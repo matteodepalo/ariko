@@ -8,3 +8,6 @@ edition = "2018"
 
 [dependencies]
 sam3x8e = { path = "./sam3x8e" }
+cortex-m = "0.7.1"
+cortex-m-rt = "0.6.13"
+panic-halt = "0.2.0"
