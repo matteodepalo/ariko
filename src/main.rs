@@ -19,26 +19,34 @@ fn delay_ms(rtt: &RTT, ms: u32) {
 fn main() -> ! {
     let p = sam3x8e::Peripherals::take().unwrap();
 
-    // Enable PIOB
+    // Enable PIOA
     let pmc = p.PMC;
-    pmc.pmc_pcer0.write_with_zero(|w| w.pid12().set_bit());
+    pmc.pmc_pcer0.write_with_zero(|w| w.pid8().set_bit());
 
     // Configure RTT resolution to approx. 1ms
     let rtt = p.RTT;
     rtt.mr.write_with_zero(|w| unsafe { w.rtpres().bits(0x20) });
 
-    let piob = p.PIOB;
+    let pioa = p.PIOA;
+    let uart = p.UART;
 
-    // Configure PIOB pin 27 (LED)
-    piob.per.write_with_zero(|w| w.p27().set_bit());
-    piob.oer.write_with_zero(|w| w.p27().set_bit());
-    piob.pudr.write_with_zero(|w| w.p27().set_bit());
+    pioa.pdr.write_with_zero(|w| w.p8().set_bit());
+    pioa.pdr.write_with_zero(|w| w.p9().set_bit());
+    pioa.absr.write_with_zero(|w| w.p8().set_bit());
+    pioa.absr.write_with_zero(|w| w.p9().set_bit());
+    pioa.puer.write_with_zero(|w| w.p8().set_bit());
+    pioa.puer.write_with_zero(|w| w.p9().set_bit());
+    uart.cr.write_with_zero(|w| w.rstrx().set_bit().rsttx().set_bit());
+    uart.brgr.write_with_zero(|w| unsafe { w.cd().bits(546) });
+    uart.mr.write_with_zero(|w| w.par().no());
+    uart.cr.write_with_zero(|w| w.rxen().set_bit().txen().set_bit());
 
-    // On/off blinking
     loop {
-        piob.sodr.write_with_zero(|w| w.p27().set_bit());
-        delay_ms(&rtt, 1000);
-        piob.codr.write_with_zero(|w| w.p27().set_bit());
+        let a = "a".as_bytes()[0];
+        loop {
+            if uart.sr.read().rxrdy().bit() { break }
+        }
+        uart.thr.write_with_zero(|w| unsafe { w.txchr().bits(a) });
         delay_ms(&rtt, 1000);
     }
 }
