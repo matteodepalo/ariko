@@ -33,7 +33,6 @@ fn main() -> ! {
     uart.cr
         .write_with_zero(|w| w.rstrx().set_bit().rsttx().set_bit());
     uart.brgr.write_with_zero(|w| unsafe { w.cd().bits(25) });
-    uart.mr.write_with_zero(|w| w.par().no());
     uart.cr
         .write_with_zero(|w| w.rxen().set_bit().txen().set_bit());
 
