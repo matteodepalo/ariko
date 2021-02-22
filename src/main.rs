@@ -32,14 +32,18 @@ fn main() -> ! {
     pioa.absr.write_with_zero(|w| w.p9().clear_bit());
     uart.cr
         .write_with_zero(|w| w.rstrx().set_bit().rsttx().set_bit());
-    uart.brgr.write_with_zero(|w| unsafe { w.cd().bits(26) });
+    uart.brgr.write_with_zero(|w| unsafe { w.cd().bits(25) });
     uart.mr.write_with_zero(|w| w.par().no());
     uart.cr
         .write_with_zero(|w| w.rxen().set_bit().txen().set_bit());
 
     loop {
-        let a = "a".as_bytes()[0];
-        uart.thr.write_with_zero(|w| unsafe { w.txchr().bits(a) });
-        delay_ms(&rtt, 1000);
+        let string = "ciao".as_bytes();
+        for char in string {
+            uart.thr
+                .write_with_zero(|w| unsafe { w.txchr().bits(*char) });
+            delay_ms(&rtt, 1)
+        }
+        delay_ms(&rtt, 1000)
     }
 }
