@@ -19,10 +19,6 @@ fn delay_ms(rtt: &RTT, ms: u32) {
 fn main() -> ! {
     let p = sam3x8e::Peripherals::take().unwrap();
 
-    // Enable PIOA
-    let pmc = p.PMC;
-    pmc.pmc_pcer0.write_with_zero(|w| w.pid8().set_bit());
-
     // Configure RTT resolution to approx. 1ms
     let rtt = p.RTT;
     rtt.mr.write_with_zero(|w| unsafe { w.rtpres().bits(0x20) });
@@ -32,20 +28,17 @@ fn main() -> ! {
 
     pioa.pdr.write_with_zero(|w| w.p8().set_bit());
     pioa.pdr.write_with_zero(|w| w.p9().set_bit());
-    pioa.absr.write_with_zero(|w| w.p8().set_bit());
-    pioa.absr.write_with_zero(|w| w.p9().set_bit());
-    pioa.puer.write_with_zero(|w| w.p8().set_bit());
-    pioa.puer.write_with_zero(|w| w.p9().set_bit());
-    uart.cr.write_with_zero(|w| w.rstrx().set_bit().rsttx().set_bit());
-    uart.brgr.write_with_zero(|w| unsafe { w.cd().bits(546) });
+    pioa.absr.write_with_zero(|w| w.p8().clear_bit());
+    pioa.absr.write_with_zero(|w| w.p9().clear_bit());
+    uart.cr
+        .write_with_zero(|w| w.rstrx().set_bit().rsttx().set_bit());
+    uart.brgr.write_with_zero(|w| unsafe { w.cd().bits(26) });
     uart.mr.write_with_zero(|w| w.par().no());
-    uart.cr.write_with_zero(|w| w.rxen().set_bit().txen().set_bit());
+    uart.cr
+        .write_with_zero(|w| w.rxen().set_bit().txen().set_bit());
 
     loop {
         let a = "a".as_bytes()[0];
-        loop {
-            if uart.sr.read().rxrdy().bit() { break }
-        }
         uart.thr.write_with_zero(|w| unsafe { w.txchr().bits(a) });
         delay_ms(&rtt, 1000);
     }
