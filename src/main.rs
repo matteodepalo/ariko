@@ -1,48 +1,104 @@
 #![no_std]
 #![no_main]
 
-extern crate panic_halt; // you can put a breakpoint on `rust_begin_unwind` to catch panics
-extern crate sam3x8e;
+extern crate cortex_m_rt;
+extern crate panic_halt;
 
+use ariko::i2c::I2c;
+use ariko::serial::Serial;
+use core::fmt::Write;
 use cortex_m_rt::entry;
-use sam3x8e::RTT;
+use hd44780_driver::{Cursor, CursorBlink, Display, DisplayMode, HD44780};
+use sam3x8e_hal::pmc::RcOscillatorSpeed::Speed12Mhz;
+use sam3x8e_hal::pmc::{MainOscillator, PeripheralClock};
+use sam3x8e_hal::time::Hertz;
+use sam3x8e_hal::{pac, pmc::Config, prelude::*};
 
-fn delay_ms(rtt: &RTT, ms: u32) {
-    // We're not considering overflow here, 32 bits can keep about 49 days in ms
-    let now = rtt.vr.read().bits();
-    let until = now + ms;
-
-    while rtt.vr.read().bits() < until {}
-}
+const LCD_ADDRESS: u8 = 0x3E;
 
 #[entry]
-fn main() -> ! {
-    let p = sam3x8e::Peripherals::take().unwrap();
+unsafe fn main() -> ! {
+  let p = pac::Peripherals::take().unwrap();
+  let cp = cortex_m::Peripherals::take().unwrap();
 
-    // Configure RTT resolution to approx. 1ms
-    let rtt = p.RTT;
-    rtt.mr.write_with_zero(|w| unsafe { w.rtpres().bits(0x20) });
+  p.EFC0.freeze(EfcConfig::new());
+  p.EFC1.freeze(EfcConfig::new());
 
-    let pioa = p.PIOA;
-    let uart = p.UART;
+  let mut pmc = p
+    .PMC
+    .freeze(Config::main_clock(MainOscillator::FastRcOscillator(
+      Speed12Mhz,
+    )));
 
-    pioa.pdr.write_with_zero(|w| w.p8().set_bit());
-    pioa.pdr.write_with_zero(|w| w.p9().set_bit());
-    pioa.absr.write_with_zero(|w| w.p8().clear_bit());
-    pioa.absr.write_with_zero(|w| w.p9().clear_bit());
-    uart.cr
-        .write_with_zero(|w| w.rstrx().set_bit().rsttx().set_bit());
-    uart.brgr.write_with_zero(|w| unsafe { w.cd().bits(25) });
-    uart.cr
-        .write_with_zero(|w| w.rxen().set_bit().txen().set_bit());
+  pmc.enable_clock(PeripheralClock::Twi0);
 
-    loop {
-        let string = "ciao".as_bytes();
-        for char in string {
-            uart.thr
-                .write_with_zero(|w| unsafe { w.txchr().bits(*char) });
-            delay_ms(&rtt, 1)
-        }
-        delay_ms(&rtt, 1000)
+  let mut piob = p.PIOB.split(&mut pmc);
+  let mut pioa = p.PIOA.split(&mut pmc);
+
+  pioa
+    .pa18
+    .disable_pio_line(&mut pioa.pdr)
+    .into_peripheral_a(&mut pioa.absr);
+
+  pioa
+    .pa17
+    .disable_pio_line(&mut pioa.pdr)
+    .into_peripheral_a(&mut pioa.absr);
+
+  pioa
+    .pa8
+    .disable_pio_line(&mut pioa.pdr)
+    .into_peripheral_a(&mut pioa.absr);
+
+  pioa
+    .pa9
+    .disable_pio_line(&mut pioa.pdr)
+    .into_peripheral_a(&mut pioa.absr);
+
+  let mut yellow = piob
+    .pb27
+    .into_peripheral_b(&mut piob.absr)
+    .into_push_pull_output(&mut piob.mddr, &mut piob.oer);
+
+  yellow.try_set_low().unwrap();
+
+  let uart = p.UART;
+  let mut delay = cp.SYST.delay(pmc.clocks);
+  let mut serial = Serial::new(Hertz(57600), &mut pmc, uart);
+  let i2c = I2c::new(p.TWI0, LCD_ADDRESS, &pmc.clocks);
+  let mut lcd = HD44780::new_i2c(i2c, LCD_ADDRESS, &mut delay).unwrap();
+
+  lcd.reset(&mut delay).unwrap();
+  lcd.clear(&mut delay).unwrap();
+
+  lcd
+    .set_display_mode(
+      DisplayMode {
+        display: Display::On,
+        cursor_visibility: Cursor::Visible,
+        cursor_blink: CursorBlink::On,
+      },
+      &mut delay,
+    )
+    .unwrap();
+
+  lcd.write_str("Hello, world!", &mut delay).unwrap();
+
+  let mut on = true;
+
+  loop {
+    if on {
+      yellow.try_set_low().unwrap();
+    } else {
+      yellow.try_set_high().unwrap();
     }
+
+    serial
+      .write_fmt(format_args!("clock: {}", pmc.clocks.master_clk().0))
+      .unwrap();
+
+    on = !on;
+
+    delay.try_delay_ms(1000_u32).unwrap();
+  }
 }

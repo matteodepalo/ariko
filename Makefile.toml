@@ -1,0 +1,24 @@
+[tasks.build-flow]
+dependencies = ["pre-build", "build-release", "post-build"]
+
+[tasks.clean-flow]
+dependencies = ["pre-clean", "clean", "post-clean"]
+
+[tasks.post-build]
+script_runner = "@duckscript"
+script = ['''
+  mkdir ./build
+  exec cargo +nightly objcopy --release --bin ariko -- -S -O binary ./build/ariko.img
+''']
+
+[tasks.post-clean]
+script_runner = "@duckscript"
+script = ["rm -r ./build"]
+
+[tasks.deploy]
+script_runner = "@duckscript"
+script = ['''
+exec stty -f /dev/cu.usbmodem14601 raw ispeed 1200 ospeed 1200 cs8 -cstopb ignpar eol 255 eof 255
+sleep 2
+exec bossac -e -w -v -b -R ./build/ariko.img -p cu.usbmodem14601
+''']

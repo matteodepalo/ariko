@@ -1,0 +1,6 @@
+[workspace]
+members = [
+  "sam3x8e",
+  "sam3x8e-hal",
+  "sam3x8e-hal-codegen",
+]
