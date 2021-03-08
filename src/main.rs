@@ -5,10 +5,10 @@ extern crate cortex_m_rt;
 extern crate panic_halt;
 
 use ariko::i2c::I2c;
+use ariko::jhd1802::Jhd1802;
 use ariko::serial::Serial;
 use core::fmt::Write;
 use cortex_m_rt::entry;
-use hd44780_driver::{Cursor, CursorBlink, Display, DisplayMode, HD44780};
 use sam3x8e_hal::pmc::RcOscillatorSpeed::Speed12Mhz;
 use sam3x8e_hal::pmc::{MainOscillator, PeripheralClock};
 use sam3x8e_hal::time::Hertz;
@@ -65,40 +65,8 @@ unsafe fn main() -> ! {
   let uart = p.UART;
   let mut delay = cp.SYST.delay(pmc.clocks);
   let mut serial = Serial::new(Hertz(57600), &mut pmc, uart);
-  let i2c = I2c::new(p.TWI0, LCD_ADDRESS, &pmc.clocks);
-  let mut lcd = HD44780::new_i2c(i2c, LCD_ADDRESS, &mut delay).unwrap();
-
-  lcd.reset(&mut delay).unwrap();
-  lcd.clear(&mut delay).unwrap();
-
-  lcd
-    .set_display_mode(
-      DisplayMode {
-        display: Display::On,
-        cursor_visibility: Cursor::Visible,
-        cursor_blink: CursorBlink::On,
-      },
-      &mut delay,
-    )
-    .unwrap();
-
-  lcd.write_str("Hello, world!", &mut delay).unwrap();
-
-  let mut on = true;
-
-  loop {
-    if on {
-      yellow.try_set_low().unwrap();
-    } else {
-      yellow.try_set_high().unwrap();
-    }
-
-    serial
-      .write_fmt(format_args!("clock: {}", pmc.clocks.master_clk().0))
-      .unwrap();
-
-    on = !on;
-
-    delay.try_delay_ms(1000_u32).unwrap();
-  }
+  let i2c = I2c::new(p.TWI0, LCD_ADDRESS as u32, &pmc.clocks, &mut serial);
+  let mut lcd = Jhd1802::new(i2c, LCD_ADDRESS, &mut delay);
+  //lcd.write_str("Hello, world!").unwrap();
+  loop {}
 }

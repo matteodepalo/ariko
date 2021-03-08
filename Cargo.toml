@@ -11,6 +11,5 @@ cortex-m = "0.7.1"
 cortex-m-rt = "0.6.13"
 panic-halt = "0.2.0"
 sam3x8e-hal = { path = "./sam3x8e-rs/sam3x8e-hal" }
-hd44780-driver = { path = "./hd44780-driver" }
 embedded-hal = "1.0.0-alpha.4"
 nb = "1.0.0"

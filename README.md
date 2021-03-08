@@ -10,7 +10,7 @@
 
 ### Display
 
-- https://github.com/JohnDoneth/hd44780-driver
+- https://github.com/JohnDoneth/jhd1802-driver
 
 ### Libraries
 

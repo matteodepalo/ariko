@@ -43,7 +43,6 @@ dependencies = [
  "cortex-m 0.7.1",
  "cortex-m-rt",
  "embedded-hal 1.0.0-alpha.4",
- "hd44780-driver",
  "nb 1.0.0",
  "panic-halt",
  "sam3x8e-hal",
@@ -179,13 +178,6 @@ checksum = "501466ecc8a30d1d3b7fc9229b122b2ce8ed6e9d9223f1138d4babb253e51817"
 dependencies = [
  "typenum",
  "version_check",
-]
-
-[[package]]
-name = "hd44780-driver"
-version = "0.4.0"
-dependencies = [
- "embedded-hal 1.0.0-alpha.4",
 ]
 
 [[package]]
