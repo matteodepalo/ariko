@@ -5,18 +5,6 @@ use embedded_hal::blocking::delay::{DelayMs, DelayUs};
 use embedded_hal::blocking::i2c::Write as I2cWrite;
 use sam3x8e_hal::delay::Delay;
 
-const LCD_2LINE: u8 = 0x08;
-const LCD_DISPLAYON: u8 = 0x04;
-const LCD_CURSOROFF: u8 = 0x00;
-const LCD_BLINKOFF: u8 = 0x00;
-const LCD_ENTRYLEFT: u8 = 0x02;
-const LCD_ENTRYSHIFTDECREMENT: u8 = 0x00;
-const LCD_FUNCTIONSET: u8 = 0x20;
-const LCD_ENTRYMODESET: u8 = 0x04;
-const LCD_DISPLAYCONTROL: u8 = 0x08;
-const LCD_CLEARDISPLAY: u8 = 0x01;
-const LCD_8BITMODE: u8 = 0x10;
-
 pub struct Jhd1802<'a> {
   i2c: I2c<'a>,
   address: u8,
@@ -36,24 +24,17 @@ impl<'a> Jhd1802<'a> {
   }
 
   fn init(&mut self) {
-    self.delay.try_delay_ms(50_u32);
-    self.command(LCD_FUNCTIONSET | LCD_8BITMODE);
-    self.delay.try_delay_us(4500_u32).unwrap();
-    self.command(LCD_FUNCTIONSET | LCD_8BITMODE);
-    self.delay.try_delay_us(150_u32).unwrap();
-    self.command(LCD_FUNCTIONSET | LCD_8BITMODE);
-    self.command(LCD_FUNCTIONSET | LCD_8BITMODE | LCD_2LINE);
-    self.delay.try_delay_us(100_u32).unwrap();
-    self.command(LCD_DISPLAYCONTROL | LCD_DISPLAYON | 0x01 | 0x02);
-    self.delay.try_delay_us(100_u32).unwrap();
-    self.clear();
-    self.delay.try_delay_us(2000_u32).unwrap();
-    self.command(LCD_ENTRYMODESET | LCD_ENTRYLEFT | LCD_ENTRYSHIFTDECREMENT);
-  }
-
-  fn clear(&mut self) {
-    self.command(LCD_CLEARDISPLAY);
-    self.delay.try_delay_us(2000_u32).unwrap();
+    self.delay.try_delay_ms(50_u32).unwrap();
+    self.command(0b00101000);
+    self.delay.try_delay_us(50_u32).unwrap();
+    self.command(0b00001111);
+    self.delay.try_delay_us(50_u32).unwrap();
+    self.command(0b00000001);
+    self.delay.try_delay_ms(3_u32).unwrap();
+    self.command(0b00000110);
+    self.delay.try_delay_ms(50_u32).unwrap();
+    self.command(0b00000010);
+    self.delay.try_delay_ms(50_u32).unwrap();
   }
 
   fn command(&mut self, value: u8) {
