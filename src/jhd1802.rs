@@ -5,18 +5,23 @@ use embedded_hal::blocking::delay::{DelayMs, DelayUs};
 use embedded_hal::blocking::i2c::Write as I2cWrite;
 use sam3x8e_hal::delay::Delay;
 
-const BACKLIGHT_BIT: u8 = 0x8;
-const ENABLE_BIT: u8 = 0x4;
-const REGISTER_SELECT_BIT: u8 = 0x1;
-const LCD_FUNCTIONSET: u8 = 0x20;
-const LCD_ENTRYLEFT: u8 = 0x2;
-const LCD_2LINE: u8 = 0x8;
-const LCD_CURSORON: u8 = 0x2;
-const LCD_DISPLAYON: u8 = 0x4;
-const LCD_BLINKON: u8 = 0x1;
-const LCD_DISPLAYCONTROL: u8 = 0x8;
-const LCD_CLEARDISPLAY: u8 = 0x1;
-const LCD_ENTRYMODESET: u8 = 0x4;
+const CMD_CLEAR_DISPLAY: u8 = 0x01;
+const CMD_ENTRY_MODE_SET: u8 = 0x04;
+const CMD_DISPLAY_CONTROL: u8 = 0x08;
+const CMD_FUNCTION_SET: u8 = 0x20;
+
+const BIT_ENTRY_MODE_INCREMENT: u8 = 1;
+const BIT_DISPLAY_CONTROL_DISPLAY: u8 = 2;
+const BIT_DISPLAY_CONTROL_CURSOR: u8 = 1;
+const BIT_DISPLAY_CONTROL_CURSOR_BLINKING: u8 = 0;
+const BIT_FUNCTION_SET_BITMODE: u8 = 4;
+const BIT_FUNCTION_SET_LINECOUNT: u8 = 3;
+const BIT_CONTROL_BYTE_RS: u8 = 6;
+
+const INIT_FUNCTION_SET: u8 = (1 << BIT_FUNCTION_SET_BITMODE) | (1 << BIT_FUNCTION_SET_LINECOUNT);
+
+const INIT_DISPLAY_CONTROL: u8 =
+  (1 << BIT_DISPLAY_CONTROL_CURSOR) | (1 << BIT_DISPLAY_CONTROL_CURSOR_BLINKING);
 
 pub struct Jhd1802<'a> {
   i2c: I2c,
@@ -37,51 +42,37 @@ impl<'a> Jhd1802<'a> {
   }
 
   fn init(&mut self) {
-    self.delay.try_delay_us(50000_u32).unwrap();
-    self.send_byte(LCD_FUNCTIONSET | LCD_2LINE, false, 4500);
-    self.send_byte(LCD_FUNCTIONSET | LCD_2LINE, false, 150);
-    self.send_byte(LCD_FUNCTIONSET | LCD_2LINE, false, 0);
-    self.send_byte(LCD_FUNCTIONSET | LCD_2LINE, false, 0);
-    self.send_command(LCD_DISPLAYCONTROL | LCD_DISPLAYON | LCD_CURSORON | LCD_BLINKON);
-    self.send_byte(LCD_CLEARDISPLAY, false, 2000);
-    self.send_command(LCD_ENTRYMODESET | LCD_ENTRYLEFT);
+    self.delay.try_delay_ms(50_u8).unwrap();
+    self.send_command(CMD_FUNCTION_SET | INIT_FUNCTION_SET);
+    self.delay.try_delay_ms(5_u8).unwrap();
+    self.send_command(CMD_FUNCTION_SET | INIT_FUNCTION_SET);
+    self.delay.try_delay_us(500_u32).unwrap();
+    self.send_command(CMD_FUNCTION_SET | INIT_FUNCTION_SET);
+    self.send_command(CMD_DISPLAY_CONTROL | INIT_DISPLAY_CONTROL);
+    self.send_command(CMD_CLEAR_DISPLAY);
+    self.delay.try_delay_ms(1700_u32).unwrap();
+    self.send_command(CMD_ENTRY_MODE_SET | (1 << BIT_ENTRY_MODE_INCREMENT));
+
+    self.send_command(
+      CMD_DISPLAY_CONTROL | INIT_DISPLAY_CONTROL | (1 << BIT_DISPLAY_CONTROL_DISPLAY),
+    );
   }
 
   fn send_command(&mut self, value: u8) {
-    self.send_byte(value, false, 100);
+    self.send_byte(value, true);
   }
 
   fn send_char(&mut self, value: u8) {
-    self.send_byte(value, true, 100);
+    self.send_byte(value, false);
   }
 
-  fn send_nibble(&mut self, value: u8, char: bool) {
-    let rs = match char {
-      false => 0_u8,
-      true => REGISTER_SELECT_BIT,
-    };
-
-    let byte = value | rs | BACKLIGHT_BIT;
+  fn send_byte(&mut self, value: u8, is_cmd: bool) {
+    let control_byte = if is_cmd { 0 } else { 1 << BIT_CONTROL_BYTE_RS };
 
     self
       .i2c
-      .try_write(self.address, &[byte, byte | ENABLE_BIT])
+      .try_write(self.address, &[control_byte, value])
       .unwrap();
-
-    self.delay.try_delay_ms(2_u8).unwrap();
-    self.i2c.try_write(self.address, &[byte]).unwrap();
-  }
-
-  fn send_byte(&mut self, value: u8, char: bool, delay_us: u32) {
-    let upper_nibble = value & 0xF0;
-    let lower_nibble = (value & 0x0F) << 4;
-
-    self.send_nibble(upper_nibble, char);
-    self.send_nibble(lower_nibble, char);
-
-    if delay_us != 0 {
-      self.delay.try_delay_us(delay_us).unwrap();
-    }
   }
 }
 
