@@ -5,6 +5,44 @@ use embedded_hal::blocking::delay::{DelayMs, DelayUs};
 use embedded_hal::blocking::i2c::Write as I2cWrite;
 use sam3x8e_hal::delay::Delay;
 
+// commands
+const LCD_CLEARDISPLAY: u8 = 0x01;
+const LCD_RETURNHOME: u8 = 0x02;
+const LCD_ENTRYMODESET: u8 = 0x04;
+const LCD_DISPLAYCONTROL: u8 = 0x08;
+const LCD_CURSORSHIFT: u8 = 0x10;
+const LCD_FUNCTIONSET: u8 = 0x20;
+const LCD_SETCGRAMADDR: u8 = 0x40;
+const LCD_SETDDRAMADDR: u8 = 0x80;
+
+// flags for display entry mode
+const LCD_ENTRYRIGHT: u8 = 0x00;
+const LCD_ENTRYLEFT: u8 = 0x02;
+const LCD_ENTRYSHIFTINCREMENT: u8 = 0x01;
+const LCD_ENTRYSHIFTDECREMENT: u8 = 0x00;
+
+// flags for display on/off control
+const LCD_DISPLAYON: u8 = 0x04;
+const LCD_DISPLAYOFF: u8 = 0x00;
+const LCD_CURSORON: u8 = 0x02;
+const LCD_CURSOROFF: u8 = 0x00;
+const LCD_BLINKON: u8 = 0x01;
+const LCD_BLINKOFF: u8 = 0x00;
+
+// flags for display/cursor shift
+const LCD_DISPLAYMOVE: u8 = 0x08;
+const LCD_CURSORMOVE: u8 = 0x00;
+const LCD_MOVERIGHT: u8 = 0x04;
+const LCD_MOVELEFT: u8 = 0x00;
+
+// flags for function set
+const LCD_8BITMODE: u8 = 0x10;
+const LCD_4BITMODE: u8 = 0x00;
+const LCD_2LINE: u8 = 0x08;
+const LCD_1LINE: u8 = 0x00;
+const LCD_5x10DOTS: u8 = 0x04;
+const LCD_5x8DOTS: u8 = 0x00;
+
 pub struct Jhd1802<'a> {
   i2c: I2c<'a>,
   address: u8,
@@ -24,22 +62,38 @@ impl<'a> Jhd1802<'a> {
   }
 
   fn init(&mut self) {
-    self.delay.try_delay_ms(50_u32).unwrap();
+    self.delay.try_delay_ms(50_u32);
 
-    self.command(0b00101000);
-    self.delay.try_delay_us(50_u32).unwrap();
+    self.command(LCD_FUNCTIONSET);
+    self.delay.try_delay_us(4500_u32);
 
-    self.command(0b00001111);
-    self.delay.try_delay_us(50_u32).unwrap();
+    self.command(LCD_FUNCTIONSET);
+    self.delay.try_delay_us(150_u32);
 
-    self.command(0b00000001);
-    self.delay.try_delay_ms(2_u32).unwrap();
+    self.command(LCD_FUNCTIONSET);
+    self.command(LCD_FUNCTIONSET);
 
-    self.command(0b00000110);
+    self.command(LCD_FUNCTIONSET | LCD_2LINE | LCD_5x8DOTS | LCD_4BITMODE);
+    self.command(LCD_DISPLAYCONTROL | LCD_DISPLAYON);
+    self.command(LCD_CLEARDISPLAY);
+    self.command(LCD_ENTRYMODESET | LCD_ENTRYLEFT);
+
+    self.delay.try_delay_ms(2_u32);
+  }
+
+  fn write_nibble(&mut self, char: u8, mode: u8) {
+    self
+      .i2c
+      .try_write(self.address, &[mode | (char & 0xF0)])
+      .unwrap();
+    self
+      .i2c
+      .try_write(self.address, &[mode | ((char << 4) & 0xF0)])
+      .unwrap();
   }
 
   fn command(&mut self, value: u8) {
-    self.i2c.try_write(self.address, &[0x80, value]).unwrap();
+    self.write_nibble(value, 0);
     self.delay.try_delay_us(50_u32).unwrap();
   }
 }
@@ -47,7 +101,8 @@ impl<'a> Jhd1802<'a> {
 impl Write for Jhd1802<'_> {
   fn write_str(&mut self, string: &str) -> Result<(), Error> {
     for char in string.as_bytes() {
-      self.i2c.try_write(self.address, &[0x40, *char]).unwrap();
+      self.write_nibble(*char, 1);
+
       self.delay.try_delay_us(50_u32).unwrap();
     }
 

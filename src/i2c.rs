@@ -23,48 +23,7 @@ impl<'a> I2c<'a> {
     clocks: &Clocks,
     serial: &'a mut Serial,
   ) -> Self {
-    // let mck = clocks.master_clk().0;
-    // //
-    // // /* Low level of time fixed for 1.3us. */
-    // let mut ck_div = 0;
-    // let mut cl_div = mck / (LOW_LEVEL_TIME_LIMIT * TWI_CLK_DIVIDER) - TWI_CLK_CALC_ARGU;
-    // let mut ch_div = mck
-    //   / ((FAST_MODE_HZ + (FAST_MODE_HZ - LOW_LEVEL_TIME_LIMIT)) * TWI_CLK_DIVIDER)
-    //   - TWI_CLK_CALC_ARGU;
-    //
-    // // // /* cldiv must fit in 8 bits, ckdiv must fit in 3 bits */
-    // while (cl_div > TWI_CLK_DIV_MAX) && (ck_div < TWI_CLK_DIV_MIN) {
-    //   /* Increase clock divider */
-    //   ck_div += 1;
-    //   /* Divide cldiv value */
-    //   cl_div /= TWI_CLK_DIVIDER;
-    // }
-    // // // /* chdiv must fit in 8 bits, ckdiv must fit in 3 bits */
-    // while (ch_div > TWI_CLK_DIV_MAX) && (ck_div < TWI_CLK_DIV_MIN) {
-    //   /* Increase clock divider */
-    //   ck_div += 1;
-    //   /* Divide cldiv value */
-    //   ch_div /= TWI_CLK_DIVIDER;
-    // }
-
-    // let mut ck_div: u32 = 0;
-    // let mut cl_div: u32;
-    //
-    // loop {
-    //   cl_div = ((clocks.master_clk().0 / (2 * FAST_MODE_HZ)) - 8) / (1 << ck_div);
-    //
-    //   if cl_div <= 255 {
-    //     break;
-    //   } else {
-    //     ck_div += 1;
-    //   }
-    // }
-    //
     twi0.cr.write_with_zero(|w| w.swrst().set_bit());
-    //
-    // twi0
-    //   .cwgr
-    //   .write_with_zero(|w| unsafe { w.ckdiv().bits(ck_div as u8).cldiv().bits(cl_div as u8) });
 
     Self { twi0, serial }
   }
