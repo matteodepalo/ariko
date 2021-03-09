@@ -32,32 +32,29 @@ unsafe fn main() -> ! {
   let mut piob = p.PIOB.split(&mut pmc);
   let mut pioa = p.PIOA.split(&mut pmc);
 
+  // SDA1
   pioa
     .pa18
     .disable_pio_line(&mut pioa.pdr)
     .into_peripheral_a(&mut pioa.absr);
 
+  // SCL1
   pioa
     .pa17
     .disable_pio_line(&mut pioa.pdr)
     .into_peripheral_a(&mut pioa.absr);
 
+  // Serial RX
   pioa
     .pa8
     .disable_pio_line(&mut pioa.pdr)
     .into_peripheral_a(&mut pioa.absr);
 
+  // Serial TX
   pioa
     .pa9
     .disable_pio_line(&mut pioa.pdr)
     .into_peripheral_a(&mut pioa.absr);
-
-  let mut yellow = piob
-    .pb27
-    .into_peripheral_b(&mut piob.absr)
-    .into_push_pull_output(&mut piob.mddr, &mut piob.oer);
-
-  yellow.try_set_low().unwrap();
 
   let uart = p.UART;
   let mut delay = cp.SYST.delay(pmc.clocks);
