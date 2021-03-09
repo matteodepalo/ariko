@@ -21,9 +21,6 @@ unsafe fn main() -> ! {
   let p = pac::Peripherals::take().unwrap();
   let cp = cortex_m::Peripherals::take().unwrap();
 
-  p.EFC0.freeze(EfcConfig::new());
-  p.EFC1.freeze(EfcConfig::new());
-
   let mut pmc = p
     .PMC
     .freeze(Config::main_clock(MainOscillator::FastRcOscillator(
@@ -67,6 +64,6 @@ unsafe fn main() -> ! {
   let mut serial = Serial::new(Hertz(57600), &mut pmc, uart);
   let i2c = I2c::new(p.TWI0, LCD_ADDRESS as u32, &pmc.clocks, &mut serial);
   let mut lcd = Jhd1802::new(i2c, LCD_ADDRESS, &mut delay);
-  lcd.write_str("Hello, world!").unwrap();
+  lcd.write_str("Hello").unwrap();
   loop {}
 }

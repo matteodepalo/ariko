@@ -25,20 +25,22 @@ impl<'a> Jhd1802<'a> {
 
   fn init(&mut self) {
     self.delay.try_delay_ms(50_u32).unwrap();
+
     self.command(0b00101000);
     self.delay.try_delay_us(50_u32).unwrap();
+
     self.command(0b00001111);
     self.delay.try_delay_us(50_u32).unwrap();
+
     self.command(0b00000001);
-    self.delay.try_delay_ms(3_u32).unwrap();
+    self.delay.try_delay_ms(2_u32).unwrap();
+
     self.command(0b00000110);
-    self.delay.try_delay_ms(50_u32).unwrap();
-    self.command(0b00000010);
-    self.delay.try_delay_ms(50_u32).unwrap();
   }
 
   fn command(&mut self, value: u8) {
-    self.i2c.try_write(self.address, &[0x80, value]).unwrap()
+    self.i2c.try_write(self.address, &[0x80, value]).unwrap();
+    self.delay.try_delay_us(50_u32).unwrap();
   }
 }
 
@@ -46,6 +48,7 @@ impl Write for Jhd1802<'_> {
   fn write_str(&mut self, string: &str) -> Result<(), Error> {
     for char in string.as_bytes() {
       self.i2c.try_write(self.address, &[0x40, *char]).unwrap();
+      self.delay.try_delay_us(50_u32).unwrap();
     }
 
     Ok(())

@@ -4,7 +4,12 @@ use embedded_hal::blocking::i2c::Write as I2cWrite;
 use sam3x8e_hal::pmc::Clocks;
 
 const XMIT_TIMEOUT: u32 = 100_000;
-const FAST_MODE_HZ: u32 = 400_000;
+const FAST_MODE_HZ: u32 = 100_000;
+const LOW_LEVEL_TIME_LIMIT: u32 = 384_000;
+const TWI_CLK_DIVIDER: u32 = 2;
+const TWI_CLK_CALC_ARGU: u32 = 3;
+const TWI_CLK_DIV_MAX: u32 = 0xFF;
+const TWI_CLK_DIV_MIN: u32 = 7;
 
 pub struct I2c<'a> {
   twi0: sam3x8e_hal::pac::TWI0,
@@ -18,34 +23,48 @@ impl<'a> I2c<'a> {
     clocks: &Clocks,
     serial: &'a mut Serial,
   ) -> Self {
-    twi0
-      .mmr
-      .write_with_zero(|w| unsafe { w.dadr().bits(address as u8).iadrsz()._1_byte() });
+    // let mck = clocks.master_clk().0;
+    // //
+    // // /* Low level of time fixed for 1.3us. */
+    // let mut ck_div = 0;
+    // let mut cl_div = mck / (LOW_LEVEL_TIME_LIMIT * TWI_CLK_DIVIDER) - TWI_CLK_CALC_ARGU;
+    // let mut ch_div = mck
+    //   / ((FAST_MODE_HZ + (FAST_MODE_HZ - LOW_LEVEL_TIME_LIMIT)) * TWI_CLK_DIVIDER)
+    //   - TWI_CLK_CALC_ARGU;
+    //
+    // // // /* cldiv must fit in 8 bits, ckdiv must fit in 3 bits */
+    // while (cl_div > TWI_CLK_DIV_MAX) && (ck_div < TWI_CLK_DIV_MIN) {
+    //   /* Increase clock divider */
+    //   ck_div += 1;
+    //   /* Divide cldiv value */
+    //   cl_div /= TWI_CLK_DIVIDER;
+    // }
+    // // // /* chdiv must fit in 8 bits, ckdiv must fit in 3 bits */
+    // while (ch_div > TWI_CLK_DIV_MAX) && (ck_div < TWI_CLK_DIV_MIN) {
+    //   /* Increase clock divider */
+    //   ck_div += 1;
+    //   /* Divide cldiv value */
+    //   ch_div /= TWI_CLK_DIVIDER;
+    // }
 
-    twi0
-      .iadr
-      .write_with_zero(|w| unsafe { w.iadr().bits(address >> 8) });
-
-    let mut ck_div: u32 = 0;
-    let mut cl_div: u32;
-
-    loop {
-      cl_div = ((clocks.master_clk().0 / (2 * FAST_MODE_HZ)) - 4) / (1 << ck_div);
-
-      if cl_div <= 255 {
-        break;
-      } else {
-        ck_div += 1;
-      }
-    }
-
-    twi0
-      .cwgr
-      .write_with_zero(|w| unsafe { w.bits((ck_div << 16) | (cl_div << 8) | cl_div) });
-
-    twi0
-      .cr
-      .write_with_zero(|w| w.svdis().set_bit().msen().set_bit());
+    // let mut ck_div: u32 = 0;
+    // let mut cl_div: u32;
+    //
+    // loop {
+    //   cl_div = ((clocks.master_clk().0 / (2 * FAST_MODE_HZ)) - 8) / (1 << ck_div);
+    //
+    //   if cl_div <= 255 {
+    //     break;
+    //   } else {
+    //     ck_div += 1;
+    //   }
+    // }
+    //
+    twi0.cr.write_with_zero(|w| w.swrst().set_bit());
+    //
+    // twi0
+    //   .cwgr
+    //   .write_with_zero(|w| unsafe { w.ckdiv().bits(ck_div as u8).cldiv().bits(cl_div as u8) });
 
     Self { twi0, serial }
   }
@@ -55,19 +74,16 @@ impl<'a> I2c<'a> {
 
     loop {
       if self.twi0.sr.read().txrdy().bit_is_set() {
-        self.serial.write_str("GOT ACK!\n").unwrap();
         break;
       }
 
       if self.twi0.sr.read().nack().bit_is_set() {
-        self.serial.write_str("GOT NACK!\n").unwrap();
         return Err(());
       }
 
       timeout -= 1;
 
       if timeout == 0 {
-        self.serial.write_str("TIMEOUT!\n").unwrap();
         return Err(());
       }
     }
@@ -82,12 +98,18 @@ impl I2cWrite for I2c<'_> {
   fn try_write(&mut self, address: u8, bytes: &[u8]) -> Result<(), Self::Error> {
     self
       .twi0
-      .thr
-      .write_with_zero(|w| unsafe { w.bits((address as u32) << 1) });
+      .mmr
+      .write_with_zero(|w| unsafe { w.dadr().bits(address as u8).iadrsz()._1_byte() });
 
-    if let Err(e) = self.wait_byte_sent() {
-      return Err(e);
-    }
+    self
+      .twi0
+      .iadr
+      .write_with_zero(|w| unsafe { w.iadr().bits(address as u32) });
+
+    self
+      .twi0
+      .cr
+      .write_with_zero(|w| w.svdis().set_bit().msen().set_bit());
 
     for byte in bytes {
       self
@@ -102,9 +124,7 @@ impl I2cWrite for I2c<'_> {
 
     self.twi0.cr.write_with_zero(|w| w.stop().set_bit());
 
-    if let Err(e) = self.wait_byte_sent() {
-      return Err(e);
-    }
+    while self.twi0.sr.read().txcomp().bit_is_clear() {}
 
     Ok(())
   }
