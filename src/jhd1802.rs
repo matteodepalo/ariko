@@ -64,21 +64,16 @@ impl<'a> Jhd1802<'a> {
   fn init(&mut self) {
     self.delay.try_delay_ms(50_u32);
 
-    self.command(LCD_FUNCTIONSET);
-    self.delay.try_delay_us(4500_u32);
-
-    self.command(LCD_FUNCTIONSET);
-    self.delay.try_delay_us(150_u32);
-
-    self.command(LCD_FUNCTIONSET);
-    self.command(LCD_FUNCTIONSET);
-
     self.command(LCD_FUNCTIONSET | LCD_2LINE | LCD_5x8DOTS | LCD_4BITMODE);
-    self.command(LCD_DISPLAYCONTROL | LCD_DISPLAYON);
-    self.command(LCD_CLEARDISPLAY);
-    self.command(LCD_ENTRYMODESET | LCD_ENTRYLEFT);
+    self.delay.try_delay_us(50_u32);
 
+    self.command(LCD_DISPLAYCONTROL | LCD_DISPLAYON | LCD_CURSORON | LCD_BLINKON);
+    self.delay.try_delay_us(50_u32);
+
+    self.command(LCD_CLEARDISPLAY);
     self.delay.try_delay_ms(2_u32);
+
+    self.command(LCD_ENTRYMODESET | LCD_ENTRYLEFT);
   }
 
   fn write_nibble(&mut self, char: u8, mode: u8) {
@@ -86,6 +81,7 @@ impl<'a> Jhd1802<'a> {
       .i2c
       .try_write(self.address, &[mode | (char & 0xF0)])
       .unwrap();
+
     self
       .i2c
       .try_write(self.address, &[mode | ((char << 4) & 0xF0)])
@@ -102,7 +98,6 @@ impl Write for Jhd1802<'_> {
   fn write_str(&mut self, string: &str) -> Result<(), Error> {
     for char in string.as_bytes() {
       self.write_nibble(*char, 1);
-
       self.delay.try_delay_us(50_u32).unwrap();
     }
 
