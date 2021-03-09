@@ -29,7 +29,7 @@ unsafe fn main() -> ! {
 
   pmc.enable_clock(PeripheralClock::Twi0);
 
-  let mut piob = p.PIOB.split(&mut pmc);
+  let _piob = p.PIOB.split(&mut pmc);
   let mut pioa = p.PIOA.split(&mut pmc);
 
   // SDA1
@@ -58,8 +58,8 @@ unsafe fn main() -> ! {
 
   let uart = p.UART;
   let mut delay = cp.SYST.delay(pmc.clocks);
-  let mut serial = Serial::new(Hertz(57600), &mut pmc, uart);
-  let i2c = I2c::new(p.TWI0, LCD_ADDRESS as u32, &pmc.clocks, &mut serial);
+  let _serial = Serial::new(Hertz(57600), &mut pmc, uart);
+  let i2c = I2c::new(p.TWI0);
   let mut lcd = Jhd1802::new(i2c, LCD_ADDRESS, &mut delay);
   lcd.write_str("Hello").unwrap();
   loop {}

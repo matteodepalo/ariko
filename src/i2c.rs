@@ -1,34 +1,19 @@
-use crate::serial::Serial;
-use core::fmt::Write;
-use embedded_hal::blocking::i2c::Write as I2cWrite;
-use sam3x8e_hal::pmc::Clocks;
+use embedded_hal::blocking::i2c::Write;
 
 const XMIT_TIMEOUT: u32 = 100_000;
-const FAST_MODE_HZ: u32 = 100_000;
-const LOW_LEVEL_TIME_LIMIT: u32 = 384_000;
-const TWI_CLK_DIVIDER: u32 = 2;
-const TWI_CLK_CALC_ARGU: u32 = 3;
-const TWI_CLK_DIV_MAX: u32 = 0xFF;
-const TWI_CLK_DIV_MIN: u32 = 7;
 
-pub struct I2c<'a> {
+pub struct I2c {
   twi0: sam3x8e_hal::pac::TWI0,
-  serial: &'a mut Serial,
 }
 
-impl<'a> I2c<'a> {
-  pub fn new(
-    twi0: sam3x8e_hal::pac::TWI0,
-    address: u32,
-    clocks: &Clocks,
-    serial: &'a mut Serial,
-  ) -> Self {
+impl I2c {
+  pub fn new(twi0: sam3x8e_hal::pac::TWI0) -> Self {
     twi0.cr.write_with_zero(|w| w.swrst().set_bit());
 
-    Self { twi0, serial }
+    Self { twi0 }
   }
 
-  fn wait_byte_sent(&mut self) -> Result<(), <I2c as I2cWrite>::Error> {
+  fn wait_byte_sent(&mut self) -> Result<(), <I2c as Write>::Error> {
     let mut timeout = XMIT_TIMEOUT;
 
     loop {
@@ -51,7 +36,7 @@ impl<'a> I2c<'a> {
   }
 }
 
-impl I2cWrite for I2c<'_> {
+impl Write for I2c {
   type Error = ();
 
   fn try_write(&mut self, address: u8, bytes: &[u8]) -> Result<(), Self::Error> {
