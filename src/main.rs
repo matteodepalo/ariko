@@ -59,8 +59,8 @@ unsafe fn main() -> ! {
   let uart = p.UART;
   let mut delay = cp.SYST.delay(pmc.clocks);
   let _serial = Serial::new(Hertz(57600), &mut pmc, uart);
-  let i2c = I2c::new(p.TWI0);
+  let i2c = I2c::new(p.TWI0, &pmc.clocks);
   let mut lcd = Jhd1802::new(i2c, LCD_ADDRESS, &mut delay);
-  lcd.write_str("Hello").unwrap();
+  lcd.write_str("Hello, world this is a test").unwrap();
   loop {}
 }

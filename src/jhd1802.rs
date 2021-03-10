@@ -10,18 +10,16 @@ const CMD_ENTRY_MODE_SET: u8 = 0x04;
 const CMD_DISPLAY_CONTROL: u8 = 0x08;
 const CMD_FUNCTION_SET: u8 = 0x20;
 
-const BIT_ENTRY_MODE_INCREMENT: u8 = 1;
-const BIT_DISPLAY_CONTROL_DISPLAY: u8 = 2;
-const BIT_DISPLAY_CONTROL_CURSOR: u8 = 1;
-const BIT_DISPLAY_CONTROL_CURSOR_BLINKING: u8 = 0;
-const BIT_FUNCTION_SET_BITMODE: u8 = 4;
-const BIT_FUNCTION_SET_LINECOUNT: u8 = 3;
-const BIT_CONTROL_BYTE_RS: u8 = 6;
+const ENTRY_MODE_INCREMENT: u8 = 0b00000010;
+const DISPLAY_CONTROL_DISPLAY_ON: u8 = 0b00000100;
+const DISPLAY_CONTROL_CURSOR_ON: u8 = 0b00000010;
+const DISPLAY_CONTROL_CURSOR_BLINKING_ON: u8 = 0b00000001;
+const FUNCTION_SET_2_LINES: u8 = 0b00001000;
+const CONTROL_BYTE_RS: u8 = 0b01000000;
 
-const INIT_FUNCTION_SET: u8 = (1 << BIT_FUNCTION_SET_BITMODE) | (1 << BIT_FUNCTION_SET_LINECOUNT);
+const INIT_FUNCTION_SET: u8 = FUNCTION_SET_2_LINES;
 
-const INIT_DISPLAY_CONTROL: u8 =
-  (1 << BIT_DISPLAY_CONTROL_CURSOR) | (1 << BIT_DISPLAY_CONTROL_CURSOR_BLINKING);
+const INIT_DISPLAY_CONTROL: u8 = 0;
 
 pub struct Jhd1802<'a> {
   i2c: I2c,
@@ -51,11 +49,8 @@ impl<'a> Jhd1802<'a> {
     self.send_command(CMD_DISPLAY_CONTROL | INIT_DISPLAY_CONTROL);
     self.send_command(CMD_CLEAR_DISPLAY);
     self.delay.try_delay_us(1700_u32).unwrap();
-    self.send_command(CMD_ENTRY_MODE_SET | (1 << BIT_ENTRY_MODE_INCREMENT));
-
-    self.send_command(
-      CMD_DISPLAY_CONTROL | INIT_DISPLAY_CONTROL | (1 << BIT_DISPLAY_CONTROL_DISPLAY),
-    );
+    self.send_command(CMD_ENTRY_MODE_SET | ENTRY_MODE_INCREMENT);
+    self.send_command(CMD_DISPLAY_CONTROL | INIT_DISPLAY_CONTROL | DISPLAY_CONTROL_DISPLAY_ON);
   }
 
   fn send_command(&mut self, value: u8) {
@@ -67,7 +62,7 @@ impl<'a> Jhd1802<'a> {
   }
 
   fn send_byte(&mut self, value: u8, is_cmd: bool) {
-    let control_byte = if is_cmd { 0 } else { 1 << BIT_CONTROL_BYTE_RS };
+    let control_byte = if is_cmd { 0x00 } else { CONTROL_BYTE_RS };
 
     self
       .i2c
