@@ -50,7 +50,7 @@ impl<'a> Jhd1802<'a> {
     self.send_command(CMD_FUNCTION_SET | INIT_FUNCTION_SET);
     self.send_command(CMD_DISPLAY_CONTROL | INIT_DISPLAY_CONTROL);
     self.send_command(CMD_CLEAR_DISPLAY);
-    self.delay.try_delay_ms(1700_u32).unwrap();
+    self.delay.try_delay_us(1700_u32).unwrap();
     self.send_command(CMD_ENTRY_MODE_SET | (1 << BIT_ENTRY_MODE_INCREMENT));
 
     self.send_command(
