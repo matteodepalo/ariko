@@ -69,11 +69,21 @@ impl<'a> Jhd1802<'a> {
       .try_write(self.address, &[control_byte, value])
       .unwrap();
   }
+
+  fn set_cursor(&mut self, col: u8, row: u8) {
+    let col = if row == 0 { col | 0x80 } else { col | 0xc0 };
+
+    self.send_command(col);
+  }
 }
 
 impl Write for Jhd1802<'_> {
   fn write_str(&mut self, string: &str) -> Result<(), Error> {
-    for char in string.as_bytes() {
+    for (i, char) in string.as_bytes().iter().enumerate() {
+      if i == 16 {
+        self.set_cursor(0, 1);
+      }
+
       self.send_char(*char);
     }
 
