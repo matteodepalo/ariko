@@ -1,13 +1,18 @@
+use crate::peripherals::Peripherals;
 use core::fmt;
-use sam3x8e_hal::pmc::Pmc;
-use sam3x8e_hal::time::Hertz;
+use core::fmt::Write;
+use sam3x8e_hal::pmc::PeripheralClock;
 
-pub struct Serial {
-  uart: sam3x8e_hal::pac::UART,
-}
+static mut S_SERIAL: Option<Serial> = None;
+
+pub struct Serial;
 
 impl Serial {
-  pub fn new(baud: Hertz, pmc: &mut Pmc, uart: sam3x8e_hal::pac::UART) -> Self {
+  pub fn init(baud: u32) {
+    let peripherals = Peripherals::get();
+    let uart = &peripherals.uart;
+    let pmc = &mut peripherals.pmc;
+
     uart
       .ptcr
       .write_with_zero(|w| w.rxtdis().set_bit().txtdis().set_bit());
@@ -25,31 +30,36 @@ impl Serial {
 
     uart.brgr.write_with_zero(|w| unsafe {
       w.cd()
-        .bits(((pmc.clocks.master_clk().0 / baud.0) / 16) as u16)
+        .bits(((pmc.clocks.master_clk().0 / baud) / 16) as u16)
     });
 
     uart
       .cr
       .write_with_zero(|w| w.rxen().set_bit().txen().set_bit().rststa().set_bit());
 
-    Serial { uart }
+    unsafe { S_SERIAL = Some(Serial) }
   }
 
-  pub fn write(&mut self, string: &str) {
-    for char in string.as_bytes() {
-      while self.uart.sr.read().txrdy().bit_is_clear() {}
+  pub fn get() -> &'static mut Self {
+    unsafe { S_SERIAL.as_mut().unwrap() }
+  }
 
-      self
-        .uart
+  pub fn send_str(&mut self, string: &str) {
+    let uart = &Peripherals::get().uart;
+
+    for char in string.as_bytes() {
+      while uart.sr.read().txrdy().bit_is_clear() {}
+
+      uart
         .thr
         .write_with_zero(|w| unsafe { w.txchr().bits(*char) });
     }
   }
 }
 
-impl fmt::Write for Serial {
-  fn write_str(&mut self, string: &str) -> fmt::Result {
-    self.write(string);
+impl Write for Serial {
+  fn write_str(&mut self, value: &str) -> fmt::Result {
+    self.send_str(value);
     Ok(())
   }
 }
