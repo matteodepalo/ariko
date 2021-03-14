@@ -528,7 +528,7 @@ impl PmcExt for PMC {
 
         while !self.pmc_sr.read().mckrdy().bit_is_set() {}
 
-        // set_prescaler(&self, &cfg);
+        set_prescaler(&self, &cfg);
 
         // Switch to PLLA
         // {

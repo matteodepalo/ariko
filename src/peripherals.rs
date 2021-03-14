@@ -23,11 +23,10 @@ impl Peripherals {
 
     let mut pmc = p
       .PMC
-      .freeze(Config::main_clock(MainOscillator::FastRcOscillator(
-        Speed12Mhz,
-      )));
+      .freeze(Config::main_clock(MainOscillator::XtalOscillator));
 
     let mut pioa = p.PIOA.split(&mut pmc);
+    let mut piob = p.PIOB.split(&mut pmc);
     let delay = cp.SYST.delay(pmc.clocks);
 
     // TWI0
@@ -51,6 +50,17 @@ impl Peripherals {
       .pa9
       .disable_pio_line(&mut pioa.pdr)
       .into_peripheral_a(&mut pioa.absr);
+
+    // UOTGHS
+    piob
+      .pb11
+      .disable_pio_line(&mut piob.pdr)
+      .into_peripheral_a(&mut piob.absr);
+
+    piob
+      .pb10
+      .disable_pio_line(&mut piob.pdr)
+      .into_peripheral_a(&mut piob.absr);
 
     unsafe {
       S_PERIPHERALS = Some(Peripherals {
