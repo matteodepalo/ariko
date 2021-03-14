@@ -544,6 +544,23 @@ impl PmcExt for PMC {
         //
         //   while !self.pmc_sr.read().mckrdy().bit_is_set() {}
         // }
+
+        // Enable USB clock
+        {
+          self
+            .ckgr_uckr
+            .write_with_zero(|w| unsafe { w.upllcount().bits(3).upllen().set_bit() });
+
+          while !self.pmc_sr.read().locku().bit_is_set() {}
+
+          self
+            .pmc_usb
+            .write_with_zero(|w| unsafe { w.usbs().set_bit().usbdiv().bits(0) });
+
+          self
+            .pmc_scer
+            .write_with_zero(|w| unsafe { w.uotgclk().set_bit() });
+        }
       }
       MasterClockSrc::SlowClock => {
         self

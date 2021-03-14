@@ -13,15 +13,15 @@ use ariko::serial::Serial;
 use ariko::usb::USB;
 use core::fmt::Write;
 use cortex_m_rt::entry;
-use embedded_hal::blocking::delay::DelayMs;
+use embedded_hal::blocking::delay::{DelayMs, DelayUs};
 
 #[entry]
 unsafe fn main() -> ! {
   Peripherals::init();
   Serial::init(57600);
-  USB::init();
   I2C::init();
   Display::init();
+  USB::init();
 
   let lcd = Display::get();
   lcd.write_str("hello").unwrap();
@@ -34,6 +34,6 @@ unsafe fn main() -> ! {
 fn panic(info: &PanicInfo) -> ! {
   loop {
     Serial::get().write_fmt(format_args!("{}\n", info.message().unwrap()));
-    Peripherals::get().delay.try_delay_ms(1000);
+    Peripherals::get().delay.try_delay_ms(1000_u32);
   }
 }
