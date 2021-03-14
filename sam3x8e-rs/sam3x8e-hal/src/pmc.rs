@@ -484,41 +484,69 @@ impl PmcExt for PMC {
       }
       MasterClockSrc::MainClock(oscillator) => {
         // Initialize main oscillator
-        self.ckgr_mor.write(|w| unsafe {
-          let w = w
-            // set "password"
-            .key()
-            .passwd();
-          // TODO: wait for oscillator to stabilize
-
-          match oscillator {
-            // Select the 3 to 20 MHz Crystal or Ceramic Resonator-based oscillator
-            MainOscillator::XtalOscillator => {
+        match oscillator {
+          // Select the 3 to 20 MHz Crystal or Ceramic Resonator-based oscillator
+          MainOscillator::XtalOscillator => {
+            // Initialize main oscillator
+            self.ckgr_mor.write(|w| unsafe {
               w
+                // set "password"
+                .key()
+                .passwd()
                 // Set the startup time that Arduino seems to think is appropriate
                 .moscxtst()
                 .bits(8)
-                // Main Crystal Oscillator Enable
+                .moscrcen()
+                .set_bit()
                 .moscxten()
                 .set_bit()
-                .moscsel()
-                .set_bit()
-            }
-            MainOscillator::FastRcOscillator(rc_speed) => w
-              .moscsel()
-              .clear_bit()
-              .moscrcen()
-              .set_bit()
-              .moscrcf()
-              .variant(match rc_speed {
-                RcOscillatorSpeed::Speed4Mhz => MOSCRCF_A::_4_MHZ,
-                RcOscillatorSpeed::Speed8Mhz => MOSCRCF_A::_8_MHZ,
-                RcOscillatorSpeed::Speed12Mhz => MOSCRCF_A::_12_MHZ,
-              }),
-          }
-        });
+            });
 
-        // // Switch master clock to Main Clock
+            // Wait for main oscillator to come online
+            while !self.pmc_sr.read().moscxts().bit_is_set() {}
+
+            // Switch to 3-20MHz Xtal oscillator
+            {
+              self.ckgr_mor.write(|w| unsafe {
+                w
+                  // set "password"
+                  .key()
+                  .passwd()
+                  // Set main clock to 84 MHz
+                  .moscxtst()
+                  .bits(8)
+                  // Main On-Chip RC Oscillator Enable
+                  .moscrcen()
+                  .set_bit()
+                  // Main Crystal Oscillator Enable
+                  .moscxten()
+                  .set_bit()
+                  // Main Oscillator Selection
+                  // the 3 to 20 MHz Crystal or Ceramic Resonator-based oscillator clock is selected as the source clock of MAINCK (MOSCSEL = 1),
+                  .moscsel()
+                  .set_bit()
+              });
+
+              while !self.pmc_sr.read().moscsels().bit_is_set() {}
+            }
+          }
+          MainOscillator::FastRcOscillator(rc_speed) => {
+            self.ckgr_mor.write(|w| unsafe {
+              w.moscsel()
+                .clear_bit()
+                .moscrcen()
+                .set_bit()
+                .moscrcf()
+                .variant(match rc_speed {
+                  RcOscillatorSpeed::Speed4Mhz => MOSCRCF_A::_4_MHZ,
+                  RcOscillatorSpeed::Speed8Mhz => MOSCRCF_A::_8_MHZ,
+                  RcOscillatorSpeed::Speed12Mhz => MOSCRCF_A::_12_MHZ,
+                })
+            });
+          }
+        }
+
+        // Switch master clock to Main Clock
         self.pmc_mckr.write(|w| {
           w
             // Main Clock is selected
@@ -526,9 +554,9 @@ impl PmcExt for PMC {
             .main_clk()
         });
 
-        while !self.pmc_sr.read().mckrdy().bit_is_set() {}
-
         set_prescaler(&self, &cfg);
+
+        while !self.pmc_sr.read().mckrdy().bit_is_set() {}
 
         // Switch to PLLA
         // {
@@ -547,19 +575,15 @@ impl PmcExt for PMC {
 
         // Enable USB clock
         {
+          // enable upll clock
           self
             .ckgr_uckr
-            .write_with_zero(|w| unsafe { w.upllcount().bits(3).upllen().set_bit() });
+            .write(|w| unsafe { w.upllcount().bits(3).upllen().set_bit() });
 
           while !self.pmc_sr.read().locku().bit_is_set() {}
 
-          self
-            .pmc_usb
-            .write_with_zero(|w| unsafe { w.usbs().set_bit().usbdiv().bits(0) });
-
-          self
-            .pmc_scer
-            .write_with_zero(|w| unsafe { w.uotgclk().set_bit() });
+          // enable usb peripheral clock
+          self.pmc_pcer1.write_with_zero(|w| w.pid40().set_bit());
         }
       }
       MasterClockSrc::SlowClock => {

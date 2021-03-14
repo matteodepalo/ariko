@@ -143,6 +143,7 @@ impl<'a> ToTokens for Pio {
                     pub mder: MDER,
                     pub oer: OER,
                     pub pdr: PDR,
+                    pub puer: PUER,
                     #(pub #lower_pin_idents: #upper_pin_idents<Input<Floating>>),*
                 }
 
@@ -169,6 +170,7 @@ impl<'a> ToTokens for Pio {
                             mder: MDER { _ownership: () },
                             oer: OER { _ownership: () },
                             pdr: PDR { _ownership: () },
+                            puer: PUER { _ownership: () },
                             #(#lower_pin_idents: #upper_pin_idents { _mode: PhantomData }),*
                         }
                     }
@@ -254,6 +256,16 @@ impl<'a> ToTokens for Pio {
                 impl MDER {
                     pub(crate) fn mder(&mut self) -> &#lower_name::MDER {
                         unsafe { &(*#upper_name::ptr()).mder }
+                    }
+                }
+
+                pub struct PUER {
+                    _ownership: (),
+                }
+
+                impl PUER {
+                    pub(crate) fn puer(&mut self) -> &#lower_name::PUER {
+                        unsafe { &(*#upper_name::ptr()).puer }
                     }
                 }
 

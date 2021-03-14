@@ -77,9 +77,11 @@ impl<'a> ToTokens for Pin<'a> {
 
             /// Configures the pin to operate as a pulled up input pin
             pub fn into_pull_up_input(
-                self,
+                self, puer: &mut PUER
             ) -> #pin_ident<Input<PullUp>> {
-                unimplemented!()
+                puer.puer().write_with_zero(|w| w.#accessor().set_bit());
+
+                #pin_ident { _mode: PhantomData }
             }
 
             /// Configures the pin to operate as an open drain output pin

@@ -55,7 +55,8 @@ impl Peripherals {
     piob
       .pb11
       .disable_pio_line(&mut piob.pdr)
-      .into_peripheral_a(&mut piob.absr);
+      .into_peripheral_a(&mut piob.absr)
+      .into_pull_up_input(&mut piob.puer);
 
     piob
       .pb10

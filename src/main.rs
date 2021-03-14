@@ -17,6 +17,8 @@ use embedded_hal::blocking::delay::{DelayMs, DelayUs};
 
 #[entry]
 unsafe fn main() -> ! {
+  cortex_m::interrupt::enable();
+
   Peripherals::init();
   Serial::init(57600);
   I2C::init();

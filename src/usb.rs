@@ -32,12 +32,9 @@ pub struct USB;
 impl USB {
   pub fn init() {
     let peripherals = Peripherals::get();
-    let pmc = &mut peripherals.pmc;
     let nvic = &mut peripherals.nvic;
     let uotghs = &mut peripherals.uotghs;
     let ctrl = &uotghs.ctrl;
-
-    pmc.enable_clock(PeripheralClock::UOtgHs);
 
     // Always authorize asynchronous USB interrupts to exit of sleep mode
     // For SAM3 USB wake up device except BACKUP mode
@@ -56,11 +53,11 @@ impl USB {
     // Enable USB macro
     ctrl.write_with_zero(|w| w.usbe().set_bit());
 
-    // Stop (freeze) internal USB clock
+    // Unfreeze internal USB clock
     ctrl.write_with_zero(|w| w.frzclk().clear_bit());
 
     // Check USB clock
-    while uotghs.sr.read().clkusable().bit_is_set() {}
+    while !uotghs.sr.read().clkusable().bit_is_set() {}
 
     // Clear all interrupts that may have been set by a previous host mode
     uotghs.hsticr.write_with_zero(|w| {
@@ -90,7 +87,7 @@ impl USB {
     // Requests VBus activation
     uotghs
       .sfr
-      .write_with_zero(|w| unsafe { w.bits(UOTGHS_SR_VBUSRQ) });
+      .write_with_zero(|w| unsafe { w.vbusrqs().set_bit() });
 
     // Force Vbus interrupt when Vbus is always high
     // This is possible due to a short timing between a Host mode stop/start.
@@ -102,7 +99,7 @@ impl USB {
     // Connection, SOF and reset
     uotghs
       .hstier
-      .write_with_zero(|w| unsafe { w.bits(UOTGHS_HSTICR_DCONNIC) });
+      .write_with_zero(|w| unsafe { w.dconnies().set_bit() });
 
     // otg freeze clock
     ctrl.write_with_zero(|w| w.frzclk().set_bit());
