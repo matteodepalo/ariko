@@ -19,7 +19,9 @@ impl Display {
 
 impl Write for Display {
   fn write_str(&mut self, string: &str) -> fmt::Result {
-    JHD1802::get().send_str(string);
+    let jhd1802 = JHD1802::get();
+    jhd1802.set_cursor(0, 0);
+    jhd1802.send_str(string);
     Ok(())
   }
 }

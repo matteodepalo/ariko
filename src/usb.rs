@@ -34,51 +34,33 @@ impl USB {
     let peripherals = Peripherals::get();
     let nvic = &mut peripherals.nvic;
     let uotghs = &mut peripherals.uotghs;
+    let pmc = &mut peripherals.pmc;
     let ctrl = &uotghs.ctrl;
 
-    // Always authorize asynchronous USB interrupts to exit of sleep mode
-    // For SAM3 USB wake up device except BACKUP mode
-    unsafe { nvic.set_priority(I_UOTGHS, 0) };
-    unsafe { NVIC::unmask(I_UOTGHS) };
+    // Enable USB peripheral clock
+    pmc.enable_clock(PeripheralClock::UOtgHs);
 
     // Freeze internal USB clock
-    ctrl.write(|w| w.frzclk().clear_bit());
+    ctrl.write(|w| w.frzclk().set_bit());
 
     // ID pin not used then force host mode
     ctrl.write(|w| w.uide().clear_bit());
     ctrl.write(|w| w.uimod().clear_bit());
 
     // According to the Arduino Due circuit the VBOF must be active high to power up the remote device
-    ctrl.write(|w| w.vbuspo().set_bit());
+    ctrl.write(|w| w.vbuspo().clear_bit());
 
     // Enable OTG pad
     ctrl.write(|w| w.otgpade().set_bit());
+
     // Enable USB macro
     ctrl.write(|w| w.usbe().set_bit());
 
-    // Clear all interrupts that may have been set by a previous host mode
-    uotghs.hsticr.write_with_zero(|w| {
-      w.dconnic()
-        .set_bit()
-        .ddiscic()
-        .set_bit()
-        .hsofic()
-        .set_bit()
-        .hwupic()
-        .set_bit()
-        .rsmedic()
-        .set_bit()
-        .rstic()
-        .set_bit()
-        .rxrsmic()
-        .set_bit()
-    });
-
-    // otg ack vbus transition
+    // Clear VBus transition interrupt
     uotghs.scr.write_with_zero(|w| w.vbustic().set_bit());
 
-    // Enable Vbus change and error interrupts
-    // Disable automatic Vbus control after Vbus error
+    // Enable VBus transition and error interrupts
+    // Disable automatic VBus control after VBus error
     ctrl.write(|w| w.vbushwc().set_bit().vbuste().set_bit().vberre().set_bit());
 
     // Requests VBus activation
@@ -86,24 +68,21 @@ impl USB {
       .sfr
       .write_with_zero(|w| unsafe { w.vbusrqs().set_bit() });
 
-    // Force Vbus interrupt when Vbus is always high
-    // This is possible due to a short timing between a Host mode stop/start.
-    if uotghs.sr.read().vbus().bit_is_set() {
-      uotghs.sfr.write_with_zero(|w| w.vbustis().set_bit());
-    }
-
     // Enable main control interrupt
     // Connection, SOF and reset
     uotghs
       .hstier
       .write_with_zero(|w| unsafe { w.dconnies().set_bit() });
 
-    // Unfreeze USB clock
-    ctrl.write(|w| w.frzclk().clear_bit());
-
     // Check USB clock
     while !uotghs.sr.read().clkusable().bit_is_set() {}
 
+    // Unfreeze USB clock
+    ctrl.write(|w| w.frzclk().clear_bit());
+
+    // Always authorize asynchronous USB interrupts to exit sleep mode
+    unsafe { nvic.set_priority(I_UOTGHS, 0) };
+    unsafe { NVIC::unmask(I_UOTGHS) };
     unsafe { S_USB = Some(USB) }
   }
 

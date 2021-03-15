@@ -54,6 +54,11 @@ impl JHD1802 {
     unsafe { S_JHD1802.as_mut().unwrap() }
   }
 
+  pub fn set_cursor(&self, col: u8, row: u8) {
+    let col = if row == 0 { col | 0x80 } else { col | 0xc0 };
+    self.send_command(col);
+  }
+
   pub fn send_str(&self, value: &str) {
     for (i, char) in value.as_bytes().iter().enumerate() {
       if i == 16 {
@@ -62,14 +67,6 @@ impl JHD1802 {
 
       self.send_char(*char);
     }
-  }
-
-  fn send_command(&self, value: u8) {
-    self.send_byte(value, true);
-  }
-
-  fn send_char(&self, value: u8) {
-    self.send_byte(value, false);
   }
 
   fn send_byte(&self, value: u8, is_cmd: bool) {
@@ -81,8 +78,10 @@ impl JHD1802 {
       .unwrap();
   }
 
-  fn set_cursor(&self, col: u8, row: u8) {
-    let col = if row == 0 { col | 0x80 } else { col | 0xc0 };
-    self.send_command(col);
+  fn send_command(&self, value: u8) {
+    self.send_byte(value, true);
+  }
+  fn send_char(&self, value: u8) {
+    self.send_byte(value, false);
   }
 }

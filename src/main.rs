@@ -18,8 +18,6 @@ use embedded_hal::digital::InputPin;
 
 #[entry]
 unsafe fn main() -> ! {
-  cortex_m::interrupt::enable();
-
   Peripherals::init();
   Serial::init(57600);
   I2C::init();
@@ -28,20 +26,20 @@ unsafe fn main() -> ! {
 
   let lcd = Display::get();
   let serial = Serial::get();
-  lcd.write_str("hello").unwrap();
+  lcd.write_str("Started!").unwrap();
 
   let p = Peripherals::get();
 
   loop {
     if p.blue_button.try_is_low().unwrap() {
-      serial.write_str("blue pressed");
+      serial.write_str("Blue button pressed\n");
     }
 
     if p.white_button.try_is_low().unwrap() {
-      serial.write_str("white pressed");
+      serial.write_str("White button pressed\n");
     }
 
-    serial.write_fmt(format_args!("{:b}             ", p.uotghs.sr.read().bits()));
+    serial.write_fmt(format_args!("{:b}\n", p.uotghs.sr.read().bits()));
   }
 }
 
