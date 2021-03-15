@@ -32,8 +32,12 @@ unsafe fn main() -> ! {
   let p = Peripherals::get();
 
   loop {
-    if p.button.try_is_low().unwrap() {
-      Serial::get().write_str("pressed");
+    if p.blue_button.try_is_low().unwrap() {
+      Serial::get().write_str("blue pressed");
+    }
+
+    if p.white_button.try_is_low().unwrap() {
+      Serial::get().write_str("white pressed");
     }
   }
 }
