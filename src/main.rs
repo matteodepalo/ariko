@@ -27,18 +27,21 @@ unsafe fn main() -> ! {
   USB::init();
 
   let lcd = Display::get();
+  let serial = Serial::get();
   lcd.write_str("hello").unwrap();
 
   let p = Peripherals::get();
 
   loop {
     if p.blue_button.try_is_low().unwrap() {
-      Serial::get().write_str("blue pressed");
+      serial.write_str("blue pressed");
     }
 
     if p.white_button.try_is_low().unwrap() {
-      Serial::get().write_str("white pressed");
+      serial.write_str("white pressed");
     }
+
+    serial.write_fmt(format_args!("{:b}             ", p.uotghs.sr.read().bits()));
   }
 }
 

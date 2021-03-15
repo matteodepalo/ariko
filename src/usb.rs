@@ -3,7 +3,7 @@ use crate::peripherals::Peripherals;
 use core::fmt::Write;
 use cortex_m::peripheral::NVIC;
 use sam3x8e_hal::pac::interrupt;
-use sam3x8e_hal::pac::Interrupt::UOTGHS as I_UOTGHS;
+use sam3x8e_hal::pac::Interrupt::{PIOB as I_PIOB, UOTGHS as I_UOTGHS};
 use sam3x8e_hal::pmc::PeripheralClock;
 
 static mut S_USB: Option<USB> = None;
@@ -42,19 +42,19 @@ impl USB {
     unsafe { NVIC::unmask(I_UOTGHS) };
 
     // ID pin not used then force host mode
-    ctrl.write_with_zero(|w| w.uide().clear_bit());
-    ctrl.write_with_zero(|w| w.uimod().clear_bit());
+    ctrl.write(|w| w.uide().clear_bit());
+    ctrl.write(|w| w.uimod().clear_bit());
 
     // According to the Arduino Due circuit the VBOF must be active high to power up the remote device
-    ctrl.write_with_zero(|w| w.vbuspo().set_bit());
+    ctrl.write(|w| w.vbuspo().set_bit());
 
     // Enable OTG pad
-    ctrl.write_with_zero(|w| w.otgpade().set_bit());
+    ctrl.write(|w| w.otgpade().set_bit());
     // Enable USB macro
-    ctrl.write_with_zero(|w| w.usbe().set_bit());
+    ctrl.write(|w| w.usbe().set_bit());
 
     // Unfreeze internal USB clock
-    ctrl.write_with_zero(|w| w.frzclk().clear_bit());
+    ctrl.write(|w| w.frzclk().clear_bit());
 
     // Check USB clock
     while !uotghs.sr.read().clkusable().bit_is_set() {}
@@ -82,7 +82,7 @@ impl USB {
 
     // Enable Vbus change and error interrupts
     // Disable automatic Vbus control after Vbus error
-    ctrl.write_with_zero(|w| w.vbushwc().set_bit().vbuste().set_bit().vberre().set_bit());
+    ctrl.write(|w| w.vbushwc().set_bit().vbuste().set_bit().vberre().set_bit());
 
     // Requests VBus activation
     uotghs
@@ -102,7 +102,7 @@ impl USB {
       .write_with_zero(|w| unsafe { w.dconnies().set_bit() });
 
     // otg freeze clock
-    ctrl.write_with_zero(|w| w.frzclk().set_bit());
+    ctrl.write(|w| w.frzclk().set_bit());
 
     unsafe { S_USB = Some(USB) }
   }
