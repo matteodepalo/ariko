@@ -41,6 +41,9 @@ impl USB {
     unsafe { nvic.set_priority(I_UOTGHS, 0) };
     unsafe { NVIC::unmask(I_UOTGHS) };
 
+    // Freeze internal USB clock
+    ctrl.write(|w| w.frzclk().clear_bit());
+
     // ID pin not used then force host mode
     ctrl.write(|w| w.uide().clear_bit());
     ctrl.write(|w| w.uimod().clear_bit());
@@ -52,12 +55,6 @@ impl USB {
     ctrl.write(|w| w.otgpade().set_bit());
     // Enable USB macro
     ctrl.write(|w| w.usbe().set_bit());
-
-    // Unfreeze internal USB clock
-    ctrl.write(|w| w.frzclk().clear_bit());
-
-    // Check USB clock
-    while !uotghs.sr.read().clkusable().bit_is_set() {}
 
     // Clear all interrupts that may have been set by a previous host mode
     uotghs.hsticr.write_with_zero(|w| {
@@ -101,8 +98,11 @@ impl USB {
       .hstier
       .write_with_zero(|w| unsafe { w.dconnies().set_bit() });
 
-    // otg freeze clock
-    ctrl.write(|w| w.frzclk().set_bit());
+    // Unfreeze USB clock
+    ctrl.write(|w| w.frzclk().clear_bit());
+
+    // Check USB clock
+    while !uotghs.sr.read().clkusable().bit_is_set() {}
 
     unsafe { S_USB = Some(USB) }
   }
