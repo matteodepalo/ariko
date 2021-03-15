@@ -28,7 +28,13 @@ unsafe fn main() -> ! {
   let lcd = Display::get();
   lcd.write_str("hello").unwrap();
 
-  loop {}
+  let p = Peripherals::get();
+
+  loop {
+    if p.button.try_is_low() {
+      Serial::get().write_str("pressed");
+    }
+  }
 }
 
 #[inline(never)]
