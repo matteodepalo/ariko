@@ -39,25 +39,25 @@ unsafe fn main() -> ! {
 
     serial
       .write_fmt(format_args!(
-        "SR:     {:#032b}\n\r",
+        "SR:     {:#034b}\n\r",
         p.uotghs.sr.read().bits()
       ))
       .unwrap();
     serial
       .write_fmt(format_args!(
-        "CTRL:   {:#032b}\n\r",
+        "CTRL:   {:#034b}\n\r",
         p.uotghs.ctrl.read().bits()
       ))
       .unwrap();
     serial
       .write_fmt(format_args!(
-        "HSTISR: {:#032b}\n\r",
+        "HSTISR: {:#034b}\n\r",
         p.uotghs.hstisr.read().bits()
       ))
       .unwrap();
     serial
       .write_fmt(format_args!(
-        "DEVISR: {:#032b}\n\r",
+        "DEVISR: {:#034b}\n\r",
         p.uotghs.devisr.read().bits()
       ))
       .unwrap();
