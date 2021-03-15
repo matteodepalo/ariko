@@ -34,44 +34,48 @@ impl USB {
     let pmc = &mut peripherals.pmc;
     let ctrl = &uotghs.ctrl;
 
-    // Enable USB peripheral clock
-    pmc.enable_clock(PeripheralClock::UOtgHs);
-
     // Freeze internal USB clock
-    ctrl.write(|w| w.frzclk().set_bit());
+    ctrl.modify(|_, w| w.frzclk().set_bit());
 
-    // ID pin not used then force host mode
-    ctrl.write(|w| w.uide().clear_bit());
-    ctrl.write(|w| w.uimod().clear_bit());
-
-    // According to the Arduino Due circuit the VBOF must be active high to power up the remote device
-    ctrl.write(|w| w.vbuspo().clear_bit());
-
-    // Enable OTG pad
-    ctrl.write(|w| w.otgpade().set_bit());
-
-    // Enable USB macro
-    ctrl.write(|w| w.usbe().set_bit());
+    ctrl.modify(|_, w| {
+      // ID pin not used then force host mode
+      w.uide()
+        .clear_bit()
+        .uimod()
+        .clear_bit()
+        // According to the Arduino Due circuit the VBOF must be active high to power up the remote device
+        .vbuspo()
+        .clear_bit()
+        // // Enable OTG pad
+        .otgpade()
+        .set_bit()
+        // // Enable USB macro
+        .usbe()
+        .set_bit()
+    });
 
     // Clear VBus transition interrupt
-    uotghs.scr.write_with_zero(|w| w.vbustic().set_bit());
+    // uotghs.scr.write_with_zero(|w| w.vbustic().set_bit());
 
     // Enable VBus transition and error interrupts
     // Disable automatic VBus control after VBus error
-    ctrl.write(|w| w.vbushwc().set_bit().vbuste().set_bit().vberre().set_bit());
+    // ctrl.modify(|_, w| w.vbushwc().set_bit().vbuste().set_bit().vberre().set_bit());
 
     // Requests VBus activation
-    uotghs.sfr.write_with_zero(|w| w.vbusrqs().set_bit());
+    // uotghs.sfr.write_with_zero(|w| w.vbusrqs().set_bit());
 
     // Enable main control interrupt
     // Connection, SOF and reset
-    uotghs.hstier.write_with_zero(|w| w.dconnies().set_bit());
+    // uotghs.hstier.write_with_zero(|w| w.dconnies().set_bit());
 
     // Check USB clock
-    while !uotghs.sr.read().clkusable().bit_is_set() {}
+    // while !uotghs.sr.read().clkusable().bit_is_set() {}
 
     // Unfreeze USB clock
-    ctrl.write(|w| w.frzclk().clear_bit());
+    // ctrl.modify(|_, w| w.frzclk().clear_bit());
+
+    // Enable USB peripheral clock
+    pmc.enable_clock(PeripheralClock::UOtgHs);
 
     // Always authorize asynchronous USB interrupts to exit sleep mode
     unsafe { nvic.set_priority(I_UOTGHS, 0) };
