@@ -38,25 +38,35 @@ unsafe fn main() -> ! {
     // }
 
     serial
-      .write_fmt(format_args!("SR: 0b{:b}\n", p.uotghs.sr.read().bits()))
-      .unwrap();
-    serial
-      .write_fmt(format_args!("CTRL: 0b{:b}\n", p.uotghs.ctrl.read().bits()))
+      .write_fmt(format_args!(
+        "SR:     {:#032b}\n\r",
+        p.uotghs.sr.read().bits()
+      ))
       .unwrap();
     serial
       .write_fmt(format_args!(
-        "HSTISR: 0b{:b}\n",
+        "CTRL:   {:#032b}\n\r",
+        p.uotghs.ctrl.read().bits()
+      ))
+      .unwrap();
+    serial
+      .write_fmt(format_args!(
+        "HSTISR: {:#032b}\n\r",
         p.uotghs.hstisr.read().bits()
       ))
       .unwrap();
     serial
       .write_fmt(format_args!(
-        "CTRL: 0b{:b}\n",
+        "DEVISR: {:#032b}\n\r",
         p.uotghs.devisr.read().bits()
       ))
       .unwrap();
 
-    p.delay.try_delay_ms(1000_u32).unwrap()
+    p.delay.try_delay_ms(1000_u32).unwrap();
+    p.delay.try_delay_ms(1000_u32).unwrap();
+    p.delay.try_delay_ms(1000_u32).unwrap();
+    p.delay.try_delay_ms(1000_u32).unwrap();
+    p.delay.try_delay_ms(1000_u32).unwrap();
   }
 }
 
