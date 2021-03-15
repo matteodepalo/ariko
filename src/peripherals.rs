@@ -58,11 +58,6 @@ impl Peripherals {
 
     // UOTGHS
     piob
-      .pb11
-      .disable_pio_line(&mut piob.pdr)
-      .into_peripheral_a(&mut piob.absr);
-
-    piob
       .pb10
       .disable_pio_line(&mut piob.pdr)
       .into_peripheral_a(&mut piob.absr);

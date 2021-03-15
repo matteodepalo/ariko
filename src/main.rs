@@ -44,10 +44,16 @@ unsafe fn main() -> ! {
       ))
       .unwrap();
     serial
+      .write_str("        0b1|987654321|987654321|987654321|\n\r")
+      .unwrap();
+    serial
       .write_fmt(format_args!(
         "CTRL:   {:#034b}\n\r",
         p.uotghs.ctrl.read().bits()
       ))
+      .unwrap();
+    serial
+      .write_str("        0b1|987654321|987654321|987654321|\n\r")
       .unwrap();
     serial
       .write_fmt(format_args!(
@@ -56,11 +62,18 @@ unsafe fn main() -> ! {
       ))
       .unwrap();
     serial
+      .write_str("        0b1|987654321|987654321|987654321|\n\r")
+      .unwrap();
+    serial
       .write_fmt(format_args!(
         "DEVISR: {:#034b}\n\r",
         p.uotghs.devisr.read().bits()
       ))
       .unwrap();
+    serial
+      .write_str("        0b1|987654321|987654321|987654321|\n\r")
+      .unwrap();
+    serial.write_str("\n\r").unwrap();
 
     p.delay.try_delay_ms(1000_u32).unwrap();
     p.delay.try_delay_ms(1000_u32).unwrap();
