@@ -31,15 +31,28 @@ unsafe fn main() -> ! {
   let p = Peripherals::get();
 
   loop {
-    if p.blue_button.try_is_low().unwrap() {
-      serial.write_str("Blue button pressed\n");
-    }
+    // if p.blue_button.try_is_low().unwrap() {
+    //   serial.write_str("Blue button pressed\n");
+    // }
+    //
+    // if p.white_button.try_is_low().unwrap() {
+    //   serial.write_str("White button pressed\n");
+    // }
 
-    if p.white_button.try_is_low().unwrap() {
-      serial.write_str("White button pressed\n");
-    }
+    serial.write_fmt(format_args!("SR: 0b{:b}\n", p.uotghs.sr.read().bits()));
+    serial.write_fmt(format_args!("CTRL: 0b{:b}\n", p.uotghs.ctrl.read().bits()));
 
-    serial.write_fmt(format_args!("{:b}\n", p.uotghs.sr.read().bits()));
+    serial.write_fmt(format_args!(
+      "HSTISR: 0b{:b}\n",
+      p.uotghs.hstisr.read().bits()
+    ));
+
+    serial.write_fmt(format_args!(
+      "CTRL: 0b{:b}\n",
+      p.uotghs.devisr.read().bits()
+    ));
+
+    p.delay.try_delay_ms(1000_u32).unwrap()
   }
 }
 
