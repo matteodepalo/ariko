@@ -14,6 +14,7 @@ use ariko::usb::USB;
 use core::fmt::Write;
 use cortex_m_rt::entry;
 use embedded_hal::blocking::delay::{DelayMs, DelayUs};
+use embedded_hal::digital::InputPin;
 
 #[entry]
 unsafe fn main() -> ! {
@@ -28,7 +29,17 @@ unsafe fn main() -> ! {
   let lcd = Display::get();
   lcd.write_str("hello").unwrap();
 
-  loop {}
+  let p = Peripherals::get();
+
+  loop {
+    if p.blue_button.try_is_low().unwrap() {
+      Serial::get().write_str("blue pressed");
+    }
+
+    if p.white_button.try_is_low().unwrap() {
+      Serial::get().write_str("white pressed");
+    }
+  }
 }
 
 #[inline(never)]

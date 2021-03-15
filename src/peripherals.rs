@@ -1,4 +1,8 @@
 use cortex_m::peripheral::NVIC;
+use embedded_hal::digital::InputPin;
+use sam3x8e_hal::gpio::piob::PB25;
+use sam3x8e_hal::gpio::pioc::PC28;
+use sam3x8e_hal::gpio::{Input, Output, PullUp, PushPull};
 use sam3x8e_hal::pac as sam3x8e;
 use sam3x8e_hal::pac::{SYST, TWI0, UART, UOTGHS};
 use sam3x8e_hal::pmc::RcOscillatorSpeed::Speed12Mhz;
@@ -14,6 +18,8 @@ pub struct Peripherals {
   pub nvic: NVIC,
   pub pmc: Pmc,
   pub delay: Delay<SYST>,
+  pub blue_button: PB25<Input<PullUp>>,
+  pub white_button: PC28<Input<PullUp>>,
 }
 
 impl Peripherals {
@@ -27,6 +33,7 @@ impl Peripherals {
 
     let mut pioa = p.PIOA.split(&mut pmc);
     let mut piob = p.PIOB.split(&mut pmc);
+    let mut pioc = p.PIOC.split(&mut pmc);
     let delay = cp.SYST.delay(pmc.clocks);
 
     // TWI0
@@ -63,12 +70,17 @@ impl Peripherals {
       .disable_pio_line(&mut piob.pdr)
       .into_peripheral_a(&mut piob.absr);
 
+    let blue_button = piob.pb25.into_pull_up_input(&mut piob.puer);
+    let white_button = pioc.pc28.into_pull_up_input(&mut pioc.puer);
+
     unsafe {
       S_PERIPHERALS = Some(Peripherals {
         uart: p.UART,
         twi0: p.TWI0,
         uotghs: p.UOTGHS,
         nvic: cp.NVIC,
+        blue_button,
+        white_button,
         pmc,
         delay,
       })
