@@ -531,7 +531,7 @@ impl PmcExt for PMC {
             }
           }
           MainOscillator::FastRcOscillator(rc_speed) => {
-            self.ckgr_mor.write(|w| unsafe {
+            self.ckgr_mor.write(|w| {
               w.moscsel()
                 .clear_bit()
                 .moscrcen()

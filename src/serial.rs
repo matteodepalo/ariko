@@ -1,7 +1,6 @@
 use crate::peripherals::Peripherals;
 use core::fmt;
 use core::fmt::Write;
-use sam3x8e_hal::pmc::PeripheralClock;
 
 static mut S_SERIAL: Option<Serial> = None;
 

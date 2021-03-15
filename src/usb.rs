@@ -3,13 +3,10 @@ use crate::peripherals::Peripherals;
 use core::fmt::Write;
 use cortex_m::peripheral::NVIC;
 use sam3x8e_hal::pac::interrupt;
-use sam3x8e_hal::pac::Interrupt::{PIOB as I_PIOB, UOTGHS as I_UOTGHS};
+use sam3x8e_hal::pac::Interrupt::UOTGHS as I_UOTGHS;
 use sam3x8e_hal::pmc::PeripheralClock;
 
 static mut S_USB: Option<USB> = None;
-
-const UOTGHS_SR_VBUSRQ: u32 = 0x1_u32 << 9;
-const UOTGHS_HSTICR_DCONNIC: u32 = 0x1_u32 << 0;
 
 #[interrupt]
 unsafe fn UOTGHS() {
@@ -64,15 +61,11 @@ impl USB {
     ctrl.write(|w| w.vbushwc().set_bit().vbuste().set_bit().vberre().set_bit());
 
     // Requests VBus activation
-    uotghs
-      .sfr
-      .write_with_zero(|w| unsafe { w.vbusrqs().set_bit() });
+    uotghs.sfr.write_with_zero(|w| w.vbusrqs().set_bit());
 
     // Enable main control interrupt
     // Connection, SOF and reset
-    uotghs
-      .hstier
-      .write_with_zero(|w| unsafe { w.dconnies().set_bit() });
+    uotghs.hstier.write_with_zero(|w| w.dconnies().set_bit());
 
     // Check USB clock
     while !uotghs.sr.read().clkusable().bit_is_set() {}

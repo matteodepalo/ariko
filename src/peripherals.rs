@@ -1,12 +1,10 @@
 use cortex_m::peripheral::NVIC;
-use embedded_hal::digital::InputPin;
 use sam3x8e_hal::gpio::piob::PB25;
 use sam3x8e_hal::gpio::pioc::PC28;
-use sam3x8e_hal::gpio::{Input, Output, PullUp, PushPull};
+use sam3x8e_hal::gpio::{Input, PullUp};
 use sam3x8e_hal::pac as sam3x8e;
 use sam3x8e_hal::pac::{SYST, TWI0, UART, UOTGHS};
-use sam3x8e_hal::pmc::RcOscillatorSpeed::Speed12Mhz;
-use sam3x8e_hal::pmc::{Config, MainOscillator, PeripheralClock, Pmc, PmcExt};
+use sam3x8e_hal::pmc::{Config, MainOscillator, Pmc, PmcExt};
 use sam3x8e_hal::prelude::*;
 
 static mut S_PERIPHERALS: Option<Peripherals> = None;
