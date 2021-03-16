@@ -1,7 +1,8 @@
 use cortex_m::peripheral::NVIC;
+use sam3x8e_hal::gpio::pioa::PA29;
 use sam3x8e_hal::gpio::piob::PB25;
 use sam3x8e_hal::gpio::pioc::PC28;
-use sam3x8e_hal::gpio::{Input, PullUp};
+use sam3x8e_hal::gpio::{Input, Output, PullUp, PushPull};
 use sam3x8e_hal::pac as sam3x8e;
 use sam3x8e_hal::pac::{SYST, TWI0, UART, UOTGHS};
 use sam3x8e_hal::pmc::{Config, MainOscillator, Pmc, PmcExt};
@@ -18,6 +19,7 @@ pub struct Peripherals {
   pub delay: Delay<SYST>,
   pub blue_button: PB25<Input<PullUp>>,
   pub white_button: PC28<Input<PullUp>>,
+  pub buzzer: PA29<Output<PushPull>>,
 }
 
 impl Peripherals {
@@ -65,6 +67,10 @@ impl Peripherals {
     let blue_button = piob.pb25.into_pull_up_input(&mut piob.puer);
     let white_button = pioc.pc28.into_pull_up_input(&mut pioc.puer);
 
+    let buzzer = pioa
+      .pa29
+      .into_push_pull_output(&mut pioa.mddr, &mut pioa.oer);
+
     unsafe {
       S_PERIPHERALS = Some(Peripherals {
         uart: p.UART,
@@ -73,6 +79,7 @@ impl Peripherals {
         nvic: cp.NVIC,
         blue_button,
         white_button,
+        buzzer,
         pmc,
         delay,
       })

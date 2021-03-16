@@ -1,5 +1,6 @@
 #![no_std]
 
+pub mod buzzer;
 pub mod display;
 pub mod i2c;
 pub mod jhd1802;
