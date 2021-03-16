@@ -5,6 +5,7 @@
 extern crate cortex_m_rt;
 use core::panic::PanicInfo;
 
+use ariko::buzzer::Buzzer;
 use ariko::display::Display;
 use ariko::i2c::I2C;
 use ariko::peripherals::Peripherals;
@@ -13,6 +14,7 @@ use ariko::usb::USB;
 use core::fmt::Write;
 use cortex_m_rt::entry;
 use embedded_hal::blocking::delay::DelayMs;
+use embedded_hal::digital::InputPin;
 
 #[entry]
 unsafe fn main() -> ! {
@@ -21,9 +23,11 @@ unsafe fn main() -> ! {
   I2C::init();
   Display::init();
   USB::init();
+  Buzzer::init();
 
   let lcd = Display::get();
   let serial = Serial::get();
+  let buzzer = Buzzer::get();
   lcd.write_str("Started!").unwrap();
 
   let p = Peripherals::get();
@@ -33,9 +37,9 @@ unsafe fn main() -> ! {
     //   serial.write_str("Blue button pressed\n");
     // }
     //
-    // if p.white_button.try_is_low().unwrap() {
-    //   serial.write_str("White button pressed\n");
-    // }
+    if p.white_button.try_is_low().unwrap() {
+      buzzer.beep();
+    }
 
     serial
       .write_fmt(format_args!(
