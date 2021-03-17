@@ -90,9 +90,17 @@ unsafe fn main() -> ! {
 #[inline(never)]
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
+  let location = info.location().unwrap();
+
   loop {
     Serial::get()
-      .write_fmt(format_args!("{}\n", info.message().unwrap()))
+      .write_fmt(format_args!(
+        "Panic at {} ({}, {}): {}\n",
+        location.file(),
+        location.line(),
+        location.column(),
+        info.message().unwrap()
+      ))
       .unwrap();
 
     Peripherals::get().delay.try_delay_ms(1000_u32).unwrap();

@@ -13,6 +13,26 @@ unsafe fn UOTGHS() {
   let uotghs = &Peripherals::get().uotghs;
   let lcd = Display::get();
 
+  // Clear all interrupts
+  uotghs.scr.write_with_zero(|w| w.vbustic().set_bit());
+
+  uotghs.hsticr.write_with_zero(|w| {
+    w.dconnic()
+      .set_bit()
+      .ddiscic()
+      .set_bit()
+      .hsofic()
+      .set_bit()
+      .hwupic()
+      .set_bit()
+      .rsmedic()
+      .set_bit()
+      .rstic()
+      .set_bit()
+      .rxrsmic()
+      .set_bit()
+  });
+
   lcd.write_str("Interrupt!").unwrap();
 
   if uotghs.hstisr.read().ddisci().bit_is_set() {
@@ -63,7 +83,7 @@ impl USB {
       // Check USB clock
       while !uotghs.sr.read().clkusable().bit_is_set() {}
 
-      // Force VBus transition
+      // Clear VBus interrupt
       uotghs.scr.write_with_zero(|w| w.vbustic().set_bit());
 
       // Enable VBus transition and error interrupts
@@ -73,9 +93,14 @@ impl USB {
       // Requests VBus activation
       uotghs.sfr.write_with_zero(|w| w.vbusrqs().set_bit());
 
+      // Force VBus transition
+      uotghs.sfr.write_with_zero(|w| w.vbustis().set_bit());
+
       // Enable main control interrupt
       // Connection, SOF and reset
-      uotghs.hstier.write_with_zero(|w| w.dconnies().set_bit());
+      uotghs
+        .hstier
+        .write_with_zero(|w| w.dconnies().set_bit().hwupies().set_bit());
 
       // Freeze USB clock
       ctrl.modify(|_, w| w.frzclk().set_bit());

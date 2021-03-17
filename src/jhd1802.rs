@@ -41,7 +41,7 @@ impl JHD1802 {
     delay.try_delay_us(500_u32).unwrap();
     jhd1802.send_command(CMD_FUNCTION_SET | INIT_FUNCTION_SET);
     jhd1802.send_command(CMD_DISPLAY_CONTROL | INIT_DISPLAY_CONTROL);
-    jhd1802.send_command(CMD_CLEAR_DISPLAY);
+    jhd1802.clear();
 
     delay.try_delay_us(1700_u32).unwrap();
     jhd1802.send_command(CMD_ENTRY_MODE_SET | ENTRY_MODE_INCREMENT);
@@ -57,6 +57,11 @@ impl JHD1802 {
   pub fn set_cursor(&self, col: u8, row: u8) {
     let col = if row == 0 { col | 0x80 } else { col | 0xc0 };
     self.send_command(col);
+  }
+
+  pub fn clear(&self) {
+    self.send_command(CMD_CLEAR_DISPLAY);
+    Peripherals::get().delay.try_delay_us(2000_u32).unwrap();
   }
 
   pub fn send_str(&self, value: &str) {
