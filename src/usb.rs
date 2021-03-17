@@ -1,5 +1,6 @@
 use crate::display::Display;
 use crate::peripherals::Peripherals;
+use crate::serial::Serial;
 use core::fmt::Write;
 use cortex_m::peripheral::NVIC;
 use sam3x8e_hal::pac::interrupt;
@@ -10,8 +11,11 @@ static mut S_USB: Option<USB> = None;
 
 #[interrupt]
 unsafe fn UOTGHS() {
+  static mut CALLED: bool = false;
+
   let uotghs = &Peripherals::get().uotghs;
   let lcd = Display::get();
+  let serial = Serial::get();
 
   // Clear all interrupts
   uotghs.scr.write_with_zero(|w| w.vbustic().set_bit());
@@ -33,15 +37,20 @@ unsafe fn UOTGHS() {
       .set_bit()
   });
 
-  lcd.write_str("Interrupt!").unwrap();
+  if !*CALLED {
+    lcd.write_str("Interrupt!").unwrap();
+    serial.write_str("Interrupt!");
 
-  if uotghs.hstisr.read().ddisci().bit_is_set() {
-    lcd.write_str("Disconnected").unwrap();
+    if uotghs.hstisr.read().ddisci().bit_is_set() {
+      lcd.write_str("Disconnected").unwrap();
+    }
+
+    if uotghs.hstisr.read().dconni().bit_is_set() {
+      lcd.write_str("Connected").unwrap();
+    }
   }
 
-  if uotghs.hstisr.read().dconni().bit_is_set() {
-    lcd.write_str("Connected").unwrap();
-  }
+  *CALLED = true;
 }
 
 pub struct USB;
