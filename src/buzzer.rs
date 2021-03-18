@@ -1,5 +1,7 @@
+#![allow(dead_code)]
+
 use crate::peripherals::Peripherals;
-use embedded_hal::blocking::delay::{DelayMs, DelayUs};
+use embedded_hal::blocking::delay::DelayUs;
 use embedded_hal::digital::OutputPin;
 
 static mut S_BUZZER: Option<Buzzer> = None;
@@ -36,7 +38,7 @@ const EIGHTH: f32 = 0.25;
 const SIXTEENTH: f32 = 0.625;
 
 //the note part of the whole song
-const tune: [u32; 98] = [
+const TUNE: [u32; 98] = [
   NOTE_DH1, NOTE_D6, NOTE_D5, NOTE_D6, NOTE_D0, NOTE_DH1, NOTE_D6, NOTE_D5, NOTE_DH1, NOTE_D6,
   NOTE_D0, NOTE_D6, NOTE_D6, NOTE_D6, NOTE_D5, NOTE_D6, NOTE_D0, NOTE_D6, NOTE_DH1, NOTE_D6,
   NOTE_D5, NOTE_DH1, NOTE_D6, NOTE_D0, NOTE_D1, NOTE_D1, NOTE_D3, NOTE_D1, NOTE_D1, NOTE_D3,
@@ -50,7 +52,7 @@ const tune: [u32; 98] = [
 ];
 
 //the duration time of each note
-const duration: [f32; 98] = [
+const DURATION: [f32; 98] = [
   WHOLE,
   WHOLE,
   HALF,
@@ -151,8 +153,8 @@ const duration: [f32; 98] = [
   WHOLE + WHOLE + WHOLE + WHOLE,
 ];
 
-const frequency: u32 = 2700; //reach the Resonant Frequency
-const cycle: u32 = 1000000 / frequency;
+const FREQUENCY: u32 = 2700; //reach the Resonant Frequency
+const CYCLE: u32 = 1000000 / FREQUENCY;
 
 pub struct Buzzer;
 
@@ -170,9 +172,9 @@ impl Buzzer {
   // fn play_tune() {
   //   let p = Peripherals::get();
   //
-  //   for (i, x) in tune.iter().enumerate() {
+  //   for (i, x) in TUNE.iter().enumerate() {
   //     tone(tonePin, x); //output the "x" note
-  //     p.delay.try_delay_ms(400 * duration[i]); // rhythm of the music,it can be tuned fast and slow by change the number"400"
+  //     p.delay.try_delay_ms(400 * DURATION[i]); // rhythm of the music,it can be tuned fast and slow by change the number"400"
   //     noTone(tonePin); //stop the current note and go to the next note
   //   }
   // }
@@ -180,9 +182,9 @@ impl Buzzer {
   pub fn beep(&self) {
     let p = Peripherals::get();
 
-    p.buzzer.try_set_high();
-    p.delay.try_delay_us(cycle / 2);
-    p.buzzer.try_set_low();
-    p.delay.try_delay_us(cycle / 2); // run the PMW cycle
+    p.buzzer.try_set_high().unwrap();
+    p.delay.try_delay_us(CYCLE / 2).unwrap();
+    p.buzzer.try_set_low().unwrap();
+    p.delay.try_delay_us(CYCLE / 2).unwrap(); // run the PMW cycle
   }
 }

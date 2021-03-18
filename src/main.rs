@@ -25,65 +25,19 @@ unsafe fn main() -> ! {
   USB::init();
   Buzzer::init();
 
+  let usb = USB::get();
   let lcd = Display::get();
-  let serial = Serial::get();
   let buzzer = Buzzer::get();
   lcd.write_str("Started!").unwrap();
 
   let p = Peripherals::get();
 
   loop {
-    // if p.blue_button.try_is_low().unwrap() {
-    //   serial.write_str("Blue button pressed\n");
-    // }
-    //
     if p.white_button.try_is_low().unwrap() {
-      buzzer.beep();
-    }
+      buzzer.beep()
+    };
 
-    serial
-      .write_fmt(format_args!(
-        "SR:     {:#034b}\n\r",
-        p.uotghs.sr.read().bits()
-      ))
-      .unwrap();
-    serial
-      .write_str("        0b1|987654321|987654321|987654321|\n\r")
-      .unwrap();
-    serial
-      .write_fmt(format_args!(
-        "CTRL:   {:#034b}\n\r",
-        p.uotghs.ctrl.read().bits()
-      ))
-      .unwrap();
-    serial
-      .write_str("        0b1|987654321|987654321|987654321|\n\r")
-      .unwrap();
-    serial
-      .write_fmt(format_args!(
-        "HSTISR: {:#034b}\n\r",
-        p.uotghs.hstisr.read().bits()
-      ))
-      .unwrap();
-    serial
-      .write_str("        0b1|987654321|987654321|987654321|\n\r")
-      .unwrap();
-    serial
-      .write_fmt(format_args!(
-        "DEVISR: {:#034b}\n\r",
-        p.uotghs.devisr.read().bits()
-      ))
-      .unwrap();
-    serial
-      .write_str("        0b1|987654321|987654321|987654321|\n\r")
-      .unwrap();
-    serial.write_str("\n\r").unwrap();
-
-    p.delay.try_delay_ms(1000_u32).unwrap();
-    p.delay.try_delay_ms(1000_u32).unwrap();
-    p.delay.try_delay_ms(1000_u32).unwrap();
-    p.delay.try_delay_ms(1000_u32).unwrap();
-    p.delay.try_delay_ms(1000_u32).unwrap();
+    usb.poll()
   }
 }
 
