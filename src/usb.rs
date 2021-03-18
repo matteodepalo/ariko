@@ -8,8 +8,26 @@ use sam3x8e_hal::pmc::PeripheralClock;
 
 static mut S_USB: Option<USB> = None;
 
+const USB_SETTLE_DELAY: usize = 200;
+
 enum State {
-  DetachedStart,
+  DetachedInitialize,
+  DetachedIllegal,
+  DetachedWaitForDevice,
+  AttachedSettle,
+  AttachedResetDevice,
+  AttachedWaitResetComplete,
+  AttachedWaitSOF,
+  Configuring,
+  Running,
+  Error,
+}
+
+enum VBusState {
+  Off,
+  Disconnected,
+  Connected,
+  Error,
 }
 
 #[derive(Copy, Clone)]
@@ -17,23 +35,53 @@ struct Device {}
 
 pub struct USB {
   state: State,
+  vbus_state: VBusState,
   devices: [Option<Device>; 16],
+  delay: u32,
 }
 
 impl USB {
   pub fn init() {
     unsafe {
       S_USB = Some(USB {
-        state: State::DetachedStart,
+        state: State::DetachedInitialize,
+        vbus_state: VBusState::Off,
         devices: [None; 16],
+        delay: 0,
       })
     }
   }
 
-  pub fn poll(&self) {
-    match self.state {
-      State::DetachedStart => (),
+  pub fn poll(&mut self) {
+    let mut lowspeed = 0_u32;
+    let peripherals = Peripherals::get();
+    let timer = &peripherals.timer;
+
+    match self.vbus_state {
+      VBusState::Error => self.state = State::DetachedIllegal,
+      VBusState::Disconnected => {
+        if !self.is_detached() {
+          self.state = State::DetachedInitialize
+        }
+      }
+      VBusState::Connected => {
+        if self.is_detached() {
+          self.delay = timer.current() + USB_SETTLE_DELAY;
+          self.state = State::AttachedSettle
+        }
+      }
+      _ => (),
     }
+
+    match self.state {
+      State::DetachedInitialize => (),
+    }
+  }
+
+  fn is_detached(&self) -> bool {
+    self.state == State::DetachedIllegal
+      || self.state == State::DetachedInitialize
+      || self.state == State::DetachedWaitForDevice
   }
 
   fn start(&self) {
