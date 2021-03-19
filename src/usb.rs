@@ -1,15 +1,17 @@
 use crate::peripherals::Peripherals;
 use crate::serial::Serial;
-use core::fmt::Write;
 use cortex_m::peripheral::NVIC;
+use embedded_hal::timer::CountDown;
 use sam3x8e_hal::pac::interrupt;
 use sam3x8e_hal::pac::Interrupt::UOTGHS as I_UOTGHS;
 use sam3x8e_hal::pmc::PeripheralClock;
+use sam3x8e_hal::time::U32Ext;
 
 static mut S_USB: Option<USB> = None;
 
-const USB_SETTLE_DELAY: usize = 200;
+const USB_SETTLE_DELAY: u32 = 200;
 
+#[derive(PartialEq)]
 enum State {
   DetachedInitialize,
   DetachedIllegal,
@@ -23,6 +25,7 @@ enum State {
   Error,
 }
 
+#[derive(PartialEq)]
 enum VBusState {
   Off,
   Disconnected,
@@ -30,14 +33,24 @@ enum VBusState {
   Error,
 }
 
+enum ConfigureError {
+  DeviceInitIncomplete,
+  Error,
+}
+
 #[derive(Copy, Clone)]
 struct Device {}
+
+impl Device {
+  pub fn poll(&self) {}
+  pub fn release(&self) {}
+}
 
 pub struct USB {
   state: State,
   vbus_state: VBusState,
   devices: [Option<Device>; 16],
-  delay: u32,
+  configure_result: Result<(), ConfigureError>,
 }
 
 impl USB {
@@ -47,15 +60,15 @@ impl USB {
         state: State::DetachedInitialize,
         vbus_state: VBusState::Off,
         devices: [None; 16],
-        delay: 0,
+        configure_result: Ok(()),
       })
     }
   }
 
   pub fn poll(&mut self) {
-    let mut lowspeed = 0_u32;
+    let low_speed = false;
     let peripherals = Peripherals::get();
-    let timer = &peripherals.timer;
+    let timer = &mut peripherals.timer;
 
     match self.vbus_state {
       VBusState::Error => self.state = State::DetachedIllegal,
@@ -66,16 +79,86 @@ impl USB {
       }
       VBusState::Connected => {
         if self.is_detached() {
-          self.delay = timer.current() + USB_SETTLE_DELAY;
+          timer.try_start(USB_SETTLE_DELAY.hz()).unwrap();
           self.state = State::AttachedSettle
         }
       }
       _ => (),
     }
 
-    match self.state {
-      State::DetachedInitialize => (),
+    for device in self.devices.iter() {
+      if let Some(device) = device {
+        device.poll()
+      }
     }
+
+    match self.state {
+      State::DetachedInitialize => {
+        self.start();
+        self.reset();
+
+        for device in self.devices.iter() {
+          if let Some(device) = device {
+            device.release()
+          }
+        }
+
+        self.state = State::DetachedWaitForDevice
+      }
+      State::AttachedSettle => {
+        if timer.try_wait().is_ok() {
+          self.state = State::AttachedResetDevice
+        }
+      }
+      State::AttachedResetDevice => {
+        self.reset_bus();
+        self.state = State::AttachedWaitResetComplete
+      }
+      State::AttachedWaitResetComplete => {
+        if self.has_sent_reset() {
+          self.ack_sent_reset();
+          self.enable_sof();
+          self.state = State::AttachedWaitSOF;
+          timer.try_start(20.hz()).unwrap()
+        }
+      }
+      State::AttachedWaitSOF => {
+        if self.is_sof() && timer.try_wait().is_ok() {
+          self.state = State::Configuring
+        }
+      }
+      State::Configuring => match self.configure(0, 0, low_speed) {
+        Ok(()) => self.state = State::Running,
+        Err(ConfigureError::DeviceInitIncomplete) => (),
+        Err(error) => {
+          self.configure_result = Err(error);
+          self.state = State::Error
+        }
+      },
+      _ => (),
+    }
+  }
+
+  fn has_sent_reset(&self) -> bool {
+    true
+  }
+
+  fn reset_bus(&self) {}
+  fn ack_sent_reset(&self) {}
+  fn enable_sof(&self) {}
+
+  fn is_sof(&self) -> bool {
+    true
+  }
+
+  fn reset(&mut self) {
+    for device in self.devices.iter_mut() {
+      *device = None
+    }
+  }
+
+  fn configure(&self, _a: u32, _b: u32, _low_speed: bool) -> Result<(), ConfigureError> {
+    Ok(())
   }
 
   fn is_detached(&self) -> bool {

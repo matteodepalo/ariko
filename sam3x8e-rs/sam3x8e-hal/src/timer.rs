@@ -19,8 +19,10 @@
 
 use crate::time::Hertz;
 
+mod rtt;
 mod syst;
 
+pub use rtt::*;
 pub use syst::*;
 
 pub trait TimerExt<TIM> {

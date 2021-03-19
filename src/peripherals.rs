@@ -4,9 +4,10 @@ use sam3x8e_hal::gpio::piob::PB25;
 use sam3x8e_hal::gpio::pioc::PC28;
 use sam3x8e_hal::gpio::{Input, Output, PullUp, PushPull};
 use sam3x8e_hal::pac as sam3x8e;
-use sam3x8e_hal::pac::{SYST, TWI0, UART, UOTGHS};
+use sam3x8e_hal::pac::{RTT, SYST, TWI0, UART, UOTGHS};
 use sam3x8e_hal::pmc::{Config, MainOscillator, Pmc, PmcExt};
 use sam3x8e_hal::prelude::*;
+use sam3x8e_hal::time::Hertz;
 use sam3x8e_hal::timer::Timer;
 
 static mut S_PERIPHERALS: Option<Peripherals> = None;
@@ -21,7 +22,7 @@ pub struct Peripherals {
   pub blue_button: PB25<Input<PullUp>>,
   pub white_button: PC28<Input<PullUp>>,
   pub buzzer: PA29<Output<PushPull>>,
-  pub timer: Timer<SYST>,
+  pub timer: Timer<RTT>,
 }
 
 impl Peripherals {
@@ -37,7 +38,7 @@ impl Peripherals {
     let mut piob = p.PIOB.split(&mut pmc);
     let mut pioc = p.PIOC.split(&mut pmc);
     let delay = cp.SYST.delay(pmc.clocks);
-    let timer = cp.SYST.timer(6);
+    let timer = p.RTT.timer(Hertz(0));
 
     // TWI0
     pioa

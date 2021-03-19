@@ -45,7 +45,9 @@ impl Timer<SYST> {
     self.tim.disable_interrupt()
   }
 
-  pub fn current(&self) -> u32 { self.tim.cvr.read() }
+  pub fn current(&self) -> u32 {
+    self.tim.cvr.read()
+  }
 }
 
 impl CountDown for Timer<SYST> {
@@ -56,7 +58,7 @@ impl CountDown for Timer<SYST> {
   where
     T: Into<Hertz>,
   {
-    let clock_speed: Hertz = 84.mhz().into(); 0x00ffffff
+    let clock_speed: Hertz = 84.mhz().into();
     let reload_value = (clock_speed.0 / timeout.into().0) - 1;
     assert!(reload_value < (1 << 24));
 
