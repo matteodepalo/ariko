@@ -1,5 +1,10 @@
+mod generic;
+mod serial;
+
 use crate::peripherals::Peripherals;
 use crate::serial::Serial;
+use crate::usb::generic::{GenericDevice, GenericDeviceClass};
+use crate::usb::serial::{SerialDevice, SerialDeviceClass};
 use cortex_m::peripheral::NVIC;
 use embedded_hal::timer::CountDown;
 use sam3x8e_hal::pac::interrupt;
@@ -9,7 +14,12 @@ use sam3x8e_hal::time::U32Ext;
 
 static mut S_USB: Option<USB> = None;
 
-const USB_SETTLE_DELAY: u32 = 200;
+const SETTLE_DELAY: u32 = 200;
+
+const DEVICE_CLASSES: [DeviceClass; 2] = [
+  DeviceClass::Serial(SerialDeviceClass {}),
+  DeviceClass::Generic(GenericDeviceClass {}),
+];
 
 #[derive(PartialEq)]
 enum State {
@@ -33,41 +43,86 @@ enum VBusState {
   Error,
 }
 
-enum ConfigureError {
+pub enum Error {
   DeviceInitIncomplete,
-  Error,
+  DeviceNotSupported,
+  Unknown,
 }
 
 #[derive(Copy, Clone)]
-struct Device {}
+pub enum Device {
+  Serial(SerialDevice),
+  Generic(GenericDevice),
+}
+
+#[derive(Copy, Clone)]
+pub enum DeviceClass {
+  Serial(SerialDeviceClass),
+  Generic(GenericDeviceClass),
+}
+
+#[derive(Copy, Clone)]
+pub struct DeviceConfiguration {
+  pub address: u8,
+  pub device: Device,
+}
 
 impl Device {
-  pub fn poll(&self) {}
-  pub fn release(&self) {}
+  pub fn poll(&self) -> Result<(), Error> {
+    Ok(())
+  }
+  pub fn release(&self) -> Result<(), Error> {
+    Ok(())
+  }
+}
+
+impl DeviceClass {
+  pub fn configure(&self) -> Result<DeviceConfiguration, Error> {
+    match self {
+      DeviceClass::Serial(serial) => serial.configure(),
+      DeviceClass::Generic(generic) => generic.configure(),
+    }
+  }
+}
+
+impl DeviceConfiguration {
+  pub fn new(device: Device) -> Self {
+    Self { device, address: 0 }
+  }
 }
 
 pub struct USB {
   state: State,
   vbus_state: VBusState,
-  devices: [Option<Device>; 16],
-  configure_result: Result<(), ConfigureError>,
+  device_configurations: [Option<DeviceConfiguration>; 16],
 }
 
 impl USB {
   pub fn init() {
-    unsafe {
-      S_USB = Some(USB {
-        state: State::DetachedInitialize,
-        vbus_state: VBusState::Off,
-        devices: [None; 16],
-        configure_result: Ok(()),
-      })
-    }
+    unsafe { S_USB = Some(Self::default()) }
   }
 
   pub fn poll(&mut self) {
+    match self.try_poll() {
+      Ok(()) | Err(Error::DeviceInitIncomplete) => (),
+      Err(_) => {
+        self.state = State::Error;
+      }
+    }
+  }
+
+  fn default() -> Self {
+    USB {
+      state: State::DetachedInitialize,
+      vbus_state: VBusState::Off,
+      device_configurations: [None; 16],
+    }
+  }
+
+  fn try_poll(&mut self) -> Result<(), Error> {
     let low_speed = false;
     let peripherals = Peripherals::get();
+    let uotghs = &peripherals.uotghs;
     let timer = &mut peripherals.timer;
 
     match self.vbus_state {
@@ -79,30 +134,18 @@ impl USB {
       }
       VBusState::Connected => {
         if self.is_detached() {
-          timer.try_start(USB_SETTLE_DELAY.hz()).unwrap();
+          timer.try_start(SETTLE_DELAY.hz()).unwrap();
           self.state = State::AttachedSettle
         }
       }
       _ => (),
     }
 
-    for device in self.devices.iter() {
-      if let Some(device) = device {
-        device.poll()
-      }
-    }
+    self.poll_devices()?;
 
     match self.state {
       State::DetachedInitialize => {
-        self.start();
-        self.reset();
-
-        for device in self.devices.iter() {
-          if let Some(device) = device {
-            device.release()
-          }
-        }
-
+        self.start()?;
         self.state = State::DetachedWaitForDevice
       }
       State::AttachedSettle => {
@@ -111,63 +154,35 @@ impl USB {
         }
       }
       State::AttachedResetDevice => {
-        self.reset_bus();
+        uotghs.hstctrl.write_with_zero(|w| w.reset().set_bit());
         self.state = State::AttachedWaitResetComplete
       }
       State::AttachedWaitResetComplete => {
-        if self.has_sent_reset() {
-          self.ack_sent_reset();
-          self.enable_sof();
+        if uotghs.hstisr.read().rsti().bit_is_set() {
+          uotghs.hsticr.write_with_zero(|w| w.rstic().set_bit());
+          uotghs.hstctrl.write(|w| w.sofe().set_bit());
           self.state = State::AttachedWaitSOF;
           timer.try_start(20.hz()).unwrap()
         }
       }
       State::AttachedWaitSOF => {
-        if self.is_sof() && timer.try_wait().is_ok() {
+        if uotghs.hstisr.read().hsofi().bit_is_set() && timer.try_wait().is_ok() {
           self.state = State::Configuring
         }
       }
-      State::Configuring => match self.configure(0, 0, low_speed) {
-        Ok(()) => self.state = State::Running,
-        Err(ConfigureError::DeviceInitIncomplete) => (),
-        Err(error) => {
-          self.configure_result = Err(error);
-          self.state = State::Error
-        }
-      },
+      State::Configuring => {
+        let _ = self.configure_device(0, 0, low_speed)?;
+        self.state = State::Running;
+      }
       _ => (),
     }
-  }
 
-  fn has_sent_reset(&self) -> bool {
-    true
-  }
-
-  fn reset_bus(&self) {}
-  fn ack_sent_reset(&self) {}
-  fn enable_sof(&self) {}
-
-  fn is_sof(&self) -> bool {
-    true
-  }
-
-  fn reset(&mut self) {
-    for device in self.devices.iter_mut() {
-      *device = None
-    }
-  }
-
-  fn configure(&self, _a: u32, _b: u32, _low_speed: bool) -> Result<(), ConfigureError> {
     Ok(())
   }
 
-  fn is_detached(&self) -> bool {
-    self.state == State::DetachedIllegal
-      || self.state == State::DetachedInitialize
-      || self.state == State::DetachedWaitForDevice
-  }
+  fn start(&mut self) -> Result<(), Error> {
+    self.release_devices()?;
 
-  fn start(&self) {
     let peripherals = Peripherals::get();
     let nvic = &mut peripherals.nvic;
     let uotghs = &mut peripherals.uotghs;
@@ -223,6 +238,56 @@ impl USB {
 
     // Freeze USB clock
     ctrl.modify(|_, w| w.frzclk().set_bit());
+
+    Ok(())
+  }
+
+  fn configure_device(&self, _parent: u32, _port: u32, _low_speed: bool) -> Result<(), Error> {
+    let mut result = Err(Error::Unknown);
+
+    for device_class in DEVICE_CLASSES.iter() {
+      match device_class.configure() {
+        Ok(_configuration) => {
+          result = Ok(());
+          break;
+        }
+        Err(Error::DeviceNotSupported) => {}
+        Err(error) => {
+          result = Err(error);
+          break;
+        }
+      }
+    }
+
+    result
+  }
+
+  fn is_detached(&self) -> bool {
+    match self.state {
+      State::DetachedIllegal | State::DetachedInitialize | State::DetachedWaitForDevice => true,
+      _ => false,
+    }
+  }
+
+  fn poll_devices(&self) -> Result<(), Error> {
+    for option in self.device_configurations.iter() {
+      if let Some(configuration) = option {
+        configuration.device.poll()?
+      }
+    }
+
+    Ok(())
+  }
+
+  fn release_devices(&mut self) -> Result<(), Error> {
+    for option in self.device_configurations.iter_mut() {
+      if let Some(configuration) = option {
+        configuration.device.release()?;
+        *option = None
+      };
+    }
+
+    Ok(())
   }
 
   pub fn get() -> &'static mut Self {
