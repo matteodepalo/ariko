@@ -13,3 +13,4 @@ panic-halt = "0.2.0"
 sam3x8e-hal = { path = "./sam3x8e-rs/sam3x8e-hal" }
 embedded-hal = "1.0.0-alpha.4"
 nb = "1.0.0"
+modular-bitfield = "0.11.2"

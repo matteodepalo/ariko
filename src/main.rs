@@ -14,7 +14,6 @@ use ariko::usb::USB;
 use core::fmt::Write;
 use cortex_m_rt::entry;
 use embedded_hal::blocking::delay::DelayMs;
-use embedded_hal::digital::InputPin;
 
 #[entry]
 unsafe fn main() -> ! {
@@ -33,9 +32,9 @@ unsafe fn main() -> ! {
   let p = Peripherals::get();
 
   loop {
-    if p.white_button.try_is_low().unwrap() {
-      buzzer.beep()
-    };
+    // if p.white_button.try_is_low().unwrap() {
+    //   buzzer.beep()
+    // };
 
     usb.poll()
   }

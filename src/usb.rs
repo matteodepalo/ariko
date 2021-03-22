@@ -1,9 +1,9 @@
-mod generic;
-mod serial;
+mod device;
 
 use crate::peripherals::Peripherals;
-use crate::usb::generic::{GenericDevice, GenericDeviceClass};
-use crate::usb::serial::{SerialDevice, SerialDeviceClass};
+use crate::serial::Serial;
+use crate::usb::device::{Device, DeviceClass};
+use core::fmt::Write;
 use cortex_m::peripheral::NVIC;
 use embedded_hal::timer::CountDown;
 use sam3x8e_hal::pac::interrupt;
@@ -15,12 +15,7 @@ static mut S_USB: Option<USB> = None;
 
 const SETTLE_DELAY: u32 = 200;
 
-const DEVICE_CLASSES: [DeviceClass; 2] = [
-  DeviceClass::Serial(SerialDeviceClass {}),
-  DeviceClass::Generic(GenericDeviceClass {}),
-];
-
-#[derive(PartialEq)]
+#[derive(PartialEq, Debug)]
 enum State {
   DetachedInitialize,
   DetachedWaitForDevice,
@@ -33,48 +28,19 @@ enum State {
   Error,
 }
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Debug)]
 enum VBusState {
   Off,
   Disconnected,
   Connected,
 }
 
+#[derive(Debug)]
 pub enum Error {
   DeviceInitIncomplete,
   DeviceNotSupported,
   TooManyDevices,
   Unknown,
-}
-
-#[derive(Copy, Clone)]
-pub enum Device {
-  Serial(SerialDevice),
-  Generic(GenericDevice),
-}
-
-#[derive(Copy, Clone)]
-pub enum DeviceClass {
-  Serial(SerialDeviceClass),
-  Generic(GenericDeviceClass),
-}
-
-impl Device {
-  pub fn poll(&self) -> Result<(), Error> {
-    Ok(())
-  }
-  pub fn release(&self) -> Result<(), Error> {
-    Ok(())
-  }
-}
-
-impl DeviceClass {
-  pub fn configure(&self, address: u8) -> Result<Device, Error> {
-    match self {
-      DeviceClass::Serial(serial) => serial.configure(address),
-      DeviceClass::Generic(generic) => generic.configure(address),
-    }
-  }
 }
 
 pub struct USB {
@@ -92,47 +58,57 @@ impl USB {
     match self.try_poll() {
       Ok(()) | Err(Error::DeviceInitIncomplete) => (),
       Err(_) => {
-        self.state = State::Error;
+        self.set_state(State::Error);
       }
     }
   }
 
   pub fn handle_interrupt(&mut self) {
     let u = &Peripherals::get().uotghs;
+    let serial = Serial::get();
+
+    serial.write_str("[USB] Handling interrupt\n\r").unwrap();
 
     let is_error = u.sr.read().vberri().bit_is_set()
       || u.sr.read().bcerri().bit_is_set()
       || u.sr.read().hnperri().bit_is_set()
       || u.sr.read().stoi().bit_is_set();
 
+    serial
+      .write_fmt(format_args!("[USB] Is error: {:?}\n\r", is_error))
+      .unwrap();
+
     if u.hstisr.read().ddisci().bit_is_set() && u.hstimr.read().ddiscie().bit_is_set() {
+      serial
+        .write_str("[USB] Disconnected interrupt\n\r")
+        .unwrap();
       u.hsticr.write_with_zero(|w| w.ddiscic().set_bit());
       u.hstidr.write_with_zero(|w| w.ddisciec().set_bit());
-      u.hstctrl.write(|w| w.reset().clear_bit());
+      u.hstctrl.modify(|_, w| w.reset().clear_bit());
       u.hsticr.write_with_zero(|w| w.dconnic().set_bit());
       u.hstier.write_with_zero(|w| w.dconnies().set_bit());
-      self.vbus_state = VBusState::Disconnected
+      self.set_vbus_state(VBusState::Disconnected)
     } else if u.hstisr.read().dconni().bit_is_set() && u.hstimr.read().dconnie().bit_is_set() {
       u.hsticr.write_with_zero(|w| w.dconnic().set_bit());
       u.hstidr.write_with_zero(|w| w.dconniec().set_bit());
       u.hsticr.write_with_zero(|w| w.ddiscic().set_bit());
       u.hstier.write_with_zero(|w| w.ddiscies().set_bit());
-      self.vbus_state = VBusState::Connected
+      self.set_vbus_state(VBusState::Connected)
     } else if u.sr.read().vberri().bit_is_set() {
       u.scr.write_with_zero(|w| w.vberric().set_bit());
-      self.vbus_state = VBusState::Disconnected
+      self.set_vbus_state(VBusState::Disconnected)
     } else {
       while !u.sr.read().clkusable().bit_is_set() {}
-      u.ctrl.write(|w| w.frzclk().clear_bit());
+      u.ctrl.modify(|_, w| w.frzclk().clear_bit());
 
       if u.sr.read().vbusti().bit_is_set() {
         u.scr.write_with_zero(|w| w.vbustic().set_bit());
 
         if u.sr.read().vbus().bit_is_set() {
-          self.vbus_state = VBusState::Disconnected
+          self.set_vbus_state(VBusState::Disconnected)
         } else {
-          u.ctrl.write(|w| w.frzclk().set_bit());
-          self.vbus_state = VBusState::Off
+          u.ctrl.modify(|_, w| w.frzclk().set_bit());
+          self.set_vbus_state(VBusState::Off)
         }
       } else if is_error {
         u.scr.write_with_zero(|w| {
@@ -157,6 +133,28 @@ impl USB {
     }
   }
 
+  fn set_state(&mut self, state: State) {
+    Serial::get()
+      .write_fmt(format_args!(
+        "[USB] Transitioning state from {:?} to {:?}\n\r",
+        self.state, state
+      ))
+      .unwrap();
+
+    self.state = state;
+  }
+
+  fn set_vbus_state(&mut self, state: VBusState) {
+    Serial::get()
+      .write_fmt(format_args!(
+        "[USB] Transitioning VBus state from {:?} to {:?}\n\r",
+        self.vbus_state, state
+      ))
+      .unwrap();
+
+    self.vbus_state = state;
+  }
+
   fn try_poll(&mut self) -> Result<(), Error> {
     let peripherals = Peripherals::get();
     let uotghs = &peripherals.uotghs;
@@ -165,13 +163,13 @@ impl USB {
     match self.vbus_state {
       VBusState::Disconnected => {
         if !self.is_detached() {
-          self.state = State::DetachedInitialize
+          self.set_state(State::DetachedInitialize)
         }
       }
       VBusState::Connected => {
         if self.is_detached() {
           timer.try_start(SETTLE_DELAY.hz()).unwrap();
-          self.state = State::AttachedSettle
+          self.set_state(State::AttachedSettle)
         }
       }
       _ => (),
@@ -182,33 +180,33 @@ impl USB {
     match self.state {
       State::DetachedInitialize => {
         self.start()?;
-        self.state = State::DetachedWaitForDevice
+        self.set_state(State::DetachedWaitForDevice)
       }
       State::AttachedSettle => {
         if timer.try_wait().is_ok() {
-          self.state = State::AttachedResetDevice
+          self.set_state(State::AttachedResetDevice)
         }
       }
       State::AttachedResetDevice => {
-        uotghs.hstctrl.write_with_zero(|w| w.reset().set_bit());
-        self.state = State::AttachedWaitResetComplete
+        uotghs.hstctrl.modify(|_, w| w.reset().set_bit());
+        self.set_state(State::AttachedWaitResetComplete)
       }
       State::AttachedWaitResetComplete => {
         if uotghs.hstisr.read().rsti().bit_is_set() {
           uotghs.hsticr.write_with_zero(|w| w.rstic().set_bit());
-          uotghs.hstctrl.write(|w| w.sofe().set_bit());
-          self.state = State::AttachedWaitSOF;
+          uotghs.hstctrl.modify(|_, w| w.sofe().set_bit());
+          self.set_state(State::AttachedWaitSOF);
           timer.try_start(20.hz()).unwrap()
         }
       }
       State::AttachedWaitSOF => {
         if uotghs.hstisr.read().hsofi().bit_is_set() && timer.try_wait().is_ok() {
-          self.state = State::Configuring
+          self.set_state(State::Configuring)
         }
       }
       State::Configuring => {
         let _ = self.configure_device()?;
-        self.state = State::Running;
+        self.set_state(State::Running)
       }
       _ => (),
     }
@@ -217,7 +215,10 @@ impl USB {
   }
 
   fn start(&mut self) -> Result<(), Error> {
+    let serial = Serial::get();
+
     cortex_m::interrupt::free(|_| {
+      serial.write_str("[USB] Begin start\n\r");
       self.release_devices()?;
 
       let peripherals = Peripherals::get();
@@ -269,13 +270,12 @@ impl USB {
 
       // Enable main control interrupt
       // Connection, SOF and reset
-      uotghs
-        .hstier
-        .write_with_zero(|w| w.dconnies().set_bit().hwupies().set_bit());
+      uotghs.hstier.write_with_zero(|w| w.dconnies().set_bit());
 
       // Freeze USB clock
       ctrl.modify(|_, w| w.frzclk().set_bit());
 
+      serial.write_str("[USB] End start\n\r").unwrap();
       Ok(())
     })
   }
@@ -297,7 +297,7 @@ impl USB {
     let mut result = Err(Error::Unknown);
     let address = self.next_free_address()?;
 
-    for device_class in DEVICE_CLASSES.iter() {
+    for device_class in DeviceClass::all().iter() {
       match device_class.configure(address) {
         Ok(device) => {
           self.devices[address as usize] = Some(device);

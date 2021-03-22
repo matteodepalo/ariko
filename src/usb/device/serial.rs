@@ -1,4 +1,4 @@
-use crate::usb::{Device, Error};
+use crate::usb::{Device, DeviceClass, Error};
 
 #[derive(Copy, Clone)]
 pub struct SerialDevice {}
@@ -7,7 +7,7 @@ pub struct SerialDevice {}
 pub struct SerialDeviceClass {}
 
 impl SerialDeviceClass {
-  pub fn configure(&self, _address: u8) -> Result<Device, Error> {
+  pub fn configure(&self, class: &DeviceClass, address: u8) -> Result<Device, Error> {
     Ok(Device::Serial(SerialDevice {}))
   }
 }
