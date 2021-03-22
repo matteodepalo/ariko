@@ -1,4 +1,4 @@
-use crate::usb::{Device, DeviceConfiguration, Error};
+use crate::usb::{Device, Error};
 
 #[derive(Copy, Clone)]
 pub struct GenericDevice {}
@@ -7,7 +7,7 @@ pub struct GenericDevice {}
 pub struct GenericDeviceClass {}
 
 impl GenericDeviceClass {
-  pub fn configure(&self) -> Result<DeviceConfiguration, Error> {
-    Ok(DeviceConfiguration::new(Device::Generic(GenericDevice {})))
+  pub fn configure(&self, _address: u8) -> Result<Device, Error> {
+    Ok(Device::Generic(GenericDevice {}))
   }
 }
