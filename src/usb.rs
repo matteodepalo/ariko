@@ -1,8 +1,11 @@
 mod device;
+mod packet;
+mod pipe;
 
 use crate::peripherals::Peripherals;
 use crate::serial::Serial;
 use crate::usb::device::{Device, DeviceClass};
+use crate::usb::pipe::{AllocatedPipe, MessagePipe, Pipe};
 use core::fmt::Write;
 use cortex_m::peripheral::NVIC;
 use embedded_hal::timer::CountDown;
@@ -40,6 +43,7 @@ pub enum Error {
   DeviceInitIncomplete,
   DeviceNotSupported,
   TooManyDevices,
+  TooManyPipes,
   Unknown,
 }
 
@@ -47,6 +51,8 @@ pub struct USB {
   state: State,
   vbus_state: VBusState,
   devices: [Option<Device>; 16],
+  control_pipe: Option<MessagePipe>,
+  pipes: [Option<Pipe>; 7],
 }
 
 impl USB {
@@ -61,6 +67,28 @@ impl USB {
         self.set_state(State::Error);
       }
     }
+  }
+
+  pub fn alloc_pipe(
+    &mut self,
+    configure_callback: fn(pipe: &Pipe) -> Pipe,
+  ) -> Result<&Pipe, Error> {
+    let index = self.next_free_pipe_index()?;
+    self.pipes[index as usize] = Some(configure_callback(&Pipe::new(index)));
+    Ok(self.pipes[index as usize].as_ref().unwrap())
+  }
+
+  pub fn release_pipe(&mut self, pipe: &Pipe) {
+    self.pipes[pipe.index() as usize] = None
+  }
+
+  pub fn control_pipe(&mut self) -> &MessagePipe {
+    self.control_pipe = match self.control_pipe {
+      None => Some(MessagePipe::new(AllocatedPipe::new(0))),
+      pipe => pipe,
+    };
+
+    self.control_pipe.as_ref().unwrap()
   }
 
   pub fn handle_interrupt(&mut self) {
@@ -82,6 +110,7 @@ impl USB {
       serial
         .write_str("[USB] Disconnected interrupt\n\r")
         .unwrap();
+
       u.hsticr.write_with_zero(|w| w.ddiscic().set_bit());
       u.hstidr.write_with_zero(|w| w.ddisciec().set_bit());
       u.hstctrl.modify(|_, w| w.reset().clear_bit());
@@ -130,6 +159,8 @@ impl USB {
       state: State::DetachedInitialize,
       vbus_state: VBusState::Off,
       devices: [None; 16],
+      control_pipe: None,
+      pipes: [None; 7],
     }
   }
 
@@ -218,7 +249,7 @@ impl USB {
     let serial = Serial::get();
 
     cortex_m::interrupt::free(|_| {
-      serial.write_str("[USB] Begin start\n\r");
+      serial.write_str("[USB] Begin start\n\r").unwrap();
       self.release_devices()?;
 
       let peripherals = Peripherals::get();
@@ -280,6 +311,19 @@ impl USB {
     })
   }
 
+  fn next_free_pipe_index(&self) -> Result<u8, Error> {
+    let mut result = Err(Error::TooManyPipes);
+
+    for (index, pipe) in self.pipes.iter().enumerate() {
+      if pipe.is_none() {
+        result = Ok(index as u8);
+        break;
+      }
+    }
+
+    result
+  }
+
   fn next_free_address(&self) -> Result<u8, Error> {
     let mut result = Err(Error::TooManyDevices);
 
@@ -334,10 +378,9 @@ impl USB {
 
   fn release_devices(&mut self) -> Result<(), Error> {
     for option in self.devices.iter_mut() {
-      if let Some(device) = option {
-        device.release()?;
+      if option.is_some() {
         *option = None
-      };
+      }
     }
 
     Ok(())

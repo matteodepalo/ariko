@@ -1,6 +1,7 @@
 #![no_std]
 #![no_main]
 #![feature(panic_info_message)]
+#![allow(dead_code)]
 
 extern crate cortex_m_rt;
 use core::panic::PanicInfo;
@@ -26,10 +27,11 @@ unsafe fn main() -> ! {
 
   let usb = USB::get();
   let lcd = Display::get();
-  let buzzer = Buzzer::get();
+  let _buzzer = Buzzer::get();
+
   lcd.write_str("Started!").unwrap();
 
-  let p = Peripherals::get();
+  let _p = Peripherals::get();
 
   loop {
     // if p.white_button.try_is_low().unwrap() {
