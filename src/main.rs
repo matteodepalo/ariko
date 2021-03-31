@@ -7,6 +7,8 @@ extern crate cortex_m_rt;
 use core::panic::PanicInfo;
 
 use ariko::buzzer::Buzzer;
+use ariko::clock_one::ClockOne;
+use ariko::clock_two::ClockTwo;
 use ariko::display::Display;
 use ariko::i2c::I2C;
 use ariko::peripherals::Peripherals;
@@ -24,12 +26,18 @@ unsafe fn main() -> ! {
   Display::init();
   USB::init();
   Buzzer::init();
+  ClockOne::init();
+  ClockTwo::init();
 
   let usb = USB::get();
   let lcd = Display::get();
   let _buzzer = Buzzer::get();
+  let clock_one = ClockOne::get();
+  let clock_two = ClockTwo::get();
 
   lcd.write_str("Started!").unwrap();
+  clock_one.write_str("1");
+  clock_two.write_str("2");
 
   let _p = Peripherals::get();
 
@@ -38,7 +46,7 @@ unsafe fn main() -> ! {
     //   buzzer.beep()
     // };
 
-    usb.poll()
+    // usb.poll()
   }
 }
 

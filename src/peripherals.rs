@@ -1,7 +1,7 @@
 use cortex_m::peripheral::NVIC;
 use sam3x8e_hal::gpio::pioa::PA29;
 use sam3x8e_hal::gpio::piob::PB25;
-use sam3x8e_hal::gpio::pioc::PC28;
+use sam3x8e_hal::gpio::pioc::{PC22, PC23, PC24, PC25, PC28};
 use sam3x8e_hal::gpio::{Input, Output, PullUp, PushPull};
 use sam3x8e_hal::pac as sam3x8e;
 use sam3x8e_hal::pac::{RTT, SYST, TWI0, UART, UOTGHS};
@@ -23,6 +23,10 @@ pub struct Peripherals {
   pub white_button: PC28<Input<PullUp>>,
   pub buzzer: PA29<Output<PushPull>>,
   pub timer: Timer<RTT>,
+  pub clock_one_clk: PC25<Output<PushPull>>,
+  pub clock_one_data: PC24<Output<PushPull>>,
+  pub clock_two_clk: PC23<Output<PushPull>>,
+  pub clock_two_data: PC22<Output<PushPull>>,
 }
 
 impl Peripherals {
@@ -75,6 +79,22 @@ impl Peripherals {
       .pa29
       .into_push_pull_output(&mut pioa.mddr, &mut pioa.oer);
 
+    let clock_one_clk = pioc
+      .pc25
+      .into_push_pull_output(&mut pioc.mddr, &mut pioc.oer);
+
+    let clock_one_data = pioc
+      .pc24
+      .into_push_pull_output(&mut pioc.mddr, &mut pioc.oer);
+
+    let clock_two_clk = pioc
+      .pc23
+      .into_push_pull_output(&mut pioc.mddr, &mut pioc.oer);
+
+    let clock_two_data = pioc
+      .pc22
+      .into_push_pull_output(&mut pioc.mddr, &mut pioc.oer);
+
     unsafe {
       S_PERIPHERALS = Some(Peripherals {
         uart: p.UART,
@@ -87,6 +107,10 @@ impl Peripherals {
         pmc,
         delay,
         timer,
+        clock_one_clk,
+        clock_one_data,
+        clock_two_clk,
+        clock_two_data,
       })
     }
   }
