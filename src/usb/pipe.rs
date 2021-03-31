@@ -1,3 +1,4 @@
+use crate::peripherals::Peripherals;
 use crate::usb::packet::{Packet, SetupPacket};
 
 #[derive(Copy, Clone)]
@@ -87,11 +88,52 @@ impl Pipe {
 
 impl AllocatedPipe {
   pub fn new(index: u8) -> Self {
-    AllocatedPipe(index)
+    let pipe = AllocatedPipe(index);
+
+    if !pipe.is_enabled() {
+      pipe.alloc()
+    }
+
+    pipe
   }
 
+  fn alloc(&self) {}
   fn configure(&self, _address: u8, _endpoint: u8) {}
   fn send_packet(&self, _packet: &Packet) {}
+
+  fn is_enabled(&self) -> bool {
+    let uotghs = &Peripherals::get().uotghs;
+
+    match self.0 {
+      0 => uotghs.hstpip.read().pen0().bit_is_set(),
+      1 => uotghs.hstpip.read().pen1().bit_is_set(),
+      2 => uotghs.hstpip.read().pen2().bit_is_set(),
+      3 => uotghs.hstpip.read().pen3().bit_is_set(),
+      4 => uotghs.hstpip.read().pen4().bit_is_set(),
+      5 => uotghs.hstpip.read().pen5().bit_is_set(),
+      6 => uotghs.hstpip.read().pen6().bit_is_set(),
+      7 => uotghs.hstpip.read().pen7().bit_is_set(),
+      8 => uotghs.hstpip.read().pen8().bit_is_set(),
+      _ => panic!("Pipe index out of bounds"),
+    }
+  }
+
+  fn enable(&self) {
+    let uotghs = &Peripherals::get().uotghs;
+
+    match self.0 {
+      0 => uotghs.hstpip.modify(|_, w| w.pen0().set_bit()),
+      1 => uotghs.hstpip.modify(|_, w| w.pen1().set_bit()),
+      2 => uotghs.hstpip.modify(|_, w| w.pen2().set_bit()),
+      3 => uotghs.hstpip.modify(|_, w| w.pen3().set_bit()),
+      4 => uotghs.hstpip.modify(|_, w| w.pen4().set_bit()),
+      5 => uotghs.hstpip.modify(|_, w| w.pen5().set_bit()),
+      6 => uotghs.hstpip.modify(|_, w| w.pen6().set_bit()),
+      7 => uotghs.hstpip.modify(|_, w| w.pen7().set_bit()),
+      8 => uotghs.hstpip.modify(|_, w| w.pen8().set_bit()),
+      _ => panic!("Pipe index out of bounds"),
+    }
+  }
 }
 
 impl MessagePipe {

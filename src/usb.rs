@@ -74,12 +74,12 @@ impl USB {
     configure_callback: fn(pipe: &Pipe) -> Pipe,
   ) -> Result<&Pipe, Error> {
     let index = self.next_free_pipe_index()?;
-    self.pipes[index as usize] = Some(configure_callback(&Pipe::new(index)));
+    self.pipes[index as usize] = Some(configure_callback(&Pipe::new(index + 1)));
     Ok(self.pipes[index as usize].as_ref().unwrap())
   }
 
   pub fn release_pipe(&mut self, pipe: &Pipe) {
-    self.pipes[pipe.index() as usize] = None
+    self.pipes[(pipe.index() - 1) as usize] = None
   }
 
   pub fn control_pipe(&mut self) -> &MessagePipe {
