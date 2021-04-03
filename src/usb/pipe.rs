@@ -1,9 +1,12 @@
 use crate::peripherals::Peripherals;
 use crate::serial::Serial;
-use crate::usb::packet::{Packet, SetupPacket, Token};
+use crate::usb::packet::{DataInPacket, DataOutPacket, Packet, SetupPacket, SetupRequestDirection};
+use core::cmp::min;
 use core::fmt::Write;
 use sam3x8e_hal::pac::uotghs::{HSTPIPCFG, HSTPIPISR};
 use sam3x8e_hal::pac::UOTGHS;
+
+const PIPE_SIZE: usize = 64;
 
 #[derive(Copy, Clone)]
 pub struct AllocatedPipe(u8);
@@ -29,6 +32,8 @@ impl Pipe {
   pub fn new(index: u8) -> Self {
     Self::Allocated(AllocatedPipe::new(index))
   }
+
+  pub fn release(&self) {}
 
   pub fn into_message(self) -> Self {
     match self {
@@ -72,10 +77,10 @@ impl Pipe {
     }
   }
 
-  pub fn configure(&self, address: u8, endpoint: u8, frequency: u8, token: Token) {
+  pub fn configure(&self, address: u8, endpoint: u8, frequency: u8) {
     self
       .allocated_pipe()
-      .configure(address, endpoint, frequency, token)
+      .configure(address, endpoint, frequency)
   }
 
   pub fn index(&self) -> u8 {
@@ -103,23 +108,45 @@ impl AllocatedPipe {
     pipe
   }
 
-  pub fn send_packet(&self, _packet: &Packet) {}
+  pub fn transfer(&self, packet: &Packet) {
+    self.hstpipcfg().modify(|_, w| match packet {
+      Packet::Setup(_) => w.ptoken().setup(),
+      Packet::DataIn(_) => w.ptoken().in_(),
+      Packet::DataOut(_) => w.ptoken().out(),
+    });
 
-  pub fn configure(&self, address: u8, endpoint: u8, frequency: u8, token: Token) {
+    match packet {
+      Packet::DataOut(packet) => {
+        for i in 0..(packet.0.len() / PIPE_SIZE) {
+          let start = i * PIPE_SIZE;
+          let end = min(packet.0.len(), start + PIPE_SIZE);
+          let packet = DataOutPacket(&packet.0[start..end]);
+
+          packet.send(self.0)
+        }
+      }
+      Packet::DataIn(packet) => packet.receive(),
+      Packet::Setup(packet) => packet.send(self.0),
+    }
+  }
+
+  pub fn configure(&self, address: u8, endpoint: u8, frequency: u8) {
+    let serial = Serial::get();
     let uotghs = self.uotghs();
     let hstaddr1 = &uotghs.hstaddr1;
     let hstaddr2 = &uotghs.hstaddr2;
     let hstaddr3 = &uotghs.hstaddr3;
 
-    self.hstpipcfg().write_with_zero(|w| unsafe {
-      let w = w.pepnum().bits(endpoint).intfrq().bits(frequency);
+    serial
+      .write_fmt(format_args!(
+        "[USB :: Pipe] Configuring pipe #{} with address: {}, endpoint: {}, frequency: {}\n\r",
+        self.0, address, endpoint, frequency
+      ))
+      .unwrap();
 
-      match token {
-        Token::Setup => w.ptoken().setup(),
-        Token::In => w.ptoken().in_(),
-        Token::Out => w.ptoken().out(),
-      }
-    });
+    self
+      .hstpipcfg()
+      .write_with_zero(|w| unsafe { w.pepnum().bits(endpoint).intfrq().bits(frequency) });
 
     match self.0 {
       0 => hstaddr1.write(|w| unsafe { w.hstaddrp0().bits(address) }),
@@ -142,12 +169,19 @@ impl AllocatedPipe {
 
   fn alloc(&self) {
     let serial = Serial::get();
+    let hstpipcfg = self.hstpipcfg();
 
-    serial.write_fmt(format_args!("[USB :: Pipe] Allocating pipe #{}", self.0));
+    serial
+      .write_fmt(format_args!(
+        "[USB :: Pipe] Allocating pipe #{}\n\r",
+        self.0
+      ))
+      .unwrap();
 
-    self
-      .hstpipcfg()
-      .write_with_zero(|w| unsafe { w.psize()._64_byte().pbk()._1_bank().alloc().set_bit() });
+    self.enable();
+
+    hstpipcfg.write_with_zero(|w| w.psize()._64_byte().pbk()._1_bank().autosw().set_bit());
+    hstpipcfg.modify(|_, w| w.alloc().set_bit())
   }
 
   fn is_enabled(&self) -> bool {
@@ -206,16 +240,26 @@ impl MessagePipe {
     Self(pipe)
   }
 
-  pub fn control_transfer(
-    &self,
-    address: u8,
-    setup_packet: &mut SetupPacket,
-    data: Option<&mut [u8]>,
-  ) {
-    self.0.configure(address, 0, 0, Token::Setup);
+  pub fn control_transfer(&self, address: u8, setup_packet: &SetupPacket, data: Option<&mut [u8]>) {
+    let mut setup_packet = setup_packet.clone();
 
-    if let Some(data) = data {
+    if let Some(data) = &data {
       setup_packet.length = data.len() as u16
+    }
+
+    self.0.configure(address, 0, 0);
+    self.0.transfer(&Packet::Setup(&setup_packet));
+
+    match data {
+      Some(data) => {
+        let packet = match setup_packet.request_type.direction() {
+          SetupRequestDirection::HostToDevice => Packet::DataOut(DataOutPacket(data)),
+          SetupRequestDirection::DeviceToHost => Packet::DataIn(DataInPacket(data)),
+        };
+
+        self.0.transfer(&packet)
+      }
+      None => (),
     }
   }
 }

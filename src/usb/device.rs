@@ -12,6 +12,7 @@ use core::fmt::Write;
 
 pub struct DeviceDescriptor;
 
+#[allow(dead_code)]
 #[derive(Copy, Clone)]
 pub enum Device {
   Serial(SerialDevice),
@@ -38,6 +39,12 @@ enum DescriptorType {
   String,
   Interface,
   Endpoint,
+}
+
+impl DeviceDescriptor {
+  fn new(_buffer: &[u8]) -> Result<Self, Error> {
+    Ok(Self)
+  }
 }
 
 impl Device {
@@ -70,24 +77,28 @@ impl DeviceClass {
   }
 
   pub fn get_descriptor(&self, address: u8) -> Result<DeviceDescriptor, Error> {
+    let serial = Serial::get();
     let mut buffer = [0_u8; 1024];
 
-    let mut setup_packet = SetupPacket::new(
+    let setup_packet = SetupPacket::new(
       SetupRequestType::default(),
       RequestType::GetDescriptor as u8,
       DescriptorType::Device as u16,
       address as u16,
     );
 
-    USB::get()
-      .control_pipe()
-      .control_transfer(address, &mut setup_packet, Some(&mut buffer));
-
-    Serial::get()
-      .write_fmt(format_args!("{:?}", buffer))
+    serial
+      .write_fmt(format_args!(
+        "[USB :: Device] Get descriptor at address {}\n\r",
+        address
+      ))
       .unwrap();
 
-    Ok(DeviceDescriptor {})
+    USB::get()
+      .control_pipe()
+      .control_transfer(address, &setup_packet, Some(&mut buffer));
+
+    DeviceDescriptor::new(&buffer)
   }
 
   pub fn set_address(&self, _old_address: u8, _new_address: u8) {}

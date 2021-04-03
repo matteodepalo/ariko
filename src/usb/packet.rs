@@ -1,7 +1,18 @@
 use modular_bitfield::prelude::*;
 
+const DPRAM_BASE: *mut [u8; 0x8000] = 0x20180000 as *mut [u8; 0x8000];
+
+use crate::serial::Serial;
+use core::fmt::Write;
+use core::mem::size_of;
+use core::ptr::write_volatile;
+use core::slice;
+
 #[repr(C)]
-pub struct DataPacket([u8; 8]);
+pub struct DataInPacket<'a>(pub &'a [u8]);
+
+#[repr(C)]
+pub struct DataOutPacket<'a>(pub &'a [u8]);
 
 #[derive(BitfieldSpecifier)]
 #[bits = 1]
@@ -28,13 +39,15 @@ pub enum SetupRequestRecipient {
 }
 
 #[bitfield]
+#[derive(Copy, Clone)]
 pub struct SetupRequestType {
-  recipient: SetupRequestRecipient,
-  kind: SetupRequestKind,
-  direction: SetupRequestDirection,
+  pub recipient: SetupRequestRecipient,
+  pub kind: SetupRequestKind,
+  pub direction: SetupRequestDirection,
 }
 
 #[repr(C)]
+#[derive(Copy, Clone)]
 pub struct SetupPacket {
   pub request_type: SetupRequestType,
   pub request: u8,
@@ -43,15 +56,10 @@ pub struct SetupPacket {
   pub length: u16,
 }
 
-pub enum Packet {
-  Data(DataPacket),
-  Setup(SetupPacket),
-}
-
-pub enum Token {
-  Setup,
-  In,
-  Out,
+pub enum Packet<'a> {
+  DataIn(DataInPacket<'a>),
+  DataOut(DataOutPacket<'a>),
+  Setup(&'a SetupPacket),
 }
 
 impl SetupRequestType {
@@ -72,5 +80,48 @@ impl SetupPacket {
       index,
       length: 0,
     }
+  }
+
+  pub fn send(&self, index: u8) {
+    let serial = Serial::get();
+    let data_pointer = self as *const Self as *const u8;
+    let data = unsafe { slice::from_raw_parts(data_pointer, size_of::<Self>()) };
+
+    serial
+      .write_fmt(format_args!("[USB :: Packet] Sending Setup packet\n\r"))
+      .unwrap();
+
+    DataOutPacket(data).send(index)
+  }
+}
+
+impl<'a> DataOutPacket<'a> {
+  pub fn send(&self, index: u8) {
+    let serial = Serial::get();
+    let fifo = unsafe { &mut *DPRAM_BASE.offset(index as isize) };
+
+    serial
+      .write_fmt(format_args!(
+        "[USB :: Packet] Sending Data packet ({} bytes)\n\r",
+        self.0.len()
+      ))
+      .unwrap();
+
+    for (i, byte) in self.0.iter().enumerate() {
+      unsafe { write_volatile(fifo.as_mut_ptr().offset(i as isize), *byte) }
+    }
+  }
+}
+
+impl<'a> DataInPacket<'a> {
+  pub fn receive(&self) {
+    let serial = Serial::get();
+
+    serial
+      .write_fmt(format_args!(
+        "[USB :: Packet] Receiving Data packet ({} bytes)\n\r",
+        self.0.len()
+      ))
+      .unwrap();
   }
 }

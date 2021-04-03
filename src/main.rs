@@ -50,7 +50,7 @@ fn panic(info: &PanicInfo) -> ! {
   loop {
     Serial::get()
       .write_fmt(format_args!(
-        "Panic at {} ({}, {}): {}\n",
+        "Panic at {} ({}, {}): {}\n\r",
         location.file(),
         location.line(),
         location.column(),
