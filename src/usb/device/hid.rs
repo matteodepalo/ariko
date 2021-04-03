@@ -1,5 +1,5 @@
 use crate::usb::device::DeviceDescriptor;
-use crate::usb::{Device, DeviceClass, Error, USB};
+use crate::usb::{Device, DeviceClass, Error};
 
 #[derive(Copy, Clone)]
 pub struct HIDDevice {}

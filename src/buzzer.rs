@@ -180,7 +180,7 @@ impl Buzzer {
   // }
 
   pub fn beep(&self) {
-    let p = Peripherals::get();
+    let p = unsafe { Peripherals::get() };
 
     p.buzzer.try_set_high().unwrap();
     p.delay.try_delay_us(CYCLE / 2).unwrap();

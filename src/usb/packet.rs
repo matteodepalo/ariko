@@ -1,5 +1,6 @@
 use modular_bitfield::prelude::*;
 
+#[repr(C)]
 pub struct DataPacket([u8; 8]);
 
 #[derive(BitfieldSpecifier)]
@@ -33,6 +34,7 @@ pub struct SetupRequestType {
   direction: SetupRequestDirection,
 }
 
+#[repr(C)]
 pub struct SetupPacket {
   pub request_type: SetupRequestType,
   pub request: u8,
@@ -41,10 +43,15 @@ pub struct SetupPacket {
   pub length: u16,
 }
 
-#[repr(C)]
 pub enum Packet {
   Data(DataPacket),
   Setup(SetupPacket),
+}
+
+pub enum Token {
+  Setup,
+  In,
+  Out,
 }
 
 impl SetupRequestType {

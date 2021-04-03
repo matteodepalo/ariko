@@ -58,6 +58,6 @@ fn panic(info: &PanicInfo) -> ! {
       ))
       .unwrap();
 
-    Peripherals::get().delay.try_delay_ms(1000_u32).unwrap();
+    unsafe { Peripherals::get().delay.try_delay_ms(1000_u32).unwrap() }
   }
 }

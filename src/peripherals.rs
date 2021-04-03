@@ -91,7 +91,7 @@ impl Peripherals {
     }
   }
 
-  pub fn get() -> &'static mut Self {
-    unsafe { S_PERIPHERALS.as_mut().unwrap() }
+  pub unsafe fn get() -> &'static mut Self {
+    S_PERIPHERALS.as_mut().unwrap()
   }
 }

@@ -8,7 +8,7 @@ pub struct Serial;
 
 impl Serial {
   pub fn init(baud: u32) {
-    let peripherals = Peripherals::get();
+    let peripherals = unsafe { Peripherals::get() };
     let uart = &peripherals.uart;
     let pmc = &mut peripherals.pmc;
 
@@ -44,7 +44,7 @@ impl Serial {
   }
 
   pub fn send_str(&mut self, string: &str) {
-    let uart = &Peripherals::get().uart;
+    let uart = unsafe { &Peripherals::get().uart };
 
     for char in string.as_bytes() {
       while uart.sr.read().txrdy().bit_is_clear() {}

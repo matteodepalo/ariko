@@ -29,7 +29,7 @@ pub struct JHD1802;
 
 impl JHD1802 {
   pub fn init() {
-    let delay = &mut Peripherals::get().delay;
+    let delay = unsafe { &mut Peripherals::get().delay };
     let jhd1802 = JHD1802;
 
     delay.try_delay_ms(50_u8).unwrap();
@@ -61,7 +61,7 @@ impl JHD1802 {
 
   pub fn clear(&self) {
     self.send_command(CMD_CLEAR_DISPLAY);
-    Peripherals::get().delay.try_delay_us(2000_u32).unwrap();
+    unsafe { Peripherals::get().delay.try_delay_us(2000_u32).unwrap() }
   }
 
   pub fn send_str(&self, value: &str) {

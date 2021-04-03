@@ -1,4 +1,5 @@
 mod device;
+mod interrupt;
 mod packet;
 mod pipe;
 
@@ -9,7 +10,6 @@ use crate::usb::pipe::{AllocatedPipe, MessagePipe, Pipe};
 use core::fmt::Write;
 use cortex_m::peripheral::NVIC;
 use embedded_hal::timer::CountDown;
-use sam3x8e_hal::pac::interrupt;
 use sam3x8e_hal::pac::Interrupt::UOTGHS as I_UOTGHS;
 use sam3x8e_hal::pmc::PeripheralClock;
 use sam3x8e_hal::time::U32Ext;
@@ -52,7 +52,7 @@ pub struct USB {
   vbus_state: VBusState,
   devices: [Option<Device>; 16],
   control_pipe: Option<MessagePipe>,
-  pipes: [Option<Pipe>; 7],
+  pipes: [Option<Pipe>; 9],
 }
 
 impl USB {
@@ -74,7 +74,9 @@ impl USB {
     configure_callback: fn(pipe: &Pipe) -> Pipe,
   ) -> Result<&Pipe, Error> {
     let index = self.next_free_pipe_index()?;
+
     self.pipes[index as usize] = Some(configure_callback(&Pipe::new(index + 1)));
+
     Ok(self.pipes[index as usize].as_ref().unwrap())
   }
 
@@ -91,76 +93,13 @@ impl USB {
     self.control_pipe.as_ref().unwrap()
   }
 
-  pub fn handle_interrupt(&mut self) {
-    let u = &Peripherals::get().uotghs;
-    let serial = Serial::get();
-
-    serial.write_str("[USB] Handling interrupt\n\r").unwrap();
-
-    let is_error = u.sr.read().vberri().bit_is_set()
-      || u.sr.read().bcerri().bit_is_set()
-      || u.sr.read().hnperri().bit_is_set()
-      || u.sr.read().stoi().bit_is_set();
-
-    serial
-      .write_fmt(format_args!("[USB] Is error: {:?}\n\r", is_error))
-      .unwrap();
-
-    if u.hstisr.read().ddisci().bit_is_set() && u.hstimr.read().ddiscie().bit_is_set() {
-      serial
-        .write_str("[USB] Disconnected interrupt\n\r")
-        .unwrap();
-
-      u.hsticr.write_with_zero(|w| w.ddiscic().set_bit());
-      u.hstidr.write_with_zero(|w| w.ddisciec().set_bit());
-      u.hstctrl.modify(|_, w| w.reset().clear_bit());
-      u.hsticr.write_with_zero(|w| w.dconnic().set_bit());
-      u.hstier.write_with_zero(|w| w.dconnies().set_bit());
-      self.set_vbus_state(VBusState::Disconnected)
-    } else if u.hstisr.read().dconni().bit_is_set() && u.hstimr.read().dconnie().bit_is_set() {
-      u.hsticr.write_with_zero(|w| w.dconnic().set_bit());
-      u.hstidr.write_with_zero(|w| w.dconniec().set_bit());
-      u.hsticr.write_with_zero(|w| w.ddiscic().set_bit());
-      u.hstier.write_with_zero(|w| w.ddiscies().set_bit());
-      self.set_vbus_state(VBusState::Connected)
-    } else if u.sr.read().vberri().bit_is_set() {
-      u.scr.write_with_zero(|w| w.vberric().set_bit());
-      self.set_vbus_state(VBusState::Disconnected)
-    } else {
-      while !u.sr.read().clkusable().bit_is_set() {}
-      u.ctrl.modify(|_, w| w.frzclk().clear_bit());
-
-      if u.sr.read().vbusti().bit_is_set() {
-        u.scr.write_with_zero(|w| w.vbustic().set_bit());
-
-        if u.sr.read().vbus().bit_is_set() {
-          self.set_vbus_state(VBusState::Disconnected)
-        } else {
-          u.ctrl.modify(|_, w| w.frzclk().set_bit());
-          self.set_vbus_state(VBusState::Off)
-        }
-      } else if is_error {
-        u.scr.write_with_zero(|w| {
-          w.vberric()
-            .set_bit()
-            .bcerric()
-            .set_bit()
-            .hnperric()
-            .set_bit()
-            .stoic()
-            .set_bit()
-        })
-      }
-    }
-  }
-
   fn default() -> Self {
     USB {
       state: State::DetachedInitialize,
       vbus_state: VBusState::Off,
       devices: [None; 16],
       control_pipe: None,
-      pipes: [None; 7],
+      pipes: [None; 9],
     }
   }
 
@@ -187,7 +126,7 @@ impl USB {
   }
 
   fn try_poll(&mut self) -> Result<(), Error> {
-    let peripherals = Peripherals::get();
+    let peripherals = unsafe { Peripherals::get() };
     let uotghs = &peripherals.uotghs;
     let timer = &mut peripherals.timer;
 
@@ -250,63 +189,38 @@ impl USB {
 
     cortex_m::interrupt::free(|_| {
       serial.write_str("[USB] Begin start\n\r").unwrap();
+
       self.release_devices()?;
 
-      let peripherals = Peripherals::get();
+      let peripherals = unsafe { Peripherals::get() };
       let nvic = &mut peripherals.nvic;
       let uotghs = &mut peripherals.uotghs;
       let pmc = &mut peripherals.pmc;
       let ctrl = &uotghs.ctrl;
 
-      // Enable USB peripheral clock
       pmc.enable_clock(PeripheralClock::UOtgHs);
 
-      // Always authorize asynchronous USB interrupts to exit sleep mode
       unsafe { nvic.set_priority(I_UOTGHS, 0) };
       unsafe { NVIC::unmask(I_UOTGHS) };
 
-      // Disable ID pin
       ctrl.modify(|_, w| w.uide().clear_bit());
-
-      // Force host mode
       ctrl.modify(|_, w| w.uimod().clear_bit());
-
-      // Set VBOF active high
       ctrl.modify(|_, w| w.vbuspo().set_bit());
-
-      // Enable OTG pad
       ctrl.modify(|_, w| w.otgpade().set_bit());
-
-      // Enable USB macro
       ctrl.modify(|_, w| w.usbe().set_bit());
-
-      // Unfreeze USB clock
       ctrl.modify(|_, w| w.frzclk().clear_bit());
 
-      // Check USB clock
       while !uotghs.sr.read().clkusable().bit_is_set() {}
 
-      // Clear VBus interrupt
       uotghs.scr.write_with_zero(|w| w.vbustic().set_bit());
-
-      // Enable VBus transition and error interrupts
-      // automatic VBus control after VBus error
       ctrl.modify(|_, w| w.vbushwc().set_bit().vbuste().set_bit().vberre().set_bit());
-
-      // Requests VBus activation
       uotghs.sfr.write_with_zero(|w| w.vbusrqs().set_bit());
-
-      // Force VBus transition
       uotghs.sfr.write_with_zero(|w| w.vbustis().set_bit());
-
-      // Enable main control interrupt
-      // Connection, SOF and reset
       uotghs.hstier.write_with_zero(|w| w.dconnies().set_bit());
-
-      // Freeze USB clock
       ctrl.modify(|_, w| w.frzclk().set_bit());
 
       serial.write_str("[USB] End start\n\r").unwrap();
+
       Ok(())
     })
   }
@@ -389,9 +303,4 @@ impl USB {
   pub fn get() -> &'static mut Self {
     unsafe { S_USB.as_mut().unwrap() }
   }
-}
-
-#[interrupt]
-unsafe fn UOTGHS() {
-  USB::get().handle_interrupt();
 }

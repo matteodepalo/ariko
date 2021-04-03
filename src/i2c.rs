@@ -12,7 +12,7 @@ pub struct I2C;
 impl I2C {
   pub fn init() {
     let i2c = I2C;
-    let peripherals = Peripherals::get();
+    let peripherals = unsafe { Peripherals::get() };
     let pmc = &mut peripherals.pmc;
     let twi0 = &peripherals.twi0;
 
@@ -50,7 +50,7 @@ impl I2C {
 
   fn wait_byte_sent(&mut self) -> Result<(), <I2C as Write>::Error> {
     let mut timeout = TRANSMIT_TIMEOUT;
-    let twi0 = &Peripherals::get().twi0;
+    let twi0 = unsafe { &Peripherals::get().twi0 };
 
     loop {
       if twi0.sr.read().txrdy().bit_is_set() {
@@ -76,7 +76,7 @@ impl Write for I2C {
   type Error = ();
 
   fn try_write(&mut self, address: u8, bytes: &[u8]) -> Result<(), Self::Error> {
-    let twi0 = &Peripherals::get().twi0;
+    let twi0 = unsafe { &Peripherals::get().twi0 };
 
     twi0
       .mmr
