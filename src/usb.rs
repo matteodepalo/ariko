@@ -44,6 +44,7 @@ pub enum Error {
   DeviceNotSupported,
   TooManyDevices,
   TooManyPipes,
+  TransferTimeout,
   Unknown,
 }
 

@@ -1,6 +1,7 @@
 use crate::peripherals::Peripherals;
 use crate::serial::Serial;
 use crate::usb::packet::{DataInPacket, DataOutPacket, Packet, SetupPacket, SetupRequestDirection};
+use crate::usb::Error;
 use core::cmp::min;
 use core::fmt::Write;
 use sam3x8e_hal::pac::uotghs::{HSTPIPCFG, HSTPIPISR};
@@ -123,7 +124,7 @@ impl AllocatedPipe {
     pipe
   }
 
-  pub fn transfer(&self, packet: &Packet, configure_token: bool) {
+  pub fn transfer(&self, packet: &mut Packet, configure_token: bool) -> Result<(), Error> {
     if configure_token {
       self.hstpipcfg().modify(|_, w| match packet {
         Packet::Setup(_) => w.ptoken().setup(),
@@ -133,16 +134,14 @@ impl AllocatedPipe {
     }
 
     match packet {
-      Packet::DataOut(packet) => {
-        for i in 0..(packet.0.len() / PIPE_SIZE) {
-          let start = i * PIPE_SIZE;
-          let end = min(packet.0.len(), start + PIPE_SIZE);
-          let packet = DataOutPacket(&packet.0[start..end]);
+      Packet::DataOut(packet) => Ok(for i in 0..(packet.0.len() / PIPE_SIZE) {
+        let start = i * PIPE_SIZE;
+        let end = min(packet.0.len(), start + PIPE_SIZE);
+        let packet = DataOutPacket(&packet.0[start..end]);
 
-          packet.send(self.0)
-        }
-      }
-      Packet::DataIn(packet) => packet.receive(),
+        packet.send(self.0)?
+      }),
+      Packet::DataIn(packet) => packet.receive(self.0),
       Packet::Setup(packet) => packet.send(self.0),
     }
   }
@@ -298,7 +297,12 @@ impl MessagePipe {
     Self(pipe)
   }
 
-  pub fn control_transfer(&self, address: u8, setup_packet: &SetupPacket, data: Option<&mut [u8]>) {
+  pub fn control_transfer(
+    &self,
+    address: u8,
+    setup_packet: &SetupPacket,
+    data: Option<&mut [u8]>,
+  ) -> Result<(), Error> {
     let mut setup_packet = setup_packet.clone();
     let direction = setup_packet.request_type.direction();
 
@@ -307,28 +311,28 @@ impl MessagePipe {
     }
 
     self.0.configure(address, 0, 0, TransferType::Control);
-    self.0.transfer(&Packet::Setup(&setup_packet), true);
+    self.0.transfer(&mut Packet::Setup(&setup_packet), true);
 
     match data {
       Some(data) => {
-        let packet = match direction {
+        let mut packet = match direction {
           SetupRequestDirection::HostToDevice => Packet::DataOut(DataOutPacket(data)),
           SetupRequestDirection::DeviceToHost => Packet::DataIn(DataInPacket(data)),
         };
 
-        self.0.transfer(&packet, false)
+        self.0.transfer(&mut packet, false)?
       }
       None => (),
     }
 
     match direction {
-      SetupRequestDirection::HostToDevice => {
-        self.0.transfer(&Packet::DataIn(DataInPacket(&[])), true)
-      }
-      SetupRequestDirection::DeviceToHost => {
-        self.0.transfer(&Packet::DataOut(DataOutPacket(&[])), true)
-      }
-    };
+      SetupRequestDirection::HostToDevice => self
+        .0
+        .transfer(&mut Packet::DataIn(DataInPacket(&mut [])), true),
+      SetupRequestDirection::DeviceToHost => self
+        .0
+        .transfer(&mut Packet::DataOut(DataOutPacket(&[])), true),
+    }
   }
 }
 
@@ -337,8 +341,10 @@ impl StreamInPipe {
     Self(pipe)
   }
 
-  pub fn in_transfer(&self, data: &mut [u8]) {
-    self.0.transfer(&Packet::DataIn(DataInPacket(data)), true)
+  pub fn in_transfer(&self, data: &mut [u8]) -> Result<(), Error> {
+    self
+      .0
+      .transfer(&mut Packet::DataIn(DataInPacket(data)), true)
   }
 }
 
@@ -347,7 +353,9 @@ impl StreamOutPipe {
     Self(pipe)
   }
 
-  pub fn out_transfer(&self, data: &[u8]) {
-    self.0.transfer(&Packet::DataIn(DataInPacket(data)), true)
+  pub fn out_transfer(&self, data: &mut [u8]) -> Result<(), Error> {
+    self
+      .0
+      .transfer(&mut Packet::DataIn(DataInPacket(data)), true)
   }
 }
