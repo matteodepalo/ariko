@@ -64,7 +64,11 @@ impl USB {
   pub fn poll(&mut self) {
     match self.try_poll() {
       Ok(()) | Err(Error::DeviceInitIncomplete) => (),
-      Err(_) => {
+      Err(error) => {
+        Serial::get()
+          .write_fmt(format_args!("[USB] Error: {:?}\n\r", error))
+          .unwrap();
+
         self.set_state(State::Error);
       }
     }
@@ -182,7 +186,7 @@ impl USB {
         }
       }
       State::Configuring => {
-        let _ = self.configure_device()?;
+        self.configure_device()?;
         self.set_state(State::Running)
       }
       _ => (),
@@ -299,7 +303,8 @@ impl USB {
 
   fn release_devices(&mut self) -> Result<(), Error> {
     for option in self.devices.iter_mut() {
-      if option.is_some() {
+      if let Some(device) = option {
+        device.release();
         *option = None
       }
     }

@@ -124,14 +124,12 @@ impl AllocatedPipe {
     pipe
   }
 
-  pub fn transfer(&self, packet: &mut Packet, configure_token: bool) -> Result<(), Error> {
-    if configure_token {
-      self.hstpipcfg().modify(|_, w| match packet {
-        Packet::Setup(_) => w.ptoken().setup(),
-        Packet::DataIn(_) => w.ptoken().in_(),
-        Packet::DataOut(_) => w.ptoken().out(),
-      });
-    }
+  pub fn transfer(&self, packet: &mut Packet) -> Result<(), Error> {
+    self.hstpipcfg().modify(|_, w| match packet {
+      Packet::Setup(_) => w.ptoken().setup(),
+      Packet::DataIn(_) => w.ptoken().in_(),
+      Packet::DataOut(_) => w.ptoken().out(),
+    });
 
     match packet {
       Packet::DataOut(packet) => Ok(for i in 0..(packet.0.len() / PIPE_SIZE) {
@@ -177,20 +175,16 @@ impl AllocatedPipe {
       _ => panic!("Pipe index out of bounds"),
     };
 
-    self.set_transfer_type(transfer_type);
-
-    if !self.is_configured() {
-      panic!("Pipe configured incorrectly")
-    }
-  }
-
-  fn set_transfer_type(&self, transfer_type: TransferType) {
     self.hstpipcfg().modify(|_, w| match transfer_type {
       TransferType::Control => w.ptype().ctrl(),
       TransferType::Interrupt => w.ptype().intrpt(),
       TransferType::Bulk => w.ptype().blk(),
       TransferType::Isochronous => w.ptype().iso(),
-    })
+    });
+
+    if !self.is_configured() {
+      panic!("Pipe configured incorrectly")
+    }
   }
 
   fn alloc(&self) {
@@ -310,8 +304,15 @@ impl MessagePipe {
       setup_packet.length = data.len() as u16
     }
 
+    Serial::get()
+      .write_fmt(format_args!(
+        "[USB :: Pipe] Control transfer at address: {}, Setup packet: {:?}\n\r",
+        address, setup_packet
+      ))
+      .unwrap();
+
     self.0.configure(address, 0, 0, TransferType::Control);
-    self.0.transfer(&mut Packet::Setup(&setup_packet), true);
+    self.0.transfer(&mut Packet::Setup(&setup_packet))?;
 
     match data {
       Some(data) => {
@@ -320,18 +321,18 @@ impl MessagePipe {
           SetupRequestDirection::DeviceToHost => Packet::DataIn(DataInPacket(data)),
         };
 
-        self.0.transfer(&mut packet, false)?
+        self.0.transfer(&mut packet)?
       }
       None => (),
     }
 
     match direction {
-      SetupRequestDirection::HostToDevice => self
-        .0
-        .transfer(&mut Packet::DataIn(DataInPacket(&mut [])), true),
-      SetupRequestDirection::DeviceToHost => self
-        .0
-        .transfer(&mut Packet::DataOut(DataOutPacket(&[])), true),
+      SetupRequestDirection::HostToDevice => {
+        self.0.transfer(&mut Packet::DataIn(DataInPacket(&mut [])))
+      }
+      SetupRequestDirection::DeviceToHost => {
+        self.0.transfer(&mut Packet::DataOut(DataOutPacket(&[])))
+      }
     }
   }
 }
@@ -342,9 +343,7 @@ impl StreamInPipe {
   }
 
   pub fn in_transfer(&self, data: &mut [u8]) -> Result<(), Error> {
-    self
-      .0
-      .transfer(&mut Packet::DataIn(DataInPacket(data)), true)
+    self.0.transfer(&mut Packet::DataIn(DataInPacket(data)))
   }
 }
 
@@ -354,8 +353,6 @@ impl StreamOutPipe {
   }
 
   pub fn out_transfer(&self, data: &mut [u8]) -> Result<(), Error> {
-    self
-      .0
-      .transfer(&mut Packet::DataIn(DataInPacket(data)), true)
+    self.0.transfer(&mut Packet::DataIn(DataInPacket(data)))
   }
 }

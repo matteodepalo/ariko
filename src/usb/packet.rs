@@ -1,7 +1,7 @@
 use modular_bitfield::prelude::*;
 
 const DPRAM_BASE: *mut [u8; 0x8000] = 0x20180000 as *mut [u8; 0x8000];
-const TRANSFER_TIMEOUT: u32 = 5000;
+const TRANSFER_TIMEOUT: u32 = 30000;
 
 use crate::peripherals::Peripherals;
 use crate::serial::Serial;
@@ -22,14 +22,14 @@ pub struct DataInPacket<'a>(pub &'a mut [u8]);
 #[repr(C)]
 pub struct DataOutPacket<'a>(pub &'a [u8]);
 
-#[derive(BitfieldSpecifier)]
+#[derive(BitfieldSpecifier, Debug)]
 #[bits = 1]
 pub enum SetupRequestDirection {
   HostToDevice,
   DeviceToHost,
 }
 
-#[derive(BitfieldSpecifier)]
+#[derive(BitfieldSpecifier, Debug)]
 #[bits = 2]
 pub enum SetupRequestKind {
   Standard,
@@ -37,7 +37,7 @@ pub enum SetupRequestKind {
   Vendor,
 }
 
-#[derive(BitfieldSpecifier)]
+#[derive(BitfieldSpecifier, Debug)]
 #[bits = 5]
 pub enum SetupRequestRecipient {
   Device,
@@ -47,7 +47,7 @@ pub enum SetupRequestRecipient {
 }
 
 #[bitfield]
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub struct SetupRequestType {
   pub recipient: SetupRequestRecipient,
   pub kind: SetupRequestKind,
@@ -55,7 +55,7 @@ pub struct SetupRequestType {
 }
 
 #[repr(C)]
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub struct SetupPacket {
   pub request_type: SetupRequestType,
   pub request: u8,
@@ -80,7 +80,8 @@ impl<'a> Packet<'a> {
     timer.try_start(TRANSFER_TIMEOUT.hz()).unwrap();
 
     for (i, byte) in data.iter().enumerate() {
-      unsafe { write_volatile(fifo.as_mut_ptr().offset(i as isize), *byte) }
+      let fifo_byte = unsafe { fifo.as_mut_ptr().offset(i as isize) };
+      unsafe { write_volatile(fifo_byte, *byte) }
     }
 
     hstpipicr.write_with_zero(|w| {
@@ -165,6 +166,12 @@ impl SetupPacket {
         Packet::hstpipier(index).write_with_zero(|w| w.pfreezes().set_bit());
         Packet::hstpipicr(index).write_with_zero(|w| w.txstpic().set_bit());
 
+        Serial::get()
+          .write_fmt(format_args!(
+            "[USB :: Packet] Finished sending Setup packet\n\r"
+          ))
+          .unwrap();
+
         result = Ok(());
         break;
       }
@@ -190,6 +197,12 @@ impl<'a> DataOutPacket<'a> {
       if Packet::hstpipisr(index).read().txouti().bit_is_set() {
         Packet::hstpipier(index).write_with_zero(|w| w.pfreezes().set_bit());
         Packet::hstpipicr(index).write_with_zero(|w| w.txoutic().set_bit());
+
+        Serial::get()
+          .write_fmt(format_args!(
+            "[USB :: Packet] Finished sending Data packet\n\r"
+          ))
+          .unwrap();
 
         result = Ok(());
         break;
@@ -219,6 +232,13 @@ impl<'a> DataInPacket<'a> {
     while bytes_received < self.0.len() && timer.try_wait().is_err() {
       let byte_count = Packet::hstpipisr(index).read().pbyct().bits();
 
+      Serial::get()
+        .write_fmt(format_args!(
+          "[USB :: Packet] Received {} bytes\n\r",
+          byte_count
+        ))
+        .unwrap();
+
       for i in 0..byte_count {
         bytes_received += 1;
         self.0[i as usize] = fifo[i as usize]
@@ -228,22 +248,38 @@ impl<'a> DataInPacket<'a> {
     if timer.try_wait().is_ok() {
       Err(Error::TransferTimeout)
     } else {
+      Serial::get()
+        .write_fmt(format_args!(
+          "[USB :: Packet] Finished receiving Data packet\n\r"
+        ))
+        .unwrap();
+
       Ok(())
     }
   }
 
   fn wait_transfer_complete(&mut self, index: u8, timer: &mut Timer<RTT>) -> Result<(), Error> {
     let mut result = Err(Error::TransferTimeout);
+    let hstpipisr = Packet::hstpipisr(index);
+    let hstpipicr = Packet::hstpipicr(index);
 
     while USB::get().vbus_state == VBusState::Connected && timer.try_wait().is_err() {
-      if Packet::hstpipisr(index).read().rxini().bit_is_set() {
+      if hstpipisr.read().rxini().bit_is_set() {
         while Packet::hstpipimr(index).read().pfreeze().bit_is_clear() {}
 
         Packet::hstpipier(index).write_with_zero(|w| w.pfreezes().set_bit());
-        Packet::hstpipicr(index).write_with_zero(|w| w.rxinic().set_bit());
+        hstpipicr.write_with_zero(|w| w.rxinic().set_bit());
 
         result = Ok(());
         break;
+      }
+
+      if hstpipisr.read().nakedi().bit_is_set() {
+        Serial::get()
+          .write_fmt(format_args!("[USB :: Packet] Got NAK\n\r"))
+          .unwrap();
+
+        hstpipicr.write_with_zero(|w| w.nakedic().set_bit())
       }
     }
 

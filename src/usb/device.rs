@@ -55,6 +55,8 @@ impl Device {
       Device::HID(hid) => hid.poll(),
     }
   }
+
+  pub fn release(&self) {}
 }
 
 impl DeviceClass {
@@ -95,7 +97,7 @@ impl DeviceClass {
 
     USB::get()
       .control_pipe()
-      .control_transfer(address, &setup_packet, Some(&mut buffer));
+      .control_transfer(address, &setup_packet, Some(&mut buffer))?;
 
     DeviceDescriptor::new(&buffer)
   }
