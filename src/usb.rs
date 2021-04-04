@@ -74,14 +74,18 @@ impl USB {
     configure_callback: fn(pipe: &Pipe) -> Pipe,
   ) -> Result<&Pipe, Error> {
     let index = self.next_free_pipe_index()?;
-
     self.pipes[index as usize] = Some(configure_callback(&Pipe::new(index + 1)));
     Ok(self.pipes[index as usize].as_ref().unwrap())
   }
 
   pub fn release_pipe(&mut self, pipe: &Pipe) {
-    match self.pipes[(pipe.index() - 1) as usize] {
-      Some(pipe) => pipe.release(),
+    let index = (pipe.index() - 1) as usize;
+
+    match self.pipes[index] {
+      Some(pipe) => {
+        pipe.release();
+        self.pipes[index] = None
+      }
       None => (),
     }
   }
@@ -296,6 +300,12 @@ impl USB {
     for option in self.devices.iter_mut() {
       if option.is_some() {
         *option = None
+      }
+    }
+
+    for pipe in self.pipes.iter() {
+      if let Some(pipe) = pipe {
+        pipe.release()
       }
     }
 

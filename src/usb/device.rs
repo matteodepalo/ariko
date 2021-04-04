@@ -77,7 +77,6 @@ impl DeviceClass {
   }
 
   pub fn get_descriptor(&self, address: u8) -> Result<DeviceDescriptor, Error> {
-    let serial = Serial::get();
     let mut buffer = [0_u8; 1024];
 
     let setup_packet = SetupPacket::new(
@@ -87,7 +86,7 @@ impl DeviceClass {
       address as u16,
     );
 
-    serial
+    Serial::get()
       .write_fmt(format_args!(
         "[USB :: Device] Get descriptor at address {}\n\r",
         address

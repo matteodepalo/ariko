@@ -28,12 +28,21 @@ pub enum Pipe {
   StreamOut(StreamOutPipe),
 }
 
+pub enum TransferType {
+  Control,
+  Bulk,
+  Interrupt,
+  Isochronous,
+}
+
 impl Pipe {
   pub fn new(index: u8) -> Self {
     Self::Allocated(AllocatedPipe::new(index))
   }
 
-  pub fn release(&self) {}
+  pub fn release(&self) {
+    self.allocated_pipe().release();
+  }
 
   pub fn into_message(self) -> Self {
     match self {
@@ -77,10 +86,16 @@ impl Pipe {
     }
   }
 
-  pub fn configure(&self, address: u8, endpoint: u8, frequency: u8) {
+  pub fn configure(
+    &self,
+    address: u8,
+    endpoint: u8,
+    frequency: u8,
+    transfer_type: TransferType,
+  ) -> &Self {
+    let pipe = self.allocated_pipe();
+    pipe.configure(address, endpoint, frequency, transfer_type);
     self
-      .allocated_pipe()
-      .configure(address, endpoint, frequency)
   }
 
   pub fn index(&self) -> u8 {
@@ -108,12 +123,14 @@ impl AllocatedPipe {
     pipe
   }
 
-  pub fn transfer(&self, packet: &Packet) {
-    self.hstpipcfg().modify(|_, w| match packet {
-      Packet::Setup(_) => w.ptoken().setup(),
-      Packet::DataIn(_) => w.ptoken().in_(),
-      Packet::DataOut(_) => w.ptoken().out(),
-    });
+  pub fn transfer(&self, packet: &Packet, configure_token: bool) {
+    if configure_token {
+      self.hstpipcfg().modify(|_, w| match packet {
+        Packet::Setup(_) => w.ptoken().setup(),
+        Packet::DataIn(_) => w.ptoken().in_(),
+        Packet::DataOut(_) => w.ptoken().out(),
+      });
+    }
 
     match packet {
       Packet::DataOut(packet) => {
@@ -130,14 +147,13 @@ impl AllocatedPipe {
     }
   }
 
-  pub fn configure(&self, address: u8, endpoint: u8, frequency: u8) {
-    let serial = Serial::get();
+  pub fn configure(&self, address: u8, endpoint: u8, frequency: u8, transfer_type: TransferType) {
     let uotghs = self.uotghs();
     let hstaddr1 = &uotghs.hstaddr1;
     let hstaddr2 = &uotghs.hstaddr2;
     let hstaddr3 = &uotghs.hstaddr3;
 
-    serial
+    Serial::get()
       .write_fmt(format_args!(
         "[USB :: Pipe] Configuring pipe #{} with address: {}, endpoint: {}, frequency: {}\n\r",
         self.0, address, endpoint, frequency
@@ -162,16 +178,26 @@ impl AllocatedPipe {
       _ => panic!("Pipe index out of bounds"),
     };
 
+    self.set_transfer_type(transfer_type);
+
     if !self.is_configured() {
       panic!("Pipe configured incorrectly")
     }
   }
 
+  fn set_transfer_type(&self, transfer_type: TransferType) {
+    self.hstpipcfg().modify(|_, w| match transfer_type {
+      TransferType::Control => w.ptype().ctrl(),
+      TransferType::Interrupt => w.ptype().intrpt(),
+      TransferType::Bulk => w.ptype().blk(),
+      TransferType::Isochronous => w.ptype().iso(),
+    })
+  }
+
   fn alloc(&self) {
-    let serial = Serial::get();
     let hstpipcfg = self.hstpipcfg();
 
-    serial
+    Serial::get()
       .write_fmt(format_args!(
         "[USB :: Pipe] Allocating pipe #{}\n\r",
         self.0
@@ -182,6 +208,21 @@ impl AllocatedPipe {
 
     hstpipcfg.write_with_zero(|w| w.psize()._64_byte().pbk()._1_bank().autosw().set_bit());
     hstpipcfg.modify(|_, w| w.alloc().set_bit())
+  }
+
+  fn release(&self) {
+    Serial::get()
+      .write_fmt(format_args!("[USB :: Pipe] Releasing pipe #{}\n\r", self.0))
+      .unwrap();
+
+    self.disable();
+    self.hstpipcfg().modify(|_, w| w.alloc().set_bit());
+    self.reset();
+  }
+
+  fn reset(&self) {
+    self.enable();
+    self.disable()
   }
 
   fn is_enabled(&self) -> bool {
@@ -222,6 +263,23 @@ impl AllocatedPipe {
     }
   }
 
+  fn disable(&self) {
+    let hstpip = &self.uotghs().hstpip;
+
+    match self.0 {
+      0 => hstpip.modify(|_, w| w.pen0().clear_bit()),
+      1 => hstpip.modify(|_, w| w.pen1().clear_bit()),
+      2 => hstpip.modify(|_, w| w.pen2().clear_bit()),
+      3 => hstpip.modify(|_, w| w.pen3().clear_bit()),
+      4 => hstpip.modify(|_, w| w.pen4().clear_bit()),
+      5 => hstpip.modify(|_, w| w.pen5().clear_bit()),
+      6 => hstpip.modify(|_, w| w.pen6().clear_bit()),
+      7 => hstpip.modify(|_, w| w.pen7().clear_bit()),
+      8 => hstpip.modify(|_, w| w.pen8().clear_bit()),
+      _ => panic!("Pipe index out of bounds"),
+    }
+  }
+
   fn hstpipcfg(&self) -> &HSTPIPCFG {
     &self.uotghs().hstpipcfg()[self.0 as usize]
   }
@@ -242,25 +300,35 @@ impl MessagePipe {
 
   pub fn control_transfer(&self, address: u8, setup_packet: &SetupPacket, data: Option<&mut [u8]>) {
     let mut setup_packet = setup_packet.clone();
+    let direction = setup_packet.request_type.direction();
 
     if let Some(data) = &data {
       setup_packet.length = data.len() as u16
     }
 
-    self.0.configure(address, 0, 0);
-    self.0.transfer(&Packet::Setup(&setup_packet));
+    self.0.configure(address, 0, 0, TransferType::Control);
+    self.0.transfer(&Packet::Setup(&setup_packet), true);
 
     match data {
       Some(data) => {
-        let packet = match setup_packet.request_type.direction() {
+        let packet = match direction {
           SetupRequestDirection::HostToDevice => Packet::DataOut(DataOutPacket(data)),
           SetupRequestDirection::DeviceToHost => Packet::DataIn(DataInPacket(data)),
         };
 
-        self.0.transfer(&packet)
+        self.0.transfer(&packet, false)
       }
       None => (),
     }
+
+    match direction {
+      SetupRequestDirection::HostToDevice => {
+        self.0.transfer(&Packet::DataIn(DataInPacket(&[])), true)
+      }
+      SetupRequestDirection::DeviceToHost => {
+        self.0.transfer(&Packet::DataOut(DataOutPacket(&[])), true)
+      }
+    };
   }
 }
 
@@ -269,7 +337,9 @@ impl StreamInPipe {
     Self(pipe)
   }
 
-  pub fn bulk_transfer(&self, _data: &mut [u8]) {}
+  pub fn in_transfer(&self, data: &mut [u8]) {
+    self.0.transfer(&Packet::DataIn(DataInPacket(data)), true)
+  }
 }
 
 impl StreamOutPipe {
@@ -277,5 +347,7 @@ impl StreamOutPipe {
     Self(pipe)
   }
 
-  pub fn bulk_transfer(&self, _data: &mut [u8]) {}
+  pub fn out_transfer(&self, data: &[u8]) {
+    self.0.transfer(&Packet::DataIn(DataInPacket(data)), true)
+  }
 }

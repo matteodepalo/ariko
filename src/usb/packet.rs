@@ -83,11 +83,10 @@ impl SetupPacket {
   }
 
   pub fn send(&self, index: u8) {
-    let serial = Serial::get();
     let data_pointer = self as *const Self as *const u8;
     let data = unsafe { slice::from_raw_parts(data_pointer, size_of::<Self>()) };
 
-    serial
+    Serial::get()
       .write_fmt(format_args!("[USB :: Packet] Sending Setup packet\n\r"))
       .unwrap();
 
@@ -97,10 +96,9 @@ impl SetupPacket {
 
 impl<'a> DataOutPacket<'a> {
   pub fn send(&self, index: u8) {
-    let serial = Serial::get();
     let fifo = unsafe { &mut *DPRAM_BASE.offset(index as isize) };
 
-    serial
+    Serial::get()
       .write_fmt(format_args!(
         "[USB :: Packet] Sending Data packet ({} bytes)\n\r",
         self.0.len()
@@ -115,9 +113,7 @@ impl<'a> DataOutPacket<'a> {
 
 impl<'a> DataInPacket<'a> {
   pub fn receive(&self) {
-    let serial = Serial::get();
-
-    serial
+    Serial::get()
       .write_fmt(format_args!(
         "[USB :: Packet] Receiving Data packet ({} bytes)\n\r",
         self.0.len()
