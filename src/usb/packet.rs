@@ -1,12 +1,11 @@
 use crate::peripherals::Peripherals;
-use crate::serial::Serial;
 use crate::usb::Error;
-use core::fmt::Write;
 use core::mem::size_of;
 use core::ops::Range;
 use core::ptr::write_volatile;
 use core::slice;
 use embedded_hal::timer::CountDown;
+use log::debug;
 use modular_bitfield::prelude::*;
 use sam3x8e_hal::pac::uotghs::{HSTPIPICR, HSTPIPIDR, HSTPIPIER, HSTPIPINRQ, HSTPIPISR};
 use sam3x8e_hal::pac::{RTT, UOTGHS};
@@ -64,7 +63,7 @@ pub struct SetupRequestType {
 pub struct SetupPacket {
   pub request_type: SetupRequestType,
   pub request: u8,
-  pub value: u16,
+  pub value: [u8; 2],
   pub index: u16,
   pub length: u16,
 }
@@ -151,15 +150,10 @@ impl<'a> Message<'a> {
   }
 
   fn receive(&mut self) -> Result<(), Error> {
-    let mut result = Err(Error::TransferTimeout);
-    let serial = Serial::get();
-
-    serial
-      .write_fmt(format_args!(
-        "[USB :: Packet] Receiving Data packet ({} bytes)\n\r",
-        self.data.len()
-      ))
-      .unwrap();
+    debug!(
+      "[USB :: Packet] Receiving Data packet ({} bytes)",
+      self.data.len()
+    );
 
     self.timer().try_start(TRANSFER_TIMEOUT.hz()).unwrap();
 
@@ -167,27 +161,26 @@ impl<'a> Message<'a> {
       .hstpipinrq()
       .write_with_zero(|w| unsafe { w.inmode().clear_bit().inrq().bits(0) });
 
-    while self.timer().try_wait().is_err() {
+    self.hstpipidr().write_with_zero(|w| w.pfreezec().set_bit());
+    while self.timer().try_wait().is_err() && self.hstpipisr().read().rxini().bit_is_clear() {}
+
+    if self.hstpipisr().read().rxini().bit_is_set() {
       for i in 0..self.hstpipisr().read().pbyct().bits() {
         self.data[i as usize] = self.fifo()[i as usize]
       }
 
-      if self.hstpipisr().read().rxini().bit_is_set() {
-        self.hstpipicr().write_with_zero(|w| w.rxinic().set_bit());
+      self.hstpipicr().write_with_zero(|w| w.rxinic().set_bit());
+      self.hstpipidr().write_with_zero(|w| w.fifoconc().set_bit());
 
-        serial
-          .write_fmt(format_args!(
-            "[USB :: Packet] Finished receiving Data packet ({} bytes)\n\r",
-            self.data.len()
-          ))
-          .unwrap();
+      debug!(
+        "[USB :: Packet] Finished receiving Data packet ({} bytes)",
+        self.data.len()
+      );
 
-        result = Ok(());
-        break;
-      }
+      Ok(())
+    } else {
+      Err(Error::TransferTimeout)
     }
-
-    result
   }
 
   fn len(&self) -> usize {
@@ -241,7 +234,7 @@ impl SetupRequestType {
 }
 
 impl SetupPacket {
-  pub fn new(request_type: SetupRequestType, request: u8, value: u16, index: u16) -> Self {
+  pub fn new(request_type: SetupRequestType, request: u8, value: [u8; 2], index: u16) -> Self {
     Self {
       request_type,
       request,
@@ -255,11 +248,8 @@ impl SetupPacket {
     let data_pointer = self as *const Self as *mut u8;
     let data = unsafe { slice::from_raw_parts_mut(data_pointer, size_of::<Self>()) };
     let mut message = Message::new(index, data);
-    let serial = Serial::get();
 
-    serial
-      .write_fmt(format_args!("[USB :: Packet] Sending Setup packet\n\r"))
-      .unwrap();
+    debug!("[USB :: Packet] Sending Setup packet");
 
     message.send();
 
@@ -275,11 +265,7 @@ impl SetupPacket {
           .hstpipier()
           .write_with_zero(|w| w.pfreezes().set_bit());
 
-        serial
-          .write_fmt(format_args!(
-            "[USB :: Packet] Finished sending Setup packet\n\r"
-          ))
-          .unwrap();
+        debug!("[USB :: Packet] Finished sending Setup packet");
 
         result = Ok(());
         break;
@@ -302,12 +288,10 @@ impl<'a> DataOutPacket<'a> {
   pub fn send(&mut self, index: u8) -> Result<(), Error> {
     let mut message = Message::new(index, self.0.data());
 
-    Serial::get()
-      .write_fmt(format_args!(
-        "[USB :: Packet] Sending Data packet ({} bytes)\n\r",
-        message.len()
-      ))
-      .unwrap();
+    debug!(
+      "[USB :: Packet] Sending Data packet ({} bytes)",
+      message.len()
+    );
 
     message.send();
 
@@ -323,11 +307,7 @@ impl<'a> DataOutPacket<'a> {
           .hstpipier()
           .write_with_zero(|w| w.pfreezes().set_bit());
 
-        Serial::get()
-          .write_fmt(format_args!(
-            "[USB :: Packet] Finished sending Data packet\n\r"
-          ))
-          .unwrap();
+        debug!("[USB :: Packet] Finished sending Data packet");
 
         result = Ok(());
         break;

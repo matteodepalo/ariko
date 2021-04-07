@@ -4,13 +4,13 @@ mod generic;
 mod hid;
 mod serial;
 
-use crate::serial::Serial;
 use crate::usb::device::generic::{GenericDevice, GenericDeviceClass};
 use crate::usb::device::hid::{HIDDevice, HIDDeviceClass};
 use crate::usb::device::serial::{SerialDevice, SerialDeviceClass};
 use crate::usb::packet::{SetupPacket, SetupRequestType};
 use crate::usb::{Error, USB};
-use core::fmt::Write;
+use log::debug;
+use modular_bitfield::prelude::*;
 
 pub struct DeviceDescriptor;
 
@@ -32,12 +32,26 @@ enum RequestType {
   SetConfiguration = 9,
 }
 
+#[derive(BitfieldSpecifier)]
+#[bits = 8]
 enum DescriptorType {
-  Device,
-  Configuration,
-  String,
-  Interface,
-  Endpoint,
+  Device = 1,
+  Configuration = 2,
+  String = 3,
+  Interface = 4,
+  Endpoint = 5,
+}
+
+#[bitfield(bits = 16)]
+pub struct GetDescriptorRequest {
+  index: u8,
+  kind: DescriptorType,
+}
+
+impl GetDescriptorRequest {
+  fn default() -> Self {
+    Self::new().with_index(0).with_kind(DescriptorType::Device)
+  }
 }
 
 impl DeviceDescriptor {
@@ -84,23 +98,17 @@ impl DeviceClass {
   }
 
   pub fn get_descriptor(&self, address: u8) -> Result<DeviceDescriptor, Error> {
-    let mut buffer = [0_u8; 512];
-    let serial = Serial::get();
+    let mut buffer = [0_u8; 18];
     let usb = USB::get();
 
     let setup_packet = SetupPacket::new(
       SetupRequestType::default(),
       RequestType::GetDescriptor as u8,
-      DescriptorType::Device as u16,
-      address as u16,
+      GetDescriptorRequest::default().into_bytes(),
+      0,
     );
 
-    serial
-      .write_fmt(format_args!(
-        "[USB :: Device] Get descriptor at address {}\n\r",
-        address
-      ))
-      .unwrap();
+    debug!("[USB :: Device] Get descriptor at address {}", address);
 
     usb
       .control_pipe()

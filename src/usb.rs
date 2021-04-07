@@ -1,12 +1,9 @@
 use crate::peripherals::Peripherals;
-use crate::serial::Serial;
 use crate::usb::device::{Device, DeviceClass};
 use crate::usb::pipe::{InnerPipe, MessagePipe, Pipe};
-use core::fmt::Write;
-use cortex_m::peripheral::NVIC;
 use embedded_hal::timer::CountDown;
+use log::debug;
 use nb::block;
-use sam3x8e_hal::pac::Interrupt::UOTGHS as UOTGHS_INTERRUPT;
 use sam3x8e_hal::pac::{RTT, UOTGHS};
 use sam3x8e_hal::pmc::PeripheralClock;
 use sam3x8e_hal::time::U32Ext;
@@ -63,10 +60,7 @@ impl USB {
     match self.try_poll() {
       Ok(()) => (),
       Err(error) => {
-        Serial::get()
-          .write_fmt(format_args!("[USB] Error: {:?}\n\r", error))
-          .unwrap();
-
+        debug!("[USB] Error: {:?}", error);
         self.set_state(State::Error);
       }
     }
@@ -128,31 +122,80 @@ impl USB {
   }
 
   fn set_state(&mut self, state: State) {
-    Serial::get()
-      .write_fmt(format_args!(
-        "[USB] Transitioning state from {:?} to {:?}\n\r",
-        self.state, state
-      ))
-      .unwrap();
+    debug!(
+      "[USB] Transitioning state from {:?} to {:?}",
+      self.state, state
+    );
 
     self.state = state;
   }
 
+  fn enable(&mut self) {
+    debug!("[USB] Enabling");
+
+    self.peripherals().pmc.enable_clock(PeripheralClock::UOtgHs);
+
+    self.uotghs().ctrl.write(|w| w.uide().clear_bit());
+    self.uotghs().ctrl.modify(|_, w| w.uimod().clear_bit());
+    self.uotghs().ctrl.modify(|_, w| w.vbuspo().clear_bit());
+    self.uotghs().ctrl.modify(|_, w| w.otgpade().set_bit());
+    self.uotghs().ctrl.modify(|_, w| w.usbe().set_bit());
+    self.uotghs().ctrl.modify(|_, w| w.frzclk().clear_bit());
+
+    while self.uotghs().sr.read().clkusable().bit_is_clear() {}
+
+    self
+      .uotghs()
+      .hsticr
+      .write_with_zero(|w| unsafe { w.bits(u32::max_value()) });
+
+    self
+      .uotghs()
+      .scr
+      .write_with_zero(|w| unsafe { w.bits(u32::max_value()) });
+
+    self.uotghs().ctrl.modify(|_, w| w.vbushwc().set_bit());
+    self.uotghs().sfr.write_with_zero(|w| w.vbusrqs().set_bit());
+
+    debug!("[USB] Finished enabling")
+  }
+
   fn start(&mut self) -> Result<(), Error> {
+    debug!("[USB] Starting");
+
     self
       .uotghs()
       .hsticr
       .write_with_zero(|w| w.dconnic().set_bit());
 
     self.delay(CONNECTION_DELAY);
-    self.peripherals().pmc.enable_clock(PeripheralClock::UOtgHs);
-
-    while self.uotghs().sr.read().clkusable().bit_is_clear() {}
-
     self.reset()
   }
 
+  fn stop(&mut self) {
+    debug!("[USB] Stopping");
+
+    self
+      .uotghs()
+      .hsticr
+      .write_with_zero(|w| w.ddiscic().set_bit());
+
+    if let Some(pipe) = &self.control_pipe {
+      pipe.inner_pipe().release();
+      self.control_pipe = None;
+    }
+
+    for option in self.devices.iter_mut() {
+      if let Some(device) = option {
+        device.release();
+        *option = None
+      }
+    }
+  }
+
   fn reset(&mut self) -> Result<(), Error> {
+    debug!("[USB] Resetting");
+
     self.uotghs().hstctrl.modify(|_, w| w.reset().set_bit());
 
     while self.uotghs().hstisr.read().rsti().bit_is_clear() {}
@@ -161,11 +204,17 @@ impl USB {
       .uotghs()
       .hsticr
       .write_with_zero(|w| w.rstic().set_bit());
+
     self.delay(RESET_DELAY);
+
+    debug!("[USB] Finished resetting");
+
     self.configure()
   }
 
   fn configure(&mut self) -> Result<(), Error> {
+    debug!("[USB] Configuring");
+
     let mut result = Ok(());
     let address = self.next_device_address()?;
 
@@ -184,58 +233,11 @@ impl USB {
       }
     }
 
+    self.uotghs().hstctrl.modify(|_, w| w.sofe().set_bit());
+
+    debug!("[USB] Finished configuring");
+
     result
-  }
-
-  fn enable(&mut self) {
-    cortex_m::interrupt::free(|_| {
-      self
-        .uotghs()
-        .hstier
-        .write_with_zero(|w| w.dconnies().set_bit().ddiscies().set_bit());
-
-      self.uotghs().ctrl.modify(|_, w| {
-        w.uide()
-          .clear_bit()
-          .uimod()
-          .clear_bit()
-          .vbuspo()
-          .set_bit()
-          .otgpade()
-          .set_bit()
-          .usbe()
-          .set_bit()
-          .vbushwc()
-          .set_bit()
-          .vbuste()
-          .set_bit()
-          .frzclk()
-          .set_bit()
-      });
-
-      self.uotghs().sfr.write_with_zero(|w| w.vbusrqs().set_bit());
-
-      unsafe { NVIC::unmask(UOTGHS_INTERRUPT) };
-    })
-  }
-
-  fn stop(&mut self) {
-    self
-      .uotghs()
-      .hsticr
-      .write_with_zero(|w| w.ddiscic().set_bit());
-
-    if let Some(pipe) = &self.control_pipe {
-      pipe.inner_pipe().release();
-      self.control_pipe = None;
-    }
-
-    for option in self.devices.iter_mut() {
-      if let Some(device) = option {
-        device.release();
-        *option = None
-      }
-    }
   }
 
   fn poll_devices(&self) -> Result<(), Error> {
@@ -275,8 +277,9 @@ impl USB {
   }
 
   fn delay(&self, ms: u32) {
-    self.timer().try_start(ms.hz()).unwrap();
-    block!(self.timer().try_wait()).unwrap()
+    let timer = self.timer();
+    timer.try_start(ms.hz()).unwrap();
+    block!(timer.try_wait()).unwrap()
   }
 
   fn peripherals(&self) -> &mut Peripherals {

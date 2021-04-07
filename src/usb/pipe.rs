@@ -1,9 +1,8 @@
 use crate::peripherals::Peripherals;
-use crate::serial::Serial;
 use crate::usb::packet::{DataInPacket, DataOutPacket, Packet, SetupPacket, SetupRequestDirection};
 use crate::usb::Error;
 use core::cmp::min;
-use core::fmt::Write;
+use log::debug;
 use sam3x8e_hal::pac::uotghs::{HSTPIPCFG, HSTPIPIER, HSTPIPISR};
 use sam3x8e_hal::pac::UOTGHS;
 
@@ -137,14 +136,10 @@ impl InnerPipe {
   }
 
   pub fn configure(&self, address: u8, endpoint: u8, transfer: Transfer) {
-    let serial = Serial::get();
-
-    serial
-      .write_fmt(format_args!(
-        "[USB :: Pipe] Configuring pipe #{} with address: {}, endpoint: {}, transfer: {:#?}\n\r",
-        self.0, address, endpoint, transfer
-      ))
-      .unwrap();
+    debug!(
+      "[USB :: Pipe] Configuring pipe #{} with address: {}, endpoint: {}, transfer: {:#?}",
+      self.0, address, endpoint, transfer
+    );
 
     let uotghs = self.uotghs();
     let hstaddr1 = &uotghs.hstaddr1;
@@ -181,9 +176,7 @@ impl InnerPipe {
   }
 
   pub fn release(&self) {
-    Serial::get()
-      .write_fmt(format_args!("[USB :: Pipe] Releasing pipe #{}\n\r", self.0))
-      .unwrap();
+    debug!("[USB :: Pipe] Releasing pipe #{}", self.0);
 
     let hstpip = &self.uotghs().hstpip;
 
@@ -206,12 +199,7 @@ impl InnerPipe {
   fn alloc(&mut self) {
     let hstpip = &self.uotghs().hstpip;
 
-    Serial::get()
-      .write_fmt(format_args!(
-        "[USB :: Pipe] Allocating pipe #{}\n\r",
-        self.0
-      ))
-      .unwrap();
+    debug!("[USB :: Pipe] Allocating pipe #{}", self.0);
 
     match self.0 {
       0 => hstpip.modify(|_, w| w.pen0().set_bit()),
@@ -275,12 +263,10 @@ impl MessagePipe {
       setup_packet.length = data.len() as u16
     }
 
-    Serial::get()
-      .write_fmt(format_args!(
-        "[USB :: Pipe] Control transfer at address: {}, Setup packet: {:?}\n\r",
-        address, setup_packet
-      ))
-      .unwrap();
+    debug!(
+      "[USB :: Pipe] Control transfer at address: {}, Setup packet: {:?}",
+      address, setup_packet
+    );
 
     pipe.configure(address, 0, Transfer::Control);
     pipe.transfer(&mut Packet::Setup(setup_packet))?;

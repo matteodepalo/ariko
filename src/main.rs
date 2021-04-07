@@ -9,6 +9,7 @@ use core::panic::PanicInfo;
 use ariko::buzzer::Buzzer;
 use ariko::display::Display;
 use ariko::i2c::I2C;
+use ariko::logger::Logger;
 use ariko::peripherals::Peripherals;
 use ariko::serial::Serial;
 use ariko::usb::USB;
@@ -20,6 +21,7 @@ use embedded_hal::blocking::delay::DelayMs;
 unsafe fn main() -> ! {
   Peripherals::init();
   Serial::init(57600);
+  Logger::init();
   I2C::init();
   Display::init();
   USB::init();

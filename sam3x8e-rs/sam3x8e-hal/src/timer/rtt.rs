@@ -28,7 +28,7 @@ impl CountDown for Timer<RTT> {
   where
     T: Into<Hertz>,
   {
-    unsafe { EXPIRES_AT = timeout.into().0 };
+    unsafe { EXPIRES_AT = self.tim.vr.read().bits() + timeout.into().0 };
     Ok(())
   }
 
