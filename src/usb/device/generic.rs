@@ -1,16 +1,15 @@
 use crate::usb::device::DeviceDescriptor;
 use crate::usb::{Device, DeviceClass, Error};
 
-#[derive(Copy, Clone)]
 pub struct GenericDevice {}
-
-#[derive(Copy, Clone)]
 pub struct GenericDeviceClass {}
 
 impl GenericDevice {
   pub fn poll(&self) -> Result<(), Error> {
     Ok(())
   }
+
+  pub fn release(&self) {}
 }
 
 impl GenericDeviceClass {

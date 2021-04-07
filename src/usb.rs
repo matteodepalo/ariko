@@ -1,69 +1,67 @@
-mod device;
-mod interrupt;
-mod packet;
-mod pipe;
-
 use crate::peripherals::Peripherals;
 use crate::serial::Serial;
 use crate::usb::device::{Device, DeviceClass};
-use crate::usb::pipe::{AllocatedPipe, MessagePipe, Pipe};
+use crate::usb::pipe::{InnerPipe, MessagePipe, Pipe};
 use core::fmt::Write;
 use cortex_m::peripheral::NVIC;
 use embedded_hal::timer::CountDown;
-use sam3x8e_hal::pac::Interrupt::UOTGHS as I_UOTGHS;
+use nb::block;
+use sam3x8e_hal::pac::Interrupt::UOTGHS as UOTGHS_INTERRUPT;
+use sam3x8e_hal::pac::{RTT, UOTGHS};
 use sam3x8e_hal::pmc::PeripheralClock;
 use sam3x8e_hal::time::U32Ext;
+use sam3x8e_hal::timer::Timer;
+
+mod device;
+mod packet;
+mod pipe;
 
 static mut S_USB: Option<USB> = None;
 
-const SETTLE_DELAY: u32 = 200;
+const CONNECTION_DELAY: u32 = 200;
+const RESET_DELAY: u32 = 20;
 
 #[derive(PartialEq, Debug)]
 enum State {
-  DetachedInitialize,
-  DetachedWaitForDevice,
-  AttachedSettle,
-  AttachedResetDevice,
-  AttachedWaitResetComplete,
-  AttachedWaitSOF,
-  Configuring,
-  Running,
-  Error,
-}
-
-#[derive(PartialEq, Debug)]
-enum VBusState {
-  Off,
+  Disabled,
   Disconnected,
-  Connected,
+  Ready,
+  Error,
 }
 
 #[derive(Debug)]
 pub enum Error {
-  DeviceInitIncomplete,
   DeviceNotSupported,
   TooManyDevices,
   TooManyPipes,
   TransferTimeout,
-  Unknown,
 }
 
 pub struct USB {
   state: State,
-  vbus_state: VBusState,
   devices: [Option<Device>; 16],
   control_pipe: Option<MessagePipe>,
-  pipes: [Option<Pipe>; 9],
+  pipes: [Option<Pipe>; 8],
 }
 
 impl USB {
   pub fn init() {
-    unsafe { S_USB = Some(Self::default()) }
+    unsafe {
+      S_USB = Some(USB {
+        state: State::Disabled,
+        devices: [
+          None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
+          None,
+        ],
+        control_pipe: None,
+        pipes: [None, None, None, None, None, None, None, None],
+      })
+    }
   }
 
   pub fn poll(&mut self) {
     match self.try_poll() {
-      Ok(()) | Err(Error::DeviceInitIncomplete) => (),
+      Ok(()) => (),
       Err(error) => {
         Serial::get()
           .write_fmt(format_args!("[USB] Error: {:?}\n\r", error))
@@ -78,40 +76,55 @@ impl USB {
     &mut self,
     configure_callback: fn(pipe: &Pipe) -> Pipe,
   ) -> Result<&Pipe, Error> {
-    let index = self.next_free_pipe_index()?;
-    self.pipes[index as usize] = Some(configure_callback(&Pipe::new(index + 1)));
-    Ok(self.pipes[index as usize].as_ref().unwrap())
+    let index = self.next_pipe_index()?;
+    let option = &mut self.pipes[(index - 1) as usize];
+
+    *option = Some(configure_callback(&Pipe::new(index)));
+
+    Ok(option.as_ref().unwrap())
   }
 
   pub fn release_pipe(&mut self, pipe: &Pipe) {
     let index = (pipe.index() - 1) as usize;
 
-    match self.pipes[index] {
-      Some(pipe) => {
-        pipe.release();
-        self.pipes[index] = None
-      }
-      None => (),
+    if let Some(pipe) = &self.pipes[index] {
+      pipe.inner_pipe().release();
+      self.pipes[index] = None
     }
   }
 
   pub fn control_pipe(&mut self) -> &MessagePipe {
-    self.control_pipe = match self.control_pipe {
-      None => Some(MessagePipe::new(AllocatedPipe::new(0))),
-      pipe => pipe,
-    };
+    if self.control_pipe.is_none() {
+      self.control_pipe = Some(MessagePipe::new(InnerPipe::new(0)))
+    }
 
     self.control_pipe.as_ref().unwrap()
   }
 
-  fn default() -> Self {
-    USB {
-      state: State::DetachedInitialize,
-      vbus_state: VBusState::Off,
-      devices: [None; 16],
-      control_pipe: None,
-      pipes: [None; 9],
+  fn try_poll(&mut self) -> Result<(), Error> {
+    match self.state {
+      State::Disabled => {
+        self.enable();
+        self.set_state(State::Disconnected)
+      }
+      State::Disconnected => {
+        if self.uotghs().hstisr.read().dconni().bit_is_set() {
+          self.start()?;
+          self.set_state(State::Ready)
+        }
+      }
+      State::Ready => {
+        if self.uotghs().hstisr.read().ddisci().bit_is_set() {
+          self.stop();
+          self.set_state(State::Disconnected)
+        } else {
+          self.poll_devices()?
+        }
+      }
+      State::Error => (),
     }
+
+    Ok(())
   }
 
   fn set_state(&mut self, state: State) {
@@ -125,146 +138,36 @@ impl USB {
     self.state = state;
   }
 
-  fn set_vbus_state(&mut self, state: VBusState) {
-    Serial::get()
-      .write_fmt(format_args!(
-        "[USB] Transitioning VBus state from {:?} to {:?}\n\r",
-        self.vbus_state, state
-      ))
-      .unwrap();
-
-    self.vbus_state = state;
-  }
-
-  fn try_poll(&mut self) -> Result<(), Error> {
-    let peripherals = unsafe { Peripherals::get() };
-    let uotghs = &peripherals.uotghs;
-    let timer = &mut peripherals.timer;
-
-    match self.vbus_state {
-      VBusState::Disconnected => {
-        if !self.is_detached() {
-          self.set_state(State::DetachedInitialize)
-        }
-      }
-      VBusState::Connected => {
-        if self.is_detached() {
-          timer.try_start(SETTLE_DELAY.hz()).unwrap();
-          self.set_state(State::AttachedSettle)
-        }
-      }
-      _ => (),
-    }
-
-    self.poll_devices()?;
-
-    match self.state {
-      State::DetachedInitialize => {
-        self.start()?;
-        self.set_state(State::DetachedWaitForDevice)
-      }
-      State::AttachedSettle => {
-        if timer.try_wait().is_ok() {
-          self.set_state(State::AttachedResetDevice)
-        }
-      }
-      State::AttachedResetDevice => {
-        uotghs.hstctrl.modify(|_, w| w.reset().set_bit());
-        self.set_state(State::AttachedWaitResetComplete)
-      }
-      State::AttachedWaitResetComplete => {
-        if uotghs.hstisr.read().rsti().bit_is_set() {
-          uotghs.hsticr.write_with_zero(|w| w.rstic().set_bit());
-          uotghs.hstctrl.modify(|_, w| w.sofe().set_bit());
-          self.set_state(State::AttachedWaitSOF);
-          timer.try_start(20.hz()).unwrap()
-        }
-      }
-      State::AttachedWaitSOF => {
-        if uotghs.hstisr.read().hsofi().bit_is_set() && timer.try_wait().is_ok() {
-          self.set_state(State::Configuring)
-        }
-      }
-      State::Configuring => {
-        self.configure_device()?;
-        self.set_state(State::Running)
-      }
-      _ => (),
-    }
-
-    Ok(())
-  }
-
   fn start(&mut self) -> Result<(), Error> {
-    let serial = Serial::get();
+    self
+      .uotghs()
+      .hsticr
+      .write_with_zero(|w| w.dconnic().set_bit());
 
-    cortex_m::interrupt::free(|_| {
-      serial.write_str("[USB] Begin start\n\r").unwrap();
+    self.delay(CONNECTION_DELAY);
+    self.peripherals().pmc.enable_clock(PeripheralClock::UOtgHs);
 
-      self.release_devices()?;
+    while self.uotghs().sr.read().clkusable().bit_is_clear() {}
 
-      let peripherals = unsafe { Peripherals::get() };
-      let nvic = &mut peripherals.nvic;
-      let uotghs = &mut peripherals.uotghs;
-      let pmc = &mut peripherals.pmc;
-      let ctrl = &uotghs.ctrl;
-
-      pmc.enable_clock(PeripheralClock::UOtgHs);
-
-      unsafe { nvic.set_priority(I_UOTGHS, 0) };
-      unsafe { NVIC::unmask(I_UOTGHS) };
-
-      ctrl.modify(|_, w| w.uide().clear_bit());
-      ctrl.modify(|_, w| w.uimod().clear_bit());
-      ctrl.modify(|_, w| w.vbuspo().set_bit());
-      ctrl.modify(|_, w| w.otgpade().set_bit());
-      ctrl.modify(|_, w| w.usbe().set_bit());
-      ctrl.modify(|_, w| w.frzclk().clear_bit());
-
-      while !uotghs.sr.read().clkusable().bit_is_set() {}
-
-      uotghs.scr.write_with_zero(|w| w.vbustic().set_bit());
-      ctrl.modify(|_, w| w.vbushwc().set_bit().vbuste().set_bit().vberre().set_bit());
-      uotghs.sfr.write_with_zero(|w| w.vbusrqs().set_bit());
-      uotghs.sfr.write_with_zero(|w| w.vbustis().set_bit());
-      uotghs.hstier.write_with_zero(|w| w.dconnies().set_bit());
-      ctrl.modify(|_, w| w.frzclk().set_bit());
-
-      serial.write_str("[USB] End start\n\r").unwrap();
-
-      Ok(())
-    })
+    self.reset()
   }
 
-  fn next_free_pipe_index(&self) -> Result<u8, Error> {
-    let mut result = Err(Error::TooManyPipes);
+  fn reset(&mut self) -> Result<(), Error> {
+    self.uotghs().hstctrl.modify(|_, w| w.reset().set_bit());
 
-    for (index, pipe) in self.pipes.iter().enumerate() {
-      if pipe.is_none() {
-        result = Ok(index as u8);
-        break;
-      }
-    }
+    while self.uotghs().hstisr.read().rsti().bit_is_clear() {}
 
-    result
+    self
+      .uotghs()
+      .hsticr
+      .write_with_zero(|w| w.rstic().set_bit());
+    self.delay(RESET_DELAY);
+    self.configure()
   }
 
-  fn next_free_address(&self) -> Result<u8, Error> {
-    let mut result = Err(Error::TooManyDevices);
-
-    for (address, device) in self.devices.iter().enumerate() {
-      if device.is_none() {
-        result = Ok(address as u8);
-        break;
-      }
-    }
-
-    result
-  }
-
-  fn configure_device(&mut self) -> Result<(), Error> {
-    let mut result = Err(Error::Unknown);
-    let address = self.next_free_address()?;
+  fn configure(&mut self) -> Result<(), Error> {
+    let mut result = Ok(());
+    let address = self.next_device_address()?;
 
     for device_class in DeviceClass::all().iter() {
       match device_class.configure(address) {
@@ -273,7 +176,7 @@ impl USB {
           result = Ok(());
           break;
         }
-        Err(Error::DeviceNotSupported) => {}
+        Err(Error::DeviceNotSupported) => (),
         Err(error) => {
           result = Err(error);
           break;
@@ -284,10 +187,54 @@ impl USB {
     result
   }
 
-  fn is_detached(&self) -> bool {
-    match self.state {
-      State::DetachedInitialize | State::DetachedWaitForDevice => true,
-      _ => false,
+  fn enable(&mut self) {
+    cortex_m::interrupt::free(|_| {
+      self
+        .uotghs()
+        .hstier
+        .write_with_zero(|w| w.dconnies().set_bit().ddiscies().set_bit());
+
+      self.uotghs().ctrl.modify(|_, w| {
+        w.uide()
+          .clear_bit()
+          .uimod()
+          .clear_bit()
+          .vbuspo()
+          .set_bit()
+          .otgpade()
+          .set_bit()
+          .usbe()
+          .set_bit()
+          .vbushwc()
+          .set_bit()
+          .vbuste()
+          .set_bit()
+          .frzclk()
+          .set_bit()
+      });
+
+      self.uotghs().sfr.write_with_zero(|w| w.vbusrqs().set_bit());
+
+      unsafe { NVIC::unmask(UOTGHS_INTERRUPT) };
+    })
+  }
+
+  fn stop(&mut self) {
+    self
+      .uotghs()
+      .hsticr
+      .write_with_zero(|w| w.ddiscic().set_bit());
+
+    if let Some(pipe) = &self.control_pipe {
+      pipe.inner_pipe().release();
+      self.control_pipe = None;
+    }
+
+    for option in self.devices.iter_mut() {
+      if let Some(device) = option {
+        device.release();
+        *option = None
+      }
     }
   }
 
@@ -301,21 +248,47 @@ impl USB {
     Ok(())
   }
 
-  fn release_devices(&mut self) -> Result<(), Error> {
-    for option in self.devices.iter_mut() {
-      if let Some(device) = option {
-        device.release();
-        *option = None
+  fn next_pipe_index(&self) -> Result<u8, Error> {
+    let mut result = Err(Error::TooManyPipes);
+
+    for (index, pipe) in self.pipes.iter().enumerate() {
+      if pipe.is_none() {
+        result = Ok(index as u8);
+        break;
       }
     }
 
-    for pipe in self.pipes.iter() {
-      if let Some(pipe) = pipe {
-        pipe.release()
+    result
+  }
+
+  fn next_device_address(&self) -> Result<u8, Error> {
+    let mut result = Err(Error::TooManyDevices);
+
+    for (address, device) in self.devices.iter().enumerate() {
+      if device.is_none() {
+        result = Ok(address as u8);
+        break;
       }
     }
 
-    Ok(())
+    result
+  }
+
+  fn delay(&self, ms: u32) {
+    self.timer().try_start(ms.hz()).unwrap();
+    block!(self.timer().try_wait()).unwrap()
+  }
+
+  fn peripherals(&self) -> &mut Peripherals {
+    unsafe { Peripherals::get() }
+  }
+
+  fn uotghs(&self) -> &UOTGHS {
+    &self.peripherals().uotghs
+  }
+
+  fn timer(&self) -> &mut Timer<RTT> {
+    &mut self.peripherals().timer
   }
 
   pub fn get() -> &'static mut Self {

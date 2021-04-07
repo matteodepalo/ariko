@@ -1,26 +1,31 @@
-use modular_bitfield::prelude::*;
-
-const DPRAM_BASE: *mut [u8; 0x8000] = 0x20180000 as *mut [u8; 0x8000];
-const TRANSFER_TIMEOUT: u32 = 30000;
-
 use crate::peripherals::Peripherals;
 use crate::serial::Serial;
-use crate::usb::{Error, VBusState, USB};
+use crate::usb::Error;
 use core::fmt::Write;
 use core::mem::size_of;
+use core::ops::Range;
 use core::ptr::write_volatile;
 use core::slice;
 use embedded_hal::timer::CountDown;
-use sam3x8e_hal::pac::uotghs::{HSTPIPICR, HSTPIPIDR, HSTPIPIER, HSTPIPIMR, HSTPIPISR};
+use modular_bitfield::prelude::*;
+use sam3x8e_hal::pac::uotghs::{HSTPIPICR, HSTPIPIDR, HSTPIPIER, HSTPIPINRQ, HSTPIPISR};
 use sam3x8e_hal::pac::{RTT, UOTGHS};
 use sam3x8e_hal::time::U32Ext;
 use sam3x8e_hal::timer::Timer;
 
-#[repr(C)]
-pub struct DataInPacket<'a>(pub &'a mut [u8]);
+const DPRAM_BASE: *mut Fifo = 0x20180000 as *mut Fifo;
+const TRANSFER_TIMEOUT: u32 = 5000;
+
+type Fifo = [u8; 0x8000];
 
 #[repr(C)]
-pub struct DataOutPacket<'a>(pub &'a [u8]);
+pub struct DataPacket<'a>(&'a mut [u8]);
+
+#[repr(C)]
+pub struct DataInPacket<'a>(DataPacket<'a>);
+
+#[repr(C)]
+pub struct DataOutPacket<'a>(DataPacket<'a>);
 
 #[derive(BitfieldSpecifier, Debug)]
 #[bits = 1]
@@ -67,24 +72,67 @@ pub struct SetupPacket {
 pub enum Packet<'a> {
   DataIn(DataInPacket<'a>),
   DataOut(DataOutPacket<'a>),
-  Setup(&'a SetupPacket),
+  Setup(SetupPacket),
+}
+
+struct Message<'a> {
+  data: &'a mut [u8],
+  index: u8,
+}
+
+impl<'a> DataPacket<'a> {
+  fn new(data: &'a mut [u8]) -> Self {
+    Self(data)
+  }
+
+  fn len(&self) -> usize {
+    self.0.len()
+  }
+
+  fn data(&mut self) -> &mut [u8] {
+    self.0
+  }
+
+  fn slice(&mut self, range: Range<usize>) -> &mut [u8] {
+    &mut self.0[range]
+  }
+
+  fn empty() -> Self {
+    Self::new(&mut [])
+  }
 }
 
 impl<'a> Packet<'a> {
-  fn send(index: u8, data: &[u8]) -> &mut Timer<RTT> {
-    let timer = unsafe { &mut Peripherals::get().timer };
-    let fifo = Self::fifo(index);
-    let hstpipicr = Self::hstpipicr(index);
-    let hstpipidr = Self::hstpipidr(index);
+  pub fn len(&self) -> usize {
+    match self {
+      Self::DataIn(packet) => packet.0.len(),
+      Self::DataOut(packet) => packet.0.len(),
+      Self::Setup(_) => panic!(),
+    }
+  }
 
-    timer.try_start(TRANSFER_TIMEOUT.hz()).unwrap();
+  pub fn slice(&mut self, range: Range<usize>) -> &mut [u8] {
+    match self {
+      Self::DataIn(packet) => packet.0.slice(range),
+      Self::DataOut(packet) => packet.0.slice(range),
+      Self::Setup(_) => panic!(),
+    }
+  }
+}
 
-    for (i, byte) in data.iter().enumerate() {
-      let fifo_byte = unsafe { fifo.as_mut_ptr().offset(i as isize) };
-      unsafe { write_volatile(fifo_byte, *byte) }
+impl<'a> Message<'a> {
+  fn new(index: u8, data: &'a mut [u8]) -> Self {
+    Self { data, index }
+  }
+
+  fn send(&mut self) {
+    self.timer().try_start(TRANSFER_TIMEOUT.hz()).unwrap();
+
+    for (i, byte) in self.data.iter().enumerate() {
+      unsafe { write_volatile(self.fifo().as_mut_ptr().offset(i as isize), *byte) }
     }
 
-    hstpipicr.write_with_zero(|w| {
+    self.hstpipicr().write_with_zero(|w| {
       w.txstpic()
         .set_bit()
         .rxinic()
@@ -97,36 +145,89 @@ impl<'a> Packet<'a> {
         .set_bit()
     });
 
-    hstpipidr.write_with_zero(|w| w.fifoconc().set_bit().pfreezec().set_bit());
-    timer
+    self
+      .hstpipidr()
+      .write_with_zero(|w| w.fifoconc().set_bit().pfreezec().set_bit())
   }
 
-  fn hstpipicr(index: u8) -> &'a HSTPIPICR {
-    &Self::uotghs().hstpipicr()[index as usize]
+  fn receive(&mut self) -> Result<(), Error> {
+    let mut result = Err(Error::TransferTimeout);
+    let serial = Serial::get();
+
+    serial
+      .write_fmt(format_args!(
+        "[USB :: Packet] Receiving Data packet ({} bytes)\n\r",
+        self.data.len()
+      ))
+      .unwrap();
+
+    self.timer().try_start(TRANSFER_TIMEOUT.hz()).unwrap();
+
+    self
+      .hstpipinrq()
+      .write_with_zero(|w| unsafe { w.inmode().clear_bit().inrq().bits(0) });
+
+    while self.timer().try_wait().is_err() {
+      for i in 0..self.hstpipisr().read().pbyct().bits() {
+        self.data[i as usize] = self.fifo()[i as usize]
+      }
+
+      if self.hstpipisr().read().rxini().bit_is_set() {
+        self.hstpipicr().write_with_zero(|w| w.rxinic().set_bit());
+
+        serial
+          .write_fmt(format_args!(
+            "[USB :: Packet] Finished receiving Data packet ({} bytes)\n\r",
+            self.data.len()
+          ))
+          .unwrap();
+
+        result = Ok(());
+        break;
+      }
+    }
+
+    result
   }
 
-  fn hstpipidr(index: u8) -> &'a HSTPIPIDR {
-    &Self::uotghs().hstpipidr()[index as usize]
+  fn len(&self) -> usize {
+    self.data.len()
   }
 
-  fn hstpipier(index: u8) -> &'a HSTPIPIER {
-    &Self::uotghs().hstpipier()[index as usize]
+  fn peripherals(&self) -> &mut Peripherals {
+    unsafe { Peripherals::get() }
   }
 
-  fn hstpipisr(index: u8) -> &'a HSTPIPISR {
-    &Self::uotghs().hstpipisr()[index as usize]
+  fn timer(&mut self) -> &mut Timer<RTT> {
+    &mut self.peripherals().timer
   }
 
-  fn hstpipimr(index: u8) -> &'a HSTPIPIMR {
-    &Self::uotghs().hstpipimr()[index as usize]
+  fn uotghs(&self) -> &UOTGHS {
+    &self.peripherals().uotghs
   }
 
-  fn fifo(index: u8) -> &'a mut [u8; 0x8000] {
-    unsafe { &mut *DPRAM_BASE.offset(index as isize) }
+  fn hstpipicr(&self) -> &HSTPIPICR {
+    &self.uotghs().hstpipicr()[self.index as usize]
   }
 
-  fn uotghs() -> &'a UOTGHS {
-    unsafe { &Peripherals::get().uotghs }
+  fn hstpipidr(&self) -> &HSTPIPIDR {
+    &self.uotghs().hstpipidr()[self.index as usize]
+  }
+
+  fn hstpipier(&self) -> &HSTPIPIER {
+    &self.uotghs().hstpipier()[self.index as usize]
+  }
+
+  fn hstpipisr(&self) -> &HSTPIPISR {
+    &self.uotghs().hstpipisr()[self.index as usize]
+  }
+
+  fn hstpipinrq(&self) -> &HSTPIPINRQ {
+    &self.uotghs().hstpipinrq[self.index as usize]
+  }
+
+  fn fifo(&self) -> &mut Fifo {
+    unsafe { &mut *DPRAM_BASE.offset(self.index as isize) }
   }
 }
 
@@ -141,7 +242,7 @@ impl SetupRequestType {
 
 impl SetupPacket {
   pub fn new(request_type: SetupRequestType, request: u8, value: u16, index: u16) -> Self {
-    SetupPacket {
+    Self {
       request_type,
       request,
       value,
@@ -151,22 +252,30 @@ impl SetupPacket {
   }
 
   pub fn send(&self, index: u8) -> Result<(), Error> {
-    let data_pointer = self as *const Self as *const u8;
-    let data = unsafe { slice::from_raw_parts(data_pointer, size_of::<Self>()) };
+    let data_pointer = self as *const Self as *mut u8;
+    let data = unsafe { slice::from_raw_parts_mut(data_pointer, size_of::<Self>()) };
+    let mut message = Message::new(index, data);
+    let serial = Serial::get();
 
-    Serial::get()
+    serial
       .write_fmt(format_args!("[USB :: Packet] Sending Setup packet\n\r"))
       .unwrap();
 
-    let timer = Packet::send(index, data);
+    message.send();
+
     let mut result = Err(Error::TransferTimeout);
 
-    while USB::get().vbus_state == VBusState::Connected && timer.try_wait().is_err() {
-      if Packet::hstpipisr(index).read().txstpi().bit_is_set() {
-        Packet::hstpipier(index).write_with_zero(|w| w.pfreezes().set_bit());
-        Packet::hstpipicr(index).write_with_zero(|w| w.txstpic().set_bit());
+    while message.timer().try_wait().is_err() {
+      if message.hstpipisr().read().txstpi().bit_is_set() {
+        message
+          .hstpipicr()
+          .write_with_zero(|w| w.txstpic().set_bit());
 
-        Serial::get()
+        message
+          .hstpipier()
+          .write_with_zero(|w| w.pfreezes().set_bit());
+
+        serial
           .write_fmt(format_args!(
             "[USB :: Packet] Finished sending Setup packet\n\r"
           ))
@@ -182,21 +291,37 @@ impl SetupPacket {
 }
 
 impl<'a> DataOutPacket<'a> {
-  pub fn send(&self, index: u8) -> Result<(), Error> {
+  pub fn new(data: &'a mut [u8]) -> Self {
+    Self(DataPacket::new(data))
+  }
+
+  pub fn empty() -> Self {
+    Self(DataPacket::empty())
+  }
+
+  pub fn send(&mut self, index: u8) -> Result<(), Error> {
+    let mut message = Message::new(index, self.0.data());
+
     Serial::get()
       .write_fmt(format_args!(
         "[USB :: Packet] Sending Data packet ({} bytes)\n\r",
-        self.0.len()
+        message.len()
       ))
       .unwrap();
 
-    let timer = Packet::send(index, self.0);
+    message.send();
+
     let mut result = Err(Error::TransferTimeout);
 
-    while USB::get().vbus_state == VBusState::Connected && timer.try_wait().is_err() {
-      if Packet::hstpipisr(index).read().txouti().bit_is_set() {
-        Packet::hstpipier(index).write_with_zero(|w| w.pfreezes().set_bit());
-        Packet::hstpipicr(index).write_with_zero(|w| w.txoutic().set_bit());
+    while message.timer().try_wait().is_err() {
+      if message.hstpipisr().read().txouti().bit_is_set() {
+        message
+          .hstpipicr()
+          .write_with_zero(|w| w.txoutic().set_bit());
+
+        message
+          .hstpipier()
+          .write_with_zero(|w| w.pfreezes().set_bit());
 
         Serial::get()
           .write_fmt(format_args!(
@@ -214,75 +339,15 @@ impl<'a> DataOutPacket<'a> {
 }
 
 impl<'a> DataInPacket<'a> {
-  pub fn receive(&mut self, index: u8) -> Result<(), Error> {
-    Serial::get()
-      .write_fmt(format_args!(
-        "[USB :: Packet] Receiving Data packet ({} bytes)\n\r",
-        self.0.len()
-      ))
-      .unwrap();
-
-    let timer = Packet::send(index, &[]);
-    let fifo = Packet::fifo(index);
-    let mut bytes_received = 0;
-
-    self.wait_transfer_complete(index, timer)?;
-    timer.try_start(TRANSFER_TIMEOUT.hz()).unwrap();
-
-    while bytes_received < self.0.len() && timer.try_wait().is_err() {
-      let byte_count = Packet::hstpipisr(index).read().pbyct().bits();
-
-      Serial::get()
-        .write_fmt(format_args!(
-          "[USB :: Packet] Received {} bytes\n\r",
-          byte_count
-        ))
-        .unwrap();
-
-      for i in 0..byte_count {
-        bytes_received += 1;
-        self.0[i as usize] = fifo[i as usize]
-      }
-    }
-
-    if timer.try_wait().is_ok() {
-      Err(Error::TransferTimeout)
-    } else {
-      Serial::get()
-        .write_fmt(format_args!(
-          "[USB :: Packet] Finished receiving Data packet\n\r"
-        ))
-        .unwrap();
-
-      Ok(())
-    }
+  pub fn new(data: &'a mut [u8]) -> Self {
+    Self(DataPacket::new(data))
   }
 
-  fn wait_transfer_complete(&mut self, index: u8, timer: &mut Timer<RTT>) -> Result<(), Error> {
-    let mut result = Err(Error::TransferTimeout);
-    let hstpipisr = Packet::hstpipisr(index);
-    let hstpipicr = Packet::hstpipicr(index);
+  pub fn empty() -> Self {
+    Self(DataPacket::empty())
+  }
 
-    while USB::get().vbus_state == VBusState::Connected && timer.try_wait().is_err() {
-      if hstpipisr.read().rxini().bit_is_set() {
-        while Packet::hstpipimr(index).read().pfreeze().bit_is_clear() {}
-
-        Packet::hstpipier(index).write_with_zero(|w| w.pfreezes().set_bit());
-        hstpipicr.write_with_zero(|w| w.rxinic().set_bit());
-
-        result = Ok(());
-        break;
-      }
-
-      if hstpipisr.read().nakedi().bit_is_set() {
-        Serial::get()
-          .write_fmt(format_args!("[USB :: Packet] Got NAK\n\r"))
-          .unwrap();
-
-        hstpipicr.write_with_zero(|w| w.nakedic().set_bit())
-      }
-    }
-
-    result
+  pub fn receive(&mut self, index: u8) -> Result<(), Error> {
+    Message::new(index, self.0.data()).receive()
   }
 }

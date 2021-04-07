@@ -4,65 +4,54 @@ use crate::usb::packet::{DataInPacket, DataOutPacket, Packet, SetupPacket, Setup
 use crate::usb::Error;
 use core::cmp::min;
 use core::fmt::Write;
-use sam3x8e_hal::pac::uotghs::{HSTPIPCFG, HSTPIPISR};
+use sam3x8e_hal::pac::uotghs::{HSTPIPCFG, HSTPIPIER, HSTPIPISR};
 use sam3x8e_hal::pac::UOTGHS;
 
 const PIPE_SIZE: usize = 64;
 
-#[derive(Copy, Clone)]
-pub struct AllocatedPipe(u8);
+pub struct InnerPipe(u8);
+pub struct MessagePipe(InnerPipe);
+pub struct StreamInPipe(InnerPipe);
+pub struct StreamOutPipe(InnerPipe);
 
-#[derive(Copy, Clone)]
-pub struct MessagePipe(AllocatedPipe);
-
-#[derive(Copy, Clone)]
-pub struct StreamInPipe(AllocatedPipe);
-
-#[derive(Copy, Clone)]
-pub struct StreamOutPipe(AllocatedPipe);
-
-#[derive(Copy, Clone)]
 pub enum Pipe {
-  Allocated(AllocatedPipe),
+  Unconfigured(InnerPipe),
   Message(MessagePipe),
   StreamIn(StreamInPipe),
   StreamOut(StreamOutPipe),
 }
 
-pub enum TransferType {
+#[derive(Debug)]
+pub enum Transfer {
   Control,
   Bulk,
-  Interrupt,
+  Interrupt(u8),
   Isochronous,
 }
 
 impl Pipe {
   pub fn new(index: u8) -> Self {
-    Self::Allocated(AllocatedPipe::new(index))
-  }
-
-  pub fn release(&self) {
-    self.allocated_pipe().release();
+    Self::Unconfigured(InnerPipe::new(index))
   }
 
   pub fn into_message(self) -> Self {
     match self {
       Self::Message(_) => self,
-      _ => Self::Message(MessagePipe::new(self.allocated_pipe())),
+      _ => Self::Message(MessagePipe::new(self.unwrap_inner_pipe())),
     }
   }
 
   pub fn into_stream_in(self) -> Self {
     match self {
       Self::StreamIn(_) => self,
-      _ => Self::StreamIn(StreamInPipe::new(self.allocated_pipe())),
+      _ => Self::StreamIn(StreamInPipe::new(self.unwrap_inner_pipe())),
     }
   }
 
   pub fn into_stream_out(self) -> Self {
     match self {
       Self::StreamOut(_) => self,
-      _ => Self::StreamOut(StreamOutPipe::new(self.allocated_pipe())),
+      _ => Self::StreamOut(StreamOutPipe::new(self.unwrap_inner_pipe())),
     }
   }
 
@@ -87,79 +76,80 @@ impl Pipe {
     }
   }
 
-  pub fn configure(
-    &self,
-    address: u8,
-    endpoint: u8,
-    frequency: u8,
-    transfer_type: TransferType,
-  ) -> &Self {
-    let pipe = self.allocated_pipe();
-    pipe.configure(address, endpoint, frequency, transfer_type);
+  pub fn configure(&mut self, address: u8, endpoint: u8, transfer: Transfer) -> &Self {
+    let pipe = self.inner_pipe();
+
+    pipe.configure(address, endpoint, transfer);
+
     self
   }
 
   pub fn index(&self) -> u8 {
-    self.allocated_pipe().0
+    self.inner_pipe().0
   }
 
-  fn allocated_pipe(&self) -> AllocatedPipe {
+  pub fn inner_pipe(&self) -> &InnerPipe {
     match self {
-      Pipe::Allocated(pipe) => *pipe,
-      Pipe::Message(pipe) => pipe.0,
-      Pipe::StreamIn(pipe) => pipe.0,
-      Pipe::StreamOut(pipe) => pipe.0,
+      Self::Unconfigured(pipe) => pipe,
+      Self::Message(pipe) => &pipe.0,
+      Self::StreamIn(pipe) => &pipe.0,
+      Self::StreamOut(pipe) => &pipe.0,
+    }
+  }
+
+  fn unwrap_inner_pipe(self) -> InnerPipe {
+    match self {
+      Self::Unconfigured(pipe) => pipe,
+      Self::Message(pipe) => pipe.0,
+      Self::StreamIn(pipe) => pipe.0,
+      Self::StreamOut(pipe) => pipe.0,
     }
   }
 }
 
-impl AllocatedPipe {
+impl InnerPipe {
   pub fn new(index: u8) -> Self {
-    let pipe = AllocatedPipe(index);
-
-    if !pipe.is_enabled() {
-      pipe.alloc()
-    }
-
+    let mut pipe = Self(index);
+    pipe.alloc();
     pipe
   }
 
-  pub fn transfer(&self, packet: &mut Packet) -> Result<(), Error> {
+  fn transfer(&self, packet: &mut Packet) -> Result<(), Error> {
     self.hstpipcfg().modify(|_, w| match packet {
       Packet::Setup(_) => w.ptoken().setup(),
       Packet::DataIn(_) => w.ptoken().in_(),
       Packet::DataOut(_) => w.ptoken().out(),
     });
 
-    match packet {
-      Packet::DataOut(packet) => Ok(for i in 0..(packet.0.len() / PIPE_SIZE) {
-        let start = i * PIPE_SIZE;
-        let end = min(packet.0.len(), start + PIPE_SIZE);
-        let packet = DataOutPacket(&packet.0[start..end]);
+    self.hstpipier().write_with_zero(|w| w.pfreezes().set_bit());
 
-        packet.send(self.0)?
+    match packet {
+      Packet::DataOut(_) => Ok(for i in 0..(packet.len() / PIPE_SIZE) {
+        let start = i * PIPE_SIZE;
+        let end = min(packet.len(), start + PIPE_SIZE);
+        let mut slice = DataOutPacket::new(packet.slice(start..end));
+
+        slice.send(self.0)?
       }),
       Packet::DataIn(packet) => packet.receive(self.0),
       Packet::Setup(packet) => packet.send(self.0),
     }
   }
 
-  pub fn configure(&self, address: u8, endpoint: u8, frequency: u8, transfer_type: TransferType) {
+  pub fn configure(&self, address: u8, endpoint: u8, transfer: Transfer) {
+    let serial = Serial::get();
+
+    serial
+      .write_fmt(format_args!(
+        "[USB :: Pipe] Configuring pipe #{} with address: {}, endpoint: {}, transfer: {:#?}\n\r",
+        self.0, address, endpoint, transfer
+      ))
+      .unwrap();
+
     let uotghs = self.uotghs();
     let hstaddr1 = &uotghs.hstaddr1;
     let hstaddr2 = &uotghs.hstaddr2;
     let hstaddr3 = &uotghs.hstaddr3;
-
-    Serial::get()
-      .write_fmt(format_args!(
-        "[USB :: Pipe] Configuring pipe #{} with address: {}, endpoint: {}, frequency: {}\n\r",
-        self.0, address, endpoint, frequency
-      ))
-      .unwrap();
-
-    self
-      .hstpipcfg()
-      .write_with_zero(|w| unsafe { w.pepnum().bits(endpoint).intfrq().bits(frequency) });
 
     match self.0 {
       0 => hstaddr1.write(|w| unsafe { w.hstaddrp0().bits(address) }),
@@ -171,24 +161,50 @@ impl AllocatedPipe {
       6 => hstaddr2.write(|w| unsafe { w.hstaddrp6().bits(address) }),
       7 => hstaddr2.write(|w| unsafe { w.hstaddrp7().bits(address) }),
       8 => hstaddr3.write(|w| unsafe { w.hstaddrp8().bits(address) }),
-      9 => hstaddr3.write(|w| unsafe { w.hstaddrp9().bits(address) }),
-      _ => panic!("Pipe index out of bounds"),
+      _ => panic!(),
     };
 
-    self.hstpipcfg().modify(|_, w| match transfer_type {
-      TransferType::Control => w.ptype().ctrl(),
-      TransferType::Interrupt => w.ptype().intrpt(),
-      TransferType::Bulk => w.ptype().blk(),
-      TransferType::Isochronous => w.ptype().iso(),
+    self
+      .hstpipcfg()
+      .modify(|_, w| unsafe { w.pepnum().bits(endpoint) });
+
+    self.hstpipcfg().modify(|_, w| match transfer {
+      Transfer::Control => w.ptype().ctrl(),
+      Transfer::Interrupt(frequency) => unsafe { w.ptype().intrpt().intfrq().bits(frequency) },
+      Transfer::Bulk => w.ptype().blk(),
+      Transfer::Isochronous => w.ptype().iso(),
     });
 
-    if !self.is_configured() {
-      panic!("Pipe configured incorrectly")
+    if self.hstpipisr().read().cfgok().bit_is_clear() {
+      panic!("Failed to configure pipe")
     }
   }
 
-  fn alloc(&self) {
-    let hstpipcfg = self.hstpipcfg();
+  pub fn release(&self) {
+    Serial::get()
+      .write_fmt(format_args!("[USB :: Pipe] Releasing pipe #{}\n\r", self.0))
+      .unwrap();
+
+    let hstpip = &self.uotghs().hstpip;
+
+    match self.0 {
+      0 => hstpip.modify(|_, w| w.pen0().clear_bit().prst0().set_bit()),
+      1 => hstpip.modify(|_, w| w.pen1().clear_bit().prst1().set_bit()),
+      2 => hstpip.modify(|_, w| w.pen2().clear_bit().prst2().set_bit()),
+      3 => hstpip.modify(|_, w| w.pen3().clear_bit().prst3().set_bit()),
+      4 => hstpip.modify(|_, w| w.pen4().clear_bit().prst4().set_bit()),
+      5 => hstpip.modify(|_, w| w.pen5().clear_bit().prst5().set_bit()),
+      6 => hstpip.modify(|_, w| w.pen6().clear_bit().prst6().set_bit()),
+      7 => hstpip.modify(|_, w| w.pen7().clear_bit().prst7().set_bit()),
+      8 => hstpip.modify(|_, w| w.pen8().clear_bit().prst8().set_bit()),
+      _ => panic!(),
+    }
+
+    self.hstpipcfg().modify(|_, w| w.alloc().clear_bit());
+  }
+
+  fn alloc(&mut self) {
+    let hstpip = &self.uotghs().hstpip;
 
     Serial::get()
       .write_fmt(format_args!(
@@ -196,51 +212,6 @@ impl AllocatedPipe {
         self.0
       ))
       .unwrap();
-
-    self.enable();
-
-    hstpipcfg.write_with_zero(|w| w.psize()._64_byte().pbk()._1_bank().autosw().set_bit());
-    hstpipcfg.modify(|_, w| w.alloc().set_bit())
-  }
-
-  fn release(&self) {
-    Serial::get()
-      .write_fmt(format_args!("[USB :: Pipe] Releasing pipe #{}\n\r", self.0))
-      .unwrap();
-
-    self.disable();
-    self.hstpipcfg().modify(|_, w| w.alloc().set_bit());
-    self.reset();
-  }
-
-  fn reset(&self) {
-    self.enable();
-    self.disable()
-  }
-
-  fn is_enabled(&self) -> bool {
-    let hstpip = &self.uotghs().hstpip;
-
-    match self.0 {
-      0 => hstpip.read().pen0().bit_is_set(),
-      1 => hstpip.read().pen1().bit_is_set(),
-      2 => hstpip.read().pen2().bit_is_set(),
-      3 => hstpip.read().pen3().bit_is_set(),
-      4 => hstpip.read().pen4().bit_is_set(),
-      5 => hstpip.read().pen5().bit_is_set(),
-      6 => hstpip.read().pen6().bit_is_set(),
-      7 => hstpip.read().pen7().bit_is_set(),
-      8 => hstpip.read().pen8().bit_is_set(),
-      _ => panic!("Pipe index out of bounds"),
-    }
-  }
-
-  fn is_configured(&self) -> bool {
-    self.hstpipisr().read().cfgok().bit_is_set()
-  }
-
-  fn enable(&self) {
-    let hstpip = &self.uotghs().hstpip;
 
     match self.0 {
       0 => hstpip.modify(|_, w| w.pen0().set_bit()),
@@ -254,23 +225,10 @@ impl AllocatedPipe {
       8 => hstpip.modify(|_, w| w.pen8().set_bit()),
       _ => panic!("Pipe index out of bounds"),
     }
-  }
 
-  fn disable(&self) {
-    let hstpip = &self.uotghs().hstpip;
-
-    match self.0 {
-      0 => hstpip.modify(|_, w| w.pen0().clear_bit()),
-      1 => hstpip.modify(|_, w| w.pen1().clear_bit()),
-      2 => hstpip.modify(|_, w| w.pen2().clear_bit()),
-      3 => hstpip.modify(|_, w| w.pen3().clear_bit()),
-      4 => hstpip.modify(|_, w| w.pen4().clear_bit()),
-      5 => hstpip.modify(|_, w| w.pen5().clear_bit()),
-      6 => hstpip.modify(|_, w| w.pen6().clear_bit()),
-      7 => hstpip.modify(|_, w| w.pen7().clear_bit()),
-      8 => hstpip.modify(|_, w| w.pen8().clear_bit()),
-      _ => panic!("Pipe index out of bounds"),
-    }
+    self
+      .hstpipcfg()
+      .modify(|_, w| w.psize()._64_byte().pbk()._1_bank().alloc().set_bit());
   }
 
   fn hstpipcfg(&self) -> &HSTPIPCFG {
@@ -281,14 +239,26 @@ impl AllocatedPipe {
     &self.uotghs().hstpipisr()[self.0 as usize]
   }
 
+  fn hstpipier(&self) -> &HSTPIPIER {
+    &self.uotghs().hstpipier()[self.0 as usize]
+  }
+
   fn uotghs(&self) -> &UOTGHS {
-    unsafe { &Peripherals::get().uotghs }
+    &self.peripherals().uotghs
+  }
+
+  fn peripherals(&self) -> &Peripherals {
+    unsafe { Peripherals::get() }
   }
 }
 
 impl MessagePipe {
-  pub fn new(pipe: AllocatedPipe) -> Self {
+  pub fn new(pipe: InnerPipe) -> Self {
     Self(pipe)
+  }
+
+  pub fn inner_pipe(&self) -> &InnerPipe {
+    &self.0
   }
 
   pub fn control_transfer(
@@ -299,6 +269,7 @@ impl MessagePipe {
   ) -> Result<(), Error> {
     let mut setup_packet = setup_packet.clone();
     let direction = setup_packet.request_type.direction();
+    let pipe = self.inner_pipe();
 
     if let Some(data) = &data {
       setup_packet.length = data.len() as u16
@@ -311,48 +282,52 @@ impl MessagePipe {
       ))
       .unwrap();
 
-    self.0.configure(address, 0, 0, TransferType::Control);
-    self.0.transfer(&mut Packet::Setup(&setup_packet))?;
+    pipe.configure(address, 0, Transfer::Control);
+    pipe.transfer(&mut Packet::Setup(setup_packet))?;
 
     match data {
       Some(data) => {
         let mut packet = match direction {
-          SetupRequestDirection::HostToDevice => Packet::DataOut(DataOutPacket(data)),
-          SetupRequestDirection::DeviceToHost => Packet::DataIn(DataInPacket(data)),
+          SetupRequestDirection::HostToDevice => Packet::DataOut(DataOutPacket::new(data)),
+          SetupRequestDirection::DeviceToHost => Packet::DataIn(DataInPacket::new(data)),
         };
 
-        self.0.transfer(&mut packet)?
+        pipe.transfer(&mut packet)?
       }
       None => (),
     }
 
     match direction {
       SetupRequestDirection::HostToDevice => {
-        self.0.transfer(&mut Packet::DataIn(DataInPacket(&mut [])))
+        pipe.transfer(&mut Packet::DataIn(DataInPacket::empty()))
       }
       SetupRequestDirection::DeviceToHost => {
-        self.0.transfer(&mut Packet::DataOut(DataOutPacket(&[])))
+        pipe.transfer(&mut Packet::DataOut(DataOutPacket::empty()))
       }
     }
   }
 }
 
 impl StreamInPipe {
-  pub fn new(pipe: AllocatedPipe) -> Self {
+  pub fn new(pipe: InnerPipe) -> Self {
     Self(pipe)
   }
 
   pub fn in_transfer(&self, data: &mut [u8]) -> Result<(), Error> {
-    self.0.transfer(&mut Packet::DataIn(DataInPacket(data)))
+    self
+      .0
+      .transfer(&mut Packet::DataIn(DataInPacket::new(data)))
   }
 }
 
 impl StreamOutPipe {
-  pub fn new(pipe: AllocatedPipe) -> Self {
+  pub fn new(pipe: InnerPipe) -> Self {
     Self(pipe)
   }
 
   pub fn out_transfer(&self, data: &mut [u8]) -> Result<(), Error> {
-    self.0.transfer(&mut Packet::DataIn(DataInPacket(data)))
+    self
+      .0
+      .transfer(&mut Packet::DataOut(DataOutPacket::new(data)))
   }
 }

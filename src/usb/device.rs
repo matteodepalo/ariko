@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 mod generic;
 mod hid;
 mod serial;
@@ -12,15 +14,12 @@ use core::fmt::Write;
 
 pub struct DeviceDescriptor;
 
-#[allow(dead_code)]
-#[derive(Copy, Clone)]
 pub enum Device {
   Serial(SerialDevice),
   Generic(GenericDevice),
   HID(HIDDevice),
 }
 
-#[derive(Copy, Clone)]
 pub enum DeviceClass {
   Serial(SerialDeviceClass),
   Generic(GenericDeviceClass),
@@ -56,7 +55,13 @@ impl Device {
     }
   }
 
-  pub fn release(&self) {}
+  pub fn release(&self) {
+    match self {
+      Device::Serial(serial) => serial.release(),
+      Device::Generic(generic) => generic.release(),
+      Device::HID(hid) => hid.release(),
+    }
+  }
 }
 
 impl DeviceClass {
@@ -79,7 +84,9 @@ impl DeviceClass {
   }
 
   pub fn get_descriptor(&self, address: u8) -> Result<DeviceDescriptor, Error> {
-    let mut buffer = [0_u8; 1024];
+    let mut buffer = [0_u8; 512];
+    let serial = Serial::get();
+    let usb = USB::get();
 
     let setup_packet = SetupPacket::new(
       SetupRequestType::default(),
@@ -88,14 +95,14 @@ impl DeviceClass {
       address as u16,
     );
 
-    Serial::get()
+    serial
       .write_fmt(format_args!(
         "[USB :: Device] Get descriptor at address {}\n\r",
         address
       ))
       .unwrap();
 
-    USB::get()
+    usb
       .control_pipe()
       .control_transfer(address, &setup_packet, Some(&mut buffer))?;
 
