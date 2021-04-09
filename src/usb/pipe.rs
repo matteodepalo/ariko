@@ -178,22 +178,7 @@ impl InnerPipe {
   pub fn release(&self) {
     debug!("[USB :: Pipe] Releasing pipe #{}", self.0);
 
-    let hstpip = &self.uotghs().hstpip;
-
-    match self.0 {
-      0 => hstpip.modify(|_, w| w.pen0().clear_bit().prst0().set_bit()),
-      1 => hstpip.modify(|_, w| w.pen1().clear_bit().prst1().set_bit()),
-      2 => hstpip.modify(|_, w| w.pen2().clear_bit().prst2().set_bit()),
-      3 => hstpip.modify(|_, w| w.pen3().clear_bit().prst3().set_bit()),
-      4 => hstpip.modify(|_, w| w.pen4().clear_bit().prst4().set_bit()),
-      5 => hstpip.modify(|_, w| w.pen5().clear_bit().prst5().set_bit()),
-      6 => hstpip.modify(|_, w| w.pen6().clear_bit().prst6().set_bit()),
-      7 => hstpip.modify(|_, w| w.pen7().clear_bit().prst7().set_bit()),
-      8 => hstpip.modify(|_, w| w.pen8().clear_bit().prst8().set_bit()),
-      _ => panic!(),
-    }
-
-    self.hstpipcfg().modify(|_, w| w.alloc().clear_bit());
+    self.hstpipcfg().modify(|_, w| w.alloc().clear_bit())
   }
 
   fn alloc(&mut self) {
