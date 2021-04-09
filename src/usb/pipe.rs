@@ -278,18 +278,18 @@ impl MessagePipe {
           SetupRequestDirection::DeviceToHost => Packet::DataIn(DataInPacket::new(data)),
         };
 
-        pipe.transfer(&mut packet)?
-      }
-      None => (),
-    }
+        pipe.transfer(&mut packet)?;
 
-    match direction {
-      SetupRequestDirection::HostToDevice => {
-        pipe.transfer(&mut Packet::DataIn(DataInPacket::empty()))
+        match direction {
+          SetupRequestDirection::HostToDevice => {
+            pipe.transfer(&mut Packet::DataIn(DataInPacket::empty()))
+          }
+          SetupRequestDirection::DeviceToHost => {
+            pipe.transfer(&mut Packet::DataOut(DataOutPacket::empty()))
+          }
+        }
       }
-      SetupRequestDirection::DeviceToHost => {
-        pipe.transfer(&mut Packet::DataOut(DataOutPacket::empty()))
-      }
+      None => pipe.transfer(&mut Packet::DataIn(DataInPacket::empty())),
     }
   }
 }

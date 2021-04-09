@@ -7,10 +7,9 @@ mod serial;
 use crate::usb::device::generic::{GenericDevice, GenericDeviceClass};
 use crate::usb::device::hid::{HIDDevice, HIDDeviceClass};
 use crate::usb::device::serial::{SerialDevice, SerialDeviceClass};
-use crate::usb::packet::{SetupPacket, SetupRequestType};
+use crate::usb::packet::{SetupPacket, SetupRequestDirection, SetupRequestType};
 use crate::usb::{Error, USB};
 use log::debug;
-use modular_bitfield::prelude::*;
 
 pub struct DeviceDescriptor;
 
@@ -32,26 +31,12 @@ enum RequestType {
   SetConfiguration = 9,
 }
 
-#[derive(BitfieldSpecifier)]
-#[bits = 8]
 enum DescriptorType {
   Device = 1,
   Configuration = 2,
   String = 3,
   Interface = 4,
   Endpoint = 5,
-}
-
-#[bitfield(bits = 16)]
-pub struct GetDescriptorRequest {
-  index: u8,
-  kind: DescriptorType,
-}
-
-impl GetDescriptorRequest {
-  fn default() -> Self {
-    Self::new().with_index(0).with_kind(DescriptorType::Device)
-  }
 }
 
 impl DeviceDescriptor {
@@ -90,6 +75,9 @@ impl DeviceClass {
   pub fn configure(&self, address: u8) -> Result<Device, Error> {
     let descriptor = self.get_descriptor(0)?;
 
+    self.set_address(0, address)?;
+    self.set_configuration(address, 1)?;
+
     match self {
       DeviceClass::HID(hid) => hid.configure(&self, address, &descriptor),
       DeviceClass::Serial(serial) => serial.configure(&self, address, &descriptor),
@@ -99,24 +87,63 @@ impl DeviceClass {
 
   pub fn get_descriptor(&self, address: u8) -> Result<DeviceDescriptor, Error> {
     let mut buffer = [0_u8; 18];
-    let usb = USB::get();
 
     let setup_packet = SetupPacket::new(
       SetupRequestType::default(),
       RequestType::GetDescriptor as u8,
-      GetDescriptorRequest::default().into_bytes(),
+      [0, DescriptorType::Device as u8],
       0,
     );
 
     debug!("[USB :: Device] Get descriptor at address {}", address);
 
-    usb
+    self
+      .usb()
       .control_pipe()
       .control_transfer(address, &setup_packet, Some(&mut buffer))?;
 
     DeviceDescriptor::new(&buffer)
   }
 
-  pub fn set_address(&self, _old_address: u8, _new_address: u8) {}
-  pub fn set_configuration(&self, _address: u8) {}
+  pub fn set_address(&self, old_address: u8, new_address: u8) -> Result<(), Error> {
+    let setup_packet = SetupPacket::new(
+      SetupRequestType::default().with_direction(SetupRequestDirection::HostToDevice),
+      RequestType::SetAddress as u8,
+      [new_address, 0],
+      0,
+    );
+
+    debug!(
+      "[USB :: Device] Set address {} at address {}",
+      new_address, old_address
+    );
+
+    self
+      .usb()
+      .control_pipe()
+      .control_transfer(old_address, &setup_packet, None)
+  }
+
+  pub fn set_configuration(&self, address: u8, configuration: u8) -> Result<(), Error> {
+    let setup_packet = SetupPacket::new(
+      SetupRequestType::default().with_direction(SetupRequestDirection::HostToDevice),
+      RequestType::SetConfiguration as u8,
+      [configuration, 0],
+      0,
+    );
+
+    debug!(
+      "[USB :: Device] Set configuration {} at address {}",
+      configuration, address
+    );
+
+    self
+      .usb()
+      .control_pipe()
+      .control_transfer(address, &setup_packet, None)
+  }
+
+  fn usb(&self) -> &mut USB {
+    USB::get()
+  }
 }

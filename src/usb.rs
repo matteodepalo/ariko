@@ -59,6 +59,9 @@ impl USB {
   pub fn poll(&mut self) {
     match self.try_poll() {
       Ok(()) => (),
+      Err(Error::TransferTimeout) => {
+        debug!("[USB] Transfer timeout");
+      }
       Err(error) => {
         debug!("[USB] Error: {:?}", error);
         self.set_state(State::Error);
@@ -221,7 +224,7 @@ impl USB {
     for device_class in DeviceClass::all().iter() {
       match device_class.configure(address) {
         Ok(device) => {
-          self.devices[address as usize] = Some(device);
+          self.devices[(address - 1) as usize] = Some(device);
           result = Ok(());
           break;
         }
@@ -232,8 +235,6 @@ impl USB {
         }
       }
     }
-
-    self.uotghs().hstctrl.modify(|_, w| w.sofe().set_bit());
 
     debug!("[USB] Finished configuring");
 
@@ -268,7 +269,7 @@ impl USB {
 
     for (address, device) in self.devices.iter().enumerate() {
       if device.is_none() {
-        result = Ok(address as u8);
+        result = Ok((address + 1) as u8);
         break;
       }
     }
