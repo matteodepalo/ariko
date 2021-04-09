@@ -30,6 +30,8 @@ impl Peripherals {
     let p = sam3x8e::Peripherals::take().unwrap();
     let cp = cortex_m::Peripherals::take().unwrap();
 
+    p.WDT.mr.write_with_zero(|w| w.wddis().set_bit());
+
     let mut pmc = p
       .PMC
       .freeze(Config::main_clock(MainOscillator::XtalOscillator));
