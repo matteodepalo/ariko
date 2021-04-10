@@ -249,7 +249,7 @@ impl MessagePipe {
     }
 
     debug!(
-      "[USB :: Pipe] Control transfer at address: {}, Setup packet: {:?}",
+      "[USB :: Pipe] Control transfer at address: {}, {:?}",
       address, setup_packet
     );
 

@@ -1,25 +1,21 @@
+#![allow(dead_code)]
+
 use crate::i2c::I2C;
 use crate::peripherals::Peripherals;
 use embedded_hal::blocking::delay::{DelayMs, DelayUs};
 use embedded_hal::blocking::i2c::Write;
 
 const DEVICE_ADDRESS: u8 = 0x3E;
-
 const CMD_CLEAR_DISPLAY: u8 = 0x01;
 const CMD_ENTRY_MODE_SET: u8 = 0x04;
 const CMD_DISPLAY_CONTROL: u8 = 0x08;
 const CMD_FUNCTION_SET: u8 = 0x20;
-
 const ENTRY_MODE_INCREMENT: u8 = 0b00000010;
-
 const DISPLAY_CONTROL_DISPLAY_ON: u8 = 0b00000100;
-const _DISPLAY_CONTROL_CURSOR_ON: u8 = 0b00000010;
-const _DISPLAY_CONTROL_CURSOR_BLINKING_ON: u8 = 0b00000001;
-
+const DISPLAY_CONTROL_CURSOR_ON: u8 = 0b00000010;
+const DISPLAY_CONTROL_CURSOR_BLINKING_ON: u8 = 0b00000001;
 const FUNCTION_SET_2_LINES: u8 = 0b00001000;
-
 const CONTROL_BYTE_RS: u8 = 0b01000000;
-
 const INIT_FUNCTION_SET: u8 = FUNCTION_SET_2_LINES;
 const INIT_DISPLAY_CONTROL: u8 = 0;
 

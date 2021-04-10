@@ -1,5 +1,5 @@
 use crate::peripherals::Peripherals;
-use crate::usb::device::{Device, DeviceClass};
+use crate::usb::device::Device;
 use crate::usb::pipe::{InnerPipe, MessagePipe, Pipe};
 use embedded_hal::timer::CountDown;
 use log::debug;
@@ -218,27 +218,14 @@ impl USB {
   fn configure(&mut self) -> Result<(), Error> {
     debug!("[USB] Configuring");
 
-    let mut result = Ok(());
     let address = self.next_device_address()?;
+    let device = Device::configure(address)?;
 
-    for device_class in DeviceClass::all().iter() {
-      match device_class.configure(address) {
-        Ok(device) => {
-          self.devices[(address - 1) as usize] = Some(device);
-          result = Ok(());
-          break;
-        }
-        Err(Error::DeviceNotSupported) => (),
-        Err(error) => {
-          result = Err(error);
-          break;
-        }
-      }
-    }
+    self.devices[(address - 1) as usize] = Some(device);
 
     debug!("[USB] Finished configuring");
 
-    result
+    Ok(())
   }
 
   fn poll_devices(&self) -> Result<(), Error> {
