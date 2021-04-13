@@ -37,20 +37,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "ariko"
-version = "0.1.0"
-dependencies = [
- "cortex-m 0.7.1",
- "cortex-m-rt",
- "embedded-hal 1.0.0-alpha.4",
- "log",
- "modular-bitfield",
- "nb 1.0.0",
- "panic-halt",
- "sam3x8e-hal",
-]
-
-[[package]]
 name = "as-slice"
 version = "0.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -76,6 +62,20 @@ name = "bitfield"
 version = "0.13.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "46afbd2983a5d5a7bd740ccb198caf5b82f45c40c09c0eed36052d91cb92e719"
+
+[[package]]
+name = "certabo"
+version = "0.1.0"
+dependencies = [
+ "cortex-m 0.7.1",
+ "cortex-m-rt",
+ "embedded-hal 1.0.0-alpha.4",
+ "log",
+ "modular-bitfield",
+ "nb 1.0.0",
+ "panic-halt",
+ "sam3x8e-hal",
+]
 
 [[package]]
 name = "cfg-if"

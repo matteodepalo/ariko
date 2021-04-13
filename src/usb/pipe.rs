@@ -8,9 +8,13 @@ use sam3x8e_hal::pac::UOTGHS;
 
 const PIPE_SIZE: usize = 64;
 
+#[derive(Debug)]
 pub struct InnerPipe(u8);
+#[derive(Debug)]
 pub struct MessagePipe(InnerPipe);
+#[derive(Debug)]
 pub struct StreamInPipe(InnerPipe);
+#[derive(Debug)]
 pub struct StreamOutPipe(InnerPipe);
 
 pub enum Pipe {

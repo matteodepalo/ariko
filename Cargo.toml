@@ -1,5 +1,5 @@
 [package]
-name = "ariko"
+name = "certabo"
 version = "0.1.0"
 authors = ["Eugenio Depalo <eugeniodepalo@gmail.com>"]
 edition = "2018"

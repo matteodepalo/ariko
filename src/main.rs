@@ -6,13 +6,13 @@
 extern crate cortex_m_rt;
 use core::panic::PanicInfo;
 
-use ariko::buzzer::Buzzer;
-use ariko::display::Display;
-use ariko::i2c::I2C;
-use ariko::logger::Logger;
-use ariko::peripherals::Peripherals;
-use ariko::serial::Serial;
-use ariko::usb::USB;
+use certabo::buzzer::Buzzer;
+use certabo::display::Display;
+use certabo::i2c::I2C;
+use certabo::logger::Logger;
+use certabo::peripherals::Peripherals;
+use certabo::serial::Serial;
+use certabo::usb::USB;
 use core::fmt::Write;
 use cortex_m_rt::entry;
 use embedded_hal::blocking::delay::DelayMs;
