@@ -71,14 +71,14 @@ impl USB {
 
   pub fn alloc_pipe(
     &mut self,
-    configure_callback: fn(pipe: &Pipe) -> Pipe,
-  ) -> Result<&Pipe, Error> {
+    configure_callback: fn(pipe: Pipe) -> Pipe,
+  ) -> Result<&mut Pipe, Error> {
     let index = self.next_pipe_index()?;
     let option = &mut self.pipes[(index - 1) as usize];
 
-    *option = Some(configure_callback(&Pipe::new(index)));
+    *option = Some(configure_callback(Pipe::new(index)));
 
-    Ok(option.as_ref().unwrap())
+    Ok(option.as_mut().unwrap())
   }
 
   pub fn release_pipe(&mut self, pipe: &Pipe) {
@@ -243,7 +243,7 @@ impl USB {
 
     for (index, pipe) in self.pipes.iter().enumerate() {
       if pipe.is_none() {
-        result = Ok(index as u8);
+        result = Ok((index + 1) as u8);
         break;
       }
     }

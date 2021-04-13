@@ -30,6 +30,7 @@ impl Peripherals {
     let p = sam3x8e::Peripherals::take().unwrap();
     let cp = cortex_m::Peripherals::take().unwrap();
 
+    // Disable watchdog to prevent restarts
     p.WDT.mr.write_with_zero(|w| w.wddis().set_bit());
 
     let mut pmc = p

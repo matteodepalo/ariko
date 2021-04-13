@@ -10,25 +10,25 @@ pub struct GenericDeviceClass;
 #[bitfield]
 #[derive(Copy, Clone, Debug)]
 pub struct DeviceDescriptor {
-  length: u8,
-  kind: u8,
-  usb_bcd: u16,
-  device_class: u8,
-  device_sub_class: u8,
-  device_protocol: u8,
-  max_packet_size: u8,
-  vendor_id: u16,
-  product_id: u16,
-  device_bcd: u16,
-  manufacturer_index: u8,
-  product_index: u8,
-  serial_number_index: u8,
-  num_configurations: u8,
+  pub length: u8,
+  pub kind: u8,
+  pub usb_bcd: u16,
+  pub device_class: u8,
+  pub device_sub_class: u8,
+  pub device_protocol: u8,
+  pub max_packet_size: u8,
+  pub vendor_id: u16,
+  pub product_id: u16,
+  pub device_bcd: u16,
+  pub manufacturer_index: u8,
+  pub product_index: u8,
+  pub serial_number_index: u8,
+  pub num_configurations: u8,
 }
 
 #[derive(Copy, Clone)]
 pub struct GenericDevice {
-  address: u8,
+  pub address: u8,
   descriptor: Option<DeviceDescriptor>,
 }
 
