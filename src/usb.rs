@@ -1,7 +1,9 @@
 use crate::peripherals::Peripherals;
 use crate::usb::device::Device;
 use crate::usb::pipe::{InnerPipe, MessagePipe, Pipe};
-use embedded_hal::timer::CountDown;
+use core::cell::RefCell;
+use critical_section::Mutex;
+use sam3x8e_hal::timer::CountDown;
 use log::debug;
 use nb::block;
 use sam3x8e_hal::pac::{RTT, UOTGHS};
@@ -13,7 +15,7 @@ mod device;
 mod packet;
 mod pipe;
 
-static mut S_USB: Option<USB> = None;
+static USB_INSTANCE: Mutex<RefCell<Option<USB>>> = Mutex::new(RefCell::new(None));
 
 const CONNECTION_DELAY: u32 = 200;
 const RESET_DELAY: u32 = 20;
@@ -43,8 +45,8 @@ pub struct USB {
 
 impl USB {
   pub fn init() {
-    unsafe {
-      S_USB = Some(USB {
+    critical_section::with(|cs| {
+      USB_INSTANCE.borrow(cs).replace(Some(USB {
         state: State::Disabled,
         devices: [
           None, None, None, None, None, None, None, None, None, None, None, None, None, None, None,
@@ -52,8 +54,19 @@ impl USB {
         ],
         control_pipe: None,
         pipes: [None, None, None, None, None, None, None, None],
-      })
-    }
+      }));
+    });
+  }
+
+  pub fn with<F, R>(f: F) -> R
+  where
+    F: FnOnce(&mut USB) -> R,
+  {
+    critical_section::with(|cs| {
+      let mut borrow = USB_INSTANCE.borrow(cs).borrow_mut();
+      let usb = borrow.as_mut().expect("USB not initialized");
+      f(usb)
+    })
   }
 
   pub fn poll(&mut self) {
@@ -98,6 +111,13 @@ impl USB {
     self.control_pipe.as_ref().unwrap()
   }
 
+  pub fn get_pipe(&self, index: u8) -> Option<&Pipe> {
+    if index == 0 || index > 8 {
+      return None;
+    }
+    self.pipes[(index - 1) as usize].as_ref()
+  }
+
   fn try_poll(&mut self) -> Result<(), Error> {
     match self.state {
       State::Disabled => {
@@ -105,13 +125,13 @@ impl USB {
         self.set_state(State::Disconnected)
       }
       State::Disconnected => {
-        if self.uotghs().hstisr.read().dconni().bit_is_set() {
+        if self.uotghs().hstisr().read().dconni().bit_is_set() {
           self.start()?;
           self.set_state(State::Ready)
         }
       }
       State::Ready => {
-        if self.uotghs().hstisr.read().ddisci().bit_is_set() {
+        if self.uotghs().hstisr().read().ddisci().bit_is_set() {
           self.stop();
           self.set_state(State::Disconnected)
         } else {
@@ -136,29 +156,33 @@ impl USB {
   fn enable(&mut self) {
     debug!("[USB] Enabling");
 
-    self.peripherals().pmc.enable_clock(PeripheralClock::UOtgHs);
+    Peripherals::with(|p| p.pmc.enable_clock(PeripheralClock::UOtgHs));
 
-    self.uotghs().ctrl.write(|w| w.uide().clear_bit());
-    self.uotghs().ctrl.modify(|_, w| w.uimod().clear_bit());
-    self.uotghs().ctrl.modify(|_, w| w.vbuspo().clear_bit());
-    self.uotghs().ctrl.modify(|_, w| w.otgpade().set_bit());
-    self.uotghs().ctrl.modify(|_, w| w.usbe().set_bit());
-    self.uotghs().ctrl.modify(|_, w| w.frzclk().clear_bit());
+    self.uotghs().ctrl().write(|w| w.uide().clear_bit());
+    self.uotghs().ctrl().modify(|_, w| w.uimod().clear_bit());
+    self.uotghs().ctrl().modify(|_, w| w.vbuspo().clear_bit());
+    self.uotghs().ctrl().modify(|_, w| w.otgpade().set_bit());
+    self.uotghs().ctrl().modify(|_, w| w.usbe().set_bit());
+    self.uotghs().ctrl().modify(|_, w| w.frzclk().clear_bit());
 
-    while self.uotghs().sr.read().clkusable().bit_is_clear() {}
+    while self.uotghs().sr().read().clkusable().bit_is_clear() {}
 
-    self
-      .uotghs()
-      .hsticr
-      .write_with_zero(|w| unsafe { w.bits(u32::max_value()) });
+    unsafe {
+      self
+        .uotghs()
+        .hsticr()
+        .write_with_zero(|w| w.bits(u32::max_value()));
+    }
 
-    self
-      .uotghs()
-      .scr
-      .write_with_zero(|w| unsafe { w.bits(u32::max_value()) });
+    unsafe {
+      self
+        .uotghs()
+        .scr()
+        .write_with_zero(|w| w.bits(u32::max_value()));
+    }
 
-    self.uotghs().ctrl.modify(|_, w| w.vbushwc().set_bit());
-    self.uotghs().sfr.write_with_zero(|w| w.vbusrqs().set_bit());
+    self.uotghs().ctrl().modify(|_, w| w.vbushwc().set_bit());
+    unsafe { self.uotghs().sfr().write_with_zero(|w| w.vbusrqs().set_bit()); }
 
     debug!("[USB] Finished enabling")
   }
@@ -166,10 +190,12 @@ impl USB {
   fn start(&mut self) -> Result<(), Error> {
     debug!("[USB] Starting");
 
-    self
-      .uotghs()
-      .hsticr
-      .write_with_zero(|w| w.dconnic().set_bit());
+    unsafe {
+      self
+        .uotghs()
+        .hsticr()
+        .write_with_zero(|w| w.dconnic().set_bit());
+    }
 
     self.delay(CONNECTION_DELAY);
     self.reset()
@@ -178,10 +204,12 @@ impl USB {
   fn stop(&mut self) {
     debug!("[USB] Stopping");
 
-    self
-      .uotghs()
-      .hsticr
-      .write_with_zero(|w| w.ddiscic().set_bit());
+    unsafe {
+      self
+        .uotghs()
+        .hsticr()
+        .write_with_zero(|w| w.ddiscic().set_bit());
+    }
 
     if let Some(pipe) = &self.control_pipe {
       pipe.inner_pipe().release();
@@ -199,14 +227,16 @@ impl USB {
   fn reset(&mut self) -> Result<(), Error> {
     debug!("[USB] Resetting");
 
-    self.uotghs().hstctrl.modify(|_, w| w.reset().set_bit());
+    self.uotghs().hstctrl().modify(|_, w| w.reset().set_bit());
 
-    while self.uotghs().hstisr.read().rsti().bit_is_clear() {}
+    while self.uotghs().hstisr().read().rsti().bit_is_clear() {}
 
-    self
-      .uotghs()
-      .hsticr
-      .write_with_zero(|w| w.rstic().set_bit());
+    unsafe {
+      self
+        .uotghs()
+        .hsticr()
+        .write_with_zero(|w| w.rstic().set_bit());
+    }
 
     self.delay(RESET_DELAY);
 
@@ -265,24 +295,16 @@ impl USB {
   }
 
   fn delay(&self, ms: u32) {
-    let timer = self.timer();
-    timer.try_start(ms.hz()).unwrap();
-    block!(timer.try_wait()).unwrap()
-  }
-
-  fn peripherals(&self) -> &mut Peripherals {
-    unsafe { Peripherals::get() }
+    Peripherals::with(|p| {
+      let timer = &mut p.timer;
+      timer.try_start(ms.hz()).unwrap();
+      block!(timer.try_wait()).unwrap()
+    });
   }
 
   fn uotghs(&self) -> &UOTGHS {
-    &self.peripherals().uotghs
-  }
-
-  fn timer(&self) -> &mut Timer<RTT> {
-    &mut self.peripherals().timer
-  }
-
-  pub fn get() -> &'static mut Self {
-    unsafe { S_USB.as_mut().unwrap() }
+    // Use pointer to get a static reference to the UOTGHS peripheral
+    // This is safe because the hardware registers are memory-mapped and don't move
+    unsafe { &*UOTGHS::ptr() }
   }
 }

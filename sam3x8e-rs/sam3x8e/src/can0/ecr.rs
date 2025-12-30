@@ -1,18 +1,27 @@
-#[doc = "Reader of register ECR"]
-pub type R = crate::R<u32, super::ECR>;
-#[doc = "Reader of field `REC`"]
-pub type REC_R = crate::R<u8, u8>;
-#[doc = "Reader of field `TEC`"]
-pub type TEC_R = crate::R<u8, u8>;
+#[doc = "Register `ECR` reader"]
+pub type R = crate::R<EcrSpec>;
+#[doc = "Field `REC` reader - Receive Error Counter"]
+pub type RecR = crate::FieldReader;
+#[doc = "Field `TEC` reader - Transmit Error Counter"]
+pub type TecR = crate::FieldReader;
 impl R {
-    #[doc = "Bits 0:7 - Receive Error Counter"]
-    #[inline(always)]
-    pub fn rec(&self) -> REC_R {
-        REC_R::new((self.bits & 0xff) as u8)
-    }
-    #[doc = "Bits 16:23 - Transmit Error Counter"]
-    #[inline(always)]
-    pub fn tec(&self) -> TEC_R {
-        TEC_R::new(((self.bits >> 16) & 0xff) as u8)
-    }
+  #[doc = "Bits 0:7 - Receive Error Counter"]
+  #[inline(always)]
+  pub fn rec(&self) -> RecR {
+    RecR::new((self.bits & 0xff) as u8)
+  }
+  #[doc = "Bits 16:23 - Transmit Error Counter"]
+  #[inline(always)]
+  pub fn tec(&self) -> TecR {
+    TecR::new(((self.bits >> 16) & 0xff) as u8)
+  }
 }
+#[doc = "Error Counter Register\n\nYou can [`read`](crate::Reg::read) this register and get [`ecr::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct EcrSpec;
+impl crate::RegisterSpec for EcrSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`ecr::R`](R) reader structure"]
+impl crate::Readable for EcrSpec {}
+#[doc = "`reset()` method sets ECR to value 0"]
+impl crate::Resettable for EcrSpec {}

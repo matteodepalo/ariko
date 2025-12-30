@@ -1,66 +1,29 @@
-#[doc = "Writer for register ECC_CTRL"]
-pub type W = crate::W<u32, super::ECC_CTRL>;
-#[doc = "Register ECC_CTRL `reset()`'s with value 0"]
-impl crate::ResetValue for super::ECC_CTRL {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Write proxy for field `RST`"]
-pub struct RST_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> RST_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x01) | ((value as u32) & 0x01);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `SWRST`"]
-pub struct SWRST_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> SWRST_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 1)) | (((value as u32) & 0x01) << 1);
-        self.w
-    }
-}
+#[doc = "Register `ECC_CTRL` writer"]
+pub type W = crate::W<EccCtrlSpec>;
+#[doc = "Field `RST` writer - Reset ECC"]
+pub type RstW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `SWRST` writer - Software Reset"]
+pub type SwrstW<'a, REG> = crate::BitWriter<'a, REG>;
 impl W {
-    #[doc = "Bit 0 - Reset ECC"]
-    #[inline(always)]
-    pub fn rst(&mut self) -> RST_W {
-        RST_W { w: self }
-    }
-    #[doc = "Bit 1 - Software Reset"]
-    #[inline(always)]
-    pub fn swrst(&mut self) -> SWRST_W {
-        SWRST_W { w: self }
-    }
+  #[doc = "Bit 0 - Reset ECC"]
+  #[inline(always)]
+  pub fn rst(&mut self) -> RstW<'_, EccCtrlSpec> {
+    RstW::new(self, 0)
+  }
+  #[doc = "Bit 1 - Software Reset"]
+  #[inline(always)]
+  pub fn swrst(&mut self) -> SwrstW<'_, EccCtrlSpec> {
+    SwrstW::new(self, 1)
+  }
 }
+#[doc = "SMC ECC Control Register\n\nYou can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ecc_ctrl::W`](W). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct EccCtrlSpec;
+impl crate::RegisterSpec for EccCtrlSpec {
+  type Ux = u32;
+}
+#[doc = "`write(|w| ..)` method takes [`ecc_ctrl::W`](W) writer structure"]
+impl crate::Writable for EccCtrlSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets ECC_CTRL to value 0"]
+impl crate::Resettable for EccCtrlSpec {}

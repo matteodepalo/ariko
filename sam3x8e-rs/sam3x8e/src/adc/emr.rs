@@ -1,239 +1,173 @@
-#[doc = "Reader of register EMR"]
-pub type R = crate::R<u32, super::EMR>;
-#[doc = "Writer for register EMR"]
-pub type W = crate::W<u32, super::EMR>;
-#[doc = "Register EMR `reset()`'s with value 0"]
-impl crate::ResetValue for super::EMR {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
+#[doc = "Register `EMR` reader"]
+pub type R = crate::R<EmrSpec>;
+#[doc = "Register `EMR` writer"]
+pub type W = crate::W<EmrSpec>;
 #[doc = "Comparison Mode\n\nValue on reset: 0"]
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub enum CMPMODE_A {
-    #[doc = "0: Generates an event when the converted data is lower than the low threshold of the window."]
-    LOW,
-    #[doc = "1: Generates an event when the converted data is higher than the high threshold of the window."]
-    HIGH,
-    #[doc = "2: Generates an event when the converted data is in the comparison window."]
-    IN,
-    #[doc = "3: Generates an event when the converted data is out of the comparison window."]
-    OUT,
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[repr(u8)]
+pub enum Cmpmode {
+  #[doc = "0: Generates an event when the converted data is lower than the low threshold of the window."]
+  Low = 0,
+  #[doc = "1: Generates an event when the converted data is higher than the high threshold of the window."]
+  High = 1,
+  #[doc = "2: Generates an event when the converted data is in the comparison window."]
+  In = 2,
+  #[doc = "3: Generates an event when the converted data is out of the comparison window."]
+  Out = 3,
 }
-impl From<CMPMODE_A> for u8 {
-    #[inline(always)]
-    fn from(variant: CMPMODE_A) -> Self {
-        match variant {
-            CMPMODE_A::LOW => 0,
-            CMPMODE_A::HIGH => 1,
-            CMPMODE_A::IN => 2,
-            CMPMODE_A::OUT => 3,
-        }
-    }
+impl From<Cmpmode> for u8 {
+  #[inline(always)]
+  fn from(variant: Cmpmode) -> Self {
+    variant as _
+  }
 }
-#[doc = "Reader of field `CMPMODE`"]
-pub type CMPMODE_R = crate::R<u8, CMPMODE_A>;
-impl CMPMODE_R {
-    #[doc = r"Get enumerated values variant"]
-    #[inline(always)]
-    pub fn variant(&self) -> CMPMODE_A {
-        match self.bits {
-            0 => CMPMODE_A::LOW,
-            1 => CMPMODE_A::HIGH,
-            2 => CMPMODE_A::IN,
-            3 => CMPMODE_A::OUT,
-            _ => unreachable!(),
-        }
-    }
-    #[doc = "Checks if the value of the field is `LOW`"]
-    #[inline(always)]
-    pub fn is_low(&self) -> bool {
-        *self == CMPMODE_A::LOW
-    }
-    #[doc = "Checks if the value of the field is `HIGH`"]
-    #[inline(always)]
-    pub fn is_high(&self) -> bool {
-        *self == CMPMODE_A::HIGH
-    }
-    #[doc = "Checks if the value of the field is `IN`"]
-    #[inline(always)]
-    pub fn is_in_(&self) -> bool {
-        *self == CMPMODE_A::IN
-    }
-    #[doc = "Checks if the value of the field is `OUT`"]
-    #[inline(always)]
-    pub fn is_out(&self) -> bool {
-        *self == CMPMODE_A::OUT
-    }
+impl crate::FieldSpec for Cmpmode {
+  type Ux = u8;
 }
-#[doc = "Write proxy for field `CMPMODE`"]
-pub struct CMPMODE_W<'a> {
-    w: &'a mut W,
+impl crate::IsEnum for Cmpmode {}
+#[doc = "Field `CMPMODE` reader - Comparison Mode"]
+pub type CmpmodeR = crate::FieldReader<Cmpmode>;
+impl CmpmodeR {
+  #[doc = "Get enumerated values variant"]
+  #[inline(always)]
+  pub const fn variant(&self) -> Cmpmode {
+    match self.bits {
+      0 => Cmpmode::Low,
+      1 => Cmpmode::High,
+      2 => Cmpmode::In,
+      3 => Cmpmode::Out,
+      _ => unreachable!(),
+    }
+  }
+  #[doc = "Generates an event when the converted data is lower than the low threshold of the window."]
+  #[inline(always)]
+  pub fn is_low(&self) -> bool {
+    *self == Cmpmode::Low
+  }
+  #[doc = "Generates an event when the converted data is higher than the high threshold of the window."]
+  #[inline(always)]
+  pub fn is_high(&self) -> bool {
+    *self == Cmpmode::High
+  }
+  #[doc = "Generates an event when the converted data is in the comparison window."]
+  #[inline(always)]
+  pub fn is_in(&self) -> bool {
+    *self == Cmpmode::In
+  }
+  #[doc = "Generates an event when the converted data is out of the comparison window."]
+  #[inline(always)]
+  pub fn is_out(&self) -> bool {
+    *self == Cmpmode::Out
+  }
 }
-impl<'a> CMPMODE_W<'a> {
-    #[doc = r"Writes `variant` to the field"]
-    #[inline(always)]
-    pub fn variant(self, variant: CMPMODE_A) -> &'a mut W {
-        {
-            self.bits(variant.into())
-        }
-    }
-    #[doc = "Generates an event when the converted data is lower than the low threshold of the window."]
-    #[inline(always)]
-    pub fn low(self) -> &'a mut W {
-        self.variant(CMPMODE_A::LOW)
-    }
-    #[doc = "Generates an event when the converted data is higher than the high threshold of the window."]
-    #[inline(always)]
-    pub fn high(self) -> &'a mut W {
-        self.variant(CMPMODE_A::HIGH)
-    }
-    #[doc = "Generates an event when the converted data is in the comparison window."]
-    #[inline(always)]
-    pub fn in_(self) -> &'a mut W {
-        self.variant(CMPMODE_A::IN)
-    }
-    #[doc = "Generates an event when the converted data is out of the comparison window."]
-    #[inline(always)]
-    pub fn out(self) -> &'a mut W {
-        self.variant(CMPMODE_A::OUT)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x03) | ((value as u32) & 0x03);
-        self.w
-    }
+#[doc = "Field `CMPMODE` writer - Comparison Mode"]
+pub type CmpmodeW<'a, REG> = crate::FieldWriter<'a, REG, 2, Cmpmode, crate::Safe>;
+impl<'a, REG> CmpmodeW<'a, REG>
+where
+  REG: crate::Writable + crate::RegisterSpec,
+  REG::Ux: From<u8>,
+{
+  #[doc = "Generates an event when the converted data is lower than the low threshold of the window."]
+  #[inline(always)]
+  pub fn low(self) -> &'a mut crate::W<REG> {
+    self.variant(Cmpmode::Low)
+  }
+  #[doc = "Generates an event when the converted data is higher than the high threshold of the window."]
+  #[inline(always)]
+  pub fn high(self) -> &'a mut crate::W<REG> {
+    self.variant(Cmpmode::High)
+  }
+  #[doc = "Generates an event when the converted data is in the comparison window."]
+  #[inline(always)]
+  pub fn in_(self) -> &'a mut crate::W<REG> {
+    self.variant(Cmpmode::In)
+  }
+  #[doc = "Generates an event when the converted data is out of the comparison window."]
+  #[inline(always)]
+  pub fn out(self) -> &'a mut crate::W<REG> {
+    self.variant(Cmpmode::Out)
+  }
 }
-#[doc = "Reader of field `CMPSEL`"]
-pub type CMPSEL_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `CMPSEL`"]
-pub struct CMPSEL_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CMPSEL_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x0f << 4)) | (((value as u32) & 0x0f) << 4);
-        self.w
-    }
-}
-#[doc = "Reader of field `CMPALL`"]
-pub type CMPALL_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `CMPALL`"]
-pub struct CMPALL_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CMPALL_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 9)) | (((value as u32) & 0x01) << 9);
-        self.w
-    }
-}
-#[doc = "Reader of field `CMPFILTER`"]
-pub type CMPFILTER_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `CMPFILTER`"]
-pub struct CMPFILTER_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CMPFILTER_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x03 << 12)) | (((value as u32) & 0x03) << 12);
-        self.w
-    }
-}
-#[doc = "Reader of field `TAG`"]
-pub type TAG_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `TAG`"]
-pub struct TAG_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> TAG_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 24)) | (((value as u32) & 0x01) << 24);
-        self.w
-    }
-}
+#[doc = "Field `CMPSEL` reader - Comparison Selected Channel"]
+pub type CmpselR = crate::FieldReader;
+#[doc = "Field `CMPSEL` writer - Comparison Selected Channel"]
+pub type CmpselW<'a, REG> = crate::FieldWriter<'a, REG, 4>;
+#[doc = "Field `CMPALL` reader - Compare All Channels"]
+pub type CmpallR = crate::BitReader;
+#[doc = "Field `CMPALL` writer - Compare All Channels"]
+pub type CmpallW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `CMPFILTER` reader - Compare Event Filtering"]
+pub type CmpfilterR = crate::FieldReader;
+#[doc = "Field `CMPFILTER` writer - Compare Event Filtering"]
+pub type CmpfilterW<'a, REG> = crate::FieldWriter<'a, REG, 2>;
+#[doc = "Field `TAG` reader - TAG of ADC_LDCR register"]
+pub type TagR = crate::BitReader;
+#[doc = "Field `TAG` writer - TAG of ADC_LDCR register"]
+pub type TagW<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
-    #[doc = "Bits 0:1 - Comparison Mode"]
-    #[inline(always)]
-    pub fn cmpmode(&self) -> CMPMODE_R {
-        CMPMODE_R::new((self.bits & 0x03) as u8)
-    }
-    #[doc = "Bits 4:7 - Comparison Selected Channel"]
-    #[inline(always)]
-    pub fn cmpsel(&self) -> CMPSEL_R {
-        CMPSEL_R::new(((self.bits >> 4) & 0x0f) as u8)
-    }
-    #[doc = "Bit 9 - Compare All Channels"]
-    #[inline(always)]
-    pub fn cmpall(&self) -> CMPALL_R {
-        CMPALL_R::new(((self.bits >> 9) & 0x01) != 0)
-    }
-    #[doc = "Bits 12:13 - Compare Event Filtering"]
-    #[inline(always)]
-    pub fn cmpfilter(&self) -> CMPFILTER_R {
-        CMPFILTER_R::new(((self.bits >> 12) & 0x03) as u8)
-    }
-    #[doc = "Bit 24 - TAG of the ADC_LDCR register"]
-    #[inline(always)]
-    pub fn tag(&self) -> TAG_R {
-        TAG_R::new(((self.bits >> 24) & 0x01) != 0)
-    }
+  #[doc = "Bits 0:1 - Comparison Mode"]
+  #[inline(always)]
+  pub fn cmpmode(&self) -> CmpmodeR {
+    CmpmodeR::new((self.bits & 3) as u8)
+  }
+  #[doc = "Bits 4:7 - Comparison Selected Channel"]
+  #[inline(always)]
+  pub fn cmpsel(&self) -> CmpselR {
+    CmpselR::new(((self.bits >> 4) & 0x0f) as u8)
+  }
+  #[doc = "Bit 9 - Compare All Channels"]
+  #[inline(always)]
+  pub fn cmpall(&self) -> CmpallR {
+    CmpallR::new(((self.bits >> 9) & 1) != 0)
+  }
+  #[doc = "Bits 12:13 - Compare Event Filtering"]
+  #[inline(always)]
+  pub fn cmpfilter(&self) -> CmpfilterR {
+    CmpfilterR::new(((self.bits >> 12) & 3) as u8)
+  }
+  #[doc = "Bit 24 - TAG of ADC_LDCR register"]
+  #[inline(always)]
+  pub fn tag(&self) -> TagR {
+    TagR::new(((self.bits >> 24) & 1) != 0)
+  }
 }
 impl W {
-    #[doc = "Bits 0:1 - Comparison Mode"]
-    #[inline(always)]
-    pub fn cmpmode(&mut self) -> CMPMODE_W {
-        CMPMODE_W { w: self }
-    }
-    #[doc = "Bits 4:7 - Comparison Selected Channel"]
-    #[inline(always)]
-    pub fn cmpsel(&mut self) -> CMPSEL_W {
-        CMPSEL_W { w: self }
-    }
-    #[doc = "Bit 9 - Compare All Channels"]
-    #[inline(always)]
-    pub fn cmpall(&mut self) -> CMPALL_W {
-        CMPALL_W { w: self }
-    }
-    #[doc = "Bits 12:13 - Compare Event Filtering"]
-    #[inline(always)]
-    pub fn cmpfilter(&mut self) -> CMPFILTER_W {
-        CMPFILTER_W { w: self }
-    }
-    #[doc = "Bit 24 - TAG of the ADC_LDCR register"]
-    #[inline(always)]
-    pub fn tag(&mut self) -> TAG_W {
-        TAG_W { w: self }
-    }
+  #[doc = "Bits 0:1 - Comparison Mode"]
+  #[inline(always)]
+  pub fn cmpmode(&mut self) -> CmpmodeW<'_, EmrSpec> {
+    CmpmodeW::new(self, 0)
+  }
+  #[doc = "Bits 4:7 - Comparison Selected Channel"]
+  #[inline(always)]
+  pub fn cmpsel(&mut self) -> CmpselW<'_, EmrSpec> {
+    CmpselW::new(self, 4)
+  }
+  #[doc = "Bit 9 - Compare All Channels"]
+  #[inline(always)]
+  pub fn cmpall(&mut self) -> CmpallW<'_, EmrSpec> {
+    CmpallW::new(self, 9)
+  }
+  #[doc = "Bits 12:13 - Compare Event Filtering"]
+  #[inline(always)]
+  pub fn cmpfilter(&mut self) -> CmpfilterW<'_, EmrSpec> {
+    CmpfilterW::new(self, 12)
+  }
+  #[doc = "Bit 24 - TAG of ADC_LDCR register"]
+  #[inline(always)]
+  pub fn tag(&mut self) -> TagW<'_, EmrSpec> {
+    TagW::new(self, 24)
+  }
 }
+#[doc = "Extended Mode Register\n\nYou can [`read`](crate::Reg::read) this register and get [`emr::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`emr::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct EmrSpec;
+impl crate::RegisterSpec for EmrSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`emr::R`](R) reader structure"]
+impl crate::Readable for EmrSpec {}
+#[doc = "`write(|w| ..)` method takes [`emr::W`](W) writer structure"]
+impl crate::Writable for EmrSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets EMR to value 0"]
+impl crate::Resettable for EmrSpec {}

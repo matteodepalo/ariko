@@ -1,220 +1,69 @@
-#[doc = "Writer for register IDR0"]
-pub type W = crate::W<u32, super::IDR0>;
-#[doc = "Write proxy for field `COVFS`"]
-pub struct COVFS_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> COVFS_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x01) | ((value as u32) & 0x01);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `LOVRS`"]
-pub struct LOVRS_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> LOVRS_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 1)) | (((value as u32) & 0x01) << 1);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `CPAS`"]
-pub struct CPAS_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CPAS_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 2)) | (((value as u32) & 0x01) << 2);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `CPBS`"]
-pub struct CPBS_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CPBS_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 3)) | (((value as u32) & 0x01) << 3);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `CPCS`"]
-pub struct CPCS_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CPCS_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 4)) | (((value as u32) & 0x01) << 4);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `LDRAS`"]
-pub struct LDRAS_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> LDRAS_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 5)) | (((value as u32) & 0x01) << 5);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `LDRBS`"]
-pub struct LDRBS_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> LDRBS_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 6)) | (((value as u32) & 0x01) << 6);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `ETRGS`"]
-pub struct ETRGS_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> ETRGS_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 7)) | (((value as u32) & 0x01) << 7);
-        self.w
-    }
-}
+#[doc = "Register `IDR0` writer"]
+pub type W = crate::W<Idr0Spec>;
+#[doc = "Field `COVFS` writer - Counter Overflow"]
+pub type CovfsW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `LOVRS` writer - Load Overrun"]
+pub type LovrsW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `CPAS` writer - RA Compare"]
+pub type CpasW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `CPBS` writer - RB Compare"]
+pub type CpbsW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `CPCS` writer - RC Compare"]
+pub type CpcsW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `LDRAS` writer - RA Loading"]
+pub type LdrasW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `LDRBS` writer - RB Loading"]
+pub type LdrbsW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `ETRGS` writer - External Trigger"]
+pub type EtrgsW<'a, REG> = crate::BitWriter<'a, REG>;
 impl W {
-    #[doc = "Bit 0 - Counter Overflow"]
-    #[inline(always)]
-    pub fn covfs(&mut self) -> COVFS_W {
-        COVFS_W { w: self }
-    }
-    #[doc = "Bit 1 - Load Overrun"]
-    #[inline(always)]
-    pub fn lovrs(&mut self) -> LOVRS_W {
-        LOVRS_W { w: self }
-    }
-    #[doc = "Bit 2 - RA Compare"]
-    #[inline(always)]
-    pub fn cpas(&mut self) -> CPAS_W {
-        CPAS_W { w: self }
-    }
-    #[doc = "Bit 3 - RB Compare"]
-    #[inline(always)]
-    pub fn cpbs(&mut self) -> CPBS_W {
-        CPBS_W { w: self }
-    }
-    #[doc = "Bit 4 - RC Compare"]
-    #[inline(always)]
-    pub fn cpcs(&mut self) -> CPCS_W {
-        CPCS_W { w: self }
-    }
-    #[doc = "Bit 5 - RA Loading"]
-    #[inline(always)]
-    pub fn ldras(&mut self) -> LDRAS_W {
-        LDRAS_W { w: self }
-    }
-    #[doc = "Bit 6 - RB Loading"]
-    #[inline(always)]
-    pub fn ldrbs(&mut self) -> LDRBS_W {
-        LDRBS_W { w: self }
-    }
-    #[doc = "Bit 7 - External Trigger"]
-    #[inline(always)]
-    pub fn etrgs(&mut self) -> ETRGS_W {
-        ETRGS_W { w: self }
-    }
+  #[doc = "Bit 0 - Counter Overflow"]
+  #[inline(always)]
+  pub fn covfs(&mut self) -> CovfsW<'_, Idr0Spec> {
+    CovfsW::new(self, 0)
+  }
+  #[doc = "Bit 1 - Load Overrun"]
+  #[inline(always)]
+  pub fn lovrs(&mut self) -> LovrsW<'_, Idr0Spec> {
+    LovrsW::new(self, 1)
+  }
+  #[doc = "Bit 2 - RA Compare"]
+  #[inline(always)]
+  pub fn cpas(&mut self) -> CpasW<'_, Idr0Spec> {
+    CpasW::new(self, 2)
+  }
+  #[doc = "Bit 3 - RB Compare"]
+  #[inline(always)]
+  pub fn cpbs(&mut self) -> CpbsW<'_, Idr0Spec> {
+    CpbsW::new(self, 3)
+  }
+  #[doc = "Bit 4 - RC Compare"]
+  #[inline(always)]
+  pub fn cpcs(&mut self) -> CpcsW<'_, Idr0Spec> {
+    CpcsW::new(self, 4)
+  }
+  #[doc = "Bit 5 - RA Loading"]
+  #[inline(always)]
+  pub fn ldras(&mut self) -> LdrasW<'_, Idr0Spec> {
+    LdrasW::new(self, 5)
+  }
+  #[doc = "Bit 6 - RB Loading"]
+  #[inline(always)]
+  pub fn ldrbs(&mut self) -> LdrbsW<'_, Idr0Spec> {
+    LdrbsW::new(self, 6)
+  }
+  #[doc = "Bit 7 - External Trigger"]
+  #[inline(always)]
+  pub fn etrgs(&mut self) -> EtrgsW<'_, Idr0Spec> {
+    EtrgsW::new(self, 7)
+  }
+}
+#[doc = "Interrupt Disable Register (channel = 0)\n\nYou can [`write_with_zero`](crate::Reg::write_with_zero) this register using [`idr0::W`](W). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct Idr0Spec;
+impl crate::RegisterSpec for Idr0Spec {
+  type Ux = u32;
+}
+#[doc = "`write(|w| ..)` method takes [`idr0::W`](W) writer structure"]
+impl crate::Writable for Idr0Spec {
+  type Safety = crate::Unsafe;
 }

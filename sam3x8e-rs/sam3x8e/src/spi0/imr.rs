@@ -1,53 +1,62 @@
-#[doc = "Reader of register IMR"]
-pub type R = crate::R<u32, super::IMR>;
-#[doc = "Reader of field `RDRF`"]
-pub type RDRF_R = crate::R<bool, bool>;
-#[doc = "Reader of field `TDRE`"]
-pub type TDRE_R = crate::R<bool, bool>;
-#[doc = "Reader of field `MODF`"]
-pub type MODF_R = crate::R<bool, bool>;
-#[doc = "Reader of field `OVRES`"]
-pub type OVRES_R = crate::R<bool, bool>;
-#[doc = "Reader of field `NSSR`"]
-pub type NSSR_R = crate::R<bool, bool>;
-#[doc = "Reader of field `TXEMPTY`"]
-pub type TXEMPTY_R = crate::R<bool, bool>;
-#[doc = "Reader of field `UNDES`"]
-pub type UNDES_R = crate::R<bool, bool>;
+#[doc = "Register `IMR` reader"]
+pub type R = crate::R<ImrSpec>;
+#[doc = "Field `RDRF` reader - Receive Data Register Full Interrupt Mask"]
+pub type RdrfR = crate::BitReader;
+#[doc = "Field `TDRE` reader - SPI Transmit Data Register Empty Interrupt Mask"]
+pub type TdreR = crate::BitReader;
+#[doc = "Field `MODF` reader - Mode Fault Error Interrupt Mask"]
+pub type ModfR = crate::BitReader;
+#[doc = "Field `OVRES` reader - Overrun Error Interrupt Mask"]
+pub type OvresR = crate::BitReader;
+#[doc = "Field `NSSR` reader - NSS Rising Interrupt Mask"]
+pub type NssrR = crate::BitReader;
+#[doc = "Field `TXEMPTY` reader - Transmission Registers Empty Mask"]
+pub type TxemptyR = crate::BitReader;
+#[doc = "Field `UNDES` reader - Underrun Error Interrupt Mask"]
+pub type UndesR = crate::BitReader;
 impl R {
-    #[doc = "Bit 0 - Receive Data Register Full Interrupt Mask"]
-    #[inline(always)]
-    pub fn rdrf(&self) -> RDRF_R {
-        RDRF_R::new((self.bits & 0x01) != 0)
-    }
-    #[doc = "Bit 1 - SPI Transmit Data Register Empty Interrupt Mask"]
-    #[inline(always)]
-    pub fn tdre(&self) -> TDRE_R {
-        TDRE_R::new(((self.bits >> 1) & 0x01) != 0)
-    }
-    #[doc = "Bit 2 - Mode Fault Error Interrupt Mask"]
-    #[inline(always)]
-    pub fn modf(&self) -> MODF_R {
-        MODF_R::new(((self.bits >> 2) & 0x01) != 0)
-    }
-    #[doc = "Bit 3 - Overrun Error Interrupt Mask"]
-    #[inline(always)]
-    pub fn ovres(&self) -> OVRES_R {
-        OVRES_R::new(((self.bits >> 3) & 0x01) != 0)
-    }
-    #[doc = "Bit 8 - NSS Rising Interrupt Mask"]
-    #[inline(always)]
-    pub fn nssr(&self) -> NSSR_R {
-        NSSR_R::new(((self.bits >> 8) & 0x01) != 0)
-    }
-    #[doc = "Bit 9 - Transmission Registers Empty Mask"]
-    #[inline(always)]
-    pub fn txempty(&self) -> TXEMPTY_R {
-        TXEMPTY_R::new(((self.bits >> 9) & 0x01) != 0)
-    }
-    #[doc = "Bit 10 - Underrun Error Interrupt Mask"]
-    #[inline(always)]
-    pub fn undes(&self) -> UNDES_R {
-        UNDES_R::new(((self.bits >> 10) & 0x01) != 0)
-    }
+  #[doc = "Bit 0 - Receive Data Register Full Interrupt Mask"]
+  #[inline(always)]
+  pub fn rdrf(&self) -> RdrfR {
+    RdrfR::new((self.bits & 1) != 0)
+  }
+  #[doc = "Bit 1 - SPI Transmit Data Register Empty Interrupt Mask"]
+  #[inline(always)]
+  pub fn tdre(&self) -> TdreR {
+    TdreR::new(((self.bits >> 1) & 1) != 0)
+  }
+  #[doc = "Bit 2 - Mode Fault Error Interrupt Mask"]
+  #[inline(always)]
+  pub fn modf(&self) -> ModfR {
+    ModfR::new(((self.bits >> 2) & 1) != 0)
+  }
+  #[doc = "Bit 3 - Overrun Error Interrupt Mask"]
+  #[inline(always)]
+  pub fn ovres(&self) -> OvresR {
+    OvresR::new(((self.bits >> 3) & 1) != 0)
+  }
+  #[doc = "Bit 8 - NSS Rising Interrupt Mask"]
+  #[inline(always)]
+  pub fn nssr(&self) -> NssrR {
+    NssrR::new(((self.bits >> 8) & 1) != 0)
+  }
+  #[doc = "Bit 9 - Transmission Registers Empty Mask"]
+  #[inline(always)]
+  pub fn txempty(&self) -> TxemptyR {
+    TxemptyR::new(((self.bits >> 9) & 1) != 0)
+  }
+  #[doc = "Bit 10 - Underrun Error Interrupt Mask"]
+  #[inline(always)]
+  pub fn undes(&self) -> UndesR {
+    UndesR::new(((self.bits >> 10) & 1) != 0)
+  }
 }
+#[doc = "Interrupt Mask Register\n\nYou can [`read`](crate::Reg::read) this register and get [`imr::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct ImrSpec;
+impl crate::RegisterSpec for ImrSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`imr::R`](R) reader structure"]
+impl crate::Readable for ImrSpec {}
+#[doc = "`reset()` method sets IMR to value 0"]
+impl crate::Resettable for ImrSpec {}

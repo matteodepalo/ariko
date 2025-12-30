@@ -15,7 +15,8 @@
  *    along with sam3x8e-hal.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub use embedded_hal::{digital::*, prelude::*};
+pub use embedded_hal::digital::*;
+pub use embedded_hal::delay::DelayNs;
 
 pub use crate::{
   delay::*,
@@ -24,5 +25,6 @@ pub use crate::{
   pmc::PmcExt as _,
   time::U32Ext as _,
   timer::TimerExt as _,
+  timer::CountDown as _,
   watchdog::WatchdogExt as _,
 };

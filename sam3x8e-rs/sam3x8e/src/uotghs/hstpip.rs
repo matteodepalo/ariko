@@ -1,628 +1,273 @@
-#[doc = "Reader of register HSTPIP"]
-pub type R = crate::R<u32, super::HSTPIP>;
-#[doc = "Writer for register HSTPIP"]
-pub type W = crate::W<u32, super::HSTPIP>;
-#[doc = "Register HSTPIP `reset()`'s with value 0"]
-impl crate::ResetValue for super::HSTPIP {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `PEN0`"]
-pub type PEN0_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `PEN0`"]
-pub struct PEN0_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PEN0_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x01) | ((value as u32) & 0x01);
-        self.w
-    }
-}
-#[doc = "Reader of field `PEN1`"]
-pub type PEN1_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `PEN1`"]
-pub struct PEN1_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PEN1_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 1)) | (((value as u32) & 0x01) << 1);
-        self.w
-    }
-}
-#[doc = "Reader of field `PEN2`"]
-pub type PEN2_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `PEN2`"]
-pub struct PEN2_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PEN2_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 2)) | (((value as u32) & 0x01) << 2);
-        self.w
-    }
-}
-#[doc = "Reader of field `PEN3`"]
-pub type PEN3_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `PEN3`"]
-pub struct PEN3_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PEN3_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 3)) | (((value as u32) & 0x01) << 3);
-        self.w
-    }
-}
-#[doc = "Reader of field `PEN4`"]
-pub type PEN4_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `PEN4`"]
-pub struct PEN4_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PEN4_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 4)) | (((value as u32) & 0x01) << 4);
-        self.w
-    }
-}
-#[doc = "Reader of field `PEN5`"]
-pub type PEN5_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `PEN5`"]
-pub struct PEN5_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PEN5_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 5)) | (((value as u32) & 0x01) << 5);
-        self.w
-    }
-}
-#[doc = "Reader of field `PEN6`"]
-pub type PEN6_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `PEN6`"]
-pub struct PEN6_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PEN6_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 6)) | (((value as u32) & 0x01) << 6);
-        self.w
-    }
-}
-#[doc = "Reader of field `PEN7`"]
-pub type PEN7_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `PEN7`"]
-pub struct PEN7_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PEN7_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 7)) | (((value as u32) & 0x01) << 7);
-        self.w
-    }
-}
-#[doc = "Reader of field `PEN8`"]
-pub type PEN8_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `PEN8`"]
-pub struct PEN8_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PEN8_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 8)) | (((value as u32) & 0x01) << 8);
-        self.w
-    }
-}
-#[doc = "Reader of field `PRST0`"]
-pub type PRST0_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `PRST0`"]
-pub struct PRST0_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PRST0_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 16)) | (((value as u32) & 0x01) << 16);
-        self.w
-    }
-}
-#[doc = "Reader of field `PRST1`"]
-pub type PRST1_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `PRST1`"]
-pub struct PRST1_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PRST1_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 17)) | (((value as u32) & 0x01) << 17);
-        self.w
-    }
-}
-#[doc = "Reader of field `PRST2`"]
-pub type PRST2_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `PRST2`"]
-pub struct PRST2_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PRST2_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 18)) | (((value as u32) & 0x01) << 18);
-        self.w
-    }
-}
-#[doc = "Reader of field `PRST3`"]
-pub type PRST3_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `PRST3`"]
-pub struct PRST3_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PRST3_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 19)) | (((value as u32) & 0x01) << 19);
-        self.w
-    }
-}
-#[doc = "Reader of field `PRST4`"]
-pub type PRST4_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `PRST4`"]
-pub struct PRST4_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PRST4_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 20)) | (((value as u32) & 0x01) << 20);
-        self.w
-    }
-}
-#[doc = "Reader of field `PRST5`"]
-pub type PRST5_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `PRST5`"]
-pub struct PRST5_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PRST5_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 21)) | (((value as u32) & 0x01) << 21);
-        self.w
-    }
-}
-#[doc = "Reader of field `PRST6`"]
-pub type PRST6_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `PRST6`"]
-pub struct PRST6_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PRST6_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 22)) | (((value as u32) & 0x01) << 22);
-        self.w
-    }
-}
-#[doc = "Reader of field `PRST7`"]
-pub type PRST7_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `PRST7`"]
-pub struct PRST7_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PRST7_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 23)) | (((value as u32) & 0x01) << 23);
-        self.w
-    }
-}
-#[doc = "Reader of field `PRST8`"]
-pub type PRST8_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `PRST8`"]
-pub struct PRST8_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PRST8_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 24)) | (((value as u32) & 0x01) << 24);
-        self.w
-    }
-}
+#[doc = "Register `HSTPIP` reader"]
+pub type R = crate::R<HstpipSpec>;
+#[doc = "Register `HSTPIP` writer"]
+pub type W = crate::W<HstpipSpec>;
+#[doc = "Field `PEN0` reader - Pipe 0 Enable"]
+pub type Pen0R = crate::BitReader;
+#[doc = "Field `PEN0` writer - Pipe 0 Enable"]
+pub type Pen0W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `PEN1` reader - Pipe 1 Enable"]
+pub type Pen1R = crate::BitReader;
+#[doc = "Field `PEN1` writer - Pipe 1 Enable"]
+pub type Pen1W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `PEN2` reader - Pipe 2 Enable"]
+pub type Pen2R = crate::BitReader;
+#[doc = "Field `PEN2` writer - Pipe 2 Enable"]
+pub type Pen2W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `PEN3` reader - Pipe 3 Enable"]
+pub type Pen3R = crate::BitReader;
+#[doc = "Field `PEN3` writer - Pipe 3 Enable"]
+pub type Pen3W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `PEN4` reader - Pipe 4 Enable"]
+pub type Pen4R = crate::BitReader;
+#[doc = "Field `PEN4` writer - Pipe 4 Enable"]
+pub type Pen4W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `PEN5` reader - Pipe 5 Enable"]
+pub type Pen5R = crate::BitReader;
+#[doc = "Field `PEN5` writer - Pipe 5 Enable"]
+pub type Pen5W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `PEN6` reader - Pipe 6 Enable"]
+pub type Pen6R = crate::BitReader;
+#[doc = "Field `PEN6` writer - Pipe 6 Enable"]
+pub type Pen6W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `PEN7` reader - Pipe 7 Enable"]
+pub type Pen7R = crate::BitReader;
+#[doc = "Field `PEN7` writer - Pipe 7 Enable"]
+pub type Pen7W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `PEN8` reader - Pipe 8 Enable"]
+pub type Pen8R = crate::BitReader;
+#[doc = "Field `PEN8` writer - Pipe 8 Enable"]
+pub type Pen8W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `PRST0` reader - Pipe 0 Reset"]
+pub type Prst0R = crate::BitReader;
+#[doc = "Field `PRST0` writer - Pipe 0 Reset"]
+pub type Prst0W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `PRST1` reader - Pipe 1 Reset"]
+pub type Prst1R = crate::BitReader;
+#[doc = "Field `PRST1` writer - Pipe 1 Reset"]
+pub type Prst1W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `PRST2` reader - Pipe 2 Reset"]
+pub type Prst2R = crate::BitReader;
+#[doc = "Field `PRST2` writer - Pipe 2 Reset"]
+pub type Prst2W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `PRST3` reader - Pipe 3 Reset"]
+pub type Prst3R = crate::BitReader;
+#[doc = "Field `PRST3` writer - Pipe 3 Reset"]
+pub type Prst3W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `PRST4` reader - Pipe 4 Reset"]
+pub type Prst4R = crate::BitReader;
+#[doc = "Field `PRST4` writer - Pipe 4 Reset"]
+pub type Prst4W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `PRST5` reader - Pipe 5 Reset"]
+pub type Prst5R = crate::BitReader;
+#[doc = "Field `PRST5` writer - Pipe 5 Reset"]
+pub type Prst5W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `PRST6` reader - Pipe 6 Reset"]
+pub type Prst6R = crate::BitReader;
+#[doc = "Field `PRST6` writer - Pipe 6 Reset"]
+pub type Prst6W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `PRST7` reader - Pipe 7 Reset"]
+pub type Prst7R = crate::BitReader;
+#[doc = "Field `PRST7` writer - Pipe 7 Reset"]
+pub type Prst7W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `PRST8` reader - Pipe 8 Reset"]
+pub type Prst8R = crate::BitReader;
+#[doc = "Field `PRST8` writer - Pipe 8 Reset"]
+pub type Prst8W<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
-    #[doc = "Bit 0 - Pipe 0 Enable"]
-    #[inline(always)]
-    pub fn pen0(&self) -> PEN0_R {
-        PEN0_R::new((self.bits & 0x01) != 0)
-    }
-    #[doc = "Bit 1 - Pipe 1 Enable"]
-    #[inline(always)]
-    pub fn pen1(&self) -> PEN1_R {
-        PEN1_R::new(((self.bits >> 1) & 0x01) != 0)
-    }
-    #[doc = "Bit 2 - Pipe 2 Enable"]
-    #[inline(always)]
-    pub fn pen2(&self) -> PEN2_R {
-        PEN2_R::new(((self.bits >> 2) & 0x01) != 0)
-    }
-    #[doc = "Bit 3 - Pipe 3 Enable"]
-    #[inline(always)]
-    pub fn pen3(&self) -> PEN3_R {
-        PEN3_R::new(((self.bits >> 3) & 0x01) != 0)
-    }
-    #[doc = "Bit 4 - Pipe 4 Enable"]
-    #[inline(always)]
-    pub fn pen4(&self) -> PEN4_R {
-        PEN4_R::new(((self.bits >> 4) & 0x01) != 0)
-    }
-    #[doc = "Bit 5 - Pipe 5 Enable"]
-    #[inline(always)]
-    pub fn pen5(&self) -> PEN5_R {
-        PEN5_R::new(((self.bits >> 5) & 0x01) != 0)
-    }
-    #[doc = "Bit 6 - Pipe 6 Enable"]
-    #[inline(always)]
-    pub fn pen6(&self) -> PEN6_R {
-        PEN6_R::new(((self.bits >> 6) & 0x01) != 0)
-    }
-    #[doc = "Bit 7 - Pipe 7 Enable"]
-    #[inline(always)]
-    pub fn pen7(&self) -> PEN7_R {
-        PEN7_R::new(((self.bits >> 7) & 0x01) != 0)
-    }
-    #[doc = "Bit 8 - Pipe 8 Enable"]
-    #[inline(always)]
-    pub fn pen8(&self) -> PEN8_R {
-        PEN8_R::new(((self.bits >> 8) & 0x01) != 0)
-    }
-    #[doc = "Bit 16 - Pipe 0 Reset"]
-    #[inline(always)]
-    pub fn prst0(&self) -> PRST0_R {
-        PRST0_R::new(((self.bits >> 16) & 0x01) != 0)
-    }
-    #[doc = "Bit 17 - Pipe 1 Reset"]
-    #[inline(always)]
-    pub fn prst1(&self) -> PRST1_R {
-        PRST1_R::new(((self.bits >> 17) & 0x01) != 0)
-    }
-    #[doc = "Bit 18 - Pipe 2 Reset"]
-    #[inline(always)]
-    pub fn prst2(&self) -> PRST2_R {
-        PRST2_R::new(((self.bits >> 18) & 0x01) != 0)
-    }
-    #[doc = "Bit 19 - Pipe 3 Reset"]
-    #[inline(always)]
-    pub fn prst3(&self) -> PRST3_R {
-        PRST3_R::new(((self.bits >> 19) & 0x01) != 0)
-    }
-    #[doc = "Bit 20 - Pipe 4 Reset"]
-    #[inline(always)]
-    pub fn prst4(&self) -> PRST4_R {
-        PRST4_R::new(((self.bits >> 20) & 0x01) != 0)
-    }
-    #[doc = "Bit 21 - Pipe 5 Reset"]
-    #[inline(always)]
-    pub fn prst5(&self) -> PRST5_R {
-        PRST5_R::new(((self.bits >> 21) & 0x01) != 0)
-    }
-    #[doc = "Bit 22 - Pipe 6 Reset"]
-    #[inline(always)]
-    pub fn prst6(&self) -> PRST6_R {
-        PRST6_R::new(((self.bits >> 22) & 0x01) != 0)
-    }
-    #[doc = "Bit 23 - Pipe 7 Reset"]
-    #[inline(always)]
-    pub fn prst7(&self) -> PRST7_R {
-        PRST7_R::new(((self.bits >> 23) & 0x01) != 0)
-    }
-    #[doc = "Bit 24 - Pipe 8 Reset"]
-    #[inline(always)]
-    pub fn prst8(&self) -> PRST8_R {
-        PRST8_R::new(((self.bits >> 24) & 0x01) != 0)
-    }
+  #[doc = "Bit 0 - Pipe 0 Enable"]
+  #[inline(always)]
+  pub fn pen0(&self) -> Pen0R {
+    Pen0R::new((self.bits & 1) != 0)
+  }
+  #[doc = "Bit 1 - Pipe 1 Enable"]
+  #[inline(always)]
+  pub fn pen1(&self) -> Pen1R {
+    Pen1R::new(((self.bits >> 1) & 1) != 0)
+  }
+  #[doc = "Bit 2 - Pipe 2 Enable"]
+  #[inline(always)]
+  pub fn pen2(&self) -> Pen2R {
+    Pen2R::new(((self.bits >> 2) & 1) != 0)
+  }
+  #[doc = "Bit 3 - Pipe 3 Enable"]
+  #[inline(always)]
+  pub fn pen3(&self) -> Pen3R {
+    Pen3R::new(((self.bits >> 3) & 1) != 0)
+  }
+  #[doc = "Bit 4 - Pipe 4 Enable"]
+  #[inline(always)]
+  pub fn pen4(&self) -> Pen4R {
+    Pen4R::new(((self.bits >> 4) & 1) != 0)
+  }
+  #[doc = "Bit 5 - Pipe 5 Enable"]
+  #[inline(always)]
+  pub fn pen5(&self) -> Pen5R {
+    Pen5R::new(((self.bits >> 5) & 1) != 0)
+  }
+  #[doc = "Bit 6 - Pipe 6 Enable"]
+  #[inline(always)]
+  pub fn pen6(&self) -> Pen6R {
+    Pen6R::new(((self.bits >> 6) & 1) != 0)
+  }
+  #[doc = "Bit 7 - Pipe 7 Enable"]
+  #[inline(always)]
+  pub fn pen7(&self) -> Pen7R {
+    Pen7R::new(((self.bits >> 7) & 1) != 0)
+  }
+  #[doc = "Bit 8 - Pipe 8 Enable"]
+  #[inline(always)]
+  pub fn pen8(&self) -> Pen8R {
+    Pen8R::new(((self.bits >> 8) & 1) != 0)
+  }
+  #[doc = "Bit 16 - Pipe 0 Reset"]
+  #[inline(always)]
+  pub fn prst0(&self) -> Prst0R {
+    Prst0R::new(((self.bits >> 16) & 1) != 0)
+  }
+  #[doc = "Bit 17 - Pipe 1 Reset"]
+  #[inline(always)]
+  pub fn prst1(&self) -> Prst1R {
+    Prst1R::new(((self.bits >> 17) & 1) != 0)
+  }
+  #[doc = "Bit 18 - Pipe 2 Reset"]
+  #[inline(always)]
+  pub fn prst2(&self) -> Prst2R {
+    Prst2R::new(((self.bits >> 18) & 1) != 0)
+  }
+  #[doc = "Bit 19 - Pipe 3 Reset"]
+  #[inline(always)]
+  pub fn prst3(&self) -> Prst3R {
+    Prst3R::new(((self.bits >> 19) & 1) != 0)
+  }
+  #[doc = "Bit 20 - Pipe 4 Reset"]
+  #[inline(always)]
+  pub fn prst4(&self) -> Prst4R {
+    Prst4R::new(((self.bits >> 20) & 1) != 0)
+  }
+  #[doc = "Bit 21 - Pipe 5 Reset"]
+  #[inline(always)]
+  pub fn prst5(&self) -> Prst5R {
+    Prst5R::new(((self.bits >> 21) & 1) != 0)
+  }
+  #[doc = "Bit 22 - Pipe 6 Reset"]
+  #[inline(always)]
+  pub fn prst6(&self) -> Prst6R {
+    Prst6R::new(((self.bits >> 22) & 1) != 0)
+  }
+  #[doc = "Bit 23 - Pipe 7 Reset"]
+  #[inline(always)]
+  pub fn prst7(&self) -> Prst7R {
+    Prst7R::new(((self.bits >> 23) & 1) != 0)
+  }
+  #[doc = "Bit 24 - Pipe 8 Reset"]
+  #[inline(always)]
+  pub fn prst8(&self) -> Prst8R {
+    Prst8R::new(((self.bits >> 24) & 1) != 0)
+  }
 }
 impl W {
-    #[doc = "Bit 0 - Pipe 0 Enable"]
-    #[inline(always)]
-    pub fn pen0(&mut self) -> PEN0_W {
-        PEN0_W { w: self }
-    }
-    #[doc = "Bit 1 - Pipe 1 Enable"]
-    #[inline(always)]
-    pub fn pen1(&mut self) -> PEN1_W {
-        PEN1_W { w: self }
-    }
-    #[doc = "Bit 2 - Pipe 2 Enable"]
-    #[inline(always)]
-    pub fn pen2(&mut self) -> PEN2_W {
-        PEN2_W { w: self }
-    }
-    #[doc = "Bit 3 - Pipe 3 Enable"]
-    #[inline(always)]
-    pub fn pen3(&mut self) -> PEN3_W {
-        PEN3_W { w: self }
-    }
-    #[doc = "Bit 4 - Pipe 4 Enable"]
-    #[inline(always)]
-    pub fn pen4(&mut self) -> PEN4_W {
-        PEN4_W { w: self }
-    }
-    #[doc = "Bit 5 - Pipe 5 Enable"]
-    #[inline(always)]
-    pub fn pen5(&mut self) -> PEN5_W {
-        PEN5_W { w: self }
-    }
-    #[doc = "Bit 6 - Pipe 6 Enable"]
-    #[inline(always)]
-    pub fn pen6(&mut self) -> PEN6_W {
-        PEN6_W { w: self }
-    }
-    #[doc = "Bit 7 - Pipe 7 Enable"]
-    #[inline(always)]
-    pub fn pen7(&mut self) -> PEN7_W {
-        PEN7_W { w: self }
-    }
-    #[doc = "Bit 8 - Pipe 8 Enable"]
-    #[inline(always)]
-    pub fn pen8(&mut self) -> PEN8_W {
-        PEN8_W { w: self }
-    }
-    #[doc = "Bit 16 - Pipe 0 Reset"]
-    #[inline(always)]
-    pub fn prst0(&mut self) -> PRST0_W {
-        PRST0_W { w: self }
-    }
-    #[doc = "Bit 17 - Pipe 1 Reset"]
-    #[inline(always)]
-    pub fn prst1(&mut self) -> PRST1_W {
-        PRST1_W { w: self }
-    }
-    #[doc = "Bit 18 - Pipe 2 Reset"]
-    #[inline(always)]
-    pub fn prst2(&mut self) -> PRST2_W {
-        PRST2_W { w: self }
-    }
-    #[doc = "Bit 19 - Pipe 3 Reset"]
-    #[inline(always)]
-    pub fn prst3(&mut self) -> PRST3_W {
-        PRST3_W { w: self }
-    }
-    #[doc = "Bit 20 - Pipe 4 Reset"]
-    #[inline(always)]
-    pub fn prst4(&mut self) -> PRST4_W {
-        PRST4_W { w: self }
-    }
-    #[doc = "Bit 21 - Pipe 5 Reset"]
-    #[inline(always)]
-    pub fn prst5(&mut self) -> PRST5_W {
-        PRST5_W { w: self }
-    }
-    #[doc = "Bit 22 - Pipe 6 Reset"]
-    #[inline(always)]
-    pub fn prst6(&mut self) -> PRST6_W {
-        PRST6_W { w: self }
-    }
-    #[doc = "Bit 23 - Pipe 7 Reset"]
-    #[inline(always)]
-    pub fn prst7(&mut self) -> PRST7_W {
-        PRST7_W { w: self }
-    }
-    #[doc = "Bit 24 - Pipe 8 Reset"]
-    #[inline(always)]
-    pub fn prst8(&mut self) -> PRST8_W {
-        PRST8_W { w: self }
-    }
+  #[doc = "Bit 0 - Pipe 0 Enable"]
+  #[inline(always)]
+  pub fn pen0(&mut self) -> Pen0W<'_, HstpipSpec> {
+    Pen0W::new(self, 0)
+  }
+  #[doc = "Bit 1 - Pipe 1 Enable"]
+  #[inline(always)]
+  pub fn pen1(&mut self) -> Pen1W<'_, HstpipSpec> {
+    Pen1W::new(self, 1)
+  }
+  #[doc = "Bit 2 - Pipe 2 Enable"]
+  #[inline(always)]
+  pub fn pen2(&mut self) -> Pen2W<'_, HstpipSpec> {
+    Pen2W::new(self, 2)
+  }
+  #[doc = "Bit 3 - Pipe 3 Enable"]
+  #[inline(always)]
+  pub fn pen3(&mut self) -> Pen3W<'_, HstpipSpec> {
+    Pen3W::new(self, 3)
+  }
+  #[doc = "Bit 4 - Pipe 4 Enable"]
+  #[inline(always)]
+  pub fn pen4(&mut self) -> Pen4W<'_, HstpipSpec> {
+    Pen4W::new(self, 4)
+  }
+  #[doc = "Bit 5 - Pipe 5 Enable"]
+  #[inline(always)]
+  pub fn pen5(&mut self) -> Pen5W<'_, HstpipSpec> {
+    Pen5W::new(self, 5)
+  }
+  #[doc = "Bit 6 - Pipe 6 Enable"]
+  #[inline(always)]
+  pub fn pen6(&mut self) -> Pen6W<'_, HstpipSpec> {
+    Pen6W::new(self, 6)
+  }
+  #[doc = "Bit 7 - Pipe 7 Enable"]
+  #[inline(always)]
+  pub fn pen7(&mut self) -> Pen7W<'_, HstpipSpec> {
+    Pen7W::new(self, 7)
+  }
+  #[doc = "Bit 8 - Pipe 8 Enable"]
+  #[inline(always)]
+  pub fn pen8(&mut self) -> Pen8W<'_, HstpipSpec> {
+    Pen8W::new(self, 8)
+  }
+  #[doc = "Bit 16 - Pipe 0 Reset"]
+  #[inline(always)]
+  pub fn prst0(&mut self) -> Prst0W<'_, HstpipSpec> {
+    Prst0W::new(self, 16)
+  }
+  #[doc = "Bit 17 - Pipe 1 Reset"]
+  #[inline(always)]
+  pub fn prst1(&mut self) -> Prst1W<'_, HstpipSpec> {
+    Prst1W::new(self, 17)
+  }
+  #[doc = "Bit 18 - Pipe 2 Reset"]
+  #[inline(always)]
+  pub fn prst2(&mut self) -> Prst2W<'_, HstpipSpec> {
+    Prst2W::new(self, 18)
+  }
+  #[doc = "Bit 19 - Pipe 3 Reset"]
+  #[inline(always)]
+  pub fn prst3(&mut self) -> Prst3W<'_, HstpipSpec> {
+    Prst3W::new(self, 19)
+  }
+  #[doc = "Bit 20 - Pipe 4 Reset"]
+  #[inline(always)]
+  pub fn prst4(&mut self) -> Prst4W<'_, HstpipSpec> {
+    Prst4W::new(self, 20)
+  }
+  #[doc = "Bit 21 - Pipe 5 Reset"]
+  #[inline(always)]
+  pub fn prst5(&mut self) -> Prst5W<'_, HstpipSpec> {
+    Prst5W::new(self, 21)
+  }
+  #[doc = "Bit 22 - Pipe 6 Reset"]
+  #[inline(always)]
+  pub fn prst6(&mut self) -> Prst6W<'_, HstpipSpec> {
+    Prst6W::new(self, 22)
+  }
+  #[doc = "Bit 23 - Pipe 7 Reset"]
+  #[inline(always)]
+  pub fn prst7(&mut self) -> Prst7W<'_, HstpipSpec> {
+    Prst7W::new(self, 23)
+  }
+  #[doc = "Bit 24 - Pipe 8 Reset"]
+  #[inline(always)]
+  pub fn prst8(&mut self) -> Prst8W<'_, HstpipSpec> {
+    Prst8W::new(self, 24)
+  }
 }
+#[doc = "Host Pipe Register\n\nYou can [`read`](crate::Reg::read) this register and get [`hstpip::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`hstpip::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct HstpipSpec;
+impl crate::RegisterSpec for HstpipSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`hstpip::R`](R) reader structure"]
+impl crate::Readable for HstpipSpec {}
+#[doc = "`write(|w| ..)` method takes [`hstpip::W`](W) writer structure"]
+impl crate::Writable for HstpipSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets HSTPIP to value 0"]
+impl crate::Resettable for HstpipSpec {}

@@ -1,40 +1,35 @@
-#[doc = "Reader of register FCSE"]
-pub type R = crate::R<u32, super::FCSE>;
-#[doc = "Writer for register FCSE"]
-pub type W = crate::W<u32, super::FCSE>;
-#[doc = "Register FCSE `reset()`'s with value 0"]
-impl crate::ResetValue for super::FCSE {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `FCSE`"]
-pub type FCSE_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `FCSE`"]
-pub struct FCSE_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> FCSE_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0xff) | ((value as u32) & 0xff);
-        self.w
-    }
-}
+#[doc = "Register `FCSE` reader"]
+pub type R = crate::R<FcseSpec>;
+#[doc = "Register `FCSE` writer"]
+pub type W = crate::W<FcseSpec>;
+#[doc = "Field `FCSE` reader - Frame Check Sequence Errors"]
+pub type FcseR = crate::FieldReader;
+#[doc = "Field `FCSE` writer - Frame Check Sequence Errors"]
+pub type FcseW<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 impl R {
-    #[doc = "Bits 0:7 - Frame Check Sequence Errors"]
-    #[inline(always)]
-    pub fn fcse(&self) -> FCSE_R {
-        FCSE_R::new((self.bits & 0xff) as u8)
-    }
+  #[doc = "Bits 0:7 - Frame Check Sequence Errors"]
+  #[inline(always)]
+  pub fn fcse(&self) -> FcseR {
+    FcseR::new((self.bits & 0xff) as u8)
+  }
 }
 impl W {
-    #[doc = "Bits 0:7 - Frame Check Sequence Errors"]
-    #[inline(always)]
-    pub fn fcse(&mut self) -> FCSE_W {
-        FCSE_W { w: self }
-    }
+  #[doc = "Bits 0:7 - Frame Check Sequence Errors"]
+  #[inline(always)]
+  pub fn fcse(&mut self) -> FcseW<'_, FcseSpec> {
+    FcseW::new(self, 0)
+  }
 }
+#[doc = "Frame Check Sequence Errors Register\n\nYou can [`read`](crate::Reg::read) this register and get [`fcse::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`fcse::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct FcseSpec;
+impl crate::RegisterSpec for FcseSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`fcse::R`](R) reader structure"]
+impl crate::Readable for FcseSpec {}
+#[doc = "`write(|w| ..)` method takes [`fcse::W`](W) writer structure"]
+impl crate::Writable for FcseSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets FCSE to value 0"]
+impl crate::Resettable for FcseSpec {}

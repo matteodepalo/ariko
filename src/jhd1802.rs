@@ -1,9 +1,10 @@
 #![allow(dead_code)]
 
-use crate::i2c::I2C;
+use crate::i2c::{I2cWrite, I2C};
 use crate::peripherals::Peripherals;
-use embedded_hal::blocking::delay::{DelayMs, DelayUs};
-use embedded_hal::blocking::i2c::Write;
+use core::cell::RefCell;
+use critical_section::Mutex;
+use embedded_hal::delay::DelayNs;
 
 const DEVICE_ADDRESS: u8 = 0x3E;
 const CMD_CLEAR_DISPLAY: u8 = 0x01;
@@ -19,35 +20,43 @@ const CONTROL_BYTE_RS: u8 = 0b01000000;
 const INIT_FUNCTION_SET: u8 = FUNCTION_SET_2_LINES;
 const INIT_DISPLAY_CONTROL: u8 = 0;
 
-static mut S_JHD1802: Option<JHD1802> = None;
+static JHD1802_INSTANCE: Mutex<RefCell<Option<JHD1802>>> = Mutex::new(RefCell::new(None));
 
 pub struct JHD1802;
 
 impl JHD1802 {
   pub fn init() {
-    let delay = unsafe { &mut Peripherals::get().delay };
     let jhd1802 = JHD1802;
 
-    delay.try_delay_ms(50_u8).unwrap();
+    Peripherals::with(|p| p.delay.delay_ms(50));
     jhd1802.send_command(CMD_FUNCTION_SET | INIT_FUNCTION_SET);
 
-    delay.try_delay_ms(5_u8).unwrap();
+    Peripherals::with(|p| p.delay.delay_ms(5));
     jhd1802.send_command(CMD_FUNCTION_SET | INIT_FUNCTION_SET);
 
-    delay.try_delay_us(500_u32).unwrap();
+    Peripherals::with(|p| p.delay.delay_us(500));
     jhd1802.send_command(CMD_FUNCTION_SET | INIT_FUNCTION_SET);
     jhd1802.send_command(CMD_DISPLAY_CONTROL | INIT_DISPLAY_CONTROL);
     jhd1802.clear();
 
-    delay.try_delay_us(1700_u32).unwrap();
+    Peripherals::with(|p| p.delay.delay_us(1700));
     jhd1802.send_command(CMD_ENTRY_MODE_SET | ENTRY_MODE_INCREMENT);
     jhd1802.send_command(CMD_DISPLAY_CONTROL | INIT_DISPLAY_CONTROL | DISPLAY_CONTROL_DISPLAY_ON);
 
-    unsafe { S_JHD1802 = Some(jhd1802) }
+    critical_section::with(|cs| {
+      JHD1802_INSTANCE.borrow(cs).replace(Some(jhd1802));
+    });
   }
 
-  pub fn get() -> &'static mut Self {
-    unsafe { S_JHD1802.as_mut().unwrap() }
+  pub fn with<F, R>(f: F) -> R
+  where
+    F: FnOnce(&mut JHD1802) -> R,
+  {
+    critical_section::with(|cs| {
+      let mut borrow = JHD1802_INSTANCE.borrow(cs).borrow_mut();
+      let jhd1802 = borrow.as_mut().expect("JHD1802 not initialized");
+      f(jhd1802)
+    })
   }
 
   pub fn set_cursor(&self, col: u8, row: u8) {
@@ -57,7 +66,7 @@ impl JHD1802 {
 
   pub fn clear(&self) {
     self.send_command(CMD_CLEAR_DISPLAY);
-    unsafe { Peripherals::get().delay.try_delay_us(2000_u32).unwrap() }
+    Peripherals::with(|p| p.delay.delay_us(2000));
   }
 
   pub fn send_str(&self, value: &str) {
@@ -71,12 +80,13 @@ impl JHD1802 {
   }
 
   fn send_byte(&self, value: u8, is_cmd: bool) {
-    let i2c = I2C::get();
     let control_byte = if is_cmd { 0x00 } else { CONTROL_BYTE_RS };
 
-    i2c
-      .try_write(DEVICE_ADDRESS, &[control_byte, value])
-      .unwrap();
+    I2C::with(|i2c| {
+      i2c
+        .write(DEVICE_ADDRESS, &[control_byte, value])
+        .unwrap();
+    });
   }
 
   fn send_command(&self, value: u8) {

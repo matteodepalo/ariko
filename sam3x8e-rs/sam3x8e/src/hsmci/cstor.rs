@@ -1,203 +1,183 @@
-#[doc = "Reader of register CSTOR"]
-pub type R = crate::R<u32, super::CSTOR>;
-#[doc = "Writer for register CSTOR"]
-pub type W = crate::W<u32, super::CSTOR>;
-#[doc = "Register CSTOR `reset()`'s with value 0"]
-impl crate::ResetValue for super::CSTOR {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `CSTOCYC`"]
-pub type CSTOCYC_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `CSTOCYC`"]
-pub struct CSTOCYC_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CSTOCYC_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x0f) | ((value as u32) & 0x0f);
-        self.w
-    }
-}
+#[doc = "Register `CSTOR` reader"]
+pub type R = crate::R<CstorSpec>;
+#[doc = "Register `CSTOR` writer"]
+pub type W = crate::W<CstorSpec>;
+#[doc = "Field `CSTOCYC` reader - Completion Signal Timeout Cycle Number"]
+pub type CstocycR = crate::FieldReader;
+#[doc = "Field `CSTOCYC` writer - Completion Signal Timeout Cycle Number"]
+pub type CstocycW<'a, REG> = crate::FieldWriter<'a, REG, 4>;
 #[doc = "Completion Signal Timeout Multiplier\n\nValue on reset: 0"]
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub enum CSTOMUL_A {
-    #[doc = "0: CSTOCYC x 1"]
-    _1,
-    #[doc = "1: CSTOCYC x 16"]
-    _16,
-    #[doc = "2: CSTOCYC x 128"]
-    _128,
-    #[doc = "3: CSTOCYC x 256"]
-    _256,
-    #[doc = "4: CSTOCYC x 1024"]
-    _1024,
-    #[doc = "5: CSTOCYC x 4096"]
-    _4096,
-    #[doc = "6: CSTOCYC x 65536"]
-    _65536,
-    #[doc = "7: CSTOCYC x 1048576"]
-    _1048576,
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[repr(u8)]
+pub enum Cstomul {
+  #[doc = "0: CSTOCYC x 1"]
+  _1 = 0,
+  #[doc = "1: CSTOCYC x 16"]
+  _16 = 1,
+  #[doc = "2: CSTOCYC x 128"]
+  _128 = 2,
+  #[doc = "3: CSTOCYC x 256"]
+  _256 = 3,
+  #[doc = "4: CSTOCYC x 1024"]
+  _1024 = 4,
+  #[doc = "5: CSTOCYC x 4096"]
+  _4096 = 5,
+  #[doc = "6: CSTOCYC x 65536"]
+  _65536 = 6,
+  #[doc = "7: CSTOCYC x 1048576"]
+  _1048576 = 7,
 }
-impl From<CSTOMUL_A> for u8 {
-    #[inline(always)]
-    fn from(variant: CSTOMUL_A) -> Self {
-        match variant {
-            CSTOMUL_A::_1 => 0,
-            CSTOMUL_A::_16 => 1,
-            CSTOMUL_A::_128 => 2,
-            CSTOMUL_A::_256 => 3,
-            CSTOMUL_A::_1024 => 4,
-            CSTOMUL_A::_4096 => 5,
-            CSTOMUL_A::_65536 => 6,
-            CSTOMUL_A::_1048576 => 7,
-        }
-    }
+impl From<Cstomul> for u8 {
+  #[inline(always)]
+  fn from(variant: Cstomul) -> Self {
+    variant as _
+  }
 }
-#[doc = "Reader of field `CSTOMUL`"]
-pub type CSTOMUL_R = crate::R<u8, CSTOMUL_A>;
-impl CSTOMUL_R {
-    #[doc = r"Get enumerated values variant"]
-    #[inline(always)]
-    pub fn variant(&self) -> CSTOMUL_A {
-        match self.bits {
-            0 => CSTOMUL_A::_1,
-            1 => CSTOMUL_A::_16,
-            2 => CSTOMUL_A::_128,
-            3 => CSTOMUL_A::_256,
-            4 => CSTOMUL_A::_1024,
-            5 => CSTOMUL_A::_4096,
-            6 => CSTOMUL_A::_65536,
-            7 => CSTOMUL_A::_1048576,
-            _ => unreachable!(),
-        }
-    }
-    #[doc = "Checks if the value of the field is `_1`"]
-    #[inline(always)]
-    pub fn is_1(&self) -> bool {
-        *self == CSTOMUL_A::_1
-    }
-    #[doc = "Checks if the value of the field is `_16`"]
-    #[inline(always)]
-    pub fn is_16(&self) -> bool {
-        *self == CSTOMUL_A::_16
-    }
-    #[doc = "Checks if the value of the field is `_128`"]
-    #[inline(always)]
-    pub fn is_128(&self) -> bool {
-        *self == CSTOMUL_A::_128
-    }
-    #[doc = "Checks if the value of the field is `_256`"]
-    #[inline(always)]
-    pub fn is_256(&self) -> bool {
-        *self == CSTOMUL_A::_256
-    }
-    #[doc = "Checks if the value of the field is `_1024`"]
-    #[inline(always)]
-    pub fn is_1024(&self) -> bool {
-        *self == CSTOMUL_A::_1024
-    }
-    #[doc = "Checks if the value of the field is `_4096`"]
-    #[inline(always)]
-    pub fn is_4096(&self) -> bool {
-        *self == CSTOMUL_A::_4096
-    }
-    #[doc = "Checks if the value of the field is `_65536`"]
-    #[inline(always)]
-    pub fn is_65536(&self) -> bool {
-        *self == CSTOMUL_A::_65536
-    }
-    #[doc = "Checks if the value of the field is `_1048576`"]
-    #[inline(always)]
-    pub fn is_1048576(&self) -> bool {
-        *self == CSTOMUL_A::_1048576
-    }
+impl crate::FieldSpec for Cstomul {
+  type Ux = u8;
 }
-#[doc = "Write proxy for field `CSTOMUL`"]
-pub struct CSTOMUL_W<'a> {
-    w: &'a mut W,
+impl crate::IsEnum for Cstomul {}
+#[doc = "Field `CSTOMUL` reader - Completion Signal Timeout Multiplier"]
+pub type CstomulR = crate::FieldReader<Cstomul>;
+impl CstomulR {
+  #[doc = "Get enumerated values variant"]
+  #[inline(always)]
+  pub const fn variant(&self) -> Cstomul {
+    match self.bits {
+      0 => Cstomul::_1,
+      1 => Cstomul::_16,
+      2 => Cstomul::_128,
+      3 => Cstomul::_256,
+      4 => Cstomul::_1024,
+      5 => Cstomul::_4096,
+      6 => Cstomul::_65536,
+      7 => Cstomul::_1048576,
+      _ => unreachable!(),
+    }
+  }
+  #[doc = "CSTOCYC x 1"]
+  #[inline(always)]
+  pub fn is_1(&self) -> bool {
+    *self == Cstomul::_1
+  }
+  #[doc = "CSTOCYC x 16"]
+  #[inline(always)]
+  pub fn is_16(&self) -> bool {
+    *self == Cstomul::_16
+  }
+  #[doc = "CSTOCYC x 128"]
+  #[inline(always)]
+  pub fn is_128(&self) -> bool {
+    *self == Cstomul::_128
+  }
+  #[doc = "CSTOCYC x 256"]
+  #[inline(always)]
+  pub fn is_256(&self) -> bool {
+    *self == Cstomul::_256
+  }
+  #[doc = "CSTOCYC x 1024"]
+  #[inline(always)]
+  pub fn is_1024(&self) -> bool {
+    *self == Cstomul::_1024
+  }
+  #[doc = "CSTOCYC x 4096"]
+  #[inline(always)]
+  pub fn is_4096(&self) -> bool {
+    *self == Cstomul::_4096
+  }
+  #[doc = "CSTOCYC x 65536"]
+  #[inline(always)]
+  pub fn is_65536(&self) -> bool {
+    *self == Cstomul::_65536
+  }
+  #[doc = "CSTOCYC x 1048576"]
+  #[inline(always)]
+  pub fn is_1048576(&self) -> bool {
+    *self == Cstomul::_1048576
+  }
 }
-impl<'a> CSTOMUL_W<'a> {
-    #[doc = r"Writes `variant` to the field"]
-    #[inline(always)]
-    pub fn variant(self, variant: CSTOMUL_A) -> &'a mut W {
-        {
-            self.bits(variant.into())
-        }
-    }
-    #[doc = "CSTOCYC x 1"]
-    #[inline(always)]
-    pub fn _1(self) -> &'a mut W {
-        self.variant(CSTOMUL_A::_1)
-    }
-    #[doc = "CSTOCYC x 16"]
-    #[inline(always)]
-    pub fn _16(self) -> &'a mut W {
-        self.variant(CSTOMUL_A::_16)
-    }
-    #[doc = "CSTOCYC x 128"]
-    #[inline(always)]
-    pub fn _128(self) -> &'a mut W {
-        self.variant(CSTOMUL_A::_128)
-    }
-    #[doc = "CSTOCYC x 256"]
-    #[inline(always)]
-    pub fn _256(self) -> &'a mut W {
-        self.variant(CSTOMUL_A::_256)
-    }
-    #[doc = "CSTOCYC x 1024"]
-    #[inline(always)]
-    pub fn _1024(self) -> &'a mut W {
-        self.variant(CSTOMUL_A::_1024)
-    }
-    #[doc = "CSTOCYC x 4096"]
-    #[inline(always)]
-    pub fn _4096(self) -> &'a mut W {
-        self.variant(CSTOMUL_A::_4096)
-    }
-    #[doc = "CSTOCYC x 65536"]
-    #[inline(always)]
-    pub fn _65536(self) -> &'a mut W {
-        self.variant(CSTOMUL_A::_65536)
-    }
-    #[doc = "CSTOCYC x 1048576"]
-    #[inline(always)]
-    pub fn _1048576(self) -> &'a mut W {
-        self.variant(CSTOMUL_A::_1048576)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x07 << 4)) | (((value as u32) & 0x07) << 4);
-        self.w
-    }
+#[doc = "Field `CSTOMUL` writer - Completion Signal Timeout Multiplier"]
+pub type CstomulW<'a, REG> = crate::FieldWriter<'a, REG, 3, Cstomul, crate::Safe>;
+impl<'a, REG> CstomulW<'a, REG>
+where
+  REG: crate::Writable + crate::RegisterSpec,
+  REG::Ux: From<u8>,
+{
+  #[doc = "CSTOCYC x 1"]
+  #[inline(always)]
+  pub fn _1(self) -> &'a mut crate::W<REG> {
+    self.variant(Cstomul::_1)
+  }
+  #[doc = "CSTOCYC x 16"]
+  #[inline(always)]
+  pub fn _16(self) -> &'a mut crate::W<REG> {
+    self.variant(Cstomul::_16)
+  }
+  #[doc = "CSTOCYC x 128"]
+  #[inline(always)]
+  pub fn _128(self) -> &'a mut crate::W<REG> {
+    self.variant(Cstomul::_128)
+  }
+  #[doc = "CSTOCYC x 256"]
+  #[inline(always)]
+  pub fn _256(self) -> &'a mut crate::W<REG> {
+    self.variant(Cstomul::_256)
+  }
+  #[doc = "CSTOCYC x 1024"]
+  #[inline(always)]
+  pub fn _1024(self) -> &'a mut crate::W<REG> {
+    self.variant(Cstomul::_1024)
+  }
+  #[doc = "CSTOCYC x 4096"]
+  #[inline(always)]
+  pub fn _4096(self) -> &'a mut crate::W<REG> {
+    self.variant(Cstomul::_4096)
+  }
+  #[doc = "CSTOCYC x 65536"]
+  #[inline(always)]
+  pub fn _65536(self) -> &'a mut crate::W<REG> {
+    self.variant(Cstomul::_65536)
+  }
+  #[doc = "CSTOCYC x 1048576"]
+  #[inline(always)]
+  pub fn _1048576(self) -> &'a mut crate::W<REG> {
+    self.variant(Cstomul::_1048576)
+  }
 }
 impl R {
-    #[doc = "Bits 0:3 - Completion Signal Timeout Cycle Number"]
-    #[inline(always)]
-    pub fn cstocyc(&self) -> CSTOCYC_R {
-        CSTOCYC_R::new((self.bits & 0x0f) as u8)
-    }
-    #[doc = "Bits 4:6 - Completion Signal Timeout Multiplier"]
-    #[inline(always)]
-    pub fn cstomul(&self) -> CSTOMUL_R {
-        CSTOMUL_R::new(((self.bits >> 4) & 0x07) as u8)
-    }
+  #[doc = "Bits 0:3 - Completion Signal Timeout Cycle Number"]
+  #[inline(always)]
+  pub fn cstocyc(&self) -> CstocycR {
+    CstocycR::new((self.bits & 0x0f) as u8)
+  }
+  #[doc = "Bits 4:6 - Completion Signal Timeout Multiplier"]
+  #[inline(always)]
+  pub fn cstomul(&self) -> CstomulR {
+    CstomulR::new(((self.bits >> 4) & 7) as u8)
+  }
 }
 impl W {
-    #[doc = "Bits 0:3 - Completion Signal Timeout Cycle Number"]
-    #[inline(always)]
-    pub fn cstocyc(&mut self) -> CSTOCYC_W {
-        CSTOCYC_W { w: self }
-    }
-    #[doc = "Bits 4:6 - Completion Signal Timeout Multiplier"]
-    #[inline(always)]
-    pub fn cstomul(&mut self) -> CSTOMUL_W {
-        CSTOMUL_W { w: self }
-    }
+  #[doc = "Bits 0:3 - Completion Signal Timeout Cycle Number"]
+  #[inline(always)]
+  pub fn cstocyc(&mut self) -> CstocycW<'_, CstorSpec> {
+    CstocycW::new(self, 0)
+  }
+  #[doc = "Bits 4:6 - Completion Signal Timeout Multiplier"]
+  #[inline(always)]
+  pub fn cstomul(&mut self) -> CstomulW<'_, CstorSpec> {
+    CstomulW::new(self, 4)
+  }
 }
+#[doc = "Completion Signal Timeout Register\n\nYou can [`read`](crate::Reg::read) this register and get [`cstor::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cstor::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct CstorSpec;
+impl crate::RegisterSpec for CstorSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`cstor::R`](R) reader structure"]
+impl crate::Readable for CstorSpec {}
+#[doc = "`write(|w| ..)` method takes [`cstor::W`](W) writer structure"]
+impl crate::Writable for CstorSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets CSTOR to value 0"]
+impl crate::Resettable for CstorSpec {}

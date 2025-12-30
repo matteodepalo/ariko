@@ -1,40 +1,35 @@
-#[doc = "Reader of register ROV"]
-pub type R = crate::R<u32, super::ROV>;
-#[doc = "Writer for register ROV"]
-pub type W = crate::W<u32, super::ROV>;
-#[doc = "Register ROV `reset()`'s with value 0"]
-impl crate::ResetValue for super::ROV {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `ROVR`"]
-pub type ROVR_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `ROVR`"]
-pub struct ROVR_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> ROVR_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0xff) | ((value as u32) & 0xff);
-        self.w
-    }
-}
+#[doc = "Register `ROV` reader"]
+pub type R = crate::R<RovSpec>;
+#[doc = "Register `ROV` writer"]
+pub type W = crate::W<RovSpec>;
+#[doc = "Field `ROVR` reader - Receive Overrun"]
+pub type RovrR = crate::FieldReader;
+#[doc = "Field `ROVR` writer - Receive Overrun"]
+pub type RovrW<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 impl R {
-    #[doc = "Bits 0:7 - Receive Overrun"]
-    #[inline(always)]
-    pub fn rovr(&self) -> ROVR_R {
-        ROVR_R::new((self.bits & 0xff) as u8)
-    }
+  #[doc = "Bits 0:7 - Receive Overrun"]
+  #[inline(always)]
+  pub fn rovr(&self) -> RovrR {
+    RovrR::new((self.bits & 0xff) as u8)
+  }
 }
 impl W {
-    #[doc = "Bits 0:7 - Receive Overrun"]
-    #[inline(always)]
-    pub fn rovr(&mut self) -> ROVR_W {
-        ROVR_W { w: self }
-    }
+  #[doc = "Bits 0:7 - Receive Overrun"]
+  #[inline(always)]
+  pub fn rovr(&mut self) -> RovrW<'_, RovSpec> {
+    RovrW::new(self, 0)
+  }
 }
+#[doc = "Receive Overrun Errors Register\n\nYou can [`read`](crate::Reg::read) this register and get [`rov::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`rov::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct RovSpec;
+impl crate::RegisterSpec for RovSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`rov::R`](R) reader structure"]
+impl crate::Readable for RovSpec {}
+#[doc = "`write(|w| ..)` method takes [`rov::W`](W) writer structure"]
+impl crate::Writable for RovSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets ROV to value 0"]
+impl crate::Resettable for RovSpec {}

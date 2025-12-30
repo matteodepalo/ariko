@@ -17,7 +17,7 @@
 
 use crate::pac::PMC;
 use crate::time::*;
-use sam3x8e::pmc::ckgr_mor::MOSCRCF_A;
+use atsam3x8e::pmc::ckgr_mor::Moscrcf;
 
 #[derive(Clone, Copy)]
 pub enum RcOscillatorSpeed {
@@ -261,41 +261,43 @@ impl Pmc {
     // Enable write access to the PMC
     self
       .pmc
-      .pmc_wpmr
-      .write(|w| w.wpkey().passwd().wpen().clear_bit());
+      .pmc_wpmr()
+      .write(|w| unsafe { w.wpkey().bits(0x504D43).wpen().clear_bit() });
 
-    match clock {
-      PeripheralClock::PioA => self.pmc.pmc_pcer0.write_with_zero(|w| w.pid11().set_bit()),
-      PeripheralClock::PioB => self.pmc.pmc_pcer0.write_with_zero(|w| w.pid12().set_bit()),
-      PeripheralClock::PioC => self.pmc.pmc_pcer0.write_with_zero(|w| w.pid13().set_bit()),
-      PeripheralClock::PioD => self.pmc.pmc_pcer0.write_with_zero(|w| w.pid14().set_bit()),
-      PeripheralClock::Usart0 => self.pmc.pmc_pcer0.write_with_zero(|w| w.pid17().set_bit()),
-      PeripheralClock::Usart1 => self.pmc.pmc_pcer0.write_with_zero(|w| w.pid18().set_bit()),
-      PeripheralClock::Usart2 => self.pmc.pmc_pcer0.write_with_zero(|w| w.pid19().set_bit()),
-      PeripheralClock::Usart3 => self.pmc.pmc_pcer0.write_with_zero(|w| w.pid20().set_bit()),
-      PeripheralClock::HsMci => self.pmc.pmc_pcer0.write_with_zero(|w| w.pid21().set_bit()),
-      PeripheralClock::Twi0 => self.pmc.pmc_pcer0.write_with_zero(|w| w.pid22().set_bit()),
-      PeripheralClock::Twi1 => self.pmc.pmc_pcer0.write_with_zero(|w| w.pid23().set_bit()),
-      PeripheralClock::Spi0 => self.pmc.pmc_pcer0.write_with_zero(|w| w.pid24().set_bit()),
-      PeripheralClock::Ssc => self.pmc.pmc_pcer0.write_with_zero(|w| w.pid26().set_bit()),
-      PeripheralClock::Tc0 => self.pmc.pmc_pcer0.write_with_zero(|w| w.pid27().set_bit()),
-      PeripheralClock::Tc1 => self.pmc.pmc_pcer0.write_with_zero(|w| w.pid28().set_bit()),
-      PeripheralClock::Tc2 => self.pmc.pmc_pcer0.write_with_zero(|w| w.pid29().set_bit()),
-      PeripheralClock::Tc3 => self.pmc.pmc_pcer0.write_with_zero(|w| w.pid30().set_bit()),
-      PeripheralClock::Tc4 => self.pmc.pmc_pcer0.write_with_zero(|w| w.pid31().set_bit()),
-      PeripheralClock::Tc5 => self.pmc.pmc_pcer1.write_with_zero(|w| w.pid32().set_bit()),
-      PeripheralClock::Tc6 => self.pmc.pmc_pcer1.write_with_zero(|w| w.pid33().set_bit()),
-      PeripheralClock::Tc7 => self.pmc.pmc_pcer1.write_with_zero(|w| w.pid34().set_bit()),
-      PeripheralClock::Tc8 => self.pmc.pmc_pcer1.write_with_zero(|w| w.pid35().set_bit()),
-      PeripheralClock::Pwm => self.pmc.pmc_pcer1.write_with_zero(|w| w.pid36().set_bit()),
-      PeripheralClock::Adc => self.pmc.pmc_pcer1.write_with_zero(|w| w.pid37().set_bit()),
-      PeripheralClock::Dacc => self.pmc.pmc_pcer1.write_with_zero(|w| w.pid38().set_bit()),
-      PeripheralClock::Dmac => self.pmc.pmc_pcer1.write_with_zero(|w| w.pid39().set_bit()),
-      PeripheralClock::UOtgHs => self.pmc.pmc_pcer1.write_with_zero(|w| w.pid40().set_bit()),
-      PeripheralClock::Trng => self.pmc.pmc_pcer1.write_with_zero(|w| w.pid41().set_bit()),
-      PeripheralClock::Emac => self.pmc.pmc_pcer1.write_with_zero(|w| w.pid42().set_bit()),
-      PeripheralClock::Can0 => self.pmc.pmc_pcer1.write_with_zero(|w| w.pid43().set_bit()),
-      PeripheralClock::Can1 => self.pmc.pmc_pcer1.write_with_zero(|w| w.pid44().set_bit()),
+    unsafe {
+      match clock {
+        PeripheralClock::PioA => self.pmc.pmc_pcer0().write_with_zero(|w| w.pid11().set_bit()),
+        PeripheralClock::PioB => self.pmc.pmc_pcer0().write_with_zero(|w| w.pid12().set_bit()),
+        PeripheralClock::PioC => self.pmc.pmc_pcer0().write_with_zero(|w| w.pid13().set_bit()),
+        PeripheralClock::PioD => self.pmc.pmc_pcer0().write_with_zero(|w| w.pid14().set_bit()),
+        PeripheralClock::Usart0 => self.pmc.pmc_pcer0().write_with_zero(|w| w.pid17().set_bit()),
+        PeripheralClock::Usart1 => self.pmc.pmc_pcer0().write_with_zero(|w| w.pid18().set_bit()),
+        PeripheralClock::Usart2 => self.pmc.pmc_pcer0().write_with_zero(|w| w.pid19().set_bit()),
+        PeripheralClock::Usart3 => self.pmc.pmc_pcer0().write_with_zero(|w| w.pid20().set_bit()),
+        PeripheralClock::HsMci => self.pmc.pmc_pcer0().write_with_zero(|w| w.pid21().set_bit()),
+        PeripheralClock::Twi0 => self.pmc.pmc_pcer0().write_with_zero(|w| w.pid22().set_bit()),
+        PeripheralClock::Twi1 => self.pmc.pmc_pcer0().write_with_zero(|w| w.pid23().set_bit()),
+        PeripheralClock::Spi0 => self.pmc.pmc_pcer0().write_with_zero(|w| w.pid24().set_bit()),
+        PeripheralClock::Ssc => self.pmc.pmc_pcer0().write_with_zero(|w| w.pid26().set_bit()),
+        PeripheralClock::Tc0 => self.pmc.pmc_pcer0().write_with_zero(|w| w.pid27().set_bit()),
+        PeripheralClock::Tc1 => self.pmc.pmc_pcer0().write_with_zero(|w| w.pid28().set_bit()),
+        PeripheralClock::Tc2 => self.pmc.pmc_pcer0().write_with_zero(|w| w.pid29().set_bit()),
+        PeripheralClock::Tc3 => self.pmc.pmc_pcer0().write_with_zero(|w| w.pid30().set_bit()),
+        PeripheralClock::Tc4 => self.pmc.pmc_pcer0().write_with_zero(|w| w.pid31().set_bit()),
+        PeripheralClock::Tc5 => self.pmc.pmc_pcer1().write_with_zero(|w| w.pid32().set_bit()),
+        PeripheralClock::Tc6 => self.pmc.pmc_pcer1().write_with_zero(|w| w.pid33().set_bit()),
+        PeripheralClock::Tc7 => self.pmc.pmc_pcer1().write_with_zero(|w| w.pid34().set_bit()),
+        PeripheralClock::Tc8 => self.pmc.pmc_pcer1().write_with_zero(|w| w.pid35().set_bit()),
+        PeripheralClock::Pwm => self.pmc.pmc_pcer1().write_with_zero(|w| w.pid36().set_bit()),
+        PeripheralClock::Adc => self.pmc.pmc_pcer1().write_with_zero(|w| w.pid37().set_bit()),
+        PeripheralClock::Dacc => self.pmc.pmc_pcer1().write_with_zero(|w| w.pid38().set_bit()),
+        PeripheralClock::Dmac => self.pmc.pmc_pcer1().write_with_zero(|w| w.pid39().set_bit()),
+        PeripheralClock::UOtgHs => self.pmc.pmc_pcer1().write_with_zero(|w| w.pid40().set_bit()),
+        PeripheralClock::Trng => self.pmc.pmc_pcer1().write_with_zero(|w| w.pid41().set_bit()),
+        PeripheralClock::Emac => self.pmc.pmc_pcer1().write_with_zero(|w| w.pid42().set_bit()),
+        PeripheralClock::Can0 => self.pmc.pmc_pcer1().write_with_zero(|w| w.pid43().set_bit()),
+        PeripheralClock::Can1 => self.pmc.pmc_pcer1().write_with_zero(|w| w.pid44().set_bit()),
+      }
     }
   }
 
@@ -304,41 +306,43 @@ impl Pmc {
     // Enable write access to the PMC
     self
       .pmc
-      .pmc_wpmr
-      .write(|w| w.wpkey().passwd().wpen().clear_bit());
+      .pmc_wpmr()
+      .write(|w| unsafe { w.wpkey().bits(0x504D43).wpen().clear_bit() });
 
-    match clock {
-      PeripheralClock::PioA => self.pmc.pmc_pcdr0.write_with_zero(|w| w.pid11().set_bit()),
-      PeripheralClock::PioB => self.pmc.pmc_pcdr0.write_with_zero(|w| w.pid12().set_bit()),
-      PeripheralClock::PioC => self.pmc.pmc_pcdr0.write_with_zero(|w| w.pid13().set_bit()),
-      PeripheralClock::PioD => self.pmc.pmc_pcdr0.write_with_zero(|w| w.pid14().set_bit()),
-      PeripheralClock::Usart0 => self.pmc.pmc_pcdr0.write_with_zero(|w| w.pid17().set_bit()),
-      PeripheralClock::Usart1 => self.pmc.pmc_pcdr0.write_with_zero(|w| w.pid18().set_bit()),
-      PeripheralClock::Usart2 => self.pmc.pmc_pcdr0.write_with_zero(|w| w.pid19().set_bit()),
-      PeripheralClock::Usart3 => self.pmc.pmc_pcdr0.write_with_zero(|w| w.pid20().set_bit()),
-      PeripheralClock::HsMci => self.pmc.pmc_pcdr0.write_with_zero(|w| w.pid21().set_bit()),
-      PeripheralClock::Twi0 => self.pmc.pmc_pcdr0.write_with_zero(|w| w.pid22().set_bit()),
-      PeripheralClock::Twi1 => self.pmc.pmc_pcdr0.write_with_zero(|w| w.pid23().set_bit()),
-      PeripheralClock::Spi0 => self.pmc.pmc_pcdr0.write_with_zero(|w| w.pid24().set_bit()),
-      PeripheralClock::Ssc => self.pmc.pmc_pcdr0.write_with_zero(|w| w.pid26().set_bit()),
-      PeripheralClock::Tc0 => self.pmc.pmc_pcdr0.write_with_zero(|w| w.pid27().set_bit()),
-      PeripheralClock::Tc1 => self.pmc.pmc_pcdr0.write_with_zero(|w| w.pid28().set_bit()),
-      PeripheralClock::Tc2 => self.pmc.pmc_pcdr0.write_with_zero(|w| w.pid29().set_bit()),
-      PeripheralClock::Tc3 => self.pmc.pmc_pcdr0.write_with_zero(|w| w.pid30().set_bit()),
-      PeripheralClock::Tc4 => self.pmc.pmc_pcdr0.write_with_zero(|w| w.pid31().set_bit()),
-      PeripheralClock::Tc5 => self.pmc.pmc_pcdr1.write_with_zero(|w| w.pid32().set_bit()),
-      PeripheralClock::Tc6 => self.pmc.pmc_pcdr1.write_with_zero(|w| w.pid33().set_bit()),
-      PeripheralClock::Tc7 => self.pmc.pmc_pcdr1.write_with_zero(|w| w.pid34().set_bit()),
-      PeripheralClock::Tc8 => self.pmc.pmc_pcdr1.write_with_zero(|w| w.pid35().set_bit()),
-      PeripheralClock::Pwm => self.pmc.pmc_pcdr1.write_with_zero(|w| w.pid36().set_bit()),
-      PeripheralClock::Adc => self.pmc.pmc_pcdr1.write_with_zero(|w| w.pid37().set_bit()),
-      PeripheralClock::Dacc => self.pmc.pmc_pcdr1.write_with_zero(|w| w.pid38().set_bit()),
-      PeripheralClock::Dmac => self.pmc.pmc_pcdr1.write_with_zero(|w| w.pid39().set_bit()),
-      PeripheralClock::UOtgHs => self.pmc.pmc_pcdr1.write_with_zero(|w| w.pid40().set_bit()),
-      PeripheralClock::Trng => self.pmc.pmc_pcdr1.write_with_zero(|w| w.pid41().set_bit()),
-      PeripheralClock::Emac => self.pmc.pmc_pcdr1.write_with_zero(|w| w.pid42().set_bit()),
-      PeripheralClock::Can0 => self.pmc.pmc_pcdr1.write_with_zero(|w| w.pid43().set_bit()),
-      PeripheralClock::Can1 => self.pmc.pmc_pcdr1.write_with_zero(|w| w.pid44().set_bit()),
+    unsafe {
+      match clock {
+        PeripheralClock::PioA => self.pmc.pmc_pcdr0().write_with_zero(|w| w.pid11().set_bit()),
+        PeripheralClock::PioB => self.pmc.pmc_pcdr0().write_with_zero(|w| w.pid12().set_bit()),
+        PeripheralClock::PioC => self.pmc.pmc_pcdr0().write_with_zero(|w| w.pid13().set_bit()),
+        PeripheralClock::PioD => self.pmc.pmc_pcdr0().write_with_zero(|w| w.pid14().set_bit()),
+        PeripheralClock::Usart0 => self.pmc.pmc_pcdr0().write_with_zero(|w| w.pid17().set_bit()),
+        PeripheralClock::Usart1 => self.pmc.pmc_pcdr0().write_with_zero(|w| w.pid18().set_bit()),
+        PeripheralClock::Usart2 => self.pmc.pmc_pcdr0().write_with_zero(|w| w.pid19().set_bit()),
+        PeripheralClock::Usart3 => self.pmc.pmc_pcdr0().write_with_zero(|w| w.pid20().set_bit()),
+        PeripheralClock::HsMci => self.pmc.pmc_pcdr0().write_with_zero(|w| w.pid21().set_bit()),
+        PeripheralClock::Twi0 => self.pmc.pmc_pcdr0().write_with_zero(|w| w.pid22().set_bit()),
+        PeripheralClock::Twi1 => self.pmc.pmc_pcdr0().write_with_zero(|w| w.pid23().set_bit()),
+        PeripheralClock::Spi0 => self.pmc.pmc_pcdr0().write_with_zero(|w| w.pid24().set_bit()),
+        PeripheralClock::Ssc => self.pmc.pmc_pcdr0().write_with_zero(|w| w.pid26().set_bit()),
+        PeripheralClock::Tc0 => self.pmc.pmc_pcdr0().write_with_zero(|w| w.pid27().set_bit()),
+        PeripheralClock::Tc1 => self.pmc.pmc_pcdr0().write_with_zero(|w| w.pid28().set_bit()),
+        PeripheralClock::Tc2 => self.pmc.pmc_pcdr0().write_with_zero(|w| w.pid29().set_bit()),
+        PeripheralClock::Tc3 => self.pmc.pmc_pcdr0().write_with_zero(|w| w.pid30().set_bit()),
+        PeripheralClock::Tc4 => self.pmc.pmc_pcdr0().write_with_zero(|w| w.pid31().set_bit()),
+        PeripheralClock::Tc5 => self.pmc.pmc_pcdr1().write_with_zero(|w| w.pid32().set_bit()),
+        PeripheralClock::Tc6 => self.pmc.pmc_pcdr1().write_with_zero(|w| w.pid33().set_bit()),
+        PeripheralClock::Tc7 => self.pmc.pmc_pcdr1().write_with_zero(|w| w.pid34().set_bit()),
+        PeripheralClock::Tc8 => self.pmc.pmc_pcdr1().write_with_zero(|w| w.pid35().set_bit()),
+        PeripheralClock::Pwm => self.pmc.pmc_pcdr1().write_with_zero(|w| w.pid36().set_bit()),
+        PeripheralClock::Adc => self.pmc.pmc_pcdr1().write_with_zero(|w| w.pid37().set_bit()),
+        PeripheralClock::Dacc => self.pmc.pmc_pcdr1().write_with_zero(|w| w.pid38().set_bit()),
+        PeripheralClock::Dmac => self.pmc.pmc_pcdr1().write_with_zero(|w| w.pid39().set_bit()),
+        PeripheralClock::UOtgHs => self.pmc.pmc_pcdr1().write_with_zero(|w| w.pid40().set_bit()),
+        PeripheralClock::Trng => self.pmc.pmc_pcdr1().write_with_zero(|w| w.pid41().set_bit()),
+        PeripheralClock::Emac => self.pmc.pmc_pcdr1().write_with_zero(|w| w.pid42().set_bit()),
+        PeripheralClock::Can0 => self.pmc.pmc_pcdr1().write_with_zero(|w| w.pid43().set_bit()),
+        PeripheralClock::Can1 => self.pmc.pmc_pcdr1().write_with_zero(|w| w.pid44().set_bit()),
+      }
     }
   }
 }
@@ -351,7 +355,7 @@ pub trait PmcExt {
 fn set_prescaler(pmc: &PMC, cfg: &Config) {
   // Set the prescaler.  Supposedly this should be done separatelly from picking the PLL as an
   // input source. Datasheet §28.12.4
-  pmc.pmc_mckr.write(|w| {
+  pmc.pmc_mckr().write(|w| {
     let w = w.pres();
     match cfg.pres {
       ProcessorClockPrescaler::Clk => w.clk_1(),
@@ -365,14 +369,14 @@ fn set_prescaler(pmc: &PMC, cfg: &Config) {
     }
   });
 
-  while !pmc.pmc_sr.read().mckrdy().bit_is_set() {}
+  while !pmc.pmc_sr().read().mckrdy().bit_is_set() {}
 }
 
 #[inline(always)]
 fn set_clock(pmc: &PMC, cfg: &Config) {
   // Set the prescaler.  Supposedly this should be done separatelly from picking the PLL as an
   // input source. Datasheet §28.12.4
-  pmc.pmc_mckr.write(|w| {
+  pmc.pmc_mckr().write(|w| {
     let w = w.pres();
     let w = match cfg.pres {
       ProcessorClockPrescaler::Clk => w.clk_1(),
@@ -392,12 +396,12 @@ fn set_clock(pmc: &PMC, cfg: &Config) {
     }
   });
 
-  while !pmc.pmc_sr.read().mckrdy().bit_is_set() {}
+  while !pmc.pmc_sr().read().mckrdy().bit_is_set() {}
 }
 
 #[inline(always)]
 fn configure_pll_a(pmc: &PMC, div_a: DivA, mul_a: MulA) {
-  pmc.ckgr_pllar.write(|w| {
+  pmc.ckgr_pllar().write(|w| {
     unsafe {
       let w = match div_a {
         DivA::Zero => w.diva().bits(0),
@@ -418,7 +422,7 @@ fn configure_pll_a(pmc: &PMC, div_a: DivA, mul_a: MulA) {
     }
   });
 
-  while !pmc.pmc_sr.read().locka().bit_is_set() {}
+  while !pmc.pmc_sr().read().locka().bit_is_set() {}
 }
 
 impl PmcExt for PMC {
@@ -428,11 +432,11 @@ impl PmcExt for PMC {
         match oscillator {
           MainOscillator::XtalOscillator => {
             // Initialize main oscillator
-            self.ckgr_mor.write(|w| unsafe {
+            self.ckgr_mor().write(|w| unsafe {
               w
                 // set "password"
                 .key()
-                .passwd()
+                .bits(0x37) // CKGR_MOR password
                 // Set the startup time that Arduino seems to think is appropriate
                 .moscxtst()
                 .bits(8)
@@ -443,15 +447,15 @@ impl PmcExt for PMC {
             });
 
             // Wait for main oscillator to come online
-            while !self.pmc_sr.read().moscxts().bit_is_set() {}
+            while !self.pmc_sr().read().moscxts().bit_is_set() {}
 
             // Switch to 3-20MHz Xtal oscillator
             {
-              self.ckgr_mor.write(|w| unsafe {
+              self.ckgr_mor().write(|w| unsafe {
                 w
                   // set "password"
                   .key()
-                  .passwd()
+                  .bits(0x37) // CKGR_MOR password
                   // Set main clock to 84 MHz
                   .moscxtst()
                   .bits(8)
@@ -467,11 +471,11 @@ impl PmcExt for PMC {
                   .set_bit()
               });
 
-              while !self.pmc_sr.read().moscsels().bit_is_set() {}
+              while !self.pmc_sr().read().moscsels().bit_is_set() {}
 
               // Master Clock Register
-              self.pmc_mckr.write(|w| w.css().main_clk());
-              while !self.pmc_sr.read().mckrdy().bit_is_set() {}
+              self.pmc_mckr().write(|w| w.css().main_clk());
+              while !self.pmc_sr().read().mckrdy().bit_is_set() {}
             }
 
             configure_pll_a(&self, div_a, mul_a);
@@ -488,11 +492,11 @@ impl PmcExt for PMC {
           // Select the 3 to 20 MHz Crystal or Ceramic Resonator-based oscillator
           MainOscillator::XtalOscillator => {
             // Initialize main oscillator
-            self.ckgr_mor.write(|w| unsafe {
+            self.ckgr_mor().write(|w| unsafe {
               w
                 // set "password"
                 .key()
-                .passwd()
+                .bits(0x37) // CKGR_MOR password
                 // Set the startup time that Arduino seems to think is appropriate
                 .moscxtst()
                 .bits(8)
@@ -503,15 +507,15 @@ impl PmcExt for PMC {
             });
 
             // Wait for main oscillator to come online
-            while !self.pmc_sr.read().moscxts().bit_is_set() {}
+            while !self.pmc_sr().read().moscxts().bit_is_set() {}
 
             // Switch to 3-20MHz Xtal oscillator
             {
-              self.ckgr_mor.write(|w| unsafe {
+              self.ckgr_mor().write(|w| unsafe {
                 w
                   // set "password"
                   .key()
-                  .passwd()
+                  .bits(0x37) // CKGR_MOR password
                   // Set main clock to 84 MHz
                   .moscxtst()
                   .bits(8)
@@ -527,27 +531,27 @@ impl PmcExt for PMC {
                   .set_bit()
               });
 
-              while !self.pmc_sr.read().moscsels().bit_is_set() {}
+              while !self.pmc_sr().read().moscsels().bit_is_set() {}
             }
           }
           MainOscillator::FastRcOscillator(rc_speed) => {
-            self.ckgr_mor.write(|w| {
+            self.ckgr_mor().write(|w| {
               w.moscsel()
                 .clear_bit()
                 .moscrcen()
                 .set_bit()
                 .moscrcf()
                 .variant(match rc_speed {
-                  RcOscillatorSpeed::Speed4Mhz => MOSCRCF_A::_4_MHZ,
-                  RcOscillatorSpeed::Speed8Mhz => MOSCRCF_A::_8_MHZ,
-                  RcOscillatorSpeed::Speed12Mhz => MOSCRCF_A::_12_MHZ,
+                  RcOscillatorSpeed::Speed4Mhz => Moscrcf::_4Mhz,
+                  RcOscillatorSpeed::Speed8Mhz => Moscrcf::_8Mhz,
+                  RcOscillatorSpeed::Speed12Mhz => Moscrcf::_12Mhz,
                 })
             });
           }
         }
 
         // Switch master clock to Main Clock
-        self.pmc_mckr.write(|w| {
+        self.pmc_mckr().write(|w| {
           w
             // Main Clock is selected
             .css()
@@ -556,11 +560,11 @@ impl PmcExt for PMC {
 
         set_prescaler(&self, &cfg);
 
-        while !self.pmc_sr.read().mckrdy().bit_is_set() {}
+        while !self.pmc_sr().read().mckrdy().bit_is_set() {}
 
         // Switch to PLLA
         // {
-        //   self.pmc_mckr.write(|w| {
+        //   self.pmc_mckr().write(|w| {
         //     w
         //       // Select clock divided by 2
         //       .pres()
@@ -570,34 +574,36 @@ impl PmcExt for PMC {
         //       .plla_clk()
         //   });
         //
-        //   while !self.pmc_sr.read().mckrdy().bit_is_set() {}
+        //   while !self.pmc_sr().read().mckrdy().bit_is_set() {}
         // }
 
         // Enable UPLL clock
         self
-          .ckgr_uckr
+          .ckgr_uckr()
           .write(|w| unsafe { w.upllcount().bits(3).upllen().set_bit() });
 
-        while !self.pmc_sr.read().locku().bit_is_set() {}
+        while !self.pmc_sr().read().locku().bit_is_set() {}
 
         // Switch USB clock to UPLL
-        self
-          .pmc_usb
-          .write_with_zero(|w| unsafe { w.usbs().set_bit().usbdiv().bits(0) });
+        unsafe {
+          self
+            .pmc_usb()
+            .write_with_zero(|w| w.usbs().set_bit().usbdiv().bits(0));
+        }
 
         // Enable USB clock
-        self.pmc_scer.write_with_zero(|w| w.uotgclk().set_bit());
+        unsafe { self.pmc_scer().write_with_zero(|w| w.uotgclk().set_bit()); }
       }
       MasterClockSrc::SlowClock => {
         self
-          .pmc_wpmr
-          .write(|w| w.wpkey().passwd().wpen().clear_bit());
+          .pmc_wpmr()
+          .write(|w| unsafe { w.wpkey().bits(0x504D43).wpen().clear_bit() });
 
-        self.pmc_mckr.write(|w| w.css().slow_clk());
-        while !self.pmc_sr.read().mckrdy().bit_is_set() {}
+        self.pmc_mckr().write(|w| w.css().slow_clk());
+        while !self.pmc_sr().read().mckrdy().bit_is_set() {}
 
-        self.pmc_mckr.write(|w| w.css().slow_clk().pres().clk_1());
-        while !self.pmc_sr.read().mckrdy().bit_is_set() {}
+        self.pmc_mckr().write(|w| w.css().slow_clk().pres().clk_1());
+        while !self.pmc_sr().read().mckrdy().bit_is_set() {}
       }
     }
 

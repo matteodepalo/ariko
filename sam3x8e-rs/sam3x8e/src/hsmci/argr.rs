@@ -1,40 +1,35 @@
-#[doc = "Reader of register ARGR"]
-pub type R = crate::R<u32, super::ARGR>;
-#[doc = "Writer for register ARGR"]
-pub type W = crate::W<u32, super::ARGR>;
-#[doc = "Register ARGR `reset()`'s with value 0"]
-impl crate::ResetValue for super::ARGR {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `ARG`"]
-pub type ARG_R = crate::R<u32, u32>;
-#[doc = "Write proxy for field `ARG`"]
-pub struct ARG_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> ARG_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u32) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0xffff_ffff) | ((value as u32) & 0xffff_ffff);
-        self.w
-    }
-}
+#[doc = "Register `ARGR` reader"]
+pub type R = crate::R<ArgrSpec>;
+#[doc = "Register `ARGR` writer"]
+pub type W = crate::W<ArgrSpec>;
+#[doc = "Field `ARG` reader - Command Argument"]
+pub type ArgR = crate::FieldReader<u32>;
+#[doc = "Field `ARG` writer - Command Argument"]
+pub type ArgW<'a, REG> = crate::FieldWriter<'a, REG, 32, u32>;
 impl R {
-    #[doc = "Bits 0:31 - Command Argument"]
-    #[inline(always)]
-    pub fn arg(&self) -> ARG_R {
-        ARG_R::new((self.bits & 0xffff_ffff) as u32)
-    }
+  #[doc = "Bits 0:31 - Command Argument"]
+  #[inline(always)]
+  pub fn arg(&self) -> ArgR {
+    ArgR::new(self.bits)
+  }
 }
 impl W {
-    #[doc = "Bits 0:31 - Command Argument"]
-    #[inline(always)]
-    pub fn arg(&mut self) -> ARG_W {
-        ARG_W { w: self }
-    }
+  #[doc = "Bits 0:31 - Command Argument"]
+  #[inline(always)]
+  pub fn arg(&mut self) -> ArgW<'_, ArgrSpec> {
+    ArgW::new(self, 0)
+  }
 }
+#[doc = "Argument Register\n\nYou can [`read`](crate::Reg::read) this register and get [`argr::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`argr::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct ArgrSpec;
+impl crate::RegisterSpec for ArgrSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`argr::R`](R) reader structure"]
+impl crate::Readable for ArgrSpec {}
+#[doc = "`write(|w| ..)` method takes [`argr::W`](W) writer structure"]
+impl crate::Writable for ArgrSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets ARGR to value 0"]
+impl crate::Resettable for ArgrSpec {}

@@ -1,72 +1,27 @@
-#[doc = "Writer for register CR"]
-pub type W = crate::W<u32, super::CR>;
-#[doc = "Write proxy for field `WDRSTT`"]
-pub struct WDRSTT_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> WDRSTT_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x01) | ((value as u32) & 0x01);
-        self.w
-    }
-}
-#[doc = "Password."]
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub enum KEY_AW {
-    #[doc = "165: Writing any other value in this field aborts the write operation."]
-    PASSWD,
-}
-impl From<KEY_AW> for u8 {
-    #[inline(always)]
-    fn from(variant: KEY_AW) -> Self {
-        match variant {
-            KEY_AW::PASSWD => 165,
-        }
-    }
-}
-#[doc = "Write proxy for field `KEY`"]
-pub struct KEY_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> KEY_W<'a> {
-    #[doc = r"Writes `variant` to the field"]
-    #[inline(always)]
-    pub fn variant(self, variant: KEY_AW) -> &'a mut W {
-        unsafe { self.bits(variant.into()) }
-    }
-    #[doc = "Writing any other value in this field aborts the write operation."]
-    #[inline(always)]
-    pub fn passwd(self) -> &'a mut W {
-        self.variant(KEY_AW::PASSWD)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0xff << 24)) | (((value as u32) & 0xff) << 24);
-        self.w
-    }
-}
+#[doc = "Register `CR` writer"]
+pub type W = crate::W<CrSpec>;
+#[doc = "Field `WDRSTT` writer - Watchdog Restart"]
+pub type WdrsttW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `KEY` writer - Password"]
+pub type KeyW<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 impl W {
-    #[doc = "Bit 0 - Watchdog Restart"]
-    #[inline(always)]
-    pub fn wdrstt(&mut self) -> WDRSTT_W {
-        WDRSTT_W { w: self }
-    }
-    #[doc = "Bits 24:31 - Password."]
-    #[inline(always)]
-    pub fn key(&mut self) -> KEY_W {
-        KEY_W { w: self }
-    }
+  #[doc = "Bit 0 - Watchdog Restart"]
+  #[inline(always)]
+  pub fn wdrstt(&mut self) -> WdrsttW<'_, CrSpec> {
+    WdrsttW::new(self, 0)
+  }
+  #[doc = "Bits 24:31 - Password"]
+  #[inline(always)]
+  pub fn key(&mut self) -> KeyW<'_, CrSpec> {
+    KeyW::new(self, 24)
+  }
+}
+#[doc = "Control Register\n\nYou can [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cr::W`](W). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct CrSpec;
+impl crate::RegisterSpec for CrSpec {
+  type Ux = u32;
+}
+#[doc = "`write(|w| ..)` method takes [`cr::W`](W) writer structure"]
+impl crate::Writable for CrSpec {
+  type Safety = crate::Unsafe;
 }

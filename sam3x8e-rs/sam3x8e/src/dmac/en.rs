@@ -1,50 +1,35 @@
-#[doc = "Reader of register EN"]
-pub type R = crate::R<u32, super::EN>;
-#[doc = "Writer for register EN"]
-pub type W = crate::W<u32, super::EN>;
-#[doc = "Register EN `reset()`'s with value 0"]
-impl crate::ResetValue for super::EN {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `ENABLE`"]
-pub type ENABLE_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `ENABLE`"]
-pub struct ENABLE_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> ENABLE_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x01) | ((value as u32) & 0x01);
-        self.w
-    }
-}
+#[doc = "Register `EN` reader"]
+pub type R = crate::R<EnSpec>;
+#[doc = "Register `EN` writer"]
+pub type W = crate::W<EnSpec>;
+#[doc = "Field `ENABLE` reader - "]
+pub type EnableR = crate::BitReader;
+#[doc = "Field `ENABLE` writer - "]
+pub type EnableW<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
-    #[doc = "Bit 0 - General Enable of DMA"]
-    #[inline(always)]
-    pub fn enable(&self) -> ENABLE_R {
-        ENABLE_R::new((self.bits & 0x01) != 0)
-    }
+  #[doc = "Bit 0"]
+  #[inline(always)]
+  pub fn enable(&self) -> EnableR {
+    EnableR::new((self.bits & 1) != 0)
+  }
 }
 impl W {
-    #[doc = "Bit 0 - General Enable of DMA"]
-    #[inline(always)]
-    pub fn enable(&mut self) -> ENABLE_W {
-        ENABLE_W { w: self }
-    }
+  #[doc = "Bit 0"]
+  #[inline(always)]
+  pub fn enable(&mut self) -> EnableW<'_, EnSpec> {
+    EnableW::new(self, 0)
+  }
 }
+#[doc = "DMAC Enable Register\n\nYou can [`read`](crate::Reg::read) this register and get [`en::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`en::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct EnSpec;
+impl crate::RegisterSpec for EnSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`en::R`](R) reader structure"]
+impl crate::Readable for EnSpec {}
+#[doc = "`write(|w| ..)` method takes [`en::W`](W) writer structure"]
+impl crate::Writable for EnSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets EN to value 0"]
+impl crate::Resettable for EnSpec {}

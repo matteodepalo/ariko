@@ -1,220 +1,69 @@
-#[doc = "Writer for register DIS"]
-pub type W = crate::W<u32, super::DIS>;
-#[doc = "Write proxy for field `CHID0`"]
-pub struct CHID0_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CHID0_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x01) | ((value as u32) & 0x01);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `CHID1`"]
-pub struct CHID1_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CHID1_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 1)) | (((value as u32) & 0x01) << 1);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `CHID2`"]
-pub struct CHID2_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CHID2_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 2)) | (((value as u32) & 0x01) << 2);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `CHID3`"]
-pub struct CHID3_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CHID3_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 3)) | (((value as u32) & 0x01) << 3);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `CHID4`"]
-pub struct CHID4_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CHID4_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 4)) | (((value as u32) & 0x01) << 4);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `CHID5`"]
-pub struct CHID5_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CHID5_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 5)) | (((value as u32) & 0x01) << 5);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `CHID6`"]
-pub struct CHID6_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CHID6_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 6)) | (((value as u32) & 0x01) << 6);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `CHID7`"]
-pub struct CHID7_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CHID7_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 7)) | (((value as u32) & 0x01) << 7);
-        self.w
-    }
-}
+#[doc = "Register `DIS` writer"]
+pub type W = crate::W<DisSpec>;
+#[doc = "Field `CHID0` writer - Channel ID"]
+pub type Chid0W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `CHID1` writer - Channel ID"]
+pub type Chid1W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `CHID2` writer - Channel ID"]
+pub type Chid2W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `CHID3` writer - Channel ID"]
+pub type Chid3W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `CHID4` writer - Channel ID"]
+pub type Chid4W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `CHID5` writer - Channel ID"]
+pub type Chid5W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `CHID6` writer - Channel ID"]
+pub type Chid6W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `CHID7` writer - Channel ID"]
+pub type Chid7W<'a, REG> = crate::BitWriter<'a, REG>;
 impl W {
-    #[doc = "Bit 0 - Channel ID"]
-    #[inline(always)]
-    pub fn chid0(&mut self) -> CHID0_W {
-        CHID0_W { w: self }
-    }
-    #[doc = "Bit 1 - Channel ID"]
-    #[inline(always)]
-    pub fn chid1(&mut self) -> CHID1_W {
-        CHID1_W { w: self }
-    }
-    #[doc = "Bit 2 - Channel ID"]
-    #[inline(always)]
-    pub fn chid2(&mut self) -> CHID2_W {
-        CHID2_W { w: self }
-    }
-    #[doc = "Bit 3 - Channel ID"]
-    #[inline(always)]
-    pub fn chid3(&mut self) -> CHID3_W {
-        CHID3_W { w: self }
-    }
-    #[doc = "Bit 4 - Channel ID"]
-    #[inline(always)]
-    pub fn chid4(&mut self) -> CHID4_W {
-        CHID4_W { w: self }
-    }
-    #[doc = "Bit 5 - Channel ID"]
-    #[inline(always)]
-    pub fn chid5(&mut self) -> CHID5_W {
-        CHID5_W { w: self }
-    }
-    #[doc = "Bit 6 - Channel ID"]
-    #[inline(always)]
-    pub fn chid6(&mut self) -> CHID6_W {
-        CHID6_W { w: self }
-    }
-    #[doc = "Bit 7 - Channel ID"]
-    #[inline(always)]
-    pub fn chid7(&mut self) -> CHID7_W {
-        CHID7_W { w: self }
-    }
+  #[doc = "Bit 0 - Channel ID"]
+  #[inline(always)]
+  pub fn chid0(&mut self) -> Chid0W<'_, DisSpec> {
+    Chid0W::new(self, 0)
+  }
+  #[doc = "Bit 1 - Channel ID"]
+  #[inline(always)]
+  pub fn chid1(&mut self) -> Chid1W<'_, DisSpec> {
+    Chid1W::new(self, 1)
+  }
+  #[doc = "Bit 2 - Channel ID"]
+  #[inline(always)]
+  pub fn chid2(&mut self) -> Chid2W<'_, DisSpec> {
+    Chid2W::new(self, 2)
+  }
+  #[doc = "Bit 3 - Channel ID"]
+  #[inline(always)]
+  pub fn chid3(&mut self) -> Chid3W<'_, DisSpec> {
+    Chid3W::new(self, 3)
+  }
+  #[doc = "Bit 4 - Channel ID"]
+  #[inline(always)]
+  pub fn chid4(&mut self) -> Chid4W<'_, DisSpec> {
+    Chid4W::new(self, 4)
+  }
+  #[doc = "Bit 5 - Channel ID"]
+  #[inline(always)]
+  pub fn chid5(&mut self) -> Chid5W<'_, DisSpec> {
+    Chid5W::new(self, 5)
+  }
+  #[doc = "Bit 6 - Channel ID"]
+  #[inline(always)]
+  pub fn chid6(&mut self) -> Chid6W<'_, DisSpec> {
+    Chid6W::new(self, 6)
+  }
+  #[doc = "Bit 7 - Channel ID"]
+  #[inline(always)]
+  pub fn chid7(&mut self) -> Chid7W<'_, DisSpec> {
+    Chid7W::new(self, 7)
+  }
+}
+#[doc = "PWM Disable Register\n\nYou can [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dis::W`](W). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct DisSpec;
+impl crate::RegisterSpec for DisSpec {
+  type Ux = u32;
+}
+#[doc = "`write(|w| ..)` method takes [`dis::W`](W) writer structure"]
+impl crate::Writable for DisSpec {
+  type Safety = crate::Unsafe;
 }

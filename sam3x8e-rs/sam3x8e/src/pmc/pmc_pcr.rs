@@ -1,200 +1,146 @@
-#[doc = "Reader of register PMC_PCR"]
-pub type R = crate::R<u32, super::PMC_PCR>;
-#[doc = "Writer for register PMC_PCR"]
-pub type W = crate::W<u32, super::PMC_PCR>;
-#[doc = "Register PMC_PCR `reset()`'s with value 0"]
-impl crate::ResetValue for super::PMC_PCR {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `PID`"]
-pub type PID_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `PID`"]
-pub struct PID_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PID_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x3f) | ((value as u32) & 0x3f);
-        self.w
-    }
-}
-#[doc = "Reader of field `CMD`"]
-pub type CMD_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `CMD`"]
-pub struct CMD_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CMD_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 12)) | (((value as u32) & 0x01) << 12);
-        self.w
-    }
-}
+#[doc = "Register `PMC_PCR` reader"]
+pub type R = crate::R<PmcPcrSpec>;
+#[doc = "Register `PMC_PCR` writer"]
+pub type W = crate::W<PmcPcrSpec>;
+#[doc = "Field `PID` reader - Peripheral ID"]
+pub type PidR = crate::FieldReader;
+#[doc = "Field `PID` writer - Peripheral ID"]
+pub type PidW<'a, REG> = crate::FieldWriter<'a, REG, 6>;
+#[doc = "Field `CMD` reader - Command"]
+pub type CmdR = crate::BitReader;
+#[doc = "Field `CMD` writer - Command"]
+pub type CmdW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Divisor Value\n\nValue on reset: 0"]
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub enum DIV_A {
-    #[doc = "0: Peripheral clock is MCK"]
-    PERIPH_DIV_MCK,
-    #[doc = "1: Peripheral clock is MCK/2"]
-    PERIPH_DIV2_MCK,
-    #[doc = "2: Peripheral clock is MCK/4"]
-    PERIPH_DIV4_MCK,
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[repr(u8)]
+pub enum Div {
+  #[doc = "0: Peripheral clock is MCK"]
+  PeriphDivMck = 0,
+  #[doc = "1: Peripheral clock is MCK/2"]
+  PeriphDiv2Mck = 1,
+  #[doc = "2: Peripheral clock is MCK/4"]
+  PeriphDiv4Mck = 2,
 }
-impl From<DIV_A> for u8 {
-    #[inline(always)]
-    fn from(variant: DIV_A) -> Self {
-        match variant {
-            DIV_A::PERIPH_DIV_MCK => 0,
-            DIV_A::PERIPH_DIV2_MCK => 1,
-            DIV_A::PERIPH_DIV4_MCK => 2,
-        }
-    }
+impl From<Div> for u8 {
+  #[inline(always)]
+  fn from(variant: Div) -> Self {
+    variant as _
+  }
 }
-#[doc = "Reader of field `DIV`"]
-pub type DIV_R = crate::R<u8, DIV_A>;
-impl DIV_R {
-    #[doc = r"Get enumerated values variant"]
-    #[inline(always)]
-    pub fn variant(&self) -> crate::Variant<u8, DIV_A> {
-        use crate::Variant::*;
-        match self.bits {
-            0 => Val(DIV_A::PERIPH_DIV_MCK),
-            1 => Val(DIV_A::PERIPH_DIV2_MCK),
-            2 => Val(DIV_A::PERIPH_DIV4_MCK),
-            i => Res(i),
-        }
-    }
-    #[doc = "Checks if the value of the field is `PERIPH_DIV_MCK`"]
-    #[inline(always)]
-    pub fn is_periph_div_mck(&self) -> bool {
-        *self == DIV_A::PERIPH_DIV_MCK
-    }
-    #[doc = "Checks if the value of the field is `PERIPH_DIV2_MCK`"]
-    #[inline(always)]
-    pub fn is_periph_div2_mck(&self) -> bool {
-        *self == DIV_A::PERIPH_DIV2_MCK
-    }
-    #[doc = "Checks if the value of the field is `PERIPH_DIV4_MCK`"]
-    #[inline(always)]
-    pub fn is_periph_div4_mck(&self) -> bool {
-        *self == DIV_A::PERIPH_DIV4_MCK
-    }
+impl crate::FieldSpec for Div {
+  type Ux = u8;
 }
-#[doc = "Write proxy for field `DIV`"]
-pub struct DIV_W<'a> {
-    w: &'a mut W,
+impl crate::IsEnum for Div {}
+#[doc = "Field `DIV` reader - Divisor Value"]
+pub type DivR = crate::FieldReader<Div>;
+impl DivR {
+  #[doc = "Get enumerated values variant"]
+  #[inline(always)]
+  pub const fn variant(&self) -> Option<Div> {
+    match self.bits {
+      0 => Some(Div::PeriphDivMck),
+      1 => Some(Div::PeriphDiv2Mck),
+      2 => Some(Div::PeriphDiv4Mck),
+      _ => None,
+    }
+  }
+  #[doc = "Peripheral clock is MCK"]
+  #[inline(always)]
+  pub fn is_periph_div_mck(&self) -> bool {
+    *self == Div::PeriphDivMck
+  }
+  #[doc = "Peripheral clock is MCK/2"]
+  #[inline(always)]
+  pub fn is_periph_div2_mck(&self) -> bool {
+    *self == Div::PeriphDiv2Mck
+  }
+  #[doc = "Peripheral clock is MCK/4"]
+  #[inline(always)]
+  pub fn is_periph_div4_mck(&self) -> bool {
+    *self == Div::PeriphDiv4Mck
+  }
 }
-impl<'a> DIV_W<'a> {
-    #[doc = r"Writes `variant` to the field"]
-    #[inline(always)]
-    pub fn variant(self, variant: DIV_A) -> &'a mut W {
-        unsafe { self.bits(variant.into()) }
-    }
-    #[doc = "Peripheral clock is MCK"]
-    #[inline(always)]
-    pub fn periph_div_mck(self) -> &'a mut W {
-        self.variant(DIV_A::PERIPH_DIV_MCK)
-    }
-    #[doc = "Peripheral clock is MCK/2"]
-    #[inline(always)]
-    pub fn periph_div2_mck(self) -> &'a mut W {
-        self.variant(DIV_A::PERIPH_DIV2_MCK)
-    }
-    #[doc = "Peripheral clock is MCK/4"]
-    #[inline(always)]
-    pub fn periph_div4_mck(self) -> &'a mut W {
-        self.variant(DIV_A::PERIPH_DIV4_MCK)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x03 << 16)) | (((value as u32) & 0x03) << 16);
-        self.w
-    }
+#[doc = "Field `DIV` writer - Divisor Value"]
+pub type DivW<'a, REG> = crate::FieldWriter<'a, REG, 2, Div>;
+impl<'a, REG> DivW<'a, REG>
+where
+  REG: crate::Writable + crate::RegisterSpec,
+  REG::Ux: From<u8>,
+{
+  #[doc = "Peripheral clock is MCK"]
+  #[inline(always)]
+  pub fn periph_div_mck(self) -> &'a mut crate::W<REG> {
+    self.variant(Div::PeriphDivMck)
+  }
+  #[doc = "Peripheral clock is MCK/2"]
+  #[inline(always)]
+  pub fn periph_div2_mck(self) -> &'a mut crate::W<REG> {
+    self.variant(Div::PeriphDiv2Mck)
+  }
+  #[doc = "Peripheral clock is MCK/4"]
+  #[inline(always)]
+  pub fn periph_div4_mck(self) -> &'a mut crate::W<REG> {
+    self.variant(Div::PeriphDiv4Mck)
+  }
 }
-#[doc = "Reader of field `EN`"]
-pub type EN_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `EN`"]
-pub struct EN_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> EN_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 28)) | (((value as u32) & 0x01) << 28);
-        self.w
-    }
-}
+#[doc = "Field `EN` reader - Enable"]
+pub type EnR = crate::BitReader;
+#[doc = "Field `EN` writer - Enable"]
+pub type EnW<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
-    #[doc = "Bits 0:5 - Peripheral ID"]
-    #[inline(always)]
-    pub fn pid(&self) -> PID_R {
-        PID_R::new((self.bits & 0x3f) as u8)
-    }
-    #[doc = "Bit 12 - Command"]
-    #[inline(always)]
-    pub fn cmd(&self) -> CMD_R {
-        CMD_R::new(((self.bits >> 12) & 0x01) != 0)
-    }
-    #[doc = "Bits 16:17 - Divisor Value"]
-    #[inline(always)]
-    pub fn div(&self) -> DIV_R {
-        DIV_R::new(((self.bits >> 16) & 0x03) as u8)
-    }
-    #[doc = "Bit 28 - Enable"]
-    #[inline(always)]
-    pub fn en(&self) -> EN_R {
-        EN_R::new(((self.bits >> 28) & 0x01) != 0)
-    }
+  #[doc = "Bits 0:5 - Peripheral ID"]
+  #[inline(always)]
+  pub fn pid(&self) -> PidR {
+    PidR::new((self.bits & 0x3f) as u8)
+  }
+  #[doc = "Bit 12 - Command"]
+  #[inline(always)]
+  pub fn cmd(&self) -> CmdR {
+    CmdR::new(((self.bits >> 12) & 1) != 0)
+  }
+  #[doc = "Bits 16:17 - Divisor Value"]
+  #[inline(always)]
+  pub fn div(&self) -> DivR {
+    DivR::new(((self.bits >> 16) & 3) as u8)
+  }
+  #[doc = "Bit 28 - Enable"]
+  #[inline(always)]
+  pub fn en(&self) -> EnR {
+    EnR::new(((self.bits >> 28) & 1) != 0)
+  }
 }
 impl W {
-    #[doc = "Bits 0:5 - Peripheral ID"]
-    #[inline(always)]
-    pub fn pid(&mut self) -> PID_W {
-        PID_W { w: self }
-    }
-    #[doc = "Bit 12 - Command"]
-    #[inline(always)]
-    pub fn cmd(&mut self) -> CMD_W {
-        CMD_W { w: self }
-    }
-    #[doc = "Bits 16:17 - Divisor Value"]
-    #[inline(always)]
-    pub fn div(&mut self) -> DIV_W {
-        DIV_W { w: self }
-    }
-    #[doc = "Bit 28 - Enable"]
-    #[inline(always)]
-    pub fn en(&mut self) -> EN_W {
-        EN_W { w: self }
-    }
+  #[doc = "Bits 0:5 - Peripheral ID"]
+  #[inline(always)]
+  pub fn pid(&mut self) -> PidW<'_, PmcPcrSpec> {
+    PidW::new(self, 0)
+  }
+  #[doc = "Bit 12 - Command"]
+  #[inline(always)]
+  pub fn cmd(&mut self) -> CmdW<'_, PmcPcrSpec> {
+    CmdW::new(self, 12)
+  }
+  #[doc = "Bits 16:17 - Divisor Value"]
+  #[inline(always)]
+  pub fn div(&mut self) -> DivW<'_, PmcPcrSpec> {
+    DivW::new(self, 16)
+  }
+  #[doc = "Bit 28 - Enable"]
+  #[inline(always)]
+  pub fn en(&mut self) -> EnW<'_, PmcPcrSpec> {
+    EnW::new(self, 28)
+  }
 }
+#[doc = "Peripheral Control Register\n\nYou can [`read`](crate::Reg::read) this register and get [`pmc_pcr::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`pmc_pcr::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct PmcPcrSpec;
+impl crate::RegisterSpec for PmcPcrSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`pmc_pcr::R`](R) reader structure"]
+impl crate::Readable for PmcPcrSpec {}
+#[doc = "`write(|w| ..)` method takes [`pmc_pcr::W`](W) writer structure"]
+impl crate::Writable for PmcPcrSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets PMC_PCR to value 0"]
+impl crate::Resettable for PmcPcrSpec {}

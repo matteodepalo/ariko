@@ -1,40 +1,35 @@
-#[doc = "Reader of register RBQP"]
-pub type R = crate::R<u32, super::RBQP>;
-#[doc = "Writer for register RBQP"]
-pub type W = crate::W<u32, super::RBQP>;
-#[doc = "Register RBQP `reset()`'s with value 0"]
-impl crate::ResetValue for super::RBQP {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `ADDR`"]
-pub type ADDR_R = crate::R<u32, u32>;
-#[doc = "Write proxy for field `ADDR`"]
-pub struct ADDR_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> ADDR_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u32) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x3fff_ffff << 2)) | (((value as u32) & 0x3fff_ffff) << 2);
-        self.w
-    }
-}
+#[doc = "Register `RBQP` reader"]
+pub type R = crate::R<RbqpSpec>;
+#[doc = "Register `RBQP` writer"]
+pub type W = crate::W<RbqpSpec>;
+#[doc = "Field `ADDR` reader - Receive buffer queue pointer address"]
+pub type AddrR = crate::FieldReader<u32>;
+#[doc = "Field `ADDR` writer - Receive buffer queue pointer address"]
+pub type AddrW<'a, REG> = crate::FieldWriter<'a, REG, 30, u32>;
 impl R {
-    #[doc = "Bits 2:31 - Receive buffer queue pointer address"]
-    #[inline(always)]
-    pub fn addr(&self) -> ADDR_R {
-        ADDR_R::new(((self.bits >> 2) & 0x3fff_ffff) as u32)
-    }
+  #[doc = "Bits 2:31 - Receive buffer queue pointer address"]
+  #[inline(always)]
+  pub fn addr(&self) -> AddrR {
+    AddrR::new((self.bits >> 2) & 0x3fff_ffff)
+  }
 }
 impl W {
-    #[doc = "Bits 2:31 - Receive buffer queue pointer address"]
-    #[inline(always)]
-    pub fn addr(&mut self) -> ADDR_W {
-        ADDR_W { w: self }
-    }
+  #[doc = "Bits 2:31 - Receive buffer queue pointer address"]
+  #[inline(always)]
+  pub fn addr(&mut self) -> AddrW<'_, RbqpSpec> {
+    AddrW::new(self, 2)
+  }
 }
+#[doc = "Receive Buffer Queue Pointer Register\n\nYou can [`read`](crate::Reg::read) this register and get [`rbqp::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`rbqp::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct RbqpSpec;
+impl crate::RegisterSpec for RbqpSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`rbqp::R`](R) reader structure"]
+impl crate::Readable for RbqpSpec {}
+#[doc = "`write(|w| ..)` method takes [`rbqp::W`](W) writer structure"]
+impl crate::Writable for RbqpSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets RBQP to value 0"]
+impl crate::Resettable for RbqpSpec {}

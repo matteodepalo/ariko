@@ -1,424 +1,189 @@
-#[doc = "Reader of register LAST"]
-pub type R = crate::R<u32, super::LAST>;
-#[doc = "Writer for register LAST"]
-pub type W = crate::W<u32, super::LAST>;
-#[doc = "Register LAST `reset()`'s with value 0"]
-impl crate::ResetValue for super::LAST {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `SLAST0`"]
-pub type SLAST0_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `SLAST0`"]
-pub struct SLAST0_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> SLAST0_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x01) | ((value as u32) & 0x01);
-        self.w
-    }
-}
-#[doc = "Reader of field `DLAST0`"]
-pub type DLAST0_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `DLAST0`"]
-pub struct DLAST0_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> DLAST0_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 1)) | (((value as u32) & 0x01) << 1);
-        self.w
-    }
-}
-#[doc = "Reader of field `SLAST1`"]
-pub type SLAST1_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `SLAST1`"]
-pub struct SLAST1_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> SLAST1_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 2)) | (((value as u32) & 0x01) << 2);
-        self.w
-    }
-}
-#[doc = "Reader of field `DLAST1`"]
-pub type DLAST1_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `DLAST1`"]
-pub struct DLAST1_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> DLAST1_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 3)) | (((value as u32) & 0x01) << 3);
-        self.w
-    }
-}
-#[doc = "Reader of field `SLAST2`"]
-pub type SLAST2_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `SLAST2`"]
-pub struct SLAST2_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> SLAST2_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 4)) | (((value as u32) & 0x01) << 4);
-        self.w
-    }
-}
-#[doc = "Reader of field `DLAST2`"]
-pub type DLAST2_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `DLAST2`"]
-pub struct DLAST2_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> DLAST2_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 5)) | (((value as u32) & 0x01) << 5);
-        self.w
-    }
-}
-#[doc = "Reader of field `SLAST3`"]
-pub type SLAST3_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `SLAST3`"]
-pub struct SLAST3_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> SLAST3_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 6)) | (((value as u32) & 0x01) << 6);
-        self.w
-    }
-}
-#[doc = "Reader of field `DLAST3`"]
-pub type DLAST3_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `DLAST3`"]
-pub struct DLAST3_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> DLAST3_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 7)) | (((value as u32) & 0x01) << 7);
-        self.w
-    }
-}
-#[doc = "Reader of field `SLAST4`"]
-pub type SLAST4_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `SLAST4`"]
-pub struct SLAST4_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> SLAST4_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 8)) | (((value as u32) & 0x01) << 8);
-        self.w
-    }
-}
-#[doc = "Reader of field `DLAST4`"]
-pub type DLAST4_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `DLAST4`"]
-pub struct DLAST4_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> DLAST4_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 9)) | (((value as u32) & 0x01) << 9);
-        self.w
-    }
-}
-#[doc = "Reader of field `SLAST5`"]
-pub type SLAST5_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `SLAST5`"]
-pub struct SLAST5_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> SLAST5_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 10)) | (((value as u32) & 0x01) << 10);
-        self.w
-    }
-}
-#[doc = "Reader of field `DLAST5`"]
-pub type DLAST5_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `DLAST5`"]
-pub struct DLAST5_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> DLAST5_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 11)) | (((value as u32) & 0x01) << 11);
-        self.w
-    }
-}
+#[doc = "Register `LAST` reader"]
+pub type R = crate::R<LastSpec>;
+#[doc = "Register `LAST` writer"]
+pub type W = crate::W<LastSpec>;
+#[doc = "Field `SLAST0` reader - Source Last"]
+pub type Slast0R = crate::BitReader;
+#[doc = "Field `SLAST0` writer - Source Last"]
+pub type Slast0W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `DLAST0` reader - Destination Last"]
+pub type Dlast0R = crate::BitReader;
+#[doc = "Field `DLAST0` writer - Destination Last"]
+pub type Dlast0W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `SLAST1` reader - Source Last"]
+pub type Slast1R = crate::BitReader;
+#[doc = "Field `SLAST1` writer - Source Last"]
+pub type Slast1W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `DLAST1` reader - Destination Last"]
+pub type Dlast1R = crate::BitReader;
+#[doc = "Field `DLAST1` writer - Destination Last"]
+pub type Dlast1W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `SLAST2` reader - Source Last"]
+pub type Slast2R = crate::BitReader;
+#[doc = "Field `SLAST2` writer - Source Last"]
+pub type Slast2W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `DLAST2` reader - Destination Last"]
+pub type Dlast2R = crate::BitReader;
+#[doc = "Field `DLAST2` writer - Destination Last"]
+pub type Dlast2W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `SLAST3` reader - Source Last"]
+pub type Slast3R = crate::BitReader;
+#[doc = "Field `SLAST3` writer - Source Last"]
+pub type Slast3W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `DLAST3` reader - Destination Last"]
+pub type Dlast3R = crate::BitReader;
+#[doc = "Field `DLAST3` writer - Destination Last"]
+pub type Dlast3W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `SLAST4` reader - Source Last"]
+pub type Slast4R = crate::BitReader;
+#[doc = "Field `SLAST4` writer - Source Last"]
+pub type Slast4W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `DLAST4` reader - Destination Last"]
+pub type Dlast4R = crate::BitReader;
+#[doc = "Field `DLAST4` writer - Destination Last"]
+pub type Dlast4W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `SLAST5` reader - Source Last"]
+pub type Slast5R = crate::BitReader;
+#[doc = "Field `SLAST5` writer - Source Last"]
+pub type Slast5W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `DLAST5` reader - Destination Last"]
+pub type Dlast5R = crate::BitReader;
+#[doc = "Field `DLAST5` writer - Destination Last"]
+pub type Dlast5W<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
-    #[doc = "Bit 0 - Source Last"]
-    #[inline(always)]
-    pub fn slast0(&self) -> SLAST0_R {
-        SLAST0_R::new((self.bits & 0x01) != 0)
-    }
-    #[doc = "Bit 1 - Destination Last"]
-    #[inline(always)]
-    pub fn dlast0(&self) -> DLAST0_R {
-        DLAST0_R::new(((self.bits >> 1) & 0x01) != 0)
-    }
-    #[doc = "Bit 2 - Source Last"]
-    #[inline(always)]
-    pub fn slast1(&self) -> SLAST1_R {
-        SLAST1_R::new(((self.bits >> 2) & 0x01) != 0)
-    }
-    #[doc = "Bit 3 - Destination Last"]
-    #[inline(always)]
-    pub fn dlast1(&self) -> DLAST1_R {
-        DLAST1_R::new(((self.bits >> 3) & 0x01) != 0)
-    }
-    #[doc = "Bit 4 - Source Last"]
-    #[inline(always)]
-    pub fn slast2(&self) -> SLAST2_R {
-        SLAST2_R::new(((self.bits >> 4) & 0x01) != 0)
-    }
-    #[doc = "Bit 5 - Destination Last"]
-    #[inline(always)]
-    pub fn dlast2(&self) -> DLAST2_R {
-        DLAST2_R::new(((self.bits >> 5) & 0x01) != 0)
-    }
-    #[doc = "Bit 6 - Source Last"]
-    #[inline(always)]
-    pub fn slast3(&self) -> SLAST3_R {
-        SLAST3_R::new(((self.bits >> 6) & 0x01) != 0)
-    }
-    #[doc = "Bit 7 - Destination Last"]
-    #[inline(always)]
-    pub fn dlast3(&self) -> DLAST3_R {
-        DLAST3_R::new(((self.bits >> 7) & 0x01) != 0)
-    }
-    #[doc = "Bit 8 - Source Last"]
-    #[inline(always)]
-    pub fn slast4(&self) -> SLAST4_R {
-        SLAST4_R::new(((self.bits >> 8) & 0x01) != 0)
-    }
-    #[doc = "Bit 9 - Destination Last"]
-    #[inline(always)]
-    pub fn dlast4(&self) -> DLAST4_R {
-        DLAST4_R::new(((self.bits >> 9) & 0x01) != 0)
-    }
-    #[doc = "Bit 10 - Source Last"]
-    #[inline(always)]
-    pub fn slast5(&self) -> SLAST5_R {
-        SLAST5_R::new(((self.bits >> 10) & 0x01) != 0)
-    }
-    #[doc = "Bit 11 - Destination Last"]
-    #[inline(always)]
-    pub fn dlast5(&self) -> DLAST5_R {
-        DLAST5_R::new(((self.bits >> 11) & 0x01) != 0)
-    }
+  #[doc = "Bit 0 - Source Last"]
+  #[inline(always)]
+  pub fn slast0(&self) -> Slast0R {
+    Slast0R::new((self.bits & 1) != 0)
+  }
+  #[doc = "Bit 1 - Destination Last"]
+  #[inline(always)]
+  pub fn dlast0(&self) -> Dlast0R {
+    Dlast0R::new(((self.bits >> 1) & 1) != 0)
+  }
+  #[doc = "Bit 2 - Source Last"]
+  #[inline(always)]
+  pub fn slast1(&self) -> Slast1R {
+    Slast1R::new(((self.bits >> 2) & 1) != 0)
+  }
+  #[doc = "Bit 3 - Destination Last"]
+  #[inline(always)]
+  pub fn dlast1(&self) -> Dlast1R {
+    Dlast1R::new(((self.bits >> 3) & 1) != 0)
+  }
+  #[doc = "Bit 4 - Source Last"]
+  #[inline(always)]
+  pub fn slast2(&self) -> Slast2R {
+    Slast2R::new(((self.bits >> 4) & 1) != 0)
+  }
+  #[doc = "Bit 5 - Destination Last"]
+  #[inline(always)]
+  pub fn dlast2(&self) -> Dlast2R {
+    Dlast2R::new(((self.bits >> 5) & 1) != 0)
+  }
+  #[doc = "Bit 6 - Source Last"]
+  #[inline(always)]
+  pub fn slast3(&self) -> Slast3R {
+    Slast3R::new(((self.bits >> 6) & 1) != 0)
+  }
+  #[doc = "Bit 7 - Destination Last"]
+  #[inline(always)]
+  pub fn dlast3(&self) -> Dlast3R {
+    Dlast3R::new(((self.bits >> 7) & 1) != 0)
+  }
+  #[doc = "Bit 8 - Source Last"]
+  #[inline(always)]
+  pub fn slast4(&self) -> Slast4R {
+    Slast4R::new(((self.bits >> 8) & 1) != 0)
+  }
+  #[doc = "Bit 9 - Destination Last"]
+  #[inline(always)]
+  pub fn dlast4(&self) -> Dlast4R {
+    Dlast4R::new(((self.bits >> 9) & 1) != 0)
+  }
+  #[doc = "Bit 10 - Source Last"]
+  #[inline(always)]
+  pub fn slast5(&self) -> Slast5R {
+    Slast5R::new(((self.bits >> 10) & 1) != 0)
+  }
+  #[doc = "Bit 11 - Destination Last"]
+  #[inline(always)]
+  pub fn dlast5(&self) -> Dlast5R {
+    Dlast5R::new(((self.bits >> 11) & 1) != 0)
+  }
 }
 impl W {
-    #[doc = "Bit 0 - Source Last"]
-    #[inline(always)]
-    pub fn slast0(&mut self) -> SLAST0_W {
-        SLAST0_W { w: self }
-    }
-    #[doc = "Bit 1 - Destination Last"]
-    #[inline(always)]
-    pub fn dlast0(&mut self) -> DLAST0_W {
-        DLAST0_W { w: self }
-    }
-    #[doc = "Bit 2 - Source Last"]
-    #[inline(always)]
-    pub fn slast1(&mut self) -> SLAST1_W {
-        SLAST1_W { w: self }
-    }
-    #[doc = "Bit 3 - Destination Last"]
-    #[inline(always)]
-    pub fn dlast1(&mut self) -> DLAST1_W {
-        DLAST1_W { w: self }
-    }
-    #[doc = "Bit 4 - Source Last"]
-    #[inline(always)]
-    pub fn slast2(&mut self) -> SLAST2_W {
-        SLAST2_W { w: self }
-    }
-    #[doc = "Bit 5 - Destination Last"]
-    #[inline(always)]
-    pub fn dlast2(&mut self) -> DLAST2_W {
-        DLAST2_W { w: self }
-    }
-    #[doc = "Bit 6 - Source Last"]
-    #[inline(always)]
-    pub fn slast3(&mut self) -> SLAST3_W {
-        SLAST3_W { w: self }
-    }
-    #[doc = "Bit 7 - Destination Last"]
-    #[inline(always)]
-    pub fn dlast3(&mut self) -> DLAST3_W {
-        DLAST3_W { w: self }
-    }
-    #[doc = "Bit 8 - Source Last"]
-    #[inline(always)]
-    pub fn slast4(&mut self) -> SLAST4_W {
-        SLAST4_W { w: self }
-    }
-    #[doc = "Bit 9 - Destination Last"]
-    #[inline(always)]
-    pub fn dlast4(&mut self) -> DLAST4_W {
-        DLAST4_W { w: self }
-    }
-    #[doc = "Bit 10 - Source Last"]
-    #[inline(always)]
-    pub fn slast5(&mut self) -> SLAST5_W {
-        SLAST5_W { w: self }
-    }
-    #[doc = "Bit 11 - Destination Last"]
-    #[inline(always)]
-    pub fn dlast5(&mut self) -> DLAST5_W {
-        DLAST5_W { w: self }
-    }
+  #[doc = "Bit 0 - Source Last"]
+  #[inline(always)]
+  pub fn slast0(&mut self) -> Slast0W<'_, LastSpec> {
+    Slast0W::new(self, 0)
+  }
+  #[doc = "Bit 1 - Destination Last"]
+  #[inline(always)]
+  pub fn dlast0(&mut self) -> Dlast0W<'_, LastSpec> {
+    Dlast0W::new(self, 1)
+  }
+  #[doc = "Bit 2 - Source Last"]
+  #[inline(always)]
+  pub fn slast1(&mut self) -> Slast1W<'_, LastSpec> {
+    Slast1W::new(self, 2)
+  }
+  #[doc = "Bit 3 - Destination Last"]
+  #[inline(always)]
+  pub fn dlast1(&mut self) -> Dlast1W<'_, LastSpec> {
+    Dlast1W::new(self, 3)
+  }
+  #[doc = "Bit 4 - Source Last"]
+  #[inline(always)]
+  pub fn slast2(&mut self) -> Slast2W<'_, LastSpec> {
+    Slast2W::new(self, 4)
+  }
+  #[doc = "Bit 5 - Destination Last"]
+  #[inline(always)]
+  pub fn dlast2(&mut self) -> Dlast2W<'_, LastSpec> {
+    Dlast2W::new(self, 5)
+  }
+  #[doc = "Bit 6 - Source Last"]
+  #[inline(always)]
+  pub fn slast3(&mut self) -> Slast3W<'_, LastSpec> {
+    Slast3W::new(self, 6)
+  }
+  #[doc = "Bit 7 - Destination Last"]
+  #[inline(always)]
+  pub fn dlast3(&mut self) -> Dlast3W<'_, LastSpec> {
+    Dlast3W::new(self, 7)
+  }
+  #[doc = "Bit 8 - Source Last"]
+  #[inline(always)]
+  pub fn slast4(&mut self) -> Slast4W<'_, LastSpec> {
+    Slast4W::new(self, 8)
+  }
+  #[doc = "Bit 9 - Destination Last"]
+  #[inline(always)]
+  pub fn dlast4(&mut self) -> Dlast4W<'_, LastSpec> {
+    Dlast4W::new(self, 9)
+  }
+  #[doc = "Bit 10 - Source Last"]
+  #[inline(always)]
+  pub fn slast5(&mut self) -> Slast5W<'_, LastSpec> {
+    Slast5W::new(self, 10)
+  }
+  #[doc = "Bit 11 - Destination Last"]
+  #[inline(always)]
+  pub fn dlast5(&mut self) -> Dlast5W<'_, LastSpec> {
+    Dlast5W::new(self, 11)
+  }
 }
+#[doc = "DMAC Software Last Transfer Flag Register\n\nYou can [`read`](crate::Reg::read) this register and get [`last::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`last::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct LastSpec;
+impl crate::RegisterSpec for LastSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`last::R`](R) reader structure"]
+impl crate::Readable for LastSpec {}
+#[doc = "`write(|w| ..)` method takes [`last::W`](W) writer structure"]
+impl crate::Writable for LastSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets LAST to value 0"]
+impl crate::Resettable for LastSpec {}

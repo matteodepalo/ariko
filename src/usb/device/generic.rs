@@ -124,14 +124,11 @@ impl GenericDevice {
   }
 
   pub fn control(&self, setup_packet: &SetupPacket, data: Option<&mut [u8]>) -> Result<(), Error> {
-    self
-      .usb()
-      .control_pipe()
-      .control_transfer(self.address, setup_packet, data)
-  }
-
-  fn usb(&self) -> &mut USB {
-    USB::get()
+    USB::with(|usb| {
+      usb
+        .control_pipe()
+        .control_transfer(self.address, setup_packet, data)
+    })
   }
 }
 

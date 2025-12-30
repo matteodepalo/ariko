@@ -1,40 +1,35 @@
-#[doc = "Reader of register FRO"]
-pub type R = crate::R<u32, super::FRO>;
-#[doc = "Writer for register FRO"]
-pub type W = crate::W<u32, super::FRO>;
-#[doc = "Register FRO `reset()`'s with value 0"]
-impl crate::ResetValue for super::FRO {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `FROK`"]
-pub type FROK_R = crate::R<u32, u32>;
-#[doc = "Write proxy for field `FROK`"]
-pub struct FROK_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> FROK_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u32) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x00ff_ffff) | ((value as u32) & 0x00ff_ffff);
-        self.w
-    }
-}
+#[doc = "Register `FRO` reader"]
+pub type R = crate::R<FroSpec>;
+#[doc = "Register `FRO` writer"]
+pub type W = crate::W<FroSpec>;
+#[doc = "Field `FROK` reader - Frames Received OK"]
+pub type FrokR = crate::FieldReader<u32>;
+#[doc = "Field `FROK` writer - Frames Received OK"]
+pub type FrokW<'a, REG> = crate::FieldWriter<'a, REG, 24, u32>;
 impl R {
-    #[doc = "Bits 0:23 - Frames Received OK"]
-    #[inline(always)]
-    pub fn frok(&self) -> FROK_R {
-        FROK_R::new((self.bits & 0x00ff_ffff) as u32)
-    }
+  #[doc = "Bits 0:23 - Frames Received OK"]
+  #[inline(always)]
+  pub fn frok(&self) -> FrokR {
+    FrokR::new(self.bits & 0x00ff_ffff)
+  }
 }
 impl W {
-    #[doc = "Bits 0:23 - Frames Received OK"]
-    #[inline(always)]
-    pub fn frok(&mut self) -> FROK_W {
-        FROK_W { w: self }
-    }
+  #[doc = "Bits 0:23 - Frames Received OK"]
+  #[inline(always)]
+  pub fn frok(&mut self) -> FrokW<'_, FroSpec> {
+    FrokW::new(self, 0)
+  }
 }
+#[doc = "Frames Received Ok Register\n\nYou can [`read`](crate::Reg::read) this register and get [`fro::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`fro::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct FroSpec;
+impl crate::RegisterSpec for FroSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`fro::R`](R) reader structure"]
+impl crate::Readable for FroSpec {}
+#[doc = "`write(|w| ..)` method takes [`fro::W`](W) writer structure"]
+impl crate::Writable for FroSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets FRO to value 0"]
+impl crate::Resettable for FroSpec {}

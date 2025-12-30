@@ -1,74 +1,51 @@
-#[doc = "Reader of register CKGR_UCKR"]
-pub type R = crate::R<u32, super::CKGR_UCKR>;
-#[doc = "Writer for register CKGR_UCKR"]
-pub type W = crate::W<u32, super::CKGR_UCKR>;
-#[doc = "Register CKGR_UCKR `reset()`'s with value 0x1020_0800"]
-impl crate::ResetValue for super::CKGR_UCKR {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0x1020_0800
-    }
-}
-#[doc = "Reader of field `UPLLEN`"]
-pub type UPLLEN_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `UPLLEN`"]
-pub struct UPLLEN_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> UPLLEN_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 16)) | (((value as u32) & 0x01) << 16);
-        self.w
-    }
-}
-#[doc = "Reader of field `UPLLCOUNT`"]
-pub type UPLLCOUNT_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `UPLLCOUNT`"]
-pub struct UPLLCOUNT_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> UPLLCOUNT_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x0f << 20)) | (((value as u32) & 0x0f) << 20);
-        self.w
-    }
-}
+#[doc = "Register `CKGR_UCKR` reader"]
+pub type R = crate::R<CkgrUckrSpec>;
+#[doc = "Register `CKGR_UCKR` writer"]
+pub type W = crate::W<CkgrUckrSpec>;
+#[doc = "Field `UPLLEN` reader - UTMI PLL Enable"]
+pub type UpllenR = crate::BitReader;
+#[doc = "Field `UPLLEN` writer - UTMI PLL Enable"]
+pub type UpllenW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `UPLLCOUNT` reader - UTMI PLL Start-up Time"]
+pub type UpllcountR = crate::FieldReader;
+#[doc = "Field `UPLLCOUNT` writer - UTMI PLL Start-up Time"]
+pub type UpllcountW<'a, REG> = crate::FieldWriter<'a, REG, 4>;
 impl R {
-    #[doc = "Bit 16 - UTMI PLL Enable"]
-    #[inline(always)]
-    pub fn upllen(&self) -> UPLLEN_R {
-        UPLLEN_R::new(((self.bits >> 16) & 0x01) != 0)
-    }
-    #[doc = "Bits 20:23 - UTMI PLL Start-up Time"]
-    #[inline(always)]
-    pub fn upllcount(&self) -> UPLLCOUNT_R {
-        UPLLCOUNT_R::new(((self.bits >> 20) & 0x0f) as u8)
-    }
+  #[doc = "Bit 16 - UTMI PLL Enable"]
+  #[inline(always)]
+  pub fn upllen(&self) -> UpllenR {
+    UpllenR::new(((self.bits >> 16) & 1) != 0)
+  }
+  #[doc = "Bits 20:23 - UTMI PLL Start-up Time"]
+  #[inline(always)]
+  pub fn upllcount(&self) -> UpllcountR {
+    UpllcountR::new(((self.bits >> 20) & 0x0f) as u8)
+  }
 }
 impl W {
-    #[doc = "Bit 16 - UTMI PLL Enable"]
-    #[inline(always)]
-    pub fn upllen(&mut self) -> UPLLEN_W {
-        UPLLEN_W { w: self }
-    }
-    #[doc = "Bits 20:23 - UTMI PLL Start-up Time"]
-    #[inline(always)]
-    pub fn upllcount(&mut self) -> UPLLCOUNT_W {
-        UPLLCOUNT_W { w: self }
-    }
+  #[doc = "Bit 16 - UTMI PLL Enable"]
+  #[inline(always)]
+  pub fn upllen(&mut self) -> UpllenW<'_, CkgrUckrSpec> {
+    UpllenW::new(self, 16)
+  }
+  #[doc = "Bits 20:23 - UTMI PLL Start-up Time"]
+  #[inline(always)]
+  pub fn upllcount(&mut self) -> UpllcountW<'_, CkgrUckrSpec> {
+    UpllcountW::new(self, 20)
+  }
+}
+#[doc = "UTMI Clock Register\n\nYou can [`read`](crate::Reg::read) this register and get [`ckgr_uckr::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ckgr_uckr::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct CkgrUckrSpec;
+impl crate::RegisterSpec for CkgrUckrSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`ckgr_uckr::R`](R) reader structure"]
+impl crate::Readable for CkgrUckrSpec {}
+#[doc = "`write(|w| ..)` method takes [`ckgr_uckr::W`](W) writer structure"]
+impl crate::Writable for CkgrUckrSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets CKGR_UCKR to value 0x1020_0800"]
+impl crate::Resettable for CkgrUckrSpec {
+  const RESET_VALUE: u32 = 0x1020_0800;
 }

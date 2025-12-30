@@ -1,328 +1,97 @@
-#[doc = "Writer for register CHDR"]
-pub type W = crate::W<u32, super::CHDR>;
-#[doc = "Write proxy for field `DIS0`"]
-pub struct DIS0_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> DIS0_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x01) | ((value as u32) & 0x01);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `DIS1`"]
-pub struct DIS1_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> DIS1_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 1)) | (((value as u32) & 0x01) << 1);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `DIS2`"]
-pub struct DIS2_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> DIS2_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 2)) | (((value as u32) & 0x01) << 2);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `DIS3`"]
-pub struct DIS3_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> DIS3_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 3)) | (((value as u32) & 0x01) << 3);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `DIS4`"]
-pub struct DIS4_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> DIS4_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 4)) | (((value as u32) & 0x01) << 4);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `DIS5`"]
-pub struct DIS5_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> DIS5_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 5)) | (((value as u32) & 0x01) << 5);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `RES0`"]
-pub struct RES0_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> RES0_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 8)) | (((value as u32) & 0x01) << 8);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `RES1`"]
-pub struct RES1_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> RES1_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 9)) | (((value as u32) & 0x01) << 9);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `RES2`"]
-pub struct RES2_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> RES2_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 10)) | (((value as u32) & 0x01) << 10);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `RES3`"]
-pub struct RES3_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> RES3_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 11)) | (((value as u32) & 0x01) << 11);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `RES4`"]
-pub struct RES4_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> RES4_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 12)) | (((value as u32) & 0x01) << 12);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `RES5`"]
-pub struct RES5_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> RES5_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 13)) | (((value as u32) & 0x01) << 13);
-        self.w
-    }
-}
+#[doc = "Register `CHDR` writer"]
+pub type W = crate::W<ChdrSpec>;
+#[doc = "Field `DIS0` writer - Disable \\[5:0\\]"]
+pub type Dis0W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `DIS1` writer - Disable \\[5:0\\]"]
+pub type Dis1W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `DIS2` writer - Disable \\[5:0\\]"]
+pub type Dis2W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `DIS3` writer - Disable \\[5:0\\]"]
+pub type Dis3W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `DIS4` writer - Disable \\[5:0\\]"]
+pub type Dis4W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `DIS5` writer - Disable \\[5:0\\]"]
+pub type Dis5W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `RES0` writer - Resume \\[5:0\\]"]
+pub type Res0W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `RES1` writer - Resume \\[5:0\\]"]
+pub type Res1W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `RES2` writer - Resume \\[5:0\\]"]
+pub type Res2W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `RES3` writer - Resume \\[5:0\\]"]
+pub type Res3W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `RES4` writer - Resume \\[5:0\\]"]
+pub type Res4W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `RES5` writer - Resume \\[5:0\\]"]
+pub type Res5W<'a, REG> = crate::BitWriter<'a, REG>;
 impl W {
-    #[doc = "Bit 0 - Disable \\[5:0\\]"]
-    #[inline(always)]
-    pub fn dis0(&mut self) -> DIS0_W {
-        DIS0_W { w: self }
-    }
-    #[doc = "Bit 1 - Disable \\[5:0\\]"]
-    #[inline(always)]
-    pub fn dis1(&mut self) -> DIS1_W {
-        DIS1_W { w: self }
-    }
-    #[doc = "Bit 2 - Disable \\[5:0\\]"]
-    #[inline(always)]
-    pub fn dis2(&mut self) -> DIS2_W {
-        DIS2_W { w: self }
-    }
-    #[doc = "Bit 3 - Disable \\[5:0\\]"]
-    #[inline(always)]
-    pub fn dis3(&mut self) -> DIS3_W {
-        DIS3_W { w: self }
-    }
-    #[doc = "Bit 4 - Disable \\[5:0\\]"]
-    #[inline(always)]
-    pub fn dis4(&mut self) -> DIS4_W {
-        DIS4_W { w: self }
-    }
-    #[doc = "Bit 5 - Disable \\[5:0\\]"]
-    #[inline(always)]
-    pub fn dis5(&mut self) -> DIS5_W {
-        DIS5_W { w: self }
-    }
-    #[doc = "Bit 8 - Resume \\[5:0\\]"]
-    #[inline(always)]
-    pub fn res0(&mut self) -> RES0_W {
-        RES0_W { w: self }
-    }
-    #[doc = "Bit 9 - Resume \\[5:0\\]"]
-    #[inline(always)]
-    pub fn res1(&mut self) -> RES1_W {
-        RES1_W { w: self }
-    }
-    #[doc = "Bit 10 - Resume \\[5:0\\]"]
-    #[inline(always)]
-    pub fn res2(&mut self) -> RES2_W {
-        RES2_W { w: self }
-    }
-    #[doc = "Bit 11 - Resume \\[5:0\\]"]
-    #[inline(always)]
-    pub fn res3(&mut self) -> RES3_W {
-        RES3_W { w: self }
-    }
-    #[doc = "Bit 12 - Resume \\[5:0\\]"]
-    #[inline(always)]
-    pub fn res4(&mut self) -> RES4_W {
-        RES4_W { w: self }
-    }
-    #[doc = "Bit 13 - Resume \\[5:0\\]"]
-    #[inline(always)]
-    pub fn res5(&mut self) -> RES5_W {
-        RES5_W { w: self }
-    }
+  #[doc = "Bit 0 - Disable \\[5:0\\]"]
+  #[inline(always)]
+  pub fn dis0(&mut self) -> Dis0W<'_, ChdrSpec> {
+    Dis0W::new(self, 0)
+  }
+  #[doc = "Bit 1 - Disable \\[5:0\\]"]
+  #[inline(always)]
+  pub fn dis1(&mut self) -> Dis1W<'_, ChdrSpec> {
+    Dis1W::new(self, 1)
+  }
+  #[doc = "Bit 2 - Disable \\[5:0\\]"]
+  #[inline(always)]
+  pub fn dis2(&mut self) -> Dis2W<'_, ChdrSpec> {
+    Dis2W::new(self, 2)
+  }
+  #[doc = "Bit 3 - Disable \\[5:0\\]"]
+  #[inline(always)]
+  pub fn dis3(&mut self) -> Dis3W<'_, ChdrSpec> {
+    Dis3W::new(self, 3)
+  }
+  #[doc = "Bit 4 - Disable \\[5:0\\]"]
+  #[inline(always)]
+  pub fn dis4(&mut self) -> Dis4W<'_, ChdrSpec> {
+    Dis4W::new(self, 4)
+  }
+  #[doc = "Bit 5 - Disable \\[5:0\\]"]
+  #[inline(always)]
+  pub fn dis5(&mut self) -> Dis5W<'_, ChdrSpec> {
+    Dis5W::new(self, 5)
+  }
+  #[doc = "Bit 8 - Resume \\[5:0\\]"]
+  #[inline(always)]
+  pub fn res0(&mut self) -> Res0W<'_, ChdrSpec> {
+    Res0W::new(self, 8)
+  }
+  #[doc = "Bit 9 - Resume \\[5:0\\]"]
+  #[inline(always)]
+  pub fn res1(&mut self) -> Res1W<'_, ChdrSpec> {
+    Res1W::new(self, 9)
+  }
+  #[doc = "Bit 10 - Resume \\[5:0\\]"]
+  #[inline(always)]
+  pub fn res2(&mut self) -> Res2W<'_, ChdrSpec> {
+    Res2W::new(self, 10)
+  }
+  #[doc = "Bit 11 - Resume \\[5:0\\]"]
+  #[inline(always)]
+  pub fn res3(&mut self) -> Res3W<'_, ChdrSpec> {
+    Res3W::new(self, 11)
+  }
+  #[doc = "Bit 12 - Resume \\[5:0\\]"]
+  #[inline(always)]
+  pub fn res4(&mut self) -> Res4W<'_, ChdrSpec> {
+    Res4W::new(self, 12)
+  }
+  #[doc = "Bit 13 - Resume \\[5:0\\]"]
+  #[inline(always)]
+  pub fn res5(&mut self) -> Res5W<'_, ChdrSpec> {
+    Res5W::new(self, 13)
+  }
+}
+#[doc = "DMAC Channel Handler Disable Register\n\nYou can [`write_with_zero`](crate::Reg::write_with_zero) this register using [`chdr::W`](W). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct ChdrSpec;
+impl crate::RegisterSpec for ChdrSpec {
+  type Ux = u32;
+}
+#[doc = "`write(|w| ..)` method takes [`chdr::W`](W) writer structure"]
+impl crate::Writable for ChdrSpec {
+  type Safety = crate::Unsafe;
 }

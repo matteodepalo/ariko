@@ -1,40 +1,35 @@
-#[doc = "Reader of register HSTDMAADDRESS3"]
-pub type R = crate::R<u32, super::HSTDMAADDRESS3>;
-#[doc = "Writer for register HSTDMAADDRESS3"]
-pub type W = crate::W<u32, super::HSTDMAADDRESS3>;
-#[doc = "Register HSTDMAADDRESS3 `reset()`'s with value 0"]
-impl crate::ResetValue for super::HSTDMAADDRESS3 {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `BUFF_ADD`"]
-pub type BUFF_ADD_R = crate::R<u32, u32>;
-#[doc = "Write proxy for field `BUFF_ADD`"]
-pub struct BUFF_ADD_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> BUFF_ADD_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u32) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0xffff_ffff) | ((value as u32) & 0xffff_ffff);
-        self.w
-    }
-}
+#[doc = "Register `HSTDMAADDRESS3` reader"]
+pub type R = crate::R<Hstdmaaddress3Spec>;
+#[doc = "Register `HSTDMAADDRESS3` writer"]
+pub type W = crate::W<Hstdmaaddress3Spec>;
+#[doc = "Field `BUFF_ADD` reader - Buffer Address"]
+pub type BuffAddR = crate::FieldReader<u32>;
+#[doc = "Field `BUFF_ADD` writer - Buffer Address"]
+pub type BuffAddW<'a, REG> = crate::FieldWriter<'a, REG, 32, u32>;
 impl R {
-    #[doc = "Bits 0:31 - Buffer Address"]
-    #[inline(always)]
-    pub fn buff_add(&self) -> BUFF_ADD_R {
-        BUFF_ADD_R::new((self.bits & 0xffff_ffff) as u32)
-    }
+  #[doc = "Bits 0:31 - Buffer Address"]
+  #[inline(always)]
+  pub fn buff_add(&self) -> BuffAddR {
+    BuffAddR::new(self.bits)
+  }
 }
 impl W {
-    #[doc = "Bits 0:31 - Buffer Address"]
-    #[inline(always)]
-    pub fn buff_add(&mut self) -> BUFF_ADD_W {
-        BUFF_ADD_W { w: self }
-    }
+  #[doc = "Bits 0:31 - Buffer Address"]
+  #[inline(always)]
+  pub fn buff_add(&mut self) -> BuffAddW<'_, Hstdmaaddress3Spec> {
+    BuffAddW::new(self, 0)
+  }
 }
+#[doc = "Host DMA Channel Address Register (n = 3)\n\nYou can [`read`](crate::Reg::read) this register and get [`hstdmaaddress3::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`hstdmaaddress3::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct Hstdmaaddress3Spec;
+impl crate::RegisterSpec for Hstdmaaddress3Spec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`hstdmaaddress3::R`](R) reader structure"]
+impl crate::Readable for Hstdmaaddress3Spec {}
+#[doc = "`write(|w| ..)` method takes [`hstdmaaddress3::W`](W) writer structure"]
+impl crate::Writable for Hstdmaaddress3Spec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets HSTDMAADDRESS3 to value 0"]
+impl crate::Resettable for Hstdmaaddress3Spec {}

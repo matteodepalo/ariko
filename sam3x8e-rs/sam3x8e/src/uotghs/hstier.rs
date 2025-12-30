@@ -1,625 +1,174 @@
-#[doc = "Writer for register HSTIER"]
-pub type W = crate::W<u32, super::HSTIER>;
-#[doc = "Write proxy for field `DCONNIES`"]
-pub struct DCONNIES_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> DCONNIES_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x01) | ((value as u32) & 0x01);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `DDISCIES`"]
-pub struct DDISCIES_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> DDISCIES_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 1)) | (((value as u32) & 0x01) << 1);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `RSTIES`"]
-pub struct RSTIES_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> RSTIES_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 2)) | (((value as u32) & 0x01) << 2);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `RSMEDIES`"]
-pub struct RSMEDIES_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> RSMEDIES_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 3)) | (((value as u32) & 0x01) << 3);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `RXRSMIES`"]
-pub struct RXRSMIES_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> RXRSMIES_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 4)) | (((value as u32) & 0x01) << 4);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `HSOFIES`"]
-pub struct HSOFIES_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> HSOFIES_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 5)) | (((value as u32) & 0x01) << 5);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `HWUPIES`"]
-pub struct HWUPIES_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> HWUPIES_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 6)) | (((value as u32) & 0x01) << 6);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `PEP_0`"]
-pub struct PEP_0_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PEP_0_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 8)) | (((value as u32) & 0x01) << 8);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `PEP_1`"]
-pub struct PEP_1_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PEP_1_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 9)) | (((value as u32) & 0x01) << 9);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `PEP_2`"]
-pub struct PEP_2_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PEP_2_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 10)) | (((value as u32) & 0x01) << 10);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `PEP_3`"]
-pub struct PEP_3_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PEP_3_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 11)) | (((value as u32) & 0x01) << 11);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `PEP_4`"]
-pub struct PEP_4_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PEP_4_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 12)) | (((value as u32) & 0x01) << 12);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `PEP_5`"]
-pub struct PEP_5_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PEP_5_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 13)) | (((value as u32) & 0x01) << 13);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `PEP_6`"]
-pub struct PEP_6_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PEP_6_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 14)) | (((value as u32) & 0x01) << 14);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `PEP_7`"]
-pub struct PEP_7_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PEP_7_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 15)) | (((value as u32) & 0x01) << 15);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `PEP_8`"]
-pub struct PEP_8_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PEP_8_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 16)) | (((value as u32) & 0x01) << 16);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `PEP_9`"]
-pub struct PEP_9_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PEP_9_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 17)) | (((value as u32) & 0x01) << 17);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `DMA_1`"]
-pub struct DMA_1_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> DMA_1_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 25)) | (((value as u32) & 0x01) << 25);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `DMA_2`"]
-pub struct DMA_2_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> DMA_2_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 26)) | (((value as u32) & 0x01) << 26);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `DMA_3`"]
-pub struct DMA_3_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> DMA_3_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 27)) | (((value as u32) & 0x01) << 27);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `DMA_4`"]
-pub struct DMA_4_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> DMA_4_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 28)) | (((value as u32) & 0x01) << 28);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `DMA_5`"]
-pub struct DMA_5_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> DMA_5_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 29)) | (((value as u32) & 0x01) << 29);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `DMA_6`"]
-pub struct DMA_6_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> DMA_6_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 30)) | (((value as u32) & 0x01) << 30);
-        self.w
-    }
-}
+#[doc = "Register `HSTIER` writer"]
+pub type W = crate::W<HstierSpec>;
+#[doc = "Field `DCONNIES` writer - Device Connection Interrupt Enable"]
+pub type DconniesW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `DDISCIES` writer - Device Disconnection Interrupt Enable"]
+pub type DdisciesW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `RSTIES` writer - USB Reset Sent Interrupt Enable"]
+pub type RstiesW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `RSMEDIES` writer - Downstream Resume Sent Interrupt Enable"]
+pub type RsmediesW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `RXRSMIES` writer - Upstream Resume Received Interrupt Enable"]
+pub type RxrsmiesW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `HSOFIES` writer - Host Start of Frame Interrupt Enable"]
+pub type HsofiesW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `HWUPIES` writer - Host Wake-Up Interrupt Enable"]
+pub type HwupiesW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `PEP_0` writer - Pipe 0 Interrupt Enable"]
+pub type Pep0W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `PEP_1` writer - Pipe 1 Interrupt Enable"]
+pub type Pep1W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `PEP_2` writer - Pipe 2 Interrupt Enable"]
+pub type Pep2W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `PEP_3` writer - Pipe 3 Interrupt Enable"]
+pub type Pep3W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `PEP_4` writer - Pipe 4 Interrupt Enable"]
+pub type Pep4W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `PEP_5` writer - Pipe 5 Interrupt Enable"]
+pub type Pep5W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `PEP_6` writer - Pipe 6 Interrupt Enable"]
+pub type Pep6W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `PEP_7` writer - Pipe 7 Interrupt Enable"]
+pub type Pep7W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `PEP_8` writer - Pipe 8 Interrupt Enable"]
+pub type Pep8W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `PEP_9` writer - Pipe 9 Interrupt Enable"]
+pub type Pep9W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `DMA_1` writer - DMA Channel 1 Interrupt Enable"]
+pub type Dma1W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `DMA_2` writer - DMA Channel 2 Interrupt Enable"]
+pub type Dma2W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `DMA_3` writer - DMA Channel 3 Interrupt Enable"]
+pub type Dma3W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `DMA_4` writer - DMA Channel 4 Interrupt Enable"]
+pub type Dma4W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `DMA_5` writer - DMA Channel 5 Interrupt Enable"]
+pub type Dma5W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `DMA_6` writer - DMA Channel 6 Interrupt Enable"]
+pub type Dma6W<'a, REG> = crate::BitWriter<'a, REG>;
 impl W {
-    #[doc = "Bit 0 - Device Connection Interrupt Enable"]
-    #[inline(always)]
-    pub fn dconnies(&mut self) -> DCONNIES_W {
-        DCONNIES_W { w: self }
-    }
-    #[doc = "Bit 1 - Device Disconnection Interrupt Enable"]
-    #[inline(always)]
-    pub fn ddiscies(&mut self) -> DDISCIES_W {
-        DDISCIES_W { w: self }
-    }
-    #[doc = "Bit 2 - USB Reset Sent Interrupt Enable"]
-    #[inline(always)]
-    pub fn rsties(&mut self) -> RSTIES_W {
-        RSTIES_W { w: self }
-    }
-    #[doc = "Bit 3 - Downstream Resume Sent Interrupt Enable"]
-    #[inline(always)]
-    pub fn rsmedies(&mut self) -> RSMEDIES_W {
-        RSMEDIES_W { w: self }
-    }
-    #[doc = "Bit 4 - Upstream Resume Received Interrupt Enable"]
-    #[inline(always)]
-    pub fn rxrsmies(&mut self) -> RXRSMIES_W {
-        RXRSMIES_W { w: self }
-    }
-    #[doc = "Bit 5 - Host Start of Frame Interrupt Enable"]
-    #[inline(always)]
-    pub fn hsofies(&mut self) -> HSOFIES_W {
-        HSOFIES_W { w: self }
-    }
-    #[doc = "Bit 6 - Host Wake-Up Interrupt Enable"]
-    #[inline(always)]
-    pub fn hwupies(&mut self) -> HWUPIES_W {
-        HWUPIES_W { w: self }
-    }
-    #[doc = "Bit 8 - Pipe 0 Interrupt Enable"]
-    #[inline(always)]
-    pub fn pep_0(&mut self) -> PEP_0_W {
-        PEP_0_W { w: self }
-    }
-    #[doc = "Bit 9 - Pipe 1 Interrupt Enable"]
-    #[inline(always)]
-    pub fn pep_1(&mut self) -> PEP_1_W {
-        PEP_1_W { w: self }
-    }
-    #[doc = "Bit 10 - Pipe 2 Interrupt Enable"]
-    #[inline(always)]
-    pub fn pep_2(&mut self) -> PEP_2_W {
-        PEP_2_W { w: self }
-    }
-    #[doc = "Bit 11 - Pipe 3 Interrupt Enable"]
-    #[inline(always)]
-    pub fn pep_3(&mut self) -> PEP_3_W {
-        PEP_3_W { w: self }
-    }
-    #[doc = "Bit 12 - Pipe 4 Interrupt Enable"]
-    #[inline(always)]
-    pub fn pep_4(&mut self) -> PEP_4_W {
-        PEP_4_W { w: self }
-    }
-    #[doc = "Bit 13 - Pipe 5 Interrupt Enable"]
-    #[inline(always)]
-    pub fn pep_5(&mut self) -> PEP_5_W {
-        PEP_5_W { w: self }
-    }
-    #[doc = "Bit 14 - Pipe 6 Interrupt Enable"]
-    #[inline(always)]
-    pub fn pep_6(&mut self) -> PEP_6_W {
-        PEP_6_W { w: self }
-    }
-    #[doc = "Bit 15 - Pipe 7 Interrupt Enable"]
-    #[inline(always)]
-    pub fn pep_7(&mut self) -> PEP_7_W {
-        PEP_7_W { w: self }
-    }
-    #[doc = "Bit 16 - Pipe 8 Interrupt Enable"]
-    #[inline(always)]
-    pub fn pep_8(&mut self) -> PEP_8_W {
-        PEP_8_W { w: self }
-    }
-    #[doc = "Bit 17 - Pipe 9 Interrupt Enable"]
-    #[inline(always)]
-    pub fn pep_9(&mut self) -> PEP_9_W {
-        PEP_9_W { w: self }
-    }
-    #[doc = "Bit 25 - DMA Channel 1 Interrupt Enable"]
-    #[inline(always)]
-    pub fn dma_1(&mut self) -> DMA_1_W {
-        DMA_1_W { w: self }
-    }
-    #[doc = "Bit 26 - DMA Channel 2 Interrupt Enable"]
-    #[inline(always)]
-    pub fn dma_2(&mut self) -> DMA_2_W {
-        DMA_2_W { w: self }
-    }
-    #[doc = "Bit 27 - DMA Channel 3 Interrupt Enable"]
-    #[inline(always)]
-    pub fn dma_3(&mut self) -> DMA_3_W {
-        DMA_3_W { w: self }
-    }
-    #[doc = "Bit 28 - DMA Channel 4 Interrupt Enable"]
-    #[inline(always)]
-    pub fn dma_4(&mut self) -> DMA_4_W {
-        DMA_4_W { w: self }
-    }
-    #[doc = "Bit 29 - DMA Channel 5 Interrupt Enable"]
-    #[inline(always)]
-    pub fn dma_5(&mut self) -> DMA_5_W {
-        DMA_5_W { w: self }
-    }
-    #[doc = "Bit 30 - DMA Channel 6 Interrupt Enable"]
-    #[inline(always)]
-    pub fn dma_6(&mut self) -> DMA_6_W {
-        DMA_6_W { w: self }
-    }
+  #[doc = "Bit 0 - Device Connection Interrupt Enable"]
+  #[inline(always)]
+  pub fn dconnies(&mut self) -> DconniesW<'_, HstierSpec> {
+    DconniesW::new(self, 0)
+  }
+  #[doc = "Bit 1 - Device Disconnection Interrupt Enable"]
+  #[inline(always)]
+  pub fn ddiscies(&mut self) -> DdisciesW<'_, HstierSpec> {
+    DdisciesW::new(self, 1)
+  }
+  #[doc = "Bit 2 - USB Reset Sent Interrupt Enable"]
+  #[inline(always)]
+  pub fn rsties(&mut self) -> RstiesW<'_, HstierSpec> {
+    RstiesW::new(self, 2)
+  }
+  #[doc = "Bit 3 - Downstream Resume Sent Interrupt Enable"]
+  #[inline(always)]
+  pub fn rsmedies(&mut self) -> RsmediesW<'_, HstierSpec> {
+    RsmediesW::new(self, 3)
+  }
+  #[doc = "Bit 4 - Upstream Resume Received Interrupt Enable"]
+  #[inline(always)]
+  pub fn rxrsmies(&mut self) -> RxrsmiesW<'_, HstierSpec> {
+    RxrsmiesW::new(self, 4)
+  }
+  #[doc = "Bit 5 - Host Start of Frame Interrupt Enable"]
+  #[inline(always)]
+  pub fn hsofies(&mut self) -> HsofiesW<'_, HstierSpec> {
+    HsofiesW::new(self, 5)
+  }
+  #[doc = "Bit 6 - Host Wake-Up Interrupt Enable"]
+  #[inline(always)]
+  pub fn hwupies(&mut self) -> HwupiesW<'_, HstierSpec> {
+    HwupiesW::new(self, 6)
+  }
+  #[doc = "Bit 8 - Pipe 0 Interrupt Enable"]
+  #[inline(always)]
+  pub fn pep_0(&mut self) -> Pep0W<'_, HstierSpec> {
+    Pep0W::new(self, 8)
+  }
+  #[doc = "Bit 9 - Pipe 1 Interrupt Enable"]
+  #[inline(always)]
+  pub fn pep_1(&mut self) -> Pep1W<'_, HstierSpec> {
+    Pep1W::new(self, 9)
+  }
+  #[doc = "Bit 10 - Pipe 2 Interrupt Enable"]
+  #[inline(always)]
+  pub fn pep_2(&mut self) -> Pep2W<'_, HstierSpec> {
+    Pep2W::new(self, 10)
+  }
+  #[doc = "Bit 11 - Pipe 3 Interrupt Enable"]
+  #[inline(always)]
+  pub fn pep_3(&mut self) -> Pep3W<'_, HstierSpec> {
+    Pep3W::new(self, 11)
+  }
+  #[doc = "Bit 12 - Pipe 4 Interrupt Enable"]
+  #[inline(always)]
+  pub fn pep_4(&mut self) -> Pep4W<'_, HstierSpec> {
+    Pep4W::new(self, 12)
+  }
+  #[doc = "Bit 13 - Pipe 5 Interrupt Enable"]
+  #[inline(always)]
+  pub fn pep_5(&mut self) -> Pep5W<'_, HstierSpec> {
+    Pep5W::new(self, 13)
+  }
+  #[doc = "Bit 14 - Pipe 6 Interrupt Enable"]
+  #[inline(always)]
+  pub fn pep_6(&mut self) -> Pep6W<'_, HstierSpec> {
+    Pep6W::new(self, 14)
+  }
+  #[doc = "Bit 15 - Pipe 7 Interrupt Enable"]
+  #[inline(always)]
+  pub fn pep_7(&mut self) -> Pep7W<'_, HstierSpec> {
+    Pep7W::new(self, 15)
+  }
+  #[doc = "Bit 16 - Pipe 8 Interrupt Enable"]
+  #[inline(always)]
+  pub fn pep_8(&mut self) -> Pep8W<'_, HstierSpec> {
+    Pep8W::new(self, 16)
+  }
+  #[doc = "Bit 17 - Pipe 9 Interrupt Enable"]
+  #[inline(always)]
+  pub fn pep_9(&mut self) -> Pep9W<'_, HstierSpec> {
+    Pep9W::new(self, 17)
+  }
+  #[doc = "Bit 25 - DMA Channel 1 Interrupt Enable"]
+  #[inline(always)]
+  pub fn dma_1(&mut self) -> Dma1W<'_, HstierSpec> {
+    Dma1W::new(self, 25)
+  }
+  #[doc = "Bit 26 - DMA Channel 2 Interrupt Enable"]
+  #[inline(always)]
+  pub fn dma_2(&mut self) -> Dma2W<'_, HstierSpec> {
+    Dma2W::new(self, 26)
+  }
+  #[doc = "Bit 27 - DMA Channel 3 Interrupt Enable"]
+  #[inline(always)]
+  pub fn dma_3(&mut self) -> Dma3W<'_, HstierSpec> {
+    Dma3W::new(self, 27)
+  }
+  #[doc = "Bit 28 - DMA Channel 4 Interrupt Enable"]
+  #[inline(always)]
+  pub fn dma_4(&mut self) -> Dma4W<'_, HstierSpec> {
+    Dma4W::new(self, 28)
+  }
+  #[doc = "Bit 29 - DMA Channel 5 Interrupt Enable"]
+  #[inline(always)]
+  pub fn dma_5(&mut self) -> Dma5W<'_, HstierSpec> {
+    Dma5W::new(self, 29)
+  }
+  #[doc = "Bit 30 - DMA Channel 6 Interrupt Enable"]
+  #[inline(always)]
+  pub fn dma_6(&mut self) -> Dma6W<'_, HstierSpec> {
+    Dma6W::new(self, 30)
+  }
+}
+#[doc = "Host Global Interrupt Enable Register\n\nYou can [`write_with_zero`](crate::Reg::write_with_zero) this register using [`hstier::W`](W). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct HstierSpec;
+impl crate::RegisterSpec for HstierSpec {
+  type Ux = u32;
+}
+#[doc = "`write(|w| ..)` method takes [`hstier::W`](W) writer structure"]
+impl crate::Writable for HstierSpec {
+  type Safety = crate::Unsafe;
 }

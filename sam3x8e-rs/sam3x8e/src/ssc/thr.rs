@@ -1,21 +1,20 @@
-#[doc = "Writer for register THR"]
-pub type W = crate::W<u32, super::THR>;
-#[doc = "Write proxy for field `TDAT`"]
-pub struct TDAT_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> TDAT_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u32) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0xffff_ffff) | ((value as u32) & 0xffff_ffff);
-        self.w
-    }
-}
+#[doc = "Register `THR` writer"]
+pub type W = crate::W<ThrSpec>;
+#[doc = "Field `TDAT` writer - Transmit Data"]
+pub type TdatW<'a, REG> = crate::FieldWriter<'a, REG, 32, u32>;
 impl W {
-    #[doc = "Bits 0:31 - Transmit Data"]
-    #[inline(always)]
-    pub fn tdat(&mut self) -> TDAT_W {
-        TDAT_W { w: self }
-    }
+  #[doc = "Bits 0:31 - Transmit Data"]
+  #[inline(always)]
+  pub fn tdat(&mut self) -> TdatW<'_, ThrSpec> {
+    TdatW::new(self, 0)
+  }
+}
+#[doc = "Transmit Holding Register\n\nYou can [`write_with_zero`](crate::Reg::write_with_zero) this register using [`thr::W`](W). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct ThrSpec;
+impl crate::RegisterSpec for ThrSpec {
+  type Ux = u32;
+}
+#[doc = "`write(|w| ..)` method takes [`thr::W`](W) writer structure"]
+impl crate::Writable for ThrSpec {
+  type Safety = crate::Unsafe;
 }

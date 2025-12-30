@@ -3,10 +3,12 @@ use crate::usb::device::generic::GenericDevice;
 use crate::usb::packet::{
   SetupPacket, SetupRequestDirection, SetupRequestKind, SetupRequestRecipient, SetupRequestType,
 };
-use crate::usb::pipe::{StreamInPipe, Transfer};
+use crate::usb::pipe::Transfer;
 use crate::usb::{Device, Error, USB};
+use core::cell::RefCell;
 use core::mem::size_of;
-use embedded_hal::blocking::delay::DelayMs;
+use critical_section::Mutex;
+use embedded_hal::delay::DelayNs;
 use log::debug;
 use modular_bitfield::prelude::*;
 
@@ -22,7 +24,8 @@ pub struct StatusResponse {
   pub reserved: u8,
 }
 
-static mut IN_PIPE: Option<&StreamInPipe> = None;
+// Store the pipe index instead of a reference
+static IN_PIPE_INDEX: Mutex<RefCell<Option<u8>>> = Mutex::new(RefCell::new(None));
 
 #[derive(Debug)]
 pub struct CP210xDevice {
@@ -60,7 +63,17 @@ impl CP210xDevice {
     if status_response.amount_in_in_queue() > 0 {
       let mut buffer = [0_u8; 512];
 
-      unsafe { IN_PIPE.unwrap().in_transfer(&mut buffer)? }
+      USB::with(|usb| {
+        let pipe_index = critical_section::with(|cs| {
+          *IN_PIPE_INDEX.borrow(cs).borrow()
+        }).expect("IN_PIPE not configured");
+
+        if let Some(pipe) = usb.get_pipe(pipe_index) {
+          pipe.as_stream_in().in_transfer(&mut buffer)
+        } else {
+          Err(Error::TooManyPipes)
+        }
+      })?;
       debug!("[USB] Buffer: {:?}", buffer);
 
       let setup_packet = SetupPacket::new(
@@ -78,7 +91,7 @@ impl CP210xDevice {
       self.generic_device.control(&setup_packet, None)?;
     }
 
-    unsafe { Peripherals::get().delay.try_delay_ms(1000_u32) };
+    Peripherals::with(|p| p.delay.delay_ms(1000_u32));
 
     Ok(())
   }
@@ -188,14 +201,17 @@ impl CP210xDeviceClass {
         generic_device: generic_device.clone(),
       };
 
-      unsafe {
-        IN_PIPE = Some(
-          USB::get()
-            .alloc_pipe(|p| p.into_stream_in())?
-            .configure(generic_device.address, 1, Transfer::Bulk)
-            .as_stream_in(),
-        )
-      };
+      USB::with(|usb| {
+        let pipe = usb.alloc_pipe(|p| p.into_stream_in())?;
+        pipe.configure(generic_device.address, 1, Transfer::Bulk);
+        let pipe_index = pipe.index();
+
+        critical_section::with(|cs| {
+          IN_PIPE_INDEX.borrow(cs).replace(Some(pipe_index));
+        });
+
+        Ok::<(), Error>(())
+      })?;
 
       Ok(Device::CP210x(device))
     } else {

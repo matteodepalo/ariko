@@ -1,84 +1,49 @@
-#[doc = "Reader of register SMMR0"]
-pub type R = crate::R<u32, super::SMMR0>;
-#[doc = "Writer for register SMMR0"]
-pub type W = crate::W<u32, super::SMMR0>;
-#[doc = "Register SMMR0 `reset()`'s with value 0"]
-impl crate::ResetValue for super::SMMR0 {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `GCEN`"]
-pub type GCEN_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `GCEN`"]
-pub struct GCEN_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> GCEN_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x01) | ((value as u32) & 0x01);
-        self.w
-    }
-}
-#[doc = "Reader of field `DOWN`"]
-pub type DOWN_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `DOWN`"]
-pub struct DOWN_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> DOWN_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 1)) | (((value as u32) & 0x01) << 1);
-        self.w
-    }
-}
+#[doc = "Register `SMMR0` reader"]
+pub type R = crate::R<Smmr0Spec>;
+#[doc = "Register `SMMR0` writer"]
+pub type W = crate::W<Smmr0Spec>;
+#[doc = "Field `GCEN` reader - Gray Count Enable"]
+pub type GcenR = crate::BitReader;
+#[doc = "Field `GCEN` writer - Gray Count Enable"]
+pub type GcenW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `DOWN` reader - DOWN Count"]
+pub type DownR = crate::BitReader;
+#[doc = "Field `DOWN` writer - DOWN Count"]
+pub type DownW<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
-    #[doc = "Bit 0 - Gray Count Enable"]
-    #[inline(always)]
-    pub fn gcen(&self) -> GCEN_R {
-        GCEN_R::new((self.bits & 0x01) != 0)
-    }
-    #[doc = "Bit 1 - DOWN Count"]
-    #[inline(always)]
-    pub fn down(&self) -> DOWN_R {
-        DOWN_R::new(((self.bits >> 1) & 0x01) != 0)
-    }
+  #[doc = "Bit 0 - Gray Count Enable"]
+  #[inline(always)]
+  pub fn gcen(&self) -> GcenR {
+    GcenR::new((self.bits & 1) != 0)
+  }
+  #[doc = "Bit 1 - DOWN Count"]
+  #[inline(always)]
+  pub fn down(&self) -> DownR {
+    DownR::new(((self.bits >> 1) & 1) != 0)
+  }
 }
 impl W {
-    #[doc = "Bit 0 - Gray Count Enable"]
-    #[inline(always)]
-    pub fn gcen(&mut self) -> GCEN_W {
-        GCEN_W { w: self }
-    }
-    #[doc = "Bit 1 - DOWN Count"]
-    #[inline(always)]
-    pub fn down(&mut self) -> DOWN_W {
-        DOWN_W { w: self }
-    }
+  #[doc = "Bit 0 - Gray Count Enable"]
+  #[inline(always)]
+  pub fn gcen(&mut self) -> GcenW<'_, Smmr0Spec> {
+    GcenW::new(self, 0)
+  }
+  #[doc = "Bit 1 - DOWN Count"]
+  #[inline(always)]
+  pub fn down(&mut self) -> DownW<'_, Smmr0Spec> {
+    DownW::new(self, 1)
+  }
 }
+#[doc = "Stepper Motor Mode Register (channel = 0)\n\nYou can [`read`](crate::Reg::read) this register and get [`smmr0::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`smmr0::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct Smmr0Spec;
+impl crate::RegisterSpec for Smmr0Spec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`smmr0::R`](R) reader structure"]
+impl crate::Readable for Smmr0Spec {}
+#[doc = "`write(|w| ..)` method takes [`smmr0::W`](W) writer structure"]
+impl crate::Writable for Smmr0Spec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets SMMR0 to value 0"]
+impl crate::Resettable for Smmr0Spec {}

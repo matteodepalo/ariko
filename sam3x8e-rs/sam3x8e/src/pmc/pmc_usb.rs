@@ -1,74 +1,49 @@
-#[doc = "Reader of register PMC_USB"]
-pub type R = crate::R<u32, super::PMC_USB>;
-#[doc = "Writer for register PMC_USB"]
-pub type W = crate::W<u32, super::PMC_USB>;
-#[doc = "Register PMC_USB `reset()`'s with value 0"]
-impl crate::ResetValue for super::PMC_USB {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `USBS`"]
-pub type USBS_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `USBS`"]
-pub struct USBS_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> USBS_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x01) | ((value as u32) & 0x01);
-        self.w
-    }
-}
-#[doc = "Reader of field `USBDIV`"]
-pub type USBDIV_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `USBDIV`"]
-pub struct USBDIV_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> USBDIV_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x0f << 8)) | (((value as u32) & 0x0f) << 8);
-        self.w
-    }
-}
+#[doc = "Register `PMC_USB` reader"]
+pub type R = crate::R<PmcUsbSpec>;
+#[doc = "Register `PMC_USB` writer"]
+pub type W = crate::W<PmcUsbSpec>;
+#[doc = "Field `USBS` reader - USB Input Clock Selection"]
+pub type UsbsR = crate::BitReader;
+#[doc = "Field `USBS` writer - USB Input Clock Selection"]
+pub type UsbsW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `USBDIV` reader - Divider for USB Clock."]
+pub type UsbdivR = crate::FieldReader;
+#[doc = "Field `USBDIV` writer - Divider for USB Clock."]
+pub type UsbdivW<'a, REG> = crate::FieldWriter<'a, REG, 4>;
 impl R {
-    #[doc = "Bit 0 - USB Input Clock Selection"]
-    #[inline(always)]
-    pub fn usbs(&self) -> USBS_R {
-        USBS_R::new((self.bits & 0x01) != 0)
-    }
-    #[doc = "Bits 8:11 - Divider for USB Clock."]
-    #[inline(always)]
-    pub fn usbdiv(&self) -> USBDIV_R {
-        USBDIV_R::new(((self.bits >> 8) & 0x0f) as u8)
-    }
+  #[doc = "Bit 0 - USB Input Clock Selection"]
+  #[inline(always)]
+  pub fn usbs(&self) -> UsbsR {
+    UsbsR::new((self.bits & 1) != 0)
+  }
+  #[doc = "Bits 8:11 - Divider for USB Clock."]
+  #[inline(always)]
+  pub fn usbdiv(&self) -> UsbdivR {
+    UsbdivR::new(((self.bits >> 8) & 0x0f) as u8)
+  }
 }
 impl W {
-    #[doc = "Bit 0 - USB Input Clock Selection"]
-    #[inline(always)]
-    pub fn usbs(&mut self) -> USBS_W {
-        USBS_W { w: self }
-    }
-    #[doc = "Bits 8:11 - Divider for USB Clock."]
-    #[inline(always)]
-    pub fn usbdiv(&mut self) -> USBDIV_W {
-        USBDIV_W { w: self }
-    }
+  #[doc = "Bit 0 - USB Input Clock Selection"]
+  #[inline(always)]
+  pub fn usbs(&mut self) -> UsbsW<'_, PmcUsbSpec> {
+    UsbsW::new(self, 0)
+  }
+  #[doc = "Bits 8:11 - Divider for USB Clock."]
+  #[inline(always)]
+  pub fn usbdiv(&mut self) -> UsbdivW<'_, PmcUsbSpec> {
+    UsbdivW::new(self, 8)
+  }
 }
+#[doc = "USB Clock Register\n\nYou can [`read`](crate::Reg::read) this register and get [`pmc_usb::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`pmc_usb::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct PmcUsbSpec;
+impl crate::RegisterSpec for PmcUsbSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`pmc_usb::R`](R) reader structure"]
+impl crate::Readable for PmcUsbSpec {}
+#[doc = "`write(|w| ..)` method takes [`pmc_usb::W`](W) writer structure"]
+impl crate::Writable for PmcUsbSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets PMC_USB to value 0"]
+impl crate::Resettable for PmcUsbSpec {}

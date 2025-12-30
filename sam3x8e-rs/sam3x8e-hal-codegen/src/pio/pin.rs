@@ -44,20 +44,20 @@ impl<'a> ToTokens for Pin<'a> {
             /// Configures the pin to use peripheral A
             /// AB Select -- select A.  Datasheet §31.5.3
             pub fn into_peripheral_a(self, absr: &mut ABSR) -> #pin_ident<PeripheralA> {
-                absr.absr().write_with_zero(|w| w.#accessor().clear_bit());
+                unsafe { absr.absr().write_with_zero(|w| w.#accessor().clear_bit()); }
                 #pin_ident { _mode: PhantomData }
             }
 
             /// Configures the pin to use peripheral B
             /// AB Select -- select B.  Datasheet §31.5.3
             pub fn into_peripheral_b(self, absr: &mut ABSR) -> #pin_ident<PeripheralB> {
-                absr.absr().write_with_zero(|w| w.#accessor().set_bit());
+                unsafe { absr.absr().write_with_zero(|w| w.#accessor().set_bit()); }
                 #pin_ident { _mode: PhantomData }
             }
 
             /// Disables PIO lines for pin
             pub fn disable_pio_line(self, pdr: &mut PDR) -> #pin_ident<PioDisabled> {
-               pdr.pdr().write_with_zero(|w| w.#accessor().set_bit());
+               unsafe { pdr.pdr().write_with_zero(|w| w.#accessor().set_bit()); }
                #pin_ident { _mode: PhantomData }
             }
 
@@ -79,7 +79,7 @@ impl<'a> ToTokens for Pin<'a> {
             pub fn into_pull_up_input(
                 self, puer: &mut PUER
             ) -> #pin_ident<Input<PullUp>> {
-                puer.puer().write_with_zero(|w| w.#accessor().set_bit());
+                unsafe { puer.puer().write_with_zero(|w| w.#accessor().set_bit()); }
 
                 #pin_ident { _mode: PhantomData }
             }
@@ -92,10 +92,10 @@ impl<'a> ToTokens for Pin<'a> {
                 oer: &mut OER,
             ) -> #pin_ident<Output<OpenDrain>> {
                 // OER = Output Enable Register
-                oer.oer().write_with_zero(|w| w.#accessor().set_bit());
+                unsafe { oer.oer().write_with_zero(|w| w.#accessor().set_bit()); }
 
                 // Enable multi-mode / open drain
-                mder.mder().write_with_zero(|w| w.#accessor().set_bit());
+                unsafe { mder.mder().write_with_zero(|w| w.#accessor().set_bit()); }
 
                 #pin_ident { _mode: PhantomData }
             }
@@ -107,10 +107,10 @@ impl<'a> ToTokens for Pin<'a> {
                 oer: &mut OER,
             ) -> #pin_ident<Output<PushPull>> {
                 // OER = Output Enable Register
-                oer.oer().write_with_zero(|w| w.#accessor().set_bit());
+                unsafe { oer.oer().write_with_zero(|w| w.#accessor().set_bit()); }
 
                 // Disable multi-mode / open drain
-                mddr.mddr().write_with_zero(|w| w.#accessor().set_bit());
+                unsafe { mddr.mddr().write_with_zero(|w| w.#accessor().set_bit()); }
 
                 #pin_ident { _mode: PhantomData }
             }
@@ -142,25 +142,31 @@ impl<'a> ToTokens for Pin<'a> {
             }
         }
 
+        impl<MODE> ErrorType for #pin_ident<Output<MODE>> {
+            type Error = core::convert::Infallible;
+        }
+
         impl<MODE> OutputPin for #pin_ident<Output<MODE>> {
-            type Error = ();
-            fn try_set_high(&mut self) -> Result<(), Self::Error> {
-                unsafe { (*#upper_name::ptr()).sodr.write_with_zero(|w| w.#accessor().set_bit()) };
+            fn set_high(&mut self) -> Result<(), Self::Error> {
+                unsafe { (*#upper_name::ptr()).sodr().write_with_zero(|w| w.#accessor().set_bit()) };
                 Ok(())
             }
-            fn try_set_low(&mut self) -> Result<(), Self::Error> {
-                unsafe { (*#upper_name::ptr()).codr.write_with_zero(|w| w.#accessor().set_bit()) };
+            fn set_low(&mut self) -> Result<(), Self::Error> {
+                unsafe { (*#upper_name::ptr()).codr().write_with_zero(|w| w.#accessor().set_bit()) };
                 Ok(())
             }
         }
 
+        impl<MODE> ErrorType for #pin_ident<Input<MODE>> {
+            type Error = core::convert::Infallible;
+        }
+
         impl<MODE> InputPin for #pin_ident<Input<MODE>> {
-            type Error = ();
-            fn try_is_high(&self) -> Result<bool, Self::Error> {
-                Ok(unsafe { (*#upper_name::ptr()).pdsr.read().#accessor().bits() })
+            fn is_high(&mut self) -> Result<bool, Self::Error> {
+                Ok(unsafe { (*#upper_name::ptr()).pdsr().read().#accessor().bit() })
             }
-            fn try_is_low(&self) -> Result<bool, Self::Error> {
-                Ok(unsafe { !(*#upper_name::ptr()).pdsr.read().#accessor().bits() })
+            fn is_low(&mut self) -> Result<bool, Self::Error> {
+                Ok(unsafe { !(*#upper_name::ptr()).pdsr().read().#accessor().bit() })
             }
         }
     ))

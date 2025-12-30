@@ -1,6 +1,5 @@
 #![no_std]
 #![no_main]
-#![feature(panic_info_message)]
 #![allow(dead_code)]
 
 extern crate cortex_m_rt;
@@ -15,10 +14,10 @@ use certabo::serial::Serial;
 use certabo::usb::USB;
 use core::fmt::Write;
 use cortex_m_rt::entry;
-use embedded_hal::blocking::delay::DelayMs;
+use embedded_hal::delay::DelayNs;
 
 #[entry]
-unsafe fn main() -> ! {
+fn main() -> ! {
   Peripherals::init();
   Serial::init(57600);
   Logger::init();
@@ -27,20 +26,18 @@ unsafe fn main() -> ! {
   USB::init();
   Buzzer::init();
 
-  let usb = USB::get();
-  let lcd = Display::get();
-  let _buzzer = Buzzer::get();
-
-  lcd.write_str("Started!").unwrap();
-
-  let _p = Peripherals::get();
+  Display::with(|lcd| {
+    lcd.write_str("Started!").unwrap();
+  });
 
   loop {
-    // if p.white_button.try_is_low().unwrap() {
-    //   buzzer.beep()
-    // };
+    // Peripherals::with(|p| {
+    //   if p.white_button.try_is_low().unwrap() {
+    //     Buzzer::with(|buzzer| buzzer.beep());
+    //   }
+    // });
 
-    usb.poll()
+    USB::with(|usb| usb.poll());
   }
 }
 
@@ -50,16 +47,18 @@ fn panic(info: &PanicInfo) -> ! {
   let location = info.location().unwrap();
 
   loop {
-    Serial::get()
-      .write_fmt(format_args!(
-        "Panic at {} ({}, {}): {}\n\r",
-        location.file(),
-        location.line(),
-        location.column(),
-        info.message().unwrap()
-      ))
-      .unwrap();
+    Serial::with(|serial| {
+      serial
+        .write_fmt(format_args!(
+          "Panic at {} ({}, {}): {}\n\r",
+          location.file(),
+          location.line(),
+          location.column(),
+          info.message()
+        ))
+        .unwrap();
+    });
 
-    unsafe { Peripherals::get().delay.try_delay_ms(1000_u32).unwrap() }
+    Peripherals::with(|p| p.delay.delay_ms(1000_u32));
   }
 }

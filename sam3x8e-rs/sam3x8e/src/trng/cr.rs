@@ -1,48 +1,27 @@
-#[doc = "Writer for register CR"]
-pub type W = crate::W<u32, super::CR>;
-#[doc = "Write proxy for field `ENABLE`"]
-pub struct ENABLE_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> ENABLE_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x01) | ((value as u32) & 0x01);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `KEY`"]
-pub struct KEY_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> KEY_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u32) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x00ff_ffff << 8)) | (((value as u32) & 0x00ff_ffff) << 8);
-        self.w
-    }
-}
+#[doc = "Register `CR` writer"]
+pub type W = crate::W<CrSpec>;
+#[doc = "Field `ENABLE` writer - Enables the TRNG to provide random values"]
+pub type EnableW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `KEY` writer - Security Key"]
+pub type KeyW<'a, REG> = crate::FieldWriter<'a, REG, 24, u32>;
 impl W {
-    #[doc = "Bit 0 - Enables the TRNG to provide random values"]
-    #[inline(always)]
-    pub fn enable(&mut self) -> ENABLE_W {
-        ENABLE_W { w: self }
-    }
-    #[doc = "Bits 8:31 - Security Key"]
-    #[inline(always)]
-    pub fn key(&mut self) -> KEY_W {
-        KEY_W { w: self }
-    }
+  #[doc = "Bit 0 - Enables the TRNG to provide random values"]
+  #[inline(always)]
+  pub fn enable(&mut self) -> EnableW<'_, CrSpec> {
+    EnableW::new(self, 0)
+  }
+  #[doc = "Bits 8:31 - Security Key"]
+  #[inline(always)]
+  pub fn key(&mut self) -> KeyW<'_, CrSpec> {
+    KeyW::new(self, 8)
+  }
+}
+#[doc = "Control Register\n\nYou can [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cr::W`](W). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct CrSpec;
+impl crate::RegisterSpec for CrSpec {
+  type Ux = u32;
+}
+#[doc = "`write(|w| ..)` method takes [`cr::W`](W) writer structure"]
+impl crate::Writable for CrSpec {
+  type Safety = crate::Unsafe;
 }

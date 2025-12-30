@@ -1,436 +1,125 @@
-#[doc = "Writer for register OSSUPD"]
-pub type W = crate::W<u32, super::OSSUPD>;
-#[doc = "Write proxy for field `OSSUPH0`"]
-pub struct OSSUPH0_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> OSSUPH0_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x01) | ((value as u32) & 0x01);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `OSSUPH1`"]
-pub struct OSSUPH1_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> OSSUPH1_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 1)) | (((value as u32) & 0x01) << 1);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `OSSUPH2`"]
-pub struct OSSUPH2_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> OSSUPH2_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 2)) | (((value as u32) & 0x01) << 2);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `OSSUPH3`"]
-pub struct OSSUPH3_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> OSSUPH3_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 3)) | (((value as u32) & 0x01) << 3);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `OSSUPH4`"]
-pub struct OSSUPH4_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> OSSUPH4_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 4)) | (((value as u32) & 0x01) << 4);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `OSSUPH5`"]
-pub struct OSSUPH5_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> OSSUPH5_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 5)) | (((value as u32) & 0x01) << 5);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `OSSUPH6`"]
-pub struct OSSUPH6_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> OSSUPH6_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 6)) | (((value as u32) & 0x01) << 6);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `OSSUPH7`"]
-pub struct OSSUPH7_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> OSSUPH7_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 7)) | (((value as u32) & 0x01) << 7);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `OSSUPL0`"]
-pub struct OSSUPL0_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> OSSUPL0_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 16)) | (((value as u32) & 0x01) << 16);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `OSSUPL1`"]
-pub struct OSSUPL1_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> OSSUPL1_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 17)) | (((value as u32) & 0x01) << 17);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `OSSUPL2`"]
-pub struct OSSUPL2_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> OSSUPL2_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 18)) | (((value as u32) & 0x01) << 18);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `OSSUPL3`"]
-pub struct OSSUPL3_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> OSSUPL3_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 19)) | (((value as u32) & 0x01) << 19);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `OSSUPL4`"]
-pub struct OSSUPL4_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> OSSUPL4_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 20)) | (((value as u32) & 0x01) << 20);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `OSSUPL5`"]
-pub struct OSSUPL5_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> OSSUPL5_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 21)) | (((value as u32) & 0x01) << 21);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `OSSUPL6`"]
-pub struct OSSUPL6_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> OSSUPL6_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 22)) | (((value as u32) & 0x01) << 22);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `OSSUPL7`"]
-pub struct OSSUPL7_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> OSSUPL7_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 23)) | (((value as u32) & 0x01) << 23);
-        self.w
-    }
-}
+#[doc = "Register `OSSUPD` writer"]
+pub type W = crate::W<OssupdSpec>;
+#[doc = "Field `OSSUPH0` writer - Output Selection Set for PWMH output of the channel 0"]
+pub type Ossuph0W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `OSSUPH1` writer - Output Selection Set for PWMH output of the channel 1"]
+pub type Ossuph1W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `OSSUPH2` writer - Output Selection Set for PWMH output of the channel 2"]
+pub type Ossuph2W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `OSSUPH3` writer - Output Selection Set for PWMH output of the channel 3"]
+pub type Ossuph3W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `OSSUPH4` writer - Output Selection Set for PWMH output of the channel 4"]
+pub type Ossuph4W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `OSSUPH5` writer - Output Selection Set for PWMH output of the channel 5"]
+pub type Ossuph5W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `OSSUPH6` writer - Output Selection Set for PWMH output of the channel 6"]
+pub type Ossuph6W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `OSSUPH7` writer - Output Selection Set for PWMH output of the channel 7"]
+pub type Ossuph7W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `OSSUPL0` writer - Output Selection Set for PWML output of the channel 0"]
+pub type Ossupl0W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `OSSUPL1` writer - Output Selection Set for PWML output of the channel 1"]
+pub type Ossupl1W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `OSSUPL2` writer - Output Selection Set for PWML output of the channel 2"]
+pub type Ossupl2W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `OSSUPL3` writer - Output Selection Set for PWML output of the channel 3"]
+pub type Ossupl3W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `OSSUPL4` writer - Output Selection Set for PWML output of the channel 4"]
+pub type Ossupl4W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `OSSUPL5` writer - Output Selection Set for PWML output of the channel 5"]
+pub type Ossupl5W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `OSSUPL6` writer - Output Selection Set for PWML output of the channel 6"]
+pub type Ossupl6W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `OSSUPL7` writer - Output Selection Set for PWML output of the channel 7"]
+pub type Ossupl7W<'a, REG> = crate::BitWriter<'a, REG>;
 impl W {
-    #[doc = "Bit 0 - Output Selection Set for PWMH output of the channel 0"]
-    #[inline(always)]
-    pub fn ossuph0(&mut self) -> OSSUPH0_W {
-        OSSUPH0_W { w: self }
-    }
-    #[doc = "Bit 1 - Output Selection Set for PWMH output of the channel 1"]
-    #[inline(always)]
-    pub fn ossuph1(&mut self) -> OSSUPH1_W {
-        OSSUPH1_W { w: self }
-    }
-    #[doc = "Bit 2 - Output Selection Set for PWMH output of the channel 2"]
-    #[inline(always)]
-    pub fn ossuph2(&mut self) -> OSSUPH2_W {
-        OSSUPH2_W { w: self }
-    }
-    #[doc = "Bit 3 - Output Selection Set for PWMH output of the channel 3"]
-    #[inline(always)]
-    pub fn ossuph3(&mut self) -> OSSUPH3_W {
-        OSSUPH3_W { w: self }
-    }
-    #[doc = "Bit 4 - Output Selection Set for PWMH output of the channel 4"]
-    #[inline(always)]
-    pub fn ossuph4(&mut self) -> OSSUPH4_W {
-        OSSUPH4_W { w: self }
-    }
-    #[doc = "Bit 5 - Output Selection Set for PWMH output of the channel 5"]
-    #[inline(always)]
-    pub fn ossuph5(&mut self) -> OSSUPH5_W {
-        OSSUPH5_W { w: self }
-    }
-    #[doc = "Bit 6 - Output Selection Set for PWMH output of the channel 6"]
-    #[inline(always)]
-    pub fn ossuph6(&mut self) -> OSSUPH6_W {
-        OSSUPH6_W { w: self }
-    }
-    #[doc = "Bit 7 - Output Selection Set for PWMH output of the channel 7"]
-    #[inline(always)]
-    pub fn ossuph7(&mut self) -> OSSUPH7_W {
-        OSSUPH7_W { w: self }
-    }
-    #[doc = "Bit 16 - Output Selection Set for PWML output of the channel 0"]
-    #[inline(always)]
-    pub fn ossupl0(&mut self) -> OSSUPL0_W {
-        OSSUPL0_W { w: self }
-    }
-    #[doc = "Bit 17 - Output Selection Set for PWML output of the channel 1"]
-    #[inline(always)]
-    pub fn ossupl1(&mut self) -> OSSUPL1_W {
-        OSSUPL1_W { w: self }
-    }
-    #[doc = "Bit 18 - Output Selection Set for PWML output of the channel 2"]
-    #[inline(always)]
-    pub fn ossupl2(&mut self) -> OSSUPL2_W {
-        OSSUPL2_W { w: self }
-    }
-    #[doc = "Bit 19 - Output Selection Set for PWML output of the channel 3"]
-    #[inline(always)]
-    pub fn ossupl3(&mut self) -> OSSUPL3_W {
-        OSSUPL3_W { w: self }
-    }
-    #[doc = "Bit 20 - Output Selection Set for PWML output of the channel 4"]
-    #[inline(always)]
-    pub fn ossupl4(&mut self) -> OSSUPL4_W {
-        OSSUPL4_W { w: self }
-    }
-    #[doc = "Bit 21 - Output Selection Set for PWML output of the channel 5"]
-    #[inline(always)]
-    pub fn ossupl5(&mut self) -> OSSUPL5_W {
-        OSSUPL5_W { w: self }
-    }
-    #[doc = "Bit 22 - Output Selection Set for PWML output of the channel 6"]
-    #[inline(always)]
-    pub fn ossupl6(&mut self) -> OSSUPL6_W {
-        OSSUPL6_W { w: self }
-    }
-    #[doc = "Bit 23 - Output Selection Set for PWML output of the channel 7"]
-    #[inline(always)]
-    pub fn ossupl7(&mut self) -> OSSUPL7_W {
-        OSSUPL7_W { w: self }
-    }
+  #[doc = "Bit 0 - Output Selection Set for PWMH output of the channel 0"]
+  #[inline(always)]
+  pub fn ossuph0(&mut self) -> Ossuph0W<'_, OssupdSpec> {
+    Ossuph0W::new(self, 0)
+  }
+  #[doc = "Bit 1 - Output Selection Set for PWMH output of the channel 1"]
+  #[inline(always)]
+  pub fn ossuph1(&mut self) -> Ossuph1W<'_, OssupdSpec> {
+    Ossuph1W::new(self, 1)
+  }
+  #[doc = "Bit 2 - Output Selection Set for PWMH output of the channel 2"]
+  #[inline(always)]
+  pub fn ossuph2(&mut self) -> Ossuph2W<'_, OssupdSpec> {
+    Ossuph2W::new(self, 2)
+  }
+  #[doc = "Bit 3 - Output Selection Set for PWMH output of the channel 3"]
+  #[inline(always)]
+  pub fn ossuph3(&mut self) -> Ossuph3W<'_, OssupdSpec> {
+    Ossuph3W::new(self, 3)
+  }
+  #[doc = "Bit 4 - Output Selection Set for PWMH output of the channel 4"]
+  #[inline(always)]
+  pub fn ossuph4(&mut self) -> Ossuph4W<'_, OssupdSpec> {
+    Ossuph4W::new(self, 4)
+  }
+  #[doc = "Bit 5 - Output Selection Set for PWMH output of the channel 5"]
+  #[inline(always)]
+  pub fn ossuph5(&mut self) -> Ossuph5W<'_, OssupdSpec> {
+    Ossuph5W::new(self, 5)
+  }
+  #[doc = "Bit 6 - Output Selection Set for PWMH output of the channel 6"]
+  #[inline(always)]
+  pub fn ossuph6(&mut self) -> Ossuph6W<'_, OssupdSpec> {
+    Ossuph6W::new(self, 6)
+  }
+  #[doc = "Bit 7 - Output Selection Set for PWMH output of the channel 7"]
+  #[inline(always)]
+  pub fn ossuph7(&mut self) -> Ossuph7W<'_, OssupdSpec> {
+    Ossuph7W::new(self, 7)
+  }
+  #[doc = "Bit 16 - Output Selection Set for PWML output of the channel 0"]
+  #[inline(always)]
+  pub fn ossupl0(&mut self) -> Ossupl0W<'_, OssupdSpec> {
+    Ossupl0W::new(self, 16)
+  }
+  #[doc = "Bit 17 - Output Selection Set for PWML output of the channel 1"]
+  #[inline(always)]
+  pub fn ossupl1(&mut self) -> Ossupl1W<'_, OssupdSpec> {
+    Ossupl1W::new(self, 17)
+  }
+  #[doc = "Bit 18 - Output Selection Set for PWML output of the channel 2"]
+  #[inline(always)]
+  pub fn ossupl2(&mut self) -> Ossupl2W<'_, OssupdSpec> {
+    Ossupl2W::new(self, 18)
+  }
+  #[doc = "Bit 19 - Output Selection Set for PWML output of the channel 3"]
+  #[inline(always)]
+  pub fn ossupl3(&mut self) -> Ossupl3W<'_, OssupdSpec> {
+    Ossupl3W::new(self, 19)
+  }
+  #[doc = "Bit 20 - Output Selection Set for PWML output of the channel 4"]
+  #[inline(always)]
+  pub fn ossupl4(&mut self) -> Ossupl4W<'_, OssupdSpec> {
+    Ossupl4W::new(self, 20)
+  }
+  #[doc = "Bit 21 - Output Selection Set for PWML output of the channel 5"]
+  #[inline(always)]
+  pub fn ossupl5(&mut self) -> Ossupl5W<'_, OssupdSpec> {
+    Ossupl5W::new(self, 21)
+  }
+  #[doc = "Bit 22 - Output Selection Set for PWML output of the channel 6"]
+  #[inline(always)]
+  pub fn ossupl6(&mut self) -> Ossupl6W<'_, OssupdSpec> {
+    Ossupl6W::new(self, 22)
+  }
+  #[doc = "Bit 23 - Output Selection Set for PWML output of the channel 7"]
+  #[inline(always)]
+  pub fn ossupl7(&mut self) -> Ossupl7W<'_, OssupdSpec> {
+    Ossupl7W::new(self, 23)
+  }
+}
+#[doc = "PWM Output Selection Set Update Register\n\nYou can [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ossupd::W`](W). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct OssupdSpec;
+impl crate::RegisterSpec for OssupdSpec {
+  type Ux = u32;
+}
+#[doc = "`write(|w| ..)` method takes [`ossupd::W`](W) writer structure"]
+impl crate::Writable for OssupdSpec {
+  type Safety = crate::Unsafe;
 }

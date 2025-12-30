@@ -22,9 +22,11 @@ impl log::Log for Logger {
 
   fn log(&self, record: &Record) {
     if self.enabled(record.metadata()) {
-      Serial::get()
-        .write_fmt(format_args!("[{}] {}\n\r", record.level(), record.args()))
-        .unwrap();
+      Serial::with(|serial| {
+        serial
+          .write_fmt(format_args!("[{}] {}\n\r", record.level(), record.args()))
+          .unwrap();
+      });
     }
   }
 

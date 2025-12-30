@@ -1,40 +1,35 @@
-#[doc = "Reader of register SMR"]
-pub type R = crate::R<u32, super::SMR>;
-#[doc = "Writer for register SMR"]
-pub type W = crate::W<u32, super::SMR>;
-#[doc = "Register SMR `reset()`'s with value 0"]
-impl crate::ResetValue for super::SMR {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `SADR`"]
-pub type SADR_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `SADR`"]
-pub struct SADR_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> SADR_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x7f << 16)) | (((value as u32) & 0x7f) << 16);
-        self.w
-    }
-}
+#[doc = "Register `SMR` reader"]
+pub type R = crate::R<SmrSpec>;
+#[doc = "Register `SMR` writer"]
+pub type W = crate::W<SmrSpec>;
+#[doc = "Field `SADR` reader - Slave Address"]
+pub type SadrR = crate::FieldReader;
+#[doc = "Field `SADR` writer - Slave Address"]
+pub type SadrW<'a, REG> = crate::FieldWriter<'a, REG, 7>;
 impl R {
-    #[doc = "Bits 16:22 - Slave Address"]
-    #[inline(always)]
-    pub fn sadr(&self) -> SADR_R {
-        SADR_R::new(((self.bits >> 16) & 0x7f) as u8)
-    }
+  #[doc = "Bits 16:22 - Slave Address"]
+  #[inline(always)]
+  pub fn sadr(&self) -> SadrR {
+    SadrR::new(((self.bits >> 16) & 0x7f) as u8)
+  }
 }
 impl W {
-    #[doc = "Bits 16:22 - Slave Address"]
-    #[inline(always)]
-    pub fn sadr(&mut self) -> SADR_W {
-        SADR_W { w: self }
-    }
+  #[doc = "Bits 16:22 - Slave Address"]
+  #[inline(always)]
+  pub fn sadr(&mut self) -> SadrW<'_, SmrSpec> {
+    SadrW::new(self, 16)
+  }
 }
+#[doc = "Slave Mode Register\n\nYou can [`read`](crate::Reg::read) this register and get [`smr::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`smr::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct SmrSpec;
+impl crate::RegisterSpec for SmrSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`smr::R`](R) reader structure"]
+impl crate::Readable for SmrSpec {}
+#[doc = "`write(|w| ..)` method takes [`smr::W`](W) writer structure"]
+impl crate::Writable for SmrSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets SMR to value 0"]
+impl crate::Resettable for SmrSpec {}

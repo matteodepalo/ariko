@@ -1,40 +1,35 @@
-#[doc = "Reader of register DTF"]
-pub type R = crate::R<u32, super::DTF>;
-#[doc = "Writer for register DTF"]
-pub type W = crate::W<u32, super::DTF>;
-#[doc = "Register DTF `reset()`'s with value 0"]
-impl crate::ResetValue for super::DTF {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `DTF`"]
-pub type DTF_R = crate::R<u16, u16>;
-#[doc = "Write proxy for field `DTF`"]
-pub struct DTF_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> DTF_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u16) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0xffff) | ((value as u32) & 0xffff);
-        self.w
-    }
-}
+#[doc = "Register `DTF` reader"]
+pub type R = crate::R<DtfSpec>;
+#[doc = "Register `DTF` writer"]
+pub type W = crate::W<DtfSpec>;
+#[doc = "Field `DTF` reader - Deferred Transmission Frames"]
+pub type DtfR = crate::FieldReader<u16>;
+#[doc = "Field `DTF` writer - Deferred Transmission Frames"]
+pub type DtfW<'a, REG> = crate::FieldWriter<'a, REG, 16, u16>;
 impl R {
-    #[doc = "Bits 0:15 - Deferred Transmission Frames"]
-    #[inline(always)]
-    pub fn dtf(&self) -> DTF_R {
-        DTF_R::new((self.bits & 0xffff) as u16)
-    }
+  #[doc = "Bits 0:15 - Deferred Transmission Frames"]
+  #[inline(always)]
+  pub fn dtf(&self) -> DtfR {
+    DtfR::new((self.bits & 0xffff) as u16)
+  }
 }
 impl W {
-    #[doc = "Bits 0:15 - Deferred Transmission Frames"]
-    #[inline(always)]
-    pub fn dtf(&mut self) -> DTF_W {
-        DTF_W { w: self }
-    }
+  #[doc = "Bits 0:15 - Deferred Transmission Frames"]
+  #[inline(always)]
+  pub fn dtf(&mut self) -> DtfW<'_, DtfSpec> {
+    DtfW::new(self, 0)
+  }
 }
+#[doc = "Deferred Transmission Frames Register\n\nYou can [`read`](crate::Reg::read) this register and get [`dtf::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dtf::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct DtfSpec;
+impl crate::RegisterSpec for DtfSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`dtf::R`](R) reader structure"]
+impl crate::Readable for DtfSpec {}
+#[doc = "`write(|w| ..)` method takes [`dtf::W`](W) writer structure"]
+impl crate::Writable for DtfSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets DTF to value 0"]
+impl crate::Resettable for DtfSpec {}

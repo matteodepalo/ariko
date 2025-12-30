@@ -15,7 +15,10 @@
  *    along with sam3x8e-hal.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-//! Delays
+//! Timers
+//!
+//! Note: CountDown and Periodic traits were removed from embedded-hal 1.0
+//! These are defined locally for HAL compatibility.
 
 use crate::time::Hertz;
 
@@ -24,6 +27,26 @@ mod syst;
 
 pub use rtt::*;
 pub use syst::*;
+
+/// CountDown trait (removed from embedded-hal 1.0, defined locally)
+pub trait CountDown {
+  /// The error type
+  type Error;
+
+  /// The unit of time used by this timer
+  type Time;
+
+  /// Starts a new count down
+  fn try_start<T>(&mut self, count: T) -> Result<(), Self::Error>
+  where
+    T: Into<Self::Time>;
+
+  /// Non-blockingly "waits" until the count down finishes
+  fn try_wait(&mut self) -> nb::Result<(), Self::Error>;
+}
+
+/// Marker trait for periodic timers (removed from embedded-hal 1.0, defined locally)
+pub trait Periodic {}
 
 pub trait TimerExt<TIM> {
   fn timer<T>(self, timeout: T) -> Timer<TIM>

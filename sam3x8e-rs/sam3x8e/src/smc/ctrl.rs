@@ -1,66 +1,29 @@
-#[doc = "Writer for register CTRL"]
-pub type W = crate::W<u32, super::CTRL>;
-#[doc = "Register CTRL `reset()`'s with value 0"]
-impl crate::ResetValue for super::CTRL {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Write proxy for field `NFCEN`"]
-pub struct NFCEN_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> NFCEN_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x01) | ((value as u32) & 0x01);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `NFCDIS`"]
-pub struct NFCDIS_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> NFCDIS_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 1)) | (((value as u32) & 0x01) << 1);
-        self.w
-    }
-}
+#[doc = "Register `CTRL` writer"]
+pub type W = crate::W<CtrlSpec>;
+#[doc = "Field `NFCEN` writer - NAND Flash Controller Enable"]
+pub type NfcenW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `NFCDIS` writer - NAND Flash Controller Disable"]
+pub type NfcdisW<'a, REG> = crate::BitWriter<'a, REG>;
 impl W {
-    #[doc = "Bit 0 - NAND Flash Controller Enable"]
-    #[inline(always)]
-    pub fn nfcen(&mut self) -> NFCEN_W {
-        NFCEN_W { w: self }
-    }
-    #[doc = "Bit 1 - NAND Flash Controller Disable"]
-    #[inline(always)]
-    pub fn nfcdis(&mut self) -> NFCDIS_W {
-        NFCDIS_W { w: self }
-    }
+  #[doc = "Bit 0 - NAND Flash Controller Enable"]
+  #[inline(always)]
+  pub fn nfcen(&mut self) -> NfcenW<'_, CtrlSpec> {
+    NfcenW::new(self, 0)
+  }
+  #[doc = "Bit 1 - NAND Flash Controller Disable"]
+  #[inline(always)]
+  pub fn nfcdis(&mut self) -> NfcdisW<'_, CtrlSpec> {
+    NfcdisW::new(self, 1)
+  }
 }
+#[doc = "SMC NFC Control Register\n\nYou can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrl::W`](W). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct CtrlSpec;
+impl crate::RegisterSpec for CtrlSpec {
+  type Ux = u32;
+}
+#[doc = "`write(|w| ..)` method takes [`ctrl::W`](W) writer structure"]
+impl crate::Writable for CtrlSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets CTRL to value 0"]
+impl crate::Resettable for CtrlSpec {}

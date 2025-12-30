@@ -1,696 +1,301 @@
-#[doc = "Reader of register PMC_FSMR"]
-pub type R = crate::R<u32, super::PMC_FSMR>;
-#[doc = "Writer for register PMC_FSMR"]
-pub type W = crate::W<u32, super::PMC_FSMR>;
-#[doc = "Register PMC_FSMR `reset()`'s with value 0"]
-impl crate::ResetValue for super::PMC_FSMR {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `FSTT0`"]
-pub type FSTT0_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `FSTT0`"]
-pub struct FSTT0_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> FSTT0_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x01) | ((value as u32) & 0x01);
-        self.w
-    }
-}
-#[doc = "Reader of field `FSTT1`"]
-pub type FSTT1_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `FSTT1`"]
-pub struct FSTT1_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> FSTT1_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 1)) | (((value as u32) & 0x01) << 1);
-        self.w
-    }
-}
-#[doc = "Reader of field `FSTT2`"]
-pub type FSTT2_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `FSTT2`"]
-pub struct FSTT2_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> FSTT2_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 2)) | (((value as u32) & 0x01) << 2);
-        self.w
-    }
-}
-#[doc = "Reader of field `FSTT3`"]
-pub type FSTT3_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `FSTT3`"]
-pub struct FSTT3_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> FSTT3_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 3)) | (((value as u32) & 0x01) << 3);
-        self.w
-    }
-}
-#[doc = "Reader of field `FSTT4`"]
-pub type FSTT4_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `FSTT4`"]
-pub struct FSTT4_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> FSTT4_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 4)) | (((value as u32) & 0x01) << 4);
-        self.w
-    }
-}
-#[doc = "Reader of field `FSTT5`"]
-pub type FSTT5_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `FSTT5`"]
-pub struct FSTT5_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> FSTT5_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 5)) | (((value as u32) & 0x01) << 5);
-        self.w
-    }
-}
-#[doc = "Reader of field `FSTT6`"]
-pub type FSTT6_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `FSTT6`"]
-pub struct FSTT6_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> FSTT6_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 6)) | (((value as u32) & 0x01) << 6);
-        self.w
-    }
-}
-#[doc = "Reader of field `FSTT7`"]
-pub type FSTT7_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `FSTT7`"]
-pub struct FSTT7_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> FSTT7_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 7)) | (((value as u32) & 0x01) << 7);
-        self.w
-    }
-}
-#[doc = "Reader of field `FSTT8`"]
-pub type FSTT8_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `FSTT8`"]
-pub struct FSTT8_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> FSTT8_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 8)) | (((value as u32) & 0x01) << 8);
-        self.w
-    }
-}
-#[doc = "Reader of field `FSTT9`"]
-pub type FSTT9_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `FSTT9`"]
-pub struct FSTT9_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> FSTT9_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 9)) | (((value as u32) & 0x01) << 9);
-        self.w
-    }
-}
-#[doc = "Reader of field `FSTT10`"]
-pub type FSTT10_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `FSTT10`"]
-pub struct FSTT10_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> FSTT10_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 10)) | (((value as u32) & 0x01) << 10);
-        self.w
-    }
-}
-#[doc = "Reader of field `FSTT11`"]
-pub type FSTT11_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `FSTT11`"]
-pub struct FSTT11_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> FSTT11_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 11)) | (((value as u32) & 0x01) << 11);
-        self.w
-    }
-}
-#[doc = "Reader of field `FSTT12`"]
-pub type FSTT12_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `FSTT12`"]
-pub struct FSTT12_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> FSTT12_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 12)) | (((value as u32) & 0x01) << 12);
-        self.w
-    }
-}
-#[doc = "Reader of field `FSTT13`"]
-pub type FSTT13_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `FSTT13`"]
-pub struct FSTT13_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> FSTT13_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 13)) | (((value as u32) & 0x01) << 13);
-        self.w
-    }
-}
-#[doc = "Reader of field `FSTT14`"]
-pub type FSTT14_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `FSTT14`"]
-pub struct FSTT14_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> FSTT14_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 14)) | (((value as u32) & 0x01) << 14);
-        self.w
-    }
-}
-#[doc = "Reader of field `FSTT15`"]
-pub type FSTT15_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `FSTT15`"]
-pub struct FSTT15_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> FSTT15_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 15)) | (((value as u32) & 0x01) << 15);
-        self.w
-    }
-}
-#[doc = "Reader of field `RTTAL`"]
-pub type RTTAL_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `RTTAL`"]
-pub struct RTTAL_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> RTTAL_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 16)) | (((value as u32) & 0x01) << 16);
-        self.w
-    }
-}
-#[doc = "Reader of field `RTCAL`"]
-pub type RTCAL_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `RTCAL`"]
-pub struct RTCAL_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> RTCAL_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 17)) | (((value as u32) & 0x01) << 17);
-        self.w
-    }
-}
-#[doc = "Reader of field `USBAL`"]
-pub type USBAL_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `USBAL`"]
-pub struct USBAL_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> USBAL_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 18)) | (((value as u32) & 0x01) << 18);
-        self.w
-    }
-}
-#[doc = "Reader of field `LPM`"]
-pub type LPM_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `LPM`"]
-pub struct LPM_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> LPM_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 20)) | (((value as u32) & 0x01) << 20);
-        self.w
-    }
-}
+#[doc = "Register `PMC_FSMR` reader"]
+pub type R = crate::R<PmcFsmrSpec>;
+#[doc = "Register `PMC_FSMR` writer"]
+pub type W = crate::W<PmcFsmrSpec>;
+#[doc = "Field `FSTT0` reader - Fast Startup Input Enable 0"]
+pub type Fstt0R = crate::BitReader;
+#[doc = "Field `FSTT0` writer - Fast Startup Input Enable 0"]
+pub type Fstt0W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `FSTT1` reader - Fast Startup Input Enable 1"]
+pub type Fstt1R = crate::BitReader;
+#[doc = "Field `FSTT1` writer - Fast Startup Input Enable 1"]
+pub type Fstt1W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `FSTT2` reader - Fast Startup Input Enable 2"]
+pub type Fstt2R = crate::BitReader;
+#[doc = "Field `FSTT2` writer - Fast Startup Input Enable 2"]
+pub type Fstt2W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `FSTT3` reader - Fast Startup Input Enable 3"]
+pub type Fstt3R = crate::BitReader;
+#[doc = "Field `FSTT3` writer - Fast Startup Input Enable 3"]
+pub type Fstt3W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `FSTT4` reader - Fast Startup Input Enable 4"]
+pub type Fstt4R = crate::BitReader;
+#[doc = "Field `FSTT4` writer - Fast Startup Input Enable 4"]
+pub type Fstt4W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `FSTT5` reader - Fast Startup Input Enable 5"]
+pub type Fstt5R = crate::BitReader;
+#[doc = "Field `FSTT5` writer - Fast Startup Input Enable 5"]
+pub type Fstt5W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `FSTT6` reader - Fast Startup Input Enable 6"]
+pub type Fstt6R = crate::BitReader;
+#[doc = "Field `FSTT6` writer - Fast Startup Input Enable 6"]
+pub type Fstt6W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `FSTT7` reader - Fast Startup Input Enable 7"]
+pub type Fstt7R = crate::BitReader;
+#[doc = "Field `FSTT7` writer - Fast Startup Input Enable 7"]
+pub type Fstt7W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `FSTT8` reader - Fast Startup Input Enable 8"]
+pub type Fstt8R = crate::BitReader;
+#[doc = "Field `FSTT8` writer - Fast Startup Input Enable 8"]
+pub type Fstt8W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `FSTT9` reader - Fast Startup Input Enable 9"]
+pub type Fstt9R = crate::BitReader;
+#[doc = "Field `FSTT9` writer - Fast Startup Input Enable 9"]
+pub type Fstt9W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `FSTT10` reader - Fast Startup Input Enable 10"]
+pub type Fstt10R = crate::BitReader;
+#[doc = "Field `FSTT10` writer - Fast Startup Input Enable 10"]
+pub type Fstt10W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `FSTT11` reader - Fast Startup Input Enable 11"]
+pub type Fstt11R = crate::BitReader;
+#[doc = "Field `FSTT11` writer - Fast Startup Input Enable 11"]
+pub type Fstt11W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `FSTT12` reader - Fast Startup Input Enable 12"]
+pub type Fstt12R = crate::BitReader;
+#[doc = "Field `FSTT12` writer - Fast Startup Input Enable 12"]
+pub type Fstt12W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `FSTT13` reader - Fast Startup Input Enable 13"]
+pub type Fstt13R = crate::BitReader;
+#[doc = "Field `FSTT13` writer - Fast Startup Input Enable 13"]
+pub type Fstt13W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `FSTT14` reader - Fast Startup Input Enable 14"]
+pub type Fstt14R = crate::BitReader;
+#[doc = "Field `FSTT14` writer - Fast Startup Input Enable 14"]
+pub type Fstt14W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `FSTT15` reader - Fast Startup Input Enable 15"]
+pub type Fstt15R = crate::BitReader;
+#[doc = "Field `FSTT15` writer - Fast Startup Input Enable 15"]
+pub type Fstt15W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `RTTAL` reader - RTT Alarm Enable"]
+pub type RttalR = crate::BitReader;
+#[doc = "Field `RTTAL` writer - RTT Alarm Enable"]
+pub type RttalW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `RTCAL` reader - RTC Alarm Enable"]
+pub type RtcalR = crate::BitReader;
+#[doc = "Field `RTCAL` writer - RTC Alarm Enable"]
+pub type RtcalW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `USBAL` reader - USB Alarm Enable"]
+pub type UsbalR = crate::BitReader;
+#[doc = "Field `USBAL` writer - USB Alarm Enable"]
+pub type UsbalW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `LPM` reader - Low Power Mode"]
+pub type LpmR = crate::BitReader;
+#[doc = "Field `LPM` writer - Low Power Mode"]
+pub type LpmW<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
-    #[doc = "Bit 0 - Fast Start-up Input Enable 0"]
-    #[inline(always)]
-    pub fn fstt0(&self) -> FSTT0_R {
-        FSTT0_R::new((self.bits & 0x01) != 0)
-    }
-    #[doc = "Bit 1 - Fast Start-up Input Enable 1"]
-    #[inline(always)]
-    pub fn fstt1(&self) -> FSTT1_R {
-        FSTT1_R::new(((self.bits >> 1) & 0x01) != 0)
-    }
-    #[doc = "Bit 2 - Fast Start-up Input Enable 2"]
-    #[inline(always)]
-    pub fn fstt2(&self) -> FSTT2_R {
-        FSTT2_R::new(((self.bits >> 2) & 0x01) != 0)
-    }
-    #[doc = "Bit 3 - Fast Start-up Input Enable 3"]
-    #[inline(always)]
-    pub fn fstt3(&self) -> FSTT3_R {
-        FSTT3_R::new(((self.bits >> 3) & 0x01) != 0)
-    }
-    #[doc = "Bit 4 - Fast Start-up Input Enable 4"]
-    #[inline(always)]
-    pub fn fstt4(&self) -> FSTT4_R {
-        FSTT4_R::new(((self.bits >> 4) & 0x01) != 0)
-    }
-    #[doc = "Bit 5 - Fast Start-up Input Enable 5"]
-    #[inline(always)]
-    pub fn fstt5(&self) -> FSTT5_R {
-        FSTT5_R::new(((self.bits >> 5) & 0x01) != 0)
-    }
-    #[doc = "Bit 6 - Fast Start-up Input Enable 6"]
-    #[inline(always)]
-    pub fn fstt6(&self) -> FSTT6_R {
-        FSTT6_R::new(((self.bits >> 6) & 0x01) != 0)
-    }
-    #[doc = "Bit 7 - Fast Start-up Input Enable 7"]
-    #[inline(always)]
-    pub fn fstt7(&self) -> FSTT7_R {
-        FSTT7_R::new(((self.bits >> 7) & 0x01) != 0)
-    }
-    #[doc = "Bit 8 - Fast Start-up Input Enable 8"]
-    #[inline(always)]
-    pub fn fstt8(&self) -> FSTT8_R {
-        FSTT8_R::new(((self.bits >> 8) & 0x01) != 0)
-    }
-    #[doc = "Bit 9 - Fast Start-up Input Enable 9"]
-    #[inline(always)]
-    pub fn fstt9(&self) -> FSTT9_R {
-        FSTT9_R::new(((self.bits >> 9) & 0x01) != 0)
-    }
-    #[doc = "Bit 10 - Fast Start-up Input Enable 10"]
-    #[inline(always)]
-    pub fn fstt10(&self) -> FSTT10_R {
-        FSTT10_R::new(((self.bits >> 10) & 0x01) != 0)
-    }
-    #[doc = "Bit 11 - Fast Start-up Input Enable 11"]
-    #[inline(always)]
-    pub fn fstt11(&self) -> FSTT11_R {
-        FSTT11_R::new(((self.bits >> 11) & 0x01) != 0)
-    }
-    #[doc = "Bit 12 - Fast Start-up Input Enable 12"]
-    #[inline(always)]
-    pub fn fstt12(&self) -> FSTT12_R {
-        FSTT12_R::new(((self.bits >> 12) & 0x01) != 0)
-    }
-    #[doc = "Bit 13 - Fast Start-up Input Enable 13"]
-    #[inline(always)]
-    pub fn fstt13(&self) -> FSTT13_R {
-        FSTT13_R::new(((self.bits >> 13) & 0x01) != 0)
-    }
-    #[doc = "Bit 14 - Fast Start-up Input Enable 14"]
-    #[inline(always)]
-    pub fn fstt14(&self) -> FSTT14_R {
-        FSTT14_R::new(((self.bits >> 14) & 0x01) != 0)
-    }
-    #[doc = "Bit 15 - Fast Start-up Input Enable 15"]
-    #[inline(always)]
-    pub fn fstt15(&self) -> FSTT15_R {
-        FSTT15_R::new(((self.bits >> 15) & 0x01) != 0)
-    }
-    #[doc = "Bit 16 - RTT Alarm Enable"]
-    #[inline(always)]
-    pub fn rttal(&self) -> RTTAL_R {
-        RTTAL_R::new(((self.bits >> 16) & 0x01) != 0)
-    }
-    #[doc = "Bit 17 - RTC Alarm Enable"]
-    #[inline(always)]
-    pub fn rtcal(&self) -> RTCAL_R {
-        RTCAL_R::new(((self.bits >> 17) & 0x01) != 0)
-    }
-    #[doc = "Bit 18 - USB Alarm Enable"]
-    #[inline(always)]
-    pub fn usbal(&self) -> USBAL_R {
-        USBAL_R::new(((self.bits >> 18) & 0x01) != 0)
-    }
-    #[doc = "Bit 20 - Low Power Mode"]
-    #[inline(always)]
-    pub fn lpm(&self) -> LPM_R {
-        LPM_R::new(((self.bits >> 20) & 0x01) != 0)
-    }
+  #[doc = "Bit 0 - Fast Startup Input Enable 0"]
+  #[inline(always)]
+  pub fn fstt0(&self) -> Fstt0R {
+    Fstt0R::new((self.bits & 1) != 0)
+  }
+  #[doc = "Bit 1 - Fast Startup Input Enable 1"]
+  #[inline(always)]
+  pub fn fstt1(&self) -> Fstt1R {
+    Fstt1R::new(((self.bits >> 1) & 1) != 0)
+  }
+  #[doc = "Bit 2 - Fast Startup Input Enable 2"]
+  #[inline(always)]
+  pub fn fstt2(&self) -> Fstt2R {
+    Fstt2R::new(((self.bits >> 2) & 1) != 0)
+  }
+  #[doc = "Bit 3 - Fast Startup Input Enable 3"]
+  #[inline(always)]
+  pub fn fstt3(&self) -> Fstt3R {
+    Fstt3R::new(((self.bits >> 3) & 1) != 0)
+  }
+  #[doc = "Bit 4 - Fast Startup Input Enable 4"]
+  #[inline(always)]
+  pub fn fstt4(&self) -> Fstt4R {
+    Fstt4R::new(((self.bits >> 4) & 1) != 0)
+  }
+  #[doc = "Bit 5 - Fast Startup Input Enable 5"]
+  #[inline(always)]
+  pub fn fstt5(&self) -> Fstt5R {
+    Fstt5R::new(((self.bits >> 5) & 1) != 0)
+  }
+  #[doc = "Bit 6 - Fast Startup Input Enable 6"]
+  #[inline(always)]
+  pub fn fstt6(&self) -> Fstt6R {
+    Fstt6R::new(((self.bits >> 6) & 1) != 0)
+  }
+  #[doc = "Bit 7 - Fast Startup Input Enable 7"]
+  #[inline(always)]
+  pub fn fstt7(&self) -> Fstt7R {
+    Fstt7R::new(((self.bits >> 7) & 1) != 0)
+  }
+  #[doc = "Bit 8 - Fast Startup Input Enable 8"]
+  #[inline(always)]
+  pub fn fstt8(&self) -> Fstt8R {
+    Fstt8R::new(((self.bits >> 8) & 1) != 0)
+  }
+  #[doc = "Bit 9 - Fast Startup Input Enable 9"]
+  #[inline(always)]
+  pub fn fstt9(&self) -> Fstt9R {
+    Fstt9R::new(((self.bits >> 9) & 1) != 0)
+  }
+  #[doc = "Bit 10 - Fast Startup Input Enable 10"]
+  #[inline(always)]
+  pub fn fstt10(&self) -> Fstt10R {
+    Fstt10R::new(((self.bits >> 10) & 1) != 0)
+  }
+  #[doc = "Bit 11 - Fast Startup Input Enable 11"]
+  #[inline(always)]
+  pub fn fstt11(&self) -> Fstt11R {
+    Fstt11R::new(((self.bits >> 11) & 1) != 0)
+  }
+  #[doc = "Bit 12 - Fast Startup Input Enable 12"]
+  #[inline(always)]
+  pub fn fstt12(&self) -> Fstt12R {
+    Fstt12R::new(((self.bits >> 12) & 1) != 0)
+  }
+  #[doc = "Bit 13 - Fast Startup Input Enable 13"]
+  #[inline(always)]
+  pub fn fstt13(&self) -> Fstt13R {
+    Fstt13R::new(((self.bits >> 13) & 1) != 0)
+  }
+  #[doc = "Bit 14 - Fast Startup Input Enable 14"]
+  #[inline(always)]
+  pub fn fstt14(&self) -> Fstt14R {
+    Fstt14R::new(((self.bits >> 14) & 1) != 0)
+  }
+  #[doc = "Bit 15 - Fast Startup Input Enable 15"]
+  #[inline(always)]
+  pub fn fstt15(&self) -> Fstt15R {
+    Fstt15R::new(((self.bits >> 15) & 1) != 0)
+  }
+  #[doc = "Bit 16 - RTT Alarm Enable"]
+  #[inline(always)]
+  pub fn rttal(&self) -> RttalR {
+    RttalR::new(((self.bits >> 16) & 1) != 0)
+  }
+  #[doc = "Bit 17 - RTC Alarm Enable"]
+  #[inline(always)]
+  pub fn rtcal(&self) -> RtcalR {
+    RtcalR::new(((self.bits >> 17) & 1) != 0)
+  }
+  #[doc = "Bit 18 - USB Alarm Enable"]
+  #[inline(always)]
+  pub fn usbal(&self) -> UsbalR {
+    UsbalR::new(((self.bits >> 18) & 1) != 0)
+  }
+  #[doc = "Bit 20 - Low Power Mode"]
+  #[inline(always)]
+  pub fn lpm(&self) -> LpmR {
+    LpmR::new(((self.bits >> 20) & 1) != 0)
+  }
 }
 impl W {
-    #[doc = "Bit 0 - Fast Start-up Input Enable 0"]
-    #[inline(always)]
-    pub fn fstt0(&mut self) -> FSTT0_W {
-        FSTT0_W { w: self }
-    }
-    #[doc = "Bit 1 - Fast Start-up Input Enable 1"]
-    #[inline(always)]
-    pub fn fstt1(&mut self) -> FSTT1_W {
-        FSTT1_W { w: self }
-    }
-    #[doc = "Bit 2 - Fast Start-up Input Enable 2"]
-    #[inline(always)]
-    pub fn fstt2(&mut self) -> FSTT2_W {
-        FSTT2_W { w: self }
-    }
-    #[doc = "Bit 3 - Fast Start-up Input Enable 3"]
-    #[inline(always)]
-    pub fn fstt3(&mut self) -> FSTT3_W {
-        FSTT3_W { w: self }
-    }
-    #[doc = "Bit 4 - Fast Start-up Input Enable 4"]
-    #[inline(always)]
-    pub fn fstt4(&mut self) -> FSTT4_W {
-        FSTT4_W { w: self }
-    }
-    #[doc = "Bit 5 - Fast Start-up Input Enable 5"]
-    #[inline(always)]
-    pub fn fstt5(&mut self) -> FSTT5_W {
-        FSTT5_W { w: self }
-    }
-    #[doc = "Bit 6 - Fast Start-up Input Enable 6"]
-    #[inline(always)]
-    pub fn fstt6(&mut self) -> FSTT6_W {
-        FSTT6_W { w: self }
-    }
-    #[doc = "Bit 7 - Fast Start-up Input Enable 7"]
-    #[inline(always)]
-    pub fn fstt7(&mut self) -> FSTT7_W {
-        FSTT7_W { w: self }
-    }
-    #[doc = "Bit 8 - Fast Start-up Input Enable 8"]
-    #[inline(always)]
-    pub fn fstt8(&mut self) -> FSTT8_W {
-        FSTT8_W { w: self }
-    }
-    #[doc = "Bit 9 - Fast Start-up Input Enable 9"]
-    #[inline(always)]
-    pub fn fstt9(&mut self) -> FSTT9_W {
-        FSTT9_W { w: self }
-    }
-    #[doc = "Bit 10 - Fast Start-up Input Enable 10"]
-    #[inline(always)]
-    pub fn fstt10(&mut self) -> FSTT10_W {
-        FSTT10_W { w: self }
-    }
-    #[doc = "Bit 11 - Fast Start-up Input Enable 11"]
-    #[inline(always)]
-    pub fn fstt11(&mut self) -> FSTT11_W {
-        FSTT11_W { w: self }
-    }
-    #[doc = "Bit 12 - Fast Start-up Input Enable 12"]
-    #[inline(always)]
-    pub fn fstt12(&mut self) -> FSTT12_W {
-        FSTT12_W { w: self }
-    }
-    #[doc = "Bit 13 - Fast Start-up Input Enable 13"]
-    #[inline(always)]
-    pub fn fstt13(&mut self) -> FSTT13_W {
-        FSTT13_W { w: self }
-    }
-    #[doc = "Bit 14 - Fast Start-up Input Enable 14"]
-    #[inline(always)]
-    pub fn fstt14(&mut self) -> FSTT14_W {
-        FSTT14_W { w: self }
-    }
-    #[doc = "Bit 15 - Fast Start-up Input Enable 15"]
-    #[inline(always)]
-    pub fn fstt15(&mut self) -> FSTT15_W {
-        FSTT15_W { w: self }
-    }
-    #[doc = "Bit 16 - RTT Alarm Enable"]
-    #[inline(always)]
-    pub fn rttal(&mut self) -> RTTAL_W {
-        RTTAL_W { w: self }
-    }
-    #[doc = "Bit 17 - RTC Alarm Enable"]
-    #[inline(always)]
-    pub fn rtcal(&mut self) -> RTCAL_W {
-        RTCAL_W { w: self }
-    }
-    #[doc = "Bit 18 - USB Alarm Enable"]
-    #[inline(always)]
-    pub fn usbal(&mut self) -> USBAL_W {
-        USBAL_W { w: self }
-    }
-    #[doc = "Bit 20 - Low Power Mode"]
-    #[inline(always)]
-    pub fn lpm(&mut self) -> LPM_W {
-        LPM_W { w: self }
-    }
+  #[doc = "Bit 0 - Fast Startup Input Enable 0"]
+  #[inline(always)]
+  pub fn fstt0(&mut self) -> Fstt0W<'_, PmcFsmrSpec> {
+    Fstt0W::new(self, 0)
+  }
+  #[doc = "Bit 1 - Fast Startup Input Enable 1"]
+  #[inline(always)]
+  pub fn fstt1(&mut self) -> Fstt1W<'_, PmcFsmrSpec> {
+    Fstt1W::new(self, 1)
+  }
+  #[doc = "Bit 2 - Fast Startup Input Enable 2"]
+  #[inline(always)]
+  pub fn fstt2(&mut self) -> Fstt2W<'_, PmcFsmrSpec> {
+    Fstt2W::new(self, 2)
+  }
+  #[doc = "Bit 3 - Fast Startup Input Enable 3"]
+  #[inline(always)]
+  pub fn fstt3(&mut self) -> Fstt3W<'_, PmcFsmrSpec> {
+    Fstt3W::new(self, 3)
+  }
+  #[doc = "Bit 4 - Fast Startup Input Enable 4"]
+  #[inline(always)]
+  pub fn fstt4(&mut self) -> Fstt4W<'_, PmcFsmrSpec> {
+    Fstt4W::new(self, 4)
+  }
+  #[doc = "Bit 5 - Fast Startup Input Enable 5"]
+  #[inline(always)]
+  pub fn fstt5(&mut self) -> Fstt5W<'_, PmcFsmrSpec> {
+    Fstt5W::new(self, 5)
+  }
+  #[doc = "Bit 6 - Fast Startup Input Enable 6"]
+  #[inline(always)]
+  pub fn fstt6(&mut self) -> Fstt6W<'_, PmcFsmrSpec> {
+    Fstt6W::new(self, 6)
+  }
+  #[doc = "Bit 7 - Fast Startup Input Enable 7"]
+  #[inline(always)]
+  pub fn fstt7(&mut self) -> Fstt7W<'_, PmcFsmrSpec> {
+    Fstt7W::new(self, 7)
+  }
+  #[doc = "Bit 8 - Fast Startup Input Enable 8"]
+  #[inline(always)]
+  pub fn fstt8(&mut self) -> Fstt8W<'_, PmcFsmrSpec> {
+    Fstt8W::new(self, 8)
+  }
+  #[doc = "Bit 9 - Fast Startup Input Enable 9"]
+  #[inline(always)]
+  pub fn fstt9(&mut self) -> Fstt9W<'_, PmcFsmrSpec> {
+    Fstt9W::new(self, 9)
+  }
+  #[doc = "Bit 10 - Fast Startup Input Enable 10"]
+  #[inline(always)]
+  pub fn fstt10(&mut self) -> Fstt10W<'_, PmcFsmrSpec> {
+    Fstt10W::new(self, 10)
+  }
+  #[doc = "Bit 11 - Fast Startup Input Enable 11"]
+  #[inline(always)]
+  pub fn fstt11(&mut self) -> Fstt11W<'_, PmcFsmrSpec> {
+    Fstt11W::new(self, 11)
+  }
+  #[doc = "Bit 12 - Fast Startup Input Enable 12"]
+  #[inline(always)]
+  pub fn fstt12(&mut self) -> Fstt12W<'_, PmcFsmrSpec> {
+    Fstt12W::new(self, 12)
+  }
+  #[doc = "Bit 13 - Fast Startup Input Enable 13"]
+  #[inline(always)]
+  pub fn fstt13(&mut self) -> Fstt13W<'_, PmcFsmrSpec> {
+    Fstt13W::new(self, 13)
+  }
+  #[doc = "Bit 14 - Fast Startup Input Enable 14"]
+  #[inline(always)]
+  pub fn fstt14(&mut self) -> Fstt14W<'_, PmcFsmrSpec> {
+    Fstt14W::new(self, 14)
+  }
+  #[doc = "Bit 15 - Fast Startup Input Enable 15"]
+  #[inline(always)]
+  pub fn fstt15(&mut self) -> Fstt15W<'_, PmcFsmrSpec> {
+    Fstt15W::new(self, 15)
+  }
+  #[doc = "Bit 16 - RTT Alarm Enable"]
+  #[inline(always)]
+  pub fn rttal(&mut self) -> RttalW<'_, PmcFsmrSpec> {
+    RttalW::new(self, 16)
+  }
+  #[doc = "Bit 17 - RTC Alarm Enable"]
+  #[inline(always)]
+  pub fn rtcal(&mut self) -> RtcalW<'_, PmcFsmrSpec> {
+    RtcalW::new(self, 17)
+  }
+  #[doc = "Bit 18 - USB Alarm Enable"]
+  #[inline(always)]
+  pub fn usbal(&mut self) -> UsbalW<'_, PmcFsmrSpec> {
+    UsbalW::new(self, 18)
+  }
+  #[doc = "Bit 20 - Low Power Mode"]
+  #[inline(always)]
+  pub fn lpm(&mut self) -> LpmW<'_, PmcFsmrSpec> {
+    LpmW::new(self, 20)
+  }
 }
+#[doc = "Fast Startup Mode Register\n\nYou can [`read`](crate::Reg::read) this register and get [`pmc_fsmr::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`pmc_fsmr::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct PmcFsmrSpec;
+impl crate::RegisterSpec for PmcFsmrSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`pmc_fsmr::R`](R) reader structure"]
+impl crate::Readable for PmcFsmrSpec {}
+#[doc = "`write(|w| ..)` method takes [`pmc_fsmr::W`](W) writer structure"]
+impl crate::Writable for PmcFsmrSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets PMC_FSMR to value 0"]
+impl crate::Resettable for PmcFsmrSpec {}

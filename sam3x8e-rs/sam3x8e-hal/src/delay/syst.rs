@@ -15,15 +15,13 @@
  *    along with sam3x8e-hal.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use super::Delay;
+use super::{Delay, DelayExt};
 use crate::pmc::{Clocks, MasterClockSrc};
 use cortex_m::peripheral::{syst::SystClkSource, SYST};
 
-use hal::blocking::delay::{DelayMs, DelayUs};
+use hal::delay::DelayNs;
 
 use crate::time::Hertz;
-
-use crate::prelude::*;
 
 impl DelayExt<SYST> for SYST {
   fn delay(self, clocks: Clocks) -> Delay<SYST> {
@@ -50,20 +48,65 @@ impl Delay<SYST> {
 const MILLISECONDS_PER_SECOND: u32 = 1_000;
 const MICROSECONDS_PER_SECOND: u32 = 1_000_000;
 
-impl DelayMs<u32> for Delay<SYST> {
-  type Error = ();
+impl DelayNs for Delay<SYST> {
+  fn delay_ns(&mut self, ns: u32) {
+    // For nanoseconds, we convert to microseconds (minimum granularity)
+    // This loses precision for sub-microsecond delays
+    let us = ns / 1000;
+    if us > 0 {
+      self.delay_us(us);
+    }
+  }
 
-  /// This is limited to 2^24 ticks, which is about 199 ms at 84 MHz
-  /// from the core clock. If a longer delay is needed consider a
-  /// different clock source like the external slow clock.
-  fn try_delay_ms(&mut self, ms: u32) -> Result<(), Self::Error> {
+  fn delay_us(&mut self, us: u32) {
+    let frequency: Hertz = self.clocks.processor_clk();
+
+    let reload_value = (us * (frequency.0 / MICROSECONDS_PER_SECOND)).saturating_sub(1);
+
+    // The register is only 24 bits wide
+    if reload_value >= (1 << 24) {
+      // For long delays, break into chunks
+      // Calculate max_us using u64 to avoid overflow: (2^24 * 1_000_000) / freq
+      let max_us = (((1_u64 << 24) * MICROSECONDS_PER_SECOND as u64) / frequency.0 as u64) as u32;
+      let mut remaining = us;
+      while remaining > max_us {
+        self.delay_us(max_us);
+        remaining -= max_us;
+      }
+      if remaining > 0 {
+        self.delay_us(remaining);
+      }
+      return;
+    }
+
+    if reload_value == 0 {
+      return;
+    }
+
+    self.source.set_reload(reload_value);
+    self.source.clear_current();
+    self.source.enable_counter();
+    self.source.disable_interrupt();
+
+    while !self.source.has_wrapped() {}
+
+    self.source.disable_counter();
+  }
+
+  fn delay_ms(&mut self, ms: u32) {
     if let MasterClockSrc::SlowClock = self.clocks.source() {
       // Too slow to get us precision
       let frequency: Hertz = self.clocks.processor_clk();
-      let reload_value = (ms * (frequency.0 / MILLISECONDS_PER_SECOND)) - 1;
+      let reload_value = (ms * (frequency.0 / MILLISECONDS_PER_SECOND)).saturating_sub(1);
 
       // The register is only 24 bits wide
-      assert!(reload_value < (1 << 24));
+      if reload_value >= (1 << 24) {
+        // Break into smaller chunks
+        for _ in 0..ms {
+          self.delay_ms(1);
+        }
+        return;
+      }
 
       self.source.set_reload(reload_value);
       self.source.clear_current();
@@ -74,65 +117,7 @@ impl DelayMs<u32> for Delay<SYST> {
 
       self.source.disable_counter();
     } else {
-      self.try_delay_us(ms * 1_000).unwrap();
+      self.delay_us(ms * 1_000);
     }
-
-    Ok(())
-  }
-}
-
-impl DelayMs<u16> for Delay<SYST> {
-  type Error = ();
-
-  fn try_delay_ms(&mut self, ms: u16) -> Result<(), Self::Error> {
-    self.try_delay_ms(ms as u32)
-  }
-}
-
-impl DelayMs<u8> for Delay<SYST> {
-  type Error = ();
-
-  fn try_delay_ms(&mut self, ms: u8) -> Result<(), Self::Error> {
-    self.try_delay_ms(ms as u32)
-  }
-}
-
-impl DelayUs<u32> for Delay<SYST> {
-  type Error = ();
-
-  fn try_delay_us(&mut self, us: u32) -> Result<(), Self::Error> {
-    let frequency: Hertz = self.clocks.processor_clk();
-
-    let reload_value = (us * (frequency.0 / MICROSECONDS_PER_SECOND)) - 1;
-
-    // The register is only 24 bits wide
-    assert!(reload_value < (1 << 24));
-
-    self.source.set_reload(reload_value);
-    self.source.clear_current();
-    self.source.enable_counter();
-    self.source.disable_interrupt();
-
-    while !self.source.has_wrapped() {}
-
-    self.source.disable_counter();
-
-    Ok(())
-  }
-}
-
-impl DelayUs<u16> for Delay<SYST> {
-  type Error = ();
-
-  fn try_delay_us(&mut self, us: u16) -> Result<(), Self::Error> {
-    self.try_delay_us(us as u32)
-  }
-}
-
-impl DelayUs<u8> for Delay<SYST> {
-  type Error = ();
-
-  fn try_delay_us(&mut self, us: u8) -> Result<(), Self::Error> {
-    self.try_delay_us(us as u32)
   }
 }

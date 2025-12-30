@@ -76,7 +76,7 @@ pub trait Efc0Ext {
 
 impl Efc0Ext for EFC0 {
     fn freeze(self, config: Config) -> Efc0 {
-        self.fmr.write(|w| unsafe {
+        self.fmr().write(|w| unsafe {
             let w = w.fws().bits(config.wait_state);
 
             let w = match config.interrupt_enable {
@@ -107,7 +107,7 @@ pub trait Efc1Ext {
 
 impl Efc1Ext for EFC1 {
     fn freeze(self, config: Config) -> Efc1 {
-        self.fmr.write(|w| unsafe {
+        self.fmr().write(|w| unsafe {
             let w = w.fws().bits(config.wait_state);
 
             let w = match config.interrupt_enable {

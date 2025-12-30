@@ -1,245 +1,253 @@
-#[doc = "Reader of register HSTPIPISR[%s]"]
-pub type R = crate::R<u32, super::HSTPIPISR>;
-#[doc = "Reader of field `RXINI`"]
-pub type RXINI_R = crate::R<bool, bool>;
-#[doc = "Reader of field `TXOUTI`"]
-pub type TXOUTI_R = crate::R<bool, bool>;
-#[doc = "Reader of field `TXSTPI`"]
-pub type TXSTPI_R = crate::R<bool, bool>;
-#[doc = "Reader of field `PERRI`"]
-pub type PERRI_R = crate::R<bool, bool>;
-#[doc = "Reader of field `NAKEDI`"]
-pub type NAKEDI_R = crate::R<bool, bool>;
-#[doc = "Reader of field `OVERFI`"]
-pub type OVERFI_R = crate::R<bool, bool>;
-#[doc = "Reader of field `RXSTALLDI`"]
-pub type RXSTALLDI_R = crate::R<bool, bool>;
-#[doc = "Reader of field `SHORTPACKETI`"]
-pub type SHORTPACKETI_R = crate::R<bool, bool>;
+#[doc = "Register `HSTPIPISR[%s]` reader"]
+pub type R = crate::R<HstpipisrSpec>;
+#[doc = "Field `RXINI` reader - Received IN Data Interrupt"]
+pub type RxiniR = crate::BitReader;
+#[doc = "Field `TXOUTI` reader - Transmitted OUT Data Interrupt"]
+pub type TxoutiR = crate::BitReader;
+#[doc = "Field `TXSTPI` reader - Transmitted SETUP Interrupt"]
+pub type TxstpiR = crate::BitReader;
+#[doc = "Field `PERRI` reader - Pipe Error Interrupt"]
+pub type PerriR = crate::BitReader;
+#[doc = "Field `NAKEDI` reader - NAKed Interrupt"]
+pub type NakediR = crate::BitReader;
+#[doc = "Field `OVERFI` reader - Overflow Interrupt"]
+pub type OverfiR = crate::BitReader;
+#[doc = "Field `RXSTALLDI` reader - Received STALLed Interrupt"]
+pub type RxstalldiR = crate::BitReader;
+#[doc = "Field `SHORTPACKETI` reader - Short Packet Interrupt"]
+pub type ShortpacketiR = crate::BitReader;
 #[doc = "Data Toggle Sequence"]
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub enum DTSEQ_A {
-    #[doc = "0: Data0 toggle sequence"]
-    DATA0,
-    #[doc = "1: Data1 toggle sequence"]
-    DATA1,
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[repr(u8)]
+pub enum Dtseq {
+  #[doc = "0: Data0 toggle sequence"]
+  Data0 = 0,
+  #[doc = "1: Data1 toggle sequence"]
+  Data1 = 1,
 }
-impl From<DTSEQ_A> for u8 {
-    #[inline(always)]
-    fn from(variant: DTSEQ_A) -> Self {
-        match variant {
-            DTSEQ_A::DATA0 => 0,
-            DTSEQ_A::DATA1 => 1,
-        }
-    }
+impl From<Dtseq> for u8 {
+  #[inline(always)]
+  fn from(variant: Dtseq) -> Self {
+    variant as _
+  }
 }
-#[doc = "Reader of field `DTSEQ`"]
-pub type DTSEQ_R = crate::R<u8, DTSEQ_A>;
-impl DTSEQ_R {
-    #[doc = r"Get enumerated values variant"]
-    #[inline(always)]
-    pub fn variant(&self) -> crate::Variant<u8, DTSEQ_A> {
-        use crate::Variant::*;
-        match self.bits {
-            0 => Val(DTSEQ_A::DATA0),
-            1 => Val(DTSEQ_A::DATA1),
-            i => Res(i),
-        }
+impl crate::FieldSpec for Dtseq {
+  type Ux = u8;
+}
+impl crate::IsEnum for Dtseq {}
+#[doc = "Field `DTSEQ` reader - Data Toggle Sequence"]
+pub type DtseqR = crate::FieldReader<Dtseq>;
+impl DtseqR {
+  #[doc = "Get enumerated values variant"]
+  #[inline(always)]
+  pub const fn variant(&self) -> Option<Dtseq> {
+    match self.bits {
+      0 => Some(Dtseq::Data0),
+      1 => Some(Dtseq::Data1),
+      _ => None,
     }
-    #[doc = "Checks if the value of the field is `DATA0`"]
-    #[inline(always)]
-    pub fn is_data0(&self) -> bool {
-        *self == DTSEQ_A::DATA0
-    }
-    #[doc = "Checks if the value of the field is `DATA1`"]
-    #[inline(always)]
-    pub fn is_data1(&self) -> bool {
-        *self == DTSEQ_A::DATA1
-    }
+  }
+  #[doc = "Data0 toggle sequence"]
+  #[inline(always)]
+  pub fn is_data0(&self) -> bool {
+    *self == Dtseq::Data0
+  }
+  #[doc = "Data1 toggle sequence"]
+  #[inline(always)]
+  pub fn is_data1(&self) -> bool {
+    *self == Dtseq::Data1
+  }
 }
 #[doc = "Number of Busy Banks"]
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub enum NBUSYBK_A {
-    #[doc = "0: 0 busy bank (all banks free)"]
-    _0_BUSY,
-    #[doc = "1: 1 busy bank"]
-    _1_BUSY,
-    #[doc = "2: 2 busy banks"]
-    _2_BUSY,
-    #[doc = "3: 3 busy banks"]
-    _3_BUSY,
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[repr(u8)]
+pub enum Nbusybk {
+  #[doc = "0: 0 busy bank (all banks free)"]
+  _0Busy = 0,
+  #[doc = "1: 1 busy bank"]
+  _1Busy = 1,
+  #[doc = "2: 2 busy banks"]
+  _2Busy = 2,
+  #[doc = "3: 3 busy banks"]
+  _3Busy = 3,
 }
-impl From<NBUSYBK_A> for u8 {
-    #[inline(always)]
-    fn from(variant: NBUSYBK_A) -> Self {
-        match variant {
-            NBUSYBK_A::_0_BUSY => 0,
-            NBUSYBK_A::_1_BUSY => 1,
-            NBUSYBK_A::_2_BUSY => 2,
-            NBUSYBK_A::_3_BUSY => 3,
-        }
-    }
+impl From<Nbusybk> for u8 {
+  #[inline(always)]
+  fn from(variant: Nbusybk) -> Self {
+    variant as _
+  }
 }
-#[doc = "Reader of field `NBUSYBK`"]
-pub type NBUSYBK_R = crate::R<u8, NBUSYBK_A>;
-impl NBUSYBK_R {
-    #[doc = r"Get enumerated values variant"]
-    #[inline(always)]
-    pub fn variant(&self) -> NBUSYBK_A {
-        match self.bits {
-            0 => NBUSYBK_A::_0_BUSY,
-            1 => NBUSYBK_A::_1_BUSY,
-            2 => NBUSYBK_A::_2_BUSY,
-            3 => NBUSYBK_A::_3_BUSY,
-            _ => unreachable!(),
-        }
+impl crate::FieldSpec for Nbusybk {
+  type Ux = u8;
+}
+impl crate::IsEnum for Nbusybk {}
+#[doc = "Field `NBUSYBK` reader - Number of Busy Banks"]
+pub type NbusybkR = crate::FieldReader<Nbusybk>;
+impl NbusybkR {
+  #[doc = "Get enumerated values variant"]
+  #[inline(always)]
+  pub const fn variant(&self) -> Nbusybk {
+    match self.bits {
+      0 => Nbusybk::_0Busy,
+      1 => Nbusybk::_1Busy,
+      2 => Nbusybk::_2Busy,
+      3 => Nbusybk::_3Busy,
+      _ => unreachable!(),
     }
-    #[doc = "Checks if the value of the field is `_0_BUSY`"]
-    #[inline(always)]
-    pub fn is_0_busy(&self) -> bool {
-        *self == NBUSYBK_A::_0_BUSY
-    }
-    #[doc = "Checks if the value of the field is `_1_BUSY`"]
-    #[inline(always)]
-    pub fn is_1_busy(&self) -> bool {
-        *self == NBUSYBK_A::_1_BUSY
-    }
-    #[doc = "Checks if the value of the field is `_2_BUSY`"]
-    #[inline(always)]
-    pub fn is_2_busy(&self) -> bool {
-        *self == NBUSYBK_A::_2_BUSY
-    }
-    #[doc = "Checks if the value of the field is `_3_BUSY`"]
-    #[inline(always)]
-    pub fn is_3_busy(&self) -> bool {
-        *self == NBUSYBK_A::_3_BUSY
-    }
+  }
+  #[doc = "0 busy bank (all banks free)"]
+  #[inline(always)]
+  pub fn is_0_busy(&self) -> bool {
+    *self == Nbusybk::_0Busy
+  }
+  #[doc = "1 busy bank"]
+  #[inline(always)]
+  pub fn is_1_busy(&self) -> bool {
+    *self == Nbusybk::_1Busy
+  }
+  #[doc = "2 busy banks"]
+  #[inline(always)]
+  pub fn is_2_busy(&self) -> bool {
+    *self == Nbusybk::_2Busy
+  }
+  #[doc = "3 busy banks"]
+  #[inline(always)]
+  pub fn is_3_busy(&self) -> bool {
+    *self == Nbusybk::_3Busy
+  }
 }
 #[doc = "Current Bank"]
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub enum CURRBK_A {
-    #[doc = "0: Current bank is bank0"]
-    BANK0,
-    #[doc = "1: Current bank is bank1"]
-    BANK1,
-    #[doc = "2: Current bank is bank2"]
-    BANK2,
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[repr(u8)]
+pub enum Currbk {
+  #[doc = "0: Current bank is bank0"]
+  Bank0 = 0,
+  #[doc = "1: Current bank is bank1"]
+  Bank1 = 1,
+  #[doc = "2: Current bank is bank2"]
+  Bank2 = 2,
 }
-impl From<CURRBK_A> for u8 {
-    #[inline(always)]
-    fn from(variant: CURRBK_A) -> Self {
-        match variant {
-            CURRBK_A::BANK0 => 0,
-            CURRBK_A::BANK1 => 1,
-            CURRBK_A::BANK2 => 2,
-        }
-    }
+impl From<Currbk> for u8 {
+  #[inline(always)]
+  fn from(variant: Currbk) -> Self {
+    variant as _
+  }
 }
-#[doc = "Reader of field `CURRBK`"]
-pub type CURRBK_R = crate::R<u8, CURRBK_A>;
-impl CURRBK_R {
-    #[doc = r"Get enumerated values variant"]
-    #[inline(always)]
-    pub fn variant(&self) -> crate::Variant<u8, CURRBK_A> {
-        use crate::Variant::*;
-        match self.bits {
-            0 => Val(CURRBK_A::BANK0),
-            1 => Val(CURRBK_A::BANK1),
-            2 => Val(CURRBK_A::BANK2),
-            i => Res(i),
-        }
-    }
-    #[doc = "Checks if the value of the field is `BANK0`"]
-    #[inline(always)]
-    pub fn is_bank0(&self) -> bool {
-        *self == CURRBK_A::BANK0
-    }
-    #[doc = "Checks if the value of the field is `BANK1`"]
-    #[inline(always)]
-    pub fn is_bank1(&self) -> bool {
-        *self == CURRBK_A::BANK1
-    }
-    #[doc = "Checks if the value of the field is `BANK2`"]
-    #[inline(always)]
-    pub fn is_bank2(&self) -> bool {
-        *self == CURRBK_A::BANK2
-    }
+impl crate::FieldSpec for Currbk {
+  type Ux = u8;
 }
-#[doc = "Reader of field `RWALL`"]
-pub type RWALL_R = crate::R<bool, bool>;
-#[doc = "Reader of field `CFGOK`"]
-pub type CFGOK_R = crate::R<bool, bool>;
-#[doc = "Reader of field `PBYCT`"]
-pub type PBYCT_R = crate::R<u16, u16>;
+impl crate::IsEnum for Currbk {}
+#[doc = "Field `CURRBK` reader - Current Bank"]
+pub type CurrbkR = crate::FieldReader<Currbk>;
+impl CurrbkR {
+  #[doc = "Get enumerated values variant"]
+  #[inline(always)]
+  pub const fn variant(&self) -> Option<Currbk> {
+    match self.bits {
+      0 => Some(Currbk::Bank0),
+      1 => Some(Currbk::Bank1),
+      2 => Some(Currbk::Bank2),
+      _ => None,
+    }
+  }
+  #[doc = "Current bank is bank0"]
+  #[inline(always)]
+  pub fn is_bank0(&self) -> bool {
+    *self == Currbk::Bank0
+  }
+  #[doc = "Current bank is bank1"]
+  #[inline(always)]
+  pub fn is_bank1(&self) -> bool {
+    *self == Currbk::Bank1
+  }
+  #[doc = "Current bank is bank2"]
+  #[inline(always)]
+  pub fn is_bank2(&self) -> bool {
+    *self == Currbk::Bank2
+  }
+}
+#[doc = "Field `RWALL` reader - Read-write Allowed"]
+pub type RwallR = crate::BitReader;
+#[doc = "Field `CFGOK` reader - Configuration OK Status"]
+pub type CfgokR = crate::BitReader;
+#[doc = "Field `PBYCT` reader - Pipe Byte Count"]
+pub type PbyctR = crate::FieldReader<u16>;
 impl R {
-    #[doc = "Bit 0 - Received IN Data Interrupt"]
-    #[inline(always)]
-    pub fn rxini(&self) -> RXINI_R {
-        RXINI_R::new((self.bits & 0x01) != 0)
-    }
-    #[doc = "Bit 1 - Transmitted OUT Data Interrupt"]
-    #[inline(always)]
-    pub fn txouti(&self) -> TXOUTI_R {
-        TXOUTI_R::new(((self.bits >> 1) & 0x01) != 0)
-    }
-    #[doc = "Bit 2 - Transmitted SETUP Interrupt"]
-    #[inline(always)]
-    pub fn txstpi(&self) -> TXSTPI_R {
-        TXSTPI_R::new(((self.bits >> 2) & 0x01) != 0)
-    }
-    #[doc = "Bit 3 - Pipe Error Interrupt"]
-    #[inline(always)]
-    pub fn perri(&self) -> PERRI_R {
-        PERRI_R::new(((self.bits >> 3) & 0x01) != 0)
-    }
-    #[doc = "Bit 4 - NAKed Interrupt"]
-    #[inline(always)]
-    pub fn nakedi(&self) -> NAKEDI_R {
-        NAKEDI_R::new(((self.bits >> 4) & 0x01) != 0)
-    }
-    #[doc = "Bit 5 - Overflow Interrupt"]
-    #[inline(always)]
-    pub fn overfi(&self) -> OVERFI_R {
-        OVERFI_R::new(((self.bits >> 5) & 0x01) != 0)
-    }
-    #[doc = "Bit 6 - Received STALLed Interrupt"]
-    #[inline(always)]
-    pub fn rxstalldi(&self) -> RXSTALLDI_R {
-        RXSTALLDI_R::new(((self.bits >> 6) & 0x01) != 0)
-    }
-    #[doc = "Bit 7 - Short Packet Interrupt"]
-    #[inline(always)]
-    pub fn shortpacketi(&self) -> SHORTPACKETI_R {
-        SHORTPACKETI_R::new(((self.bits >> 7) & 0x01) != 0)
-    }
-    #[doc = "Bits 8:9 - Data Toggle Sequence"]
-    #[inline(always)]
-    pub fn dtseq(&self) -> DTSEQ_R {
-        DTSEQ_R::new(((self.bits >> 8) & 0x03) as u8)
-    }
-    #[doc = "Bits 12:13 - Number of Busy Banks"]
-    #[inline(always)]
-    pub fn nbusybk(&self) -> NBUSYBK_R {
-        NBUSYBK_R::new(((self.bits >> 12) & 0x03) as u8)
-    }
-    #[doc = "Bits 14:15 - Current Bank"]
-    #[inline(always)]
-    pub fn currbk(&self) -> CURRBK_R {
-        CURRBK_R::new(((self.bits >> 14) & 0x03) as u8)
-    }
-    #[doc = "Bit 16 - Read-write Allowed"]
-    #[inline(always)]
-    pub fn rwall(&self) -> RWALL_R {
-        RWALL_R::new(((self.bits >> 16) & 0x01) != 0)
-    }
-    #[doc = "Bit 18 - Configuration OK Status"]
-    #[inline(always)]
-    pub fn cfgok(&self) -> CFGOK_R {
-        CFGOK_R::new(((self.bits >> 18) & 0x01) != 0)
-    }
-    #[doc = "Bits 20:30 - Pipe Byte Count"]
-    #[inline(always)]
-    pub fn pbyct(&self) -> PBYCT_R {
-        PBYCT_R::new(((self.bits >> 20) & 0x07ff) as u16)
-    }
+  #[doc = "Bit 0 - Received IN Data Interrupt"]
+  #[inline(always)]
+  pub fn rxini(&self) -> RxiniR {
+    RxiniR::new((self.bits & 1) != 0)
+  }
+  #[doc = "Bit 1 - Transmitted OUT Data Interrupt"]
+  #[inline(always)]
+  pub fn txouti(&self) -> TxoutiR {
+    TxoutiR::new(((self.bits >> 1) & 1) != 0)
+  }
+  #[doc = "Bit 2 - Transmitted SETUP Interrupt"]
+  #[inline(always)]
+  pub fn txstpi(&self) -> TxstpiR {
+    TxstpiR::new(((self.bits >> 2) & 1) != 0)
+  }
+  #[doc = "Bit 3 - Pipe Error Interrupt"]
+  #[inline(always)]
+  pub fn perri(&self) -> PerriR {
+    PerriR::new(((self.bits >> 3) & 1) != 0)
+  }
+  #[doc = "Bit 4 - NAKed Interrupt"]
+  #[inline(always)]
+  pub fn nakedi(&self) -> NakediR {
+    NakediR::new(((self.bits >> 4) & 1) != 0)
+  }
+  #[doc = "Bit 5 - Overflow Interrupt"]
+  #[inline(always)]
+  pub fn overfi(&self) -> OverfiR {
+    OverfiR::new(((self.bits >> 5) & 1) != 0)
+  }
+  #[doc = "Bit 6 - Received STALLed Interrupt"]
+  #[inline(always)]
+  pub fn rxstalldi(&self) -> RxstalldiR {
+    RxstalldiR::new(((self.bits >> 6) & 1) != 0)
+  }
+  #[doc = "Bit 7 - Short Packet Interrupt"]
+  #[inline(always)]
+  pub fn shortpacketi(&self) -> ShortpacketiR {
+    ShortpacketiR::new(((self.bits >> 7) & 1) != 0)
+  }
+  #[doc = "Bits 8:9 - Data Toggle Sequence"]
+  #[inline(always)]
+  pub fn dtseq(&self) -> DtseqR {
+    DtseqR::new(((self.bits >> 8) & 3) as u8)
+  }
+  #[doc = "Bits 12:13 - Number of Busy Banks"]
+  #[inline(always)]
+  pub fn nbusybk(&self) -> NbusybkR {
+    NbusybkR::new(((self.bits >> 12) & 3) as u8)
+  }
+  #[doc = "Bits 14:15 - Current Bank"]
+  #[inline(always)]
+  pub fn currbk(&self) -> CurrbkR {
+    CurrbkR::new(((self.bits >> 14) & 3) as u8)
+  }
+  #[doc = "Bit 16 - Read-write Allowed"]
+  #[inline(always)]
+  pub fn rwall(&self) -> RwallR {
+    RwallR::new(((self.bits >> 16) & 1) != 0)
+  }
+  #[doc = "Bit 18 - Configuration OK Status"]
+  #[inline(always)]
+  pub fn cfgok(&self) -> CfgokR {
+    CfgokR::new(((self.bits >> 18) & 1) != 0)
+  }
+  #[doc = "Bits 20:30 - Pipe Byte Count"]
+  #[inline(always)]
+  pub fn pbyct(&self) -> PbyctR {
+    PbyctR::new(((self.bits >> 20) & 0x07ff) as u16)
+  }
 }
+#[doc = "Host Pipe Status Register (n = 0)\n\nYou can [`read`](crate::Reg::read) this register and get [`hstpipisr::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct HstpipisrSpec;
+impl crate::RegisterSpec for HstpipisrSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`hstpipisr::R`](R) reader structure"]
+impl crate::Readable for HstpipisrSpec {}

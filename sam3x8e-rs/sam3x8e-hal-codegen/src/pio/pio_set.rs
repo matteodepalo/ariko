@@ -34,7 +34,7 @@ pub struct PioSet {
 
 impl Parse for PioSet {
   fn parse(input: ParseStream) -> Result<Self> {
-    let punctuated: Punctuated<Pio, Comma> = input.parse_terminated(Pio::parse)?;
+    let punctuated: Punctuated<Pio, Comma> = input.parse_terminated(Pio::parse, Comma)?;
 
     let pio = punctuated.into_iter().collect();
 
@@ -65,21 +65,24 @@ impl ToTokens for PioSet {
     ));
 
     tokens.extend(quote!(
+            impl<MODE> ErrorType for PXx<Output<MODE>> {
+                type Error = core::convert::Infallible;
+            }
+
             impl<MODE> OutputPin for PXx<Output<MODE>> {
-                type Error = ();
-                fn try_set_high(&mut self) -> Result<(), Self::Error> {
+                fn set_high(&mut self) -> Result<(), Self::Error> {
                     unsafe {
                         match self.gpio {
-                            #(Gpio::#upper_names => (*#upper_names::ptr()).sodr.write_with_zero(|w| w.bits(1 << self.i))),*
+                            #(Gpio::#upper_names => (*#upper_names::ptr()).sodr().write_with_zero(|w| w.bits(1 << self.i))),*
                         }
                     }
 
                     Ok(())
                 }
-                fn try_set_low(&mut self) -> Result<(), Self::Error> {
+                fn set_low(&mut self) -> Result<(), Self::Error> {
                     unsafe {
                         match self.gpio {
-                            #(Gpio::#upper_names => (*#upper_names::ptr()).codr.write_with_zero(|w| w.bits(1 << self.i))),*
+                            #(Gpio::#upper_names => (*#upper_names::ptr()).codr().write_with_zero(|w| w.bits(1 << self.i))),*
                         }
                     }
 
@@ -89,12 +92,15 @@ impl ToTokens for PioSet {
         ));
 
     tokens.extend(quote!(
+      impl<MODE> ErrorType for PXx<Input<MODE>> {
+        type Error = core::convert::Infallible;
+      }
+
       impl<MODE> InputPin for PXx<Input<MODE>> {
-        type Error = ();
-        fn try_is_high(&self) -> Result<bool, Self::Error> {
+        fn is_high(&mut self) -> Result<bool, Self::Error> {
           unimplemented!()
         }
-        fn try_is_low(&self) -> Result<bool, Self::Error> {
+        fn is_low(&mut self) -> Result<bool, Self::Error> {
           unimplemented!()
         }
       }

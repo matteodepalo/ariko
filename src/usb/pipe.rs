@@ -1,12 +1,62 @@
-use crate::peripherals::Peripherals;
 use crate::usb::packet::{DataInPacket, DataOutPacket, Packet, SetupPacket, SetupRequestDirection};
 use crate::usb::Error;
 use core::cmp::min;
 use log::debug;
-use sam3x8e_hal::pac::uotghs::{HSTPIPCFG, HSTPIPIER, HSTPIPISR};
 use sam3x8e_hal::pac::UOTGHS;
 
 const PIPE_SIZE: usize = 64;
+
+// Macro to handle indexed pipe configuration register access
+macro_rules! with_hstpipcfg {
+    ($uotghs:expr, $index:expr, |$cfg:ident| $body:expr) => {
+        match $index {
+            0 => { let $cfg = $uotghs.hstpipcfg0(); $body }
+            1 => { let $cfg = $uotghs.hstpipcfg1(); $body }
+            2 => { let $cfg = $uotghs.hstpipcfg2(); $body }
+            3 => { let $cfg = $uotghs.hstpipcfg3(); $body }
+            4 => { let $cfg = $uotghs.hstpipcfg4(); $body }
+            5 => { let $cfg = $uotghs.hstpipcfg5(); $body }
+            6 => { let $cfg = $uotghs.hstpipcfg6(); $body }
+            7 => { let $cfg = $uotghs.hstpipcfg7(); $body }
+            8 => { let $cfg = $uotghs.hstpipcfg8(); $body }
+            _ => panic!("Pipe index out of bounds"),
+        }
+    };
+}
+
+macro_rules! with_hstpipisr {
+    ($uotghs:expr, $index:expr, |$isr:ident| $body:expr) => {
+        match $index {
+            0 => { let $isr = $uotghs.hstpipisr0(); $body }
+            1 => { let $isr = $uotghs.hstpipisr1(); $body }
+            2 => { let $isr = $uotghs.hstpipisr2(); $body }
+            3 => { let $isr = $uotghs.hstpipisr3(); $body }
+            4 => { let $isr = $uotghs.hstpipisr4(); $body }
+            5 => { let $isr = $uotghs.hstpipisr5(); $body }
+            6 => { let $isr = $uotghs.hstpipisr6(); $body }
+            7 => { let $isr = $uotghs.hstpipisr7(); $body }
+            8 => { let $isr = $uotghs.hstpipisr8(); $body }
+            _ => panic!("Pipe index out of bounds"),
+        }
+    };
+}
+
+macro_rules! with_hstpipier {
+    ($uotghs:expr, $index:expr, |$ier:ident| $body:expr) => {
+        match $index {
+            0 => { let $ier = $uotghs.hstpipier0(); $body }
+            1 => { let $ier = $uotghs.hstpipier1(); $body }
+            2 => { let $ier = $uotghs.hstpipier2(); $body }
+            3 => { let $ier = $uotghs.hstpipier3(); $body }
+            4 => { let $ier = $uotghs.hstpipier4(); $body }
+            5 => { let $ier = $uotghs.hstpipier5(); $body }
+            6 => { let $ier = $uotghs.hstpipier6(); $body }
+            7 => { let $ier = $uotghs.hstpipier7(); $body }
+            8 => { let $ier = $uotghs.hstpipier8(); $body }
+            _ => panic!("Pipe index out of bounds"),
+        }
+    };
+}
 
 #[derive(Debug)]
 pub struct InnerPipe(u8);
@@ -118,13 +168,18 @@ impl InnerPipe {
   }
 
   fn transfer(&self, packet: &mut Packet) -> Result<(), Error> {
-    self.hstpipcfg().modify(|_, w| match packet {
-      Packet::Setup(_) => w.ptoken().setup(),
-      Packet::DataIn(_) => w.ptoken().in_(),
-      Packet::DataOut(_) => w.ptoken().out(),
+    let uotghs = self.uotghs();
+    with_hstpipcfg!(uotghs, self.0, |cfg| {
+      cfg.modify(|_, w| match packet {
+        Packet::Setup(_) => w.ptoken().setup(),
+        Packet::DataIn(_) => w.ptoken().in_(),
+        Packet::DataOut(_) => w.ptoken().out(),
+      })
     });
 
-    self.hstpipier().write_with_zero(|w| w.pfreezes().set_bit());
+    with_hstpipier!(uotghs, self.0, |ier| {
+      unsafe { ier.write_with_zero(|w| w.pfreezes().set_bit()) }
+    });
 
     match packet {
       Packet::DataOut(_) => Ok(for i in 0..(packet.len() / PIPE_SIZE) {
@@ -146,9 +201,9 @@ impl InnerPipe {
     );
 
     let uotghs = self.uotghs();
-    let hstaddr1 = &uotghs.hstaddr1;
-    let hstaddr2 = &uotghs.hstaddr2;
-    let hstaddr3 = &uotghs.hstaddr3;
+    let hstaddr1 = uotghs.hstaddr1();
+    let hstaddr2 = uotghs.hstaddr2();
+    let hstaddr3 = uotghs.hstaddr3();
 
     match self.0 {
       0 => hstaddr1.write(|w| unsafe { w.hstaddrp0().bits(address) }),
@@ -163,18 +218,23 @@ impl InnerPipe {
       _ => panic!(),
     };
 
-    self
-      .hstpipcfg()
-      .modify(|_, w| unsafe { w.pepnum().bits(endpoint) });
-
-    self.hstpipcfg().modify(|_, w| match transfer {
-      Transfer::Control => w.ptype().ctrl(),
-      Transfer::Interrupt(frequency) => unsafe { w.ptype().intrpt().intfrq().bits(frequency) },
-      Transfer::Bulk => w.ptype().blk(),
-      Transfer::Isochronous => w.ptype().iso(),
+    with_hstpipcfg!(uotghs, self.0, |cfg| {
+      cfg.modify(|_, w| unsafe { w.pepnum().bits(endpoint) })
     });
 
-    if self.hstpipisr().read().cfgok().bit_is_clear() {
+    with_hstpipcfg!(uotghs, self.0, |cfg| {
+      cfg.modify(|_, w| match transfer {
+        Transfer::Control => w.ptype().ctrl(),
+        Transfer::Interrupt(frequency) => unsafe { w.ptype().intrpt().intfrq().bits(frequency) },
+        Transfer::Bulk => w.ptype().blk(),
+        Transfer::Isochronous => w.ptype().iso(),
+      })
+    });
+
+    let cfgok = with_hstpipisr!(uotghs, self.0, |isr| {
+      isr.read().cfgok().bit_is_clear()
+    });
+    if cfgok {
       panic!("Failed to configure pipe")
     }
   }
@@ -182,11 +242,15 @@ impl InnerPipe {
   pub fn release(&self) {
     debug!("[USB :: Pipe] Releasing pipe #{}", self.0);
 
-    self.hstpipcfg().modify(|_, w| w.alloc().clear_bit())
+    let uotghs = self.uotghs();
+    with_hstpipcfg!(uotghs, self.0, |cfg| {
+      cfg.modify(|_, w| w.alloc().clear_bit())
+    })
   }
 
   fn alloc(&mut self) {
-    let hstpip = &self.uotghs().hstpip;
+    let uotghs = self.uotghs();
+    let hstpip = uotghs.hstpip();
 
     debug!("[USB :: Pipe] Allocating pipe #{}", self.0);
 
@@ -203,29 +267,14 @@ impl InnerPipe {
       _ => panic!("Pipe index out of bounds"),
     }
 
-    self
-      .hstpipcfg()
-      .modify(|_, w| w.psize()._64_byte().pbk()._1_bank().alloc().set_bit());
-  }
-
-  fn hstpipcfg(&self) -> &HSTPIPCFG {
-    &self.uotghs().hstpipcfg()[self.0 as usize]
-  }
-
-  fn hstpipisr(&self) -> &HSTPIPISR {
-    &self.uotghs().hstpipisr()[self.0 as usize]
-  }
-
-  fn hstpipier(&self) -> &HSTPIPIER {
-    &self.uotghs().hstpipier()[self.0 as usize]
+    with_hstpipcfg!(uotghs, self.0, |cfg| {
+      cfg.modify(|_, w| w.psize()._64_byte().pbk()._1_bank().alloc().set_bit())
+    });
   }
 
   fn uotghs(&self) -> &UOTGHS {
-    &self.peripherals().uotghs
-  }
-
-  fn peripherals(&self) -> &Peripherals {
-    unsafe { Peripherals::get() }
+    // Use pointer to get a static reference to the UOTGHS peripheral
+    unsafe { &*UOTGHS::ptr() }
   }
 }
 

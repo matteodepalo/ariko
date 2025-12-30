@@ -1,139 +1,48 @@
-#[doc = "Writer for register CR"]
-pub type W = crate::W<u32, super::CR>;
-#[doc = "Write proxy for field `MCIEN`"]
-pub struct MCIEN_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> MCIEN_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x01) | ((value as u32) & 0x01);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `MCIDIS`"]
-pub struct MCIDIS_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> MCIDIS_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 1)) | (((value as u32) & 0x01) << 1);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `PWSEN`"]
-pub struct PWSEN_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PWSEN_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 2)) | (((value as u32) & 0x01) << 2);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `PWSDIS`"]
-pub struct PWSDIS_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PWSDIS_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 3)) | (((value as u32) & 0x01) << 3);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `SWRST`"]
-pub struct SWRST_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> SWRST_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 7)) | (((value as u32) & 0x01) << 7);
-        self.w
-    }
-}
+#[doc = "Register `CR` writer"]
+pub type W = crate::W<CrSpec>;
+#[doc = "Field `MCIEN` writer - Multi-Media Interface Enable"]
+pub type McienW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `MCIDIS` writer - Multi-Media Interface Disable"]
+pub type McidisW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `PWSEN` writer - Power Save Mode Enable"]
+pub type PwsenW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `PWSDIS` writer - Power Save Mode Disable"]
+pub type PwsdisW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `SWRST` writer - Software Reset"]
+pub type SwrstW<'a, REG> = crate::BitWriter<'a, REG>;
 impl W {
-    #[doc = "Bit 0 - Multi-Media Interface Enable"]
-    #[inline(always)]
-    pub fn mcien(&mut self) -> MCIEN_W {
-        MCIEN_W { w: self }
-    }
-    #[doc = "Bit 1 - Multi-Media Interface Disable"]
-    #[inline(always)]
-    pub fn mcidis(&mut self) -> MCIDIS_W {
-        MCIDIS_W { w: self }
-    }
-    #[doc = "Bit 2 - Power Save Mode Enable"]
-    #[inline(always)]
-    pub fn pwsen(&mut self) -> PWSEN_W {
-        PWSEN_W { w: self }
-    }
-    #[doc = "Bit 3 - Power Save Mode Disable"]
-    #[inline(always)]
-    pub fn pwsdis(&mut self) -> PWSDIS_W {
-        PWSDIS_W { w: self }
-    }
-    #[doc = "Bit 7 - Software Reset"]
-    #[inline(always)]
-    pub fn swrst(&mut self) -> SWRST_W {
-        SWRST_W { w: self }
-    }
+  #[doc = "Bit 0 - Multi-Media Interface Enable"]
+  #[inline(always)]
+  pub fn mcien(&mut self) -> McienW<'_, CrSpec> {
+    McienW::new(self, 0)
+  }
+  #[doc = "Bit 1 - Multi-Media Interface Disable"]
+  #[inline(always)]
+  pub fn mcidis(&mut self) -> McidisW<'_, CrSpec> {
+    McidisW::new(self, 1)
+  }
+  #[doc = "Bit 2 - Power Save Mode Enable"]
+  #[inline(always)]
+  pub fn pwsen(&mut self) -> PwsenW<'_, CrSpec> {
+    PwsenW::new(self, 2)
+  }
+  #[doc = "Bit 3 - Power Save Mode Disable"]
+  #[inline(always)]
+  pub fn pwsdis(&mut self) -> PwsdisW<'_, CrSpec> {
+    PwsdisW::new(self, 3)
+  }
+  #[doc = "Bit 7 - Software Reset"]
+  #[inline(always)]
+  pub fn swrst(&mut self) -> SwrstW<'_, CrSpec> {
+    SwrstW::new(self, 7)
+  }
+}
+#[doc = "Control Register\n\nYou can [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cr::W`](W). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct CrSpec;
+impl crate::RegisterSpec for CrSpec {
+  type Ux = u32;
+}
+#[doc = "`write(|w| ..)` method takes [`cr::W`](W) writer structure"]
+impl crate::Writable for CrSpec {
+  type Safety = crate::Unsafe;
 }

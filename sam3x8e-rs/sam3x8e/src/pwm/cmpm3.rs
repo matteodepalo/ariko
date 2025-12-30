@@ -1,170 +1,105 @@
-#[doc = "Reader of register CMPM3"]
-pub type R = crate::R<u32, super::CMPM3>;
-#[doc = "Writer for register CMPM3"]
-pub type W = crate::W<u32, super::CMPM3>;
-#[doc = "Register CMPM3 `reset()`'s with value 0"]
-impl crate::ResetValue for super::CMPM3 {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `CEN`"]
-pub type CEN_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `CEN`"]
-pub struct CEN_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CEN_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x01) | ((value as u32) & 0x01);
-        self.w
-    }
-}
-#[doc = "Reader of field `CTR`"]
-pub type CTR_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `CTR`"]
-pub struct CTR_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CTR_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x0f << 4)) | (((value as u32) & 0x0f) << 4);
-        self.w
-    }
-}
-#[doc = "Reader of field `CPR`"]
-pub type CPR_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `CPR`"]
-pub struct CPR_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CPR_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x0f << 8)) | (((value as u32) & 0x0f) << 8);
-        self.w
-    }
-}
-#[doc = "Reader of field `CPRCNT`"]
-pub type CPRCNT_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `CPRCNT`"]
-pub struct CPRCNT_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CPRCNT_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x0f << 12)) | (((value as u32) & 0x0f) << 12);
-        self.w
-    }
-}
-#[doc = "Reader of field `CUPR`"]
-pub type CUPR_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `CUPR`"]
-pub struct CUPR_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CUPR_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x0f << 16)) | (((value as u32) & 0x0f) << 16);
-        self.w
-    }
-}
-#[doc = "Reader of field `CUPRCNT`"]
-pub type CUPRCNT_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `CUPRCNT`"]
-pub struct CUPRCNT_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CUPRCNT_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x0f << 20)) | (((value as u32) & 0x0f) << 20);
-        self.w
-    }
-}
+#[doc = "Register `CMPM3` reader"]
+pub type R = crate::R<Cmpm3Spec>;
+#[doc = "Register `CMPM3` writer"]
+pub type W = crate::W<Cmpm3Spec>;
+#[doc = "Field `CEN` reader - Comparison x Enable"]
+pub type CenR = crate::BitReader;
+#[doc = "Field `CEN` writer - Comparison x Enable"]
+pub type CenW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `CTR` reader - Comparison x Trigger"]
+pub type CtrR = crate::FieldReader;
+#[doc = "Field `CTR` writer - Comparison x Trigger"]
+pub type CtrW<'a, REG> = crate::FieldWriter<'a, REG, 4>;
+#[doc = "Field `CPR` reader - Comparison x Period"]
+pub type CprR = crate::FieldReader;
+#[doc = "Field `CPR` writer - Comparison x Period"]
+pub type CprW<'a, REG> = crate::FieldWriter<'a, REG, 4>;
+#[doc = "Field `CPRCNT` reader - Comparison x Period Counter"]
+pub type CprcntR = crate::FieldReader;
+#[doc = "Field `CPRCNT` writer - Comparison x Period Counter"]
+pub type CprcntW<'a, REG> = crate::FieldWriter<'a, REG, 4>;
+#[doc = "Field `CUPR` reader - Comparison x Update Period"]
+pub type CuprR = crate::FieldReader;
+#[doc = "Field `CUPR` writer - Comparison x Update Period"]
+pub type CuprW<'a, REG> = crate::FieldWriter<'a, REG, 4>;
+#[doc = "Field `CUPRCNT` reader - Comparison x Update Period Counter"]
+pub type CuprcntR = crate::FieldReader;
+#[doc = "Field `CUPRCNT` writer - Comparison x Update Period Counter"]
+pub type CuprcntW<'a, REG> = crate::FieldWriter<'a, REG, 4>;
 impl R {
-    #[doc = "Bit 0 - Comparison x Enable"]
-    #[inline(always)]
-    pub fn cen(&self) -> CEN_R {
-        CEN_R::new((self.bits & 0x01) != 0)
-    }
-    #[doc = "Bits 4:7 - Comparison x Trigger"]
-    #[inline(always)]
-    pub fn ctr(&self) -> CTR_R {
-        CTR_R::new(((self.bits >> 4) & 0x0f) as u8)
-    }
-    #[doc = "Bits 8:11 - Comparison x Period"]
-    #[inline(always)]
-    pub fn cpr(&self) -> CPR_R {
-        CPR_R::new(((self.bits >> 8) & 0x0f) as u8)
-    }
-    #[doc = "Bits 12:15 - Comparison x Period Counter"]
-    #[inline(always)]
-    pub fn cprcnt(&self) -> CPRCNT_R {
-        CPRCNT_R::new(((self.bits >> 12) & 0x0f) as u8)
-    }
-    #[doc = "Bits 16:19 - Comparison x Update Period"]
-    #[inline(always)]
-    pub fn cupr(&self) -> CUPR_R {
-        CUPR_R::new(((self.bits >> 16) & 0x0f) as u8)
-    }
-    #[doc = "Bits 20:23 - Comparison x Update Period Counter"]
-    #[inline(always)]
-    pub fn cuprcnt(&self) -> CUPRCNT_R {
-        CUPRCNT_R::new(((self.bits >> 20) & 0x0f) as u8)
-    }
+  #[doc = "Bit 0 - Comparison x Enable"]
+  #[inline(always)]
+  pub fn cen(&self) -> CenR {
+    CenR::new((self.bits & 1) != 0)
+  }
+  #[doc = "Bits 4:7 - Comparison x Trigger"]
+  #[inline(always)]
+  pub fn ctr(&self) -> CtrR {
+    CtrR::new(((self.bits >> 4) & 0x0f) as u8)
+  }
+  #[doc = "Bits 8:11 - Comparison x Period"]
+  #[inline(always)]
+  pub fn cpr(&self) -> CprR {
+    CprR::new(((self.bits >> 8) & 0x0f) as u8)
+  }
+  #[doc = "Bits 12:15 - Comparison x Period Counter"]
+  #[inline(always)]
+  pub fn cprcnt(&self) -> CprcntR {
+    CprcntR::new(((self.bits >> 12) & 0x0f) as u8)
+  }
+  #[doc = "Bits 16:19 - Comparison x Update Period"]
+  #[inline(always)]
+  pub fn cupr(&self) -> CuprR {
+    CuprR::new(((self.bits >> 16) & 0x0f) as u8)
+  }
+  #[doc = "Bits 20:23 - Comparison x Update Period Counter"]
+  #[inline(always)]
+  pub fn cuprcnt(&self) -> CuprcntR {
+    CuprcntR::new(((self.bits >> 20) & 0x0f) as u8)
+  }
 }
 impl W {
-    #[doc = "Bit 0 - Comparison x Enable"]
-    #[inline(always)]
-    pub fn cen(&mut self) -> CEN_W {
-        CEN_W { w: self }
-    }
-    #[doc = "Bits 4:7 - Comparison x Trigger"]
-    #[inline(always)]
-    pub fn ctr(&mut self) -> CTR_W {
-        CTR_W { w: self }
-    }
-    #[doc = "Bits 8:11 - Comparison x Period"]
-    #[inline(always)]
-    pub fn cpr(&mut self) -> CPR_W {
-        CPR_W { w: self }
-    }
-    #[doc = "Bits 12:15 - Comparison x Period Counter"]
-    #[inline(always)]
-    pub fn cprcnt(&mut self) -> CPRCNT_W {
-        CPRCNT_W { w: self }
-    }
-    #[doc = "Bits 16:19 - Comparison x Update Period"]
-    #[inline(always)]
-    pub fn cupr(&mut self) -> CUPR_W {
-        CUPR_W { w: self }
-    }
-    #[doc = "Bits 20:23 - Comparison x Update Period Counter"]
-    #[inline(always)]
-    pub fn cuprcnt(&mut self) -> CUPRCNT_W {
-        CUPRCNT_W { w: self }
-    }
+  #[doc = "Bit 0 - Comparison x Enable"]
+  #[inline(always)]
+  pub fn cen(&mut self) -> CenW<'_, Cmpm3Spec> {
+    CenW::new(self, 0)
+  }
+  #[doc = "Bits 4:7 - Comparison x Trigger"]
+  #[inline(always)]
+  pub fn ctr(&mut self) -> CtrW<'_, Cmpm3Spec> {
+    CtrW::new(self, 4)
+  }
+  #[doc = "Bits 8:11 - Comparison x Period"]
+  #[inline(always)]
+  pub fn cpr(&mut self) -> CprW<'_, Cmpm3Spec> {
+    CprW::new(self, 8)
+  }
+  #[doc = "Bits 12:15 - Comparison x Period Counter"]
+  #[inline(always)]
+  pub fn cprcnt(&mut self) -> CprcntW<'_, Cmpm3Spec> {
+    CprcntW::new(self, 12)
+  }
+  #[doc = "Bits 16:19 - Comparison x Update Period"]
+  #[inline(always)]
+  pub fn cupr(&mut self) -> CuprW<'_, Cmpm3Spec> {
+    CuprW::new(self, 16)
+  }
+  #[doc = "Bits 20:23 - Comparison x Update Period Counter"]
+  #[inline(always)]
+  pub fn cuprcnt(&mut self) -> CuprcntW<'_, Cmpm3Spec> {
+    CuprcntW::new(self, 20)
+  }
 }
+#[doc = "PWM Comparison 3 Mode Register\n\nYou can [`read`](crate::Reg::read) this register and get [`cmpm3::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cmpm3::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct Cmpm3Spec;
+impl crate::RegisterSpec for Cmpm3Spec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`cmpm3::R`](R) reader structure"]
+impl crate::Readable for Cmpm3Spec {}
+#[doc = "`write(|w| ..)` method takes [`cmpm3::W`](W) writer structure"]
+impl crate::Writable for Cmpm3Spec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets CMPM3 to value 0"]
+impl crate::Resettable for Cmpm3Spec {}

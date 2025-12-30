@@ -1,646 +1,564 @@
-#[doc = r"Register block"]
 #[repr(C)]
+#[doc = "Register block"]
 pub struct RegisterBlock {
-    #[doc = "0x00 - DMAC Global Configuration Register"]
-    pub gcfg: GCFG,
-    #[doc = "0x04 - DMAC Enable Register"]
-    pub en: EN,
-    #[doc = "0x08 - DMAC Software Single Request Register"]
-    pub sreq: SREQ,
-    #[doc = "0x0c - DMAC Software Chunk Transfer Request Register"]
-    pub creq: CREQ,
-    #[doc = "0x10 - DMAC Software Last Transfer Flag Register"]
-    pub last: LAST,
-    _reserved5: [u8; 4usize],
-    #[doc = "0x18 - DMAC Error, Chained Buffer Transfer Completed Interrupt and Buffer Transfer Completed Interrupt Enable register."]
-    pub ebcier: EBCIER,
-    #[doc = "0x1c - DMAC Error, Chained Buffer Transfer Completed Interrupt and Buffer Transfer Completed Interrupt Disable register."]
-    pub ebcidr: EBCIDR,
-    #[doc = "0x20 - DMAC Error, Chained Buffer Transfer Completed Interrupt and Buffer transfer completed Mask Register."]
-    pub ebcimr: EBCIMR,
-    #[doc = "0x24 - DMAC Error, Chained Buffer Transfer Completed Interrupt and Buffer transfer completed Status Register."]
-    pub ebcisr: EBCISR,
-    #[doc = "0x28 - DMAC Channel Handler Enable Register"]
-    pub cher: CHER,
-    #[doc = "0x2c - DMAC Channel Handler Disable Register"]
-    pub chdr: CHDR,
-    #[doc = "0x30 - DMAC Channel Handler Status Register"]
-    pub chsr: CHSR,
-    _reserved12: [u8; 8usize],
-    #[doc = "0x3c - DMAC Channel Source Address Register (ch_num = 0)"]
-    pub saddr0: SADDR0,
-    #[doc = "0x40 - DMAC Channel Destination Address Register (ch_num = 0)"]
-    pub daddr0: DADDR0,
-    #[doc = "0x44 - DMAC Channel Descriptor Address Register (ch_num = 0)"]
-    pub dscr0: DSCR0,
-    #[doc = "0x48 - DMAC Channel Control A Register (ch_num = 0)"]
-    pub ctrla0: CTRLA0,
-    #[doc = "0x4c - DMAC Channel Control B Register (ch_num = 0)"]
-    pub ctrlb0: CTRLB0,
-    #[doc = "0x50 - DMAC Channel Configuration Register (ch_num = 0)"]
-    pub cfg0: CFG0,
-    _reserved18: [u8; 16usize],
-    #[doc = "0x64 - DMAC Channel Source Address Register (ch_num = 1)"]
-    pub saddr1: SADDR1,
-    #[doc = "0x68 - DMAC Channel Destination Address Register (ch_num = 1)"]
-    pub daddr1: DADDR1,
-    #[doc = "0x6c - DMAC Channel Descriptor Address Register (ch_num = 1)"]
-    pub dscr1: DSCR1,
-    #[doc = "0x70 - DMAC Channel Control A Register (ch_num = 1)"]
-    pub ctrla1: CTRLA1,
-    #[doc = "0x74 - DMAC Channel Control B Register (ch_num = 1)"]
-    pub ctrlb1: CTRLB1,
-    #[doc = "0x78 - DMAC Channel Configuration Register (ch_num = 1)"]
-    pub cfg1: CFG1,
-    _reserved24: [u8; 16usize],
-    #[doc = "0x8c - DMAC Channel Source Address Register (ch_num = 2)"]
-    pub saddr2: SADDR2,
-    #[doc = "0x90 - DMAC Channel Destination Address Register (ch_num = 2)"]
-    pub daddr2: DADDR2,
-    #[doc = "0x94 - DMAC Channel Descriptor Address Register (ch_num = 2)"]
-    pub dscr2: DSCR2,
-    #[doc = "0x98 - DMAC Channel Control A Register (ch_num = 2)"]
-    pub ctrla2: CTRLA2,
-    #[doc = "0x9c - DMAC Channel Control B Register (ch_num = 2)"]
-    pub ctrlb2: CTRLB2,
-    #[doc = "0xa0 - DMAC Channel Configuration Register (ch_num = 2)"]
-    pub cfg2: CFG2,
-    _reserved30: [u8; 16usize],
-    #[doc = "0xb4 - DMAC Channel Source Address Register (ch_num = 3)"]
-    pub saddr3: SADDR3,
-    #[doc = "0xb8 - DMAC Channel Destination Address Register (ch_num = 3)"]
-    pub daddr3: DADDR3,
-    #[doc = "0xbc - DMAC Channel Descriptor Address Register (ch_num = 3)"]
-    pub dscr3: DSCR3,
-    #[doc = "0xc0 - DMAC Channel Control A Register (ch_num = 3)"]
-    pub ctrla3: CTRLA3,
-    #[doc = "0xc4 - DMAC Channel Control B Register (ch_num = 3)"]
-    pub ctrlb3: CTRLB3,
-    #[doc = "0xc8 - DMAC Channel Configuration Register (ch_num = 3)"]
-    pub cfg3: CFG3,
-    _reserved36: [u8; 16usize],
-    #[doc = "0xdc - DMAC Channel Source Address Register (ch_num = 4)"]
-    pub saddr4: SADDR4,
-    #[doc = "0xe0 - DMAC Channel Destination Address Register (ch_num = 4)"]
-    pub daddr4: DADDR4,
-    #[doc = "0xe4 - DMAC Channel Descriptor Address Register (ch_num = 4)"]
-    pub dscr4: DSCR4,
-    #[doc = "0xe8 - DMAC Channel Control A Register (ch_num = 4)"]
-    pub ctrla4: CTRLA4,
-    #[doc = "0xec - DMAC Channel Control B Register (ch_num = 4)"]
-    pub ctrlb4: CTRLB4,
-    #[doc = "0xf0 - DMAC Channel Configuration Register (ch_num = 4)"]
-    pub cfg4: CFG4,
-    _reserved42: [u8; 16usize],
-    #[doc = "0x104 - DMAC Channel Source Address Register (ch_num = 5)"]
-    pub saddr5: SADDR5,
-    #[doc = "0x108 - DMAC Channel Destination Address Register (ch_num = 5)"]
-    pub daddr5: DADDR5,
-    #[doc = "0x10c - DMAC Channel Descriptor Address Register (ch_num = 5)"]
-    pub dscr5: DSCR5,
-    #[doc = "0x110 - DMAC Channel Control A Register (ch_num = 5)"]
-    pub ctrla5: CTRLA5,
-    #[doc = "0x114 - DMAC Channel Control B Register (ch_num = 5)"]
-    pub ctrlb5: CTRLB5,
-    #[doc = "0x118 - DMAC Channel Configuration Register (ch_num = 5)"]
-    pub cfg5: CFG5,
-    _reserved48: [u8; 200usize],
-    #[doc = "0x1e4 - DMAC Write Protect Mode Register"]
-    pub wpmr: WPMR,
-    #[doc = "0x1e8 - DMAC Write Protect Status Register"]
-    pub wpsr: WPSR,
+  gcfg: Gcfg,
+  en: En,
+  sreq: Sreq,
+  creq: Creq,
+  last: Last,
+  _reserved5: [u8; 0x04],
+  ebcier: Ebcier,
+  ebcidr: Ebcidr,
+  ebcimr: Ebcimr,
+  ebcisr: Ebcisr,
+  cher: Cher,
+  chdr: Chdr,
+  chsr: Chsr,
+  _reserved12: [u8; 0x08],
+  saddr0: Saddr0,
+  daddr0: Daddr0,
+  dscr0: Dscr0,
+  ctrla0: Ctrla0,
+  ctrlb0: Ctrlb0,
+  cfg0: Cfg0,
+  _reserved18: [u8; 0x10],
+  saddr1: Saddr1,
+  daddr1: Daddr1,
+  dscr1: Dscr1,
+  ctrla1: Ctrla1,
+  ctrlb1: Ctrlb1,
+  cfg1: Cfg1,
+  _reserved24: [u8; 0x10],
+  saddr2: Saddr2,
+  daddr2: Daddr2,
+  dscr2: Dscr2,
+  ctrla2: Ctrla2,
+  ctrlb2: Ctrlb2,
+  cfg2: Cfg2,
+  _reserved30: [u8; 0x10],
+  saddr3: Saddr3,
+  daddr3: Daddr3,
+  dscr3: Dscr3,
+  ctrla3: Ctrla3,
+  ctrlb3: Ctrlb3,
+  cfg3: Cfg3,
+  _reserved36: [u8; 0x10],
+  saddr4: Saddr4,
+  daddr4: Daddr4,
+  dscr4: Dscr4,
+  ctrla4: Ctrla4,
+  ctrlb4: Ctrlb4,
+  cfg4: Cfg4,
+  _reserved42: [u8; 0x10],
+  saddr5: Saddr5,
+  daddr5: Daddr5,
+  dscr5: Dscr5,
+  ctrla5: Ctrla5,
+  ctrlb5: Ctrlb5,
+  cfg5: Cfg5,
+  _reserved48: [u8; 0xc8],
+  wpmr: Wpmr,
+  wpsr: Wpsr,
 }
-#[doc = "DMAC Global Configuration Register\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [gcfg](gcfg) module"]
-pub type GCFG = crate::Reg<u32, _GCFG>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _GCFG;
-#[doc = "`read()` method returns [gcfg::R](gcfg::R) reader structure"]
-impl crate::Readable for GCFG {}
-#[doc = "`write(|w| ..)` method takes [gcfg::W](gcfg::W) writer structure"]
-impl crate::Writable for GCFG {}
+impl RegisterBlock {
+  #[doc = "0x00 - DMAC Global Configuration Register"]
+  #[inline(always)]
+  pub const fn gcfg(&self) -> &Gcfg {
+    &self.gcfg
+  }
+  #[doc = "0x04 - DMAC Enable Register"]
+  #[inline(always)]
+  pub const fn en(&self) -> &En {
+    &self.en
+  }
+  #[doc = "0x08 - DMAC Software Single Request Register"]
+  #[inline(always)]
+  pub const fn sreq(&self) -> &Sreq {
+    &self.sreq
+  }
+  #[doc = "0x0c - DMAC Software Chunk Transfer Request Register"]
+  #[inline(always)]
+  pub const fn creq(&self) -> &Creq {
+    &self.creq
+  }
+  #[doc = "0x10 - DMAC Software Last Transfer Flag Register"]
+  #[inline(always)]
+  pub const fn last(&self) -> &Last {
+    &self.last
+  }
+  #[doc = "0x18 - DMAC Error, Chained Buffer Transfer Completed Interrupt and Buffer Transfer Completed Interrupt Enable register."]
+  #[inline(always)]
+  pub const fn ebcier(&self) -> &Ebcier {
+    &self.ebcier
+  }
+  #[doc = "0x1c - DMAC Error, Chained Buffer Transfer Completed Interrupt and Buffer Transfer Completed Interrupt Disable register."]
+  #[inline(always)]
+  pub const fn ebcidr(&self) -> &Ebcidr {
+    &self.ebcidr
+  }
+  #[doc = "0x20 - DMAC Error, Chained Buffer Transfer Completed Interrupt and Buffer transfer completed Mask Register."]
+  #[inline(always)]
+  pub const fn ebcimr(&self) -> &Ebcimr {
+    &self.ebcimr
+  }
+  #[doc = "0x24 - DMAC Error, Chained Buffer Transfer Completed Interrupt and Buffer transfer completed Status Register."]
+  #[inline(always)]
+  pub const fn ebcisr(&self) -> &Ebcisr {
+    &self.ebcisr
+  }
+  #[doc = "0x28 - DMAC Channel Handler Enable Register"]
+  #[inline(always)]
+  pub const fn cher(&self) -> &Cher {
+    &self.cher
+  }
+  #[doc = "0x2c - DMAC Channel Handler Disable Register"]
+  #[inline(always)]
+  pub const fn chdr(&self) -> &Chdr {
+    &self.chdr
+  }
+  #[doc = "0x30 - DMAC Channel Handler Status Register"]
+  #[inline(always)]
+  pub const fn chsr(&self) -> &Chsr {
+    &self.chsr
+  }
+  #[doc = "0x3c - DMAC Channel Source Address Register (ch_num = 0)"]
+  #[inline(always)]
+  pub const fn saddr0(&self) -> &Saddr0 {
+    &self.saddr0
+  }
+  #[doc = "0x40 - DMAC Channel Destination Address Register (ch_num = 0)"]
+  #[inline(always)]
+  pub const fn daddr0(&self) -> &Daddr0 {
+    &self.daddr0
+  }
+  #[doc = "0x44 - DMAC Channel Descriptor Address Register (ch_num = 0)"]
+  #[inline(always)]
+  pub const fn dscr0(&self) -> &Dscr0 {
+    &self.dscr0
+  }
+  #[doc = "0x48 - DMAC Channel Control A Register (ch_num = 0)"]
+  #[inline(always)]
+  pub const fn ctrla0(&self) -> &Ctrla0 {
+    &self.ctrla0
+  }
+  #[doc = "0x4c - DMAC Channel Control B Register (ch_num = 0)"]
+  #[inline(always)]
+  pub const fn ctrlb0(&self) -> &Ctrlb0 {
+    &self.ctrlb0
+  }
+  #[doc = "0x50 - DMAC Channel Configuration Register (ch_num = 0)"]
+  #[inline(always)]
+  pub const fn cfg0(&self) -> &Cfg0 {
+    &self.cfg0
+  }
+  #[doc = "0x64 - DMAC Channel Source Address Register (ch_num = 1)"]
+  #[inline(always)]
+  pub const fn saddr1(&self) -> &Saddr1 {
+    &self.saddr1
+  }
+  #[doc = "0x68 - DMAC Channel Destination Address Register (ch_num = 1)"]
+  #[inline(always)]
+  pub const fn daddr1(&self) -> &Daddr1 {
+    &self.daddr1
+  }
+  #[doc = "0x6c - DMAC Channel Descriptor Address Register (ch_num = 1)"]
+  #[inline(always)]
+  pub const fn dscr1(&self) -> &Dscr1 {
+    &self.dscr1
+  }
+  #[doc = "0x70 - DMAC Channel Control A Register (ch_num = 1)"]
+  #[inline(always)]
+  pub const fn ctrla1(&self) -> &Ctrla1 {
+    &self.ctrla1
+  }
+  #[doc = "0x74 - DMAC Channel Control B Register (ch_num = 1)"]
+  #[inline(always)]
+  pub const fn ctrlb1(&self) -> &Ctrlb1 {
+    &self.ctrlb1
+  }
+  #[doc = "0x78 - DMAC Channel Configuration Register (ch_num = 1)"]
+  #[inline(always)]
+  pub const fn cfg1(&self) -> &Cfg1 {
+    &self.cfg1
+  }
+  #[doc = "0x8c - DMAC Channel Source Address Register (ch_num = 2)"]
+  #[inline(always)]
+  pub const fn saddr2(&self) -> &Saddr2 {
+    &self.saddr2
+  }
+  #[doc = "0x90 - DMAC Channel Destination Address Register (ch_num = 2)"]
+  #[inline(always)]
+  pub const fn daddr2(&self) -> &Daddr2 {
+    &self.daddr2
+  }
+  #[doc = "0x94 - DMAC Channel Descriptor Address Register (ch_num = 2)"]
+  #[inline(always)]
+  pub const fn dscr2(&self) -> &Dscr2 {
+    &self.dscr2
+  }
+  #[doc = "0x98 - DMAC Channel Control A Register (ch_num = 2)"]
+  #[inline(always)]
+  pub const fn ctrla2(&self) -> &Ctrla2 {
+    &self.ctrla2
+  }
+  #[doc = "0x9c - DMAC Channel Control B Register (ch_num = 2)"]
+  #[inline(always)]
+  pub const fn ctrlb2(&self) -> &Ctrlb2 {
+    &self.ctrlb2
+  }
+  #[doc = "0xa0 - DMAC Channel Configuration Register (ch_num = 2)"]
+  #[inline(always)]
+  pub const fn cfg2(&self) -> &Cfg2 {
+    &self.cfg2
+  }
+  #[doc = "0xb4 - DMAC Channel Source Address Register (ch_num = 3)"]
+  #[inline(always)]
+  pub const fn saddr3(&self) -> &Saddr3 {
+    &self.saddr3
+  }
+  #[doc = "0xb8 - DMAC Channel Destination Address Register (ch_num = 3)"]
+  #[inline(always)]
+  pub const fn daddr3(&self) -> &Daddr3 {
+    &self.daddr3
+  }
+  #[doc = "0xbc - DMAC Channel Descriptor Address Register (ch_num = 3)"]
+  #[inline(always)]
+  pub const fn dscr3(&self) -> &Dscr3 {
+    &self.dscr3
+  }
+  #[doc = "0xc0 - DMAC Channel Control A Register (ch_num = 3)"]
+  #[inline(always)]
+  pub const fn ctrla3(&self) -> &Ctrla3 {
+    &self.ctrla3
+  }
+  #[doc = "0xc4 - DMAC Channel Control B Register (ch_num = 3)"]
+  #[inline(always)]
+  pub const fn ctrlb3(&self) -> &Ctrlb3 {
+    &self.ctrlb3
+  }
+  #[doc = "0xc8 - DMAC Channel Configuration Register (ch_num = 3)"]
+  #[inline(always)]
+  pub const fn cfg3(&self) -> &Cfg3 {
+    &self.cfg3
+  }
+  #[doc = "0xdc - DMAC Channel Source Address Register (ch_num = 4)"]
+  #[inline(always)]
+  pub const fn saddr4(&self) -> &Saddr4 {
+    &self.saddr4
+  }
+  #[doc = "0xe0 - DMAC Channel Destination Address Register (ch_num = 4)"]
+  #[inline(always)]
+  pub const fn daddr4(&self) -> &Daddr4 {
+    &self.daddr4
+  }
+  #[doc = "0xe4 - DMAC Channel Descriptor Address Register (ch_num = 4)"]
+  #[inline(always)]
+  pub const fn dscr4(&self) -> &Dscr4 {
+    &self.dscr4
+  }
+  #[doc = "0xe8 - DMAC Channel Control A Register (ch_num = 4)"]
+  #[inline(always)]
+  pub const fn ctrla4(&self) -> &Ctrla4 {
+    &self.ctrla4
+  }
+  #[doc = "0xec - DMAC Channel Control B Register (ch_num = 4)"]
+  #[inline(always)]
+  pub const fn ctrlb4(&self) -> &Ctrlb4 {
+    &self.ctrlb4
+  }
+  #[doc = "0xf0 - DMAC Channel Configuration Register (ch_num = 4)"]
+  #[inline(always)]
+  pub const fn cfg4(&self) -> &Cfg4 {
+    &self.cfg4
+  }
+  #[doc = "0x104 - DMAC Channel Source Address Register (ch_num = 5)"]
+  #[inline(always)]
+  pub const fn saddr5(&self) -> &Saddr5 {
+    &self.saddr5
+  }
+  #[doc = "0x108 - DMAC Channel Destination Address Register (ch_num = 5)"]
+  #[inline(always)]
+  pub const fn daddr5(&self) -> &Daddr5 {
+    &self.daddr5
+  }
+  #[doc = "0x10c - DMAC Channel Descriptor Address Register (ch_num = 5)"]
+  #[inline(always)]
+  pub const fn dscr5(&self) -> &Dscr5 {
+    &self.dscr5
+  }
+  #[doc = "0x110 - DMAC Channel Control A Register (ch_num = 5)"]
+  #[inline(always)]
+  pub const fn ctrla5(&self) -> &Ctrla5 {
+    &self.ctrla5
+  }
+  #[doc = "0x114 - DMAC Channel Control B Register (ch_num = 5)"]
+  #[inline(always)]
+  pub const fn ctrlb5(&self) -> &Ctrlb5 {
+    &self.ctrlb5
+  }
+  #[doc = "0x118 - DMAC Channel Configuration Register (ch_num = 5)"]
+  #[inline(always)]
+  pub const fn cfg5(&self) -> &Cfg5 {
+    &self.cfg5
+  }
+  #[doc = "0x1e4 - DMAC Write Protect Mode Register"]
+  #[inline(always)]
+  pub const fn wpmr(&self) -> &Wpmr {
+    &self.wpmr
+  }
+  #[doc = "0x1e8 - DMAC Write Protect Status Register"]
+  #[inline(always)]
+  pub const fn wpsr(&self) -> &Wpsr {
+    &self.wpsr
+  }
+}
+#[doc = "GCFG (rw) register accessor: DMAC Global Configuration Register\n\nYou can [`read`](crate::Reg::read) this register and get [`gcfg::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`gcfg::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@gcfg`] module"]
+#[doc(alias = "GCFG")]
+pub type Gcfg = crate::Reg<gcfg::GcfgSpec>;
 #[doc = "DMAC Global Configuration Register"]
 pub mod gcfg;
-#[doc = "DMAC Enable Register\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [en](en) module"]
-pub type EN = crate::Reg<u32, _EN>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _EN;
-#[doc = "`read()` method returns [en::R](en::R) reader structure"]
-impl crate::Readable for EN {}
-#[doc = "`write(|w| ..)` method takes [en::W](en::W) writer structure"]
-impl crate::Writable for EN {}
+#[doc = "EN (rw) register accessor: DMAC Enable Register\n\nYou can [`read`](crate::Reg::read) this register and get [`en::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`en::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@en`] module"]
+#[doc(alias = "EN")]
+pub type En = crate::Reg<en::EnSpec>;
 #[doc = "DMAC Enable Register"]
 pub mod en;
-#[doc = "DMAC Software Single Request Register\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [sreq](sreq) module"]
-pub type SREQ = crate::Reg<u32, _SREQ>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _SREQ;
-#[doc = "`read()` method returns [sreq::R](sreq::R) reader structure"]
-impl crate::Readable for SREQ {}
-#[doc = "`write(|w| ..)` method takes [sreq::W](sreq::W) writer structure"]
-impl crate::Writable for SREQ {}
+#[doc = "SREQ (rw) register accessor: DMAC Software Single Request Register\n\nYou can [`read`](crate::Reg::read) this register and get [`sreq::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`sreq::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@sreq`] module"]
+#[doc(alias = "SREQ")]
+pub type Sreq = crate::Reg<sreq::SreqSpec>;
 #[doc = "DMAC Software Single Request Register"]
 pub mod sreq;
-#[doc = "DMAC Software Chunk Transfer Request Register\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [creq](creq) module"]
-pub type CREQ = crate::Reg<u32, _CREQ>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _CREQ;
-#[doc = "`read()` method returns [creq::R](creq::R) reader structure"]
-impl crate::Readable for CREQ {}
-#[doc = "`write(|w| ..)` method takes [creq::W](creq::W) writer structure"]
-impl crate::Writable for CREQ {}
+#[doc = "CREQ (rw) register accessor: DMAC Software Chunk Transfer Request Register\n\nYou can [`read`](crate::Reg::read) this register and get [`creq::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`creq::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@creq`] module"]
+#[doc(alias = "CREQ")]
+pub type Creq = crate::Reg<creq::CreqSpec>;
 #[doc = "DMAC Software Chunk Transfer Request Register"]
 pub mod creq;
-#[doc = "DMAC Software Last Transfer Flag Register\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [last](last) module"]
-pub type LAST = crate::Reg<u32, _LAST>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _LAST;
-#[doc = "`read()` method returns [last::R](last::R) reader structure"]
-impl crate::Readable for LAST {}
-#[doc = "`write(|w| ..)` method takes [last::W](last::W) writer structure"]
-impl crate::Writable for LAST {}
+#[doc = "LAST (rw) register accessor: DMAC Software Last Transfer Flag Register\n\nYou can [`read`](crate::Reg::read) this register and get [`last::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`last::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@last`] module"]
+#[doc(alias = "LAST")]
+pub type Last = crate::Reg<last::LastSpec>;
 #[doc = "DMAC Software Last Transfer Flag Register"]
 pub mod last;
-#[doc = "DMAC Error, Chained Buffer Transfer Completed Interrupt and Buffer Transfer Completed Interrupt Enable register.\n\nThis register you can [`write_with_zero`](crate::generic::Reg::write_with_zero). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [ebcier](ebcier) module"]
-pub type EBCIER = crate::Reg<u32, _EBCIER>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _EBCIER;
-#[doc = "`write(|w| ..)` method takes [ebcier::W](ebcier::W) writer structure"]
-impl crate::Writable for EBCIER {}
+#[doc = "EBCIER (w) register accessor: DMAC Error, Chained Buffer Transfer Completed Interrupt and Buffer Transfer Completed Interrupt Enable register.\n\nYou can [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ebcier::W`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ebcier`] module"]
+#[doc(alias = "EBCIER")]
+pub type Ebcier = crate::Reg<ebcier::EbcierSpec>;
 #[doc = "DMAC Error, Chained Buffer Transfer Completed Interrupt and Buffer Transfer Completed Interrupt Enable register."]
 pub mod ebcier;
-#[doc = "DMAC Error, Chained Buffer Transfer Completed Interrupt and Buffer Transfer Completed Interrupt Disable register.\n\nThis register you can [`write_with_zero`](crate::generic::Reg::write_with_zero). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [ebcidr](ebcidr) module"]
-pub type EBCIDR = crate::Reg<u32, _EBCIDR>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _EBCIDR;
-#[doc = "`write(|w| ..)` method takes [ebcidr::W](ebcidr::W) writer structure"]
-impl crate::Writable for EBCIDR {}
+#[doc = "EBCIDR (w) register accessor: DMAC Error, Chained Buffer Transfer Completed Interrupt and Buffer Transfer Completed Interrupt Disable register.\n\nYou can [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ebcidr::W`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ebcidr`] module"]
+#[doc(alias = "EBCIDR")]
+pub type Ebcidr = crate::Reg<ebcidr::EbcidrSpec>;
 #[doc = "DMAC Error, Chained Buffer Transfer Completed Interrupt and Buffer Transfer Completed Interrupt Disable register."]
 pub mod ebcidr;
-#[doc = "DMAC Error, Chained Buffer Transfer Completed Interrupt and Buffer transfer completed Mask Register.\n\nThis register you can [`read`](crate::generic::Reg::read). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [ebcimr](ebcimr) module"]
-pub type EBCIMR = crate::Reg<u32, _EBCIMR>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _EBCIMR;
-#[doc = "`read()` method returns [ebcimr::R](ebcimr::R) reader structure"]
-impl crate::Readable for EBCIMR {}
+#[doc = "EBCIMR (r) register accessor: DMAC Error, Chained Buffer Transfer Completed Interrupt and Buffer transfer completed Mask Register.\n\nYou can [`read`](crate::Reg::read) this register and get [`ebcimr::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ebcimr`] module"]
+#[doc(alias = "EBCIMR")]
+pub type Ebcimr = crate::Reg<ebcimr::EbcimrSpec>;
 #[doc = "DMAC Error, Chained Buffer Transfer Completed Interrupt and Buffer transfer completed Mask Register."]
 pub mod ebcimr;
-#[doc = "DMAC Error, Chained Buffer Transfer Completed Interrupt and Buffer transfer completed Status Register.\n\nThis register you can [`read`](crate::generic::Reg::read). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [ebcisr](ebcisr) module"]
-pub type EBCISR = crate::Reg<u32, _EBCISR>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _EBCISR;
-#[doc = "`read()` method returns [ebcisr::R](ebcisr::R) reader structure"]
-impl crate::Readable for EBCISR {}
+#[doc = "EBCISR (r) register accessor: DMAC Error, Chained Buffer Transfer Completed Interrupt and Buffer transfer completed Status Register.\n\nYou can [`read`](crate::Reg::read) this register and get [`ebcisr::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ebcisr`] module"]
+#[doc(alias = "EBCISR")]
+pub type Ebcisr = crate::Reg<ebcisr::EbcisrSpec>;
 #[doc = "DMAC Error, Chained Buffer Transfer Completed Interrupt and Buffer transfer completed Status Register."]
 pub mod ebcisr;
-#[doc = "DMAC Channel Handler Enable Register\n\nThis register you can [`write_with_zero`](crate::generic::Reg::write_with_zero). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [cher](cher) module"]
-pub type CHER = crate::Reg<u32, _CHER>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _CHER;
-#[doc = "`write(|w| ..)` method takes [cher::W](cher::W) writer structure"]
-impl crate::Writable for CHER {}
+#[doc = "CHER (w) register accessor: DMAC Channel Handler Enable Register\n\nYou can [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cher::W`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cher`] module"]
+#[doc(alias = "CHER")]
+pub type Cher = crate::Reg<cher::CherSpec>;
 #[doc = "DMAC Channel Handler Enable Register"]
 pub mod cher;
-#[doc = "DMAC Channel Handler Disable Register\n\nThis register you can [`write_with_zero`](crate::generic::Reg::write_with_zero). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [chdr](chdr) module"]
-pub type CHDR = crate::Reg<u32, _CHDR>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _CHDR;
-#[doc = "`write(|w| ..)` method takes [chdr::W](chdr::W) writer structure"]
-impl crate::Writable for CHDR {}
+#[doc = "CHDR (w) register accessor: DMAC Channel Handler Disable Register\n\nYou can [`write_with_zero`](crate::Reg::write_with_zero) this register using [`chdr::W`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@chdr`] module"]
+#[doc(alias = "CHDR")]
+pub type Chdr = crate::Reg<chdr::ChdrSpec>;
 #[doc = "DMAC Channel Handler Disable Register"]
 pub mod chdr;
-#[doc = "DMAC Channel Handler Status Register\n\nThis register you can [`read`](crate::generic::Reg::read). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [chsr](chsr) module"]
-pub type CHSR = crate::Reg<u32, _CHSR>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _CHSR;
-#[doc = "`read()` method returns [chsr::R](chsr::R) reader structure"]
-impl crate::Readable for CHSR {}
+#[doc = "CHSR (r) register accessor: DMAC Channel Handler Status Register\n\nYou can [`read`](crate::Reg::read) this register and get [`chsr::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@chsr`] module"]
+#[doc(alias = "CHSR")]
+pub type Chsr = crate::Reg<chsr::ChsrSpec>;
 #[doc = "DMAC Channel Handler Status Register"]
 pub mod chsr;
-#[doc = "DMAC Channel Source Address Register (ch_num = 0)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [saddr0](saddr0) module"]
-pub type SADDR0 = crate::Reg<u32, _SADDR0>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _SADDR0;
-#[doc = "`read()` method returns [saddr0::R](saddr0::R) reader structure"]
-impl crate::Readable for SADDR0 {}
-#[doc = "`write(|w| ..)` method takes [saddr0::W](saddr0::W) writer structure"]
-impl crate::Writable for SADDR0 {}
+#[doc = "SADDR0 (rw) register accessor: DMAC Channel Source Address Register (ch_num = 0)\n\nYou can [`read`](crate::Reg::read) this register and get [`saddr0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`saddr0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@saddr0`] module"]
+#[doc(alias = "SADDR0")]
+pub type Saddr0 = crate::Reg<saddr0::Saddr0Spec>;
 #[doc = "DMAC Channel Source Address Register (ch_num = 0)"]
 pub mod saddr0;
-#[doc = "DMAC Channel Destination Address Register (ch_num = 0)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [daddr0](daddr0) module"]
-pub type DADDR0 = crate::Reg<u32, _DADDR0>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _DADDR0;
-#[doc = "`read()` method returns [daddr0::R](daddr0::R) reader structure"]
-impl crate::Readable for DADDR0 {}
-#[doc = "`write(|w| ..)` method takes [daddr0::W](daddr0::W) writer structure"]
-impl crate::Writable for DADDR0 {}
+#[doc = "DADDR0 (rw) register accessor: DMAC Channel Destination Address Register (ch_num = 0)\n\nYou can [`read`](crate::Reg::read) this register and get [`daddr0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`daddr0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@daddr0`] module"]
+#[doc(alias = "DADDR0")]
+pub type Daddr0 = crate::Reg<daddr0::Daddr0Spec>;
 #[doc = "DMAC Channel Destination Address Register (ch_num = 0)"]
 pub mod daddr0;
-#[doc = "DMAC Channel Descriptor Address Register (ch_num = 0)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [dscr0](dscr0) module"]
-pub type DSCR0 = crate::Reg<u32, _DSCR0>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _DSCR0;
-#[doc = "`read()` method returns [dscr0::R](dscr0::R) reader structure"]
-impl crate::Readable for DSCR0 {}
-#[doc = "`write(|w| ..)` method takes [dscr0::W](dscr0::W) writer structure"]
-impl crate::Writable for DSCR0 {}
+#[doc = "DSCR0 (rw) register accessor: DMAC Channel Descriptor Address Register (ch_num = 0)\n\nYou can [`read`](crate::Reg::read) this register and get [`dscr0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dscr0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dscr0`] module"]
+#[doc(alias = "DSCR0")]
+pub type Dscr0 = crate::Reg<dscr0::Dscr0Spec>;
 #[doc = "DMAC Channel Descriptor Address Register (ch_num = 0)"]
 pub mod dscr0;
-#[doc = "DMAC Channel Control A Register (ch_num = 0)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [ctrla0](ctrla0) module"]
-pub type CTRLA0 = crate::Reg<u32, _CTRLA0>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _CTRLA0;
-#[doc = "`read()` method returns [ctrla0::R](ctrla0::R) reader structure"]
-impl crate::Readable for CTRLA0 {}
-#[doc = "`write(|w| ..)` method takes [ctrla0::W](ctrla0::W) writer structure"]
-impl crate::Writable for CTRLA0 {}
+#[doc = "CTRLA0 (rw) register accessor: DMAC Channel Control A Register (ch_num = 0)\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrla0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrla0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ctrla0`] module"]
+#[doc(alias = "CTRLA0")]
+pub type Ctrla0 = crate::Reg<ctrla0::Ctrla0Spec>;
 #[doc = "DMAC Channel Control A Register (ch_num = 0)"]
 pub mod ctrla0;
-#[doc = "DMAC Channel Control B Register (ch_num = 0)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [ctrlb0](ctrlb0) module"]
-pub type CTRLB0 = crate::Reg<u32, _CTRLB0>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _CTRLB0;
-#[doc = "`read()` method returns [ctrlb0::R](ctrlb0::R) reader structure"]
-impl crate::Readable for CTRLB0 {}
-#[doc = "`write(|w| ..)` method takes [ctrlb0::W](ctrlb0::W) writer structure"]
-impl crate::Writable for CTRLB0 {}
+#[doc = "CTRLB0 (rw) register accessor: DMAC Channel Control B Register (ch_num = 0)\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrlb0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrlb0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ctrlb0`] module"]
+#[doc(alias = "CTRLB0")]
+pub type Ctrlb0 = crate::Reg<ctrlb0::Ctrlb0Spec>;
 #[doc = "DMAC Channel Control B Register (ch_num = 0)"]
 pub mod ctrlb0;
-#[doc = "DMAC Channel Configuration Register (ch_num = 0)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [cfg0](cfg0) module"]
-pub type CFG0 = crate::Reg<u32, _CFG0>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _CFG0;
-#[doc = "`read()` method returns [cfg0::R](cfg0::R) reader structure"]
-impl crate::Readable for CFG0 {}
-#[doc = "`write(|w| ..)` method takes [cfg0::W](cfg0::W) writer structure"]
-impl crate::Writable for CFG0 {}
+#[doc = "CFG0 (rw) register accessor: DMAC Channel Configuration Register (ch_num = 0)\n\nYou can [`read`](crate::Reg::read) this register and get [`cfg0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cfg0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cfg0`] module"]
+#[doc(alias = "CFG0")]
+pub type Cfg0 = crate::Reg<cfg0::Cfg0Spec>;
 #[doc = "DMAC Channel Configuration Register (ch_num = 0)"]
 pub mod cfg0;
-#[doc = "DMAC Channel Source Address Register (ch_num = 1)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [saddr1](saddr1) module"]
-pub type SADDR1 = crate::Reg<u32, _SADDR1>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _SADDR1;
-#[doc = "`read()` method returns [saddr1::R](saddr1::R) reader structure"]
-impl crate::Readable for SADDR1 {}
-#[doc = "`write(|w| ..)` method takes [saddr1::W](saddr1::W) writer structure"]
-impl crate::Writable for SADDR1 {}
+#[doc = "SADDR1 (rw) register accessor: DMAC Channel Source Address Register (ch_num = 1)\n\nYou can [`read`](crate::Reg::read) this register and get [`saddr1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`saddr1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@saddr1`] module"]
+#[doc(alias = "SADDR1")]
+pub type Saddr1 = crate::Reg<saddr1::Saddr1Spec>;
 #[doc = "DMAC Channel Source Address Register (ch_num = 1)"]
 pub mod saddr1;
-#[doc = "DMAC Channel Destination Address Register (ch_num = 1)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [daddr1](daddr1) module"]
-pub type DADDR1 = crate::Reg<u32, _DADDR1>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _DADDR1;
-#[doc = "`read()` method returns [daddr1::R](daddr1::R) reader structure"]
-impl crate::Readable for DADDR1 {}
-#[doc = "`write(|w| ..)` method takes [daddr1::W](daddr1::W) writer structure"]
-impl crate::Writable for DADDR1 {}
+#[doc = "DADDR1 (rw) register accessor: DMAC Channel Destination Address Register (ch_num = 1)\n\nYou can [`read`](crate::Reg::read) this register and get [`daddr1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`daddr1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@daddr1`] module"]
+#[doc(alias = "DADDR1")]
+pub type Daddr1 = crate::Reg<daddr1::Daddr1Spec>;
 #[doc = "DMAC Channel Destination Address Register (ch_num = 1)"]
 pub mod daddr1;
-#[doc = "DMAC Channel Descriptor Address Register (ch_num = 1)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [dscr1](dscr1) module"]
-pub type DSCR1 = crate::Reg<u32, _DSCR1>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _DSCR1;
-#[doc = "`read()` method returns [dscr1::R](dscr1::R) reader structure"]
-impl crate::Readable for DSCR1 {}
-#[doc = "`write(|w| ..)` method takes [dscr1::W](dscr1::W) writer structure"]
-impl crate::Writable for DSCR1 {}
+#[doc = "DSCR1 (rw) register accessor: DMAC Channel Descriptor Address Register (ch_num = 1)\n\nYou can [`read`](crate::Reg::read) this register and get [`dscr1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dscr1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dscr1`] module"]
+#[doc(alias = "DSCR1")]
+pub type Dscr1 = crate::Reg<dscr1::Dscr1Spec>;
 #[doc = "DMAC Channel Descriptor Address Register (ch_num = 1)"]
 pub mod dscr1;
-#[doc = "DMAC Channel Control A Register (ch_num = 1)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [ctrla1](ctrla1) module"]
-pub type CTRLA1 = crate::Reg<u32, _CTRLA1>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _CTRLA1;
-#[doc = "`read()` method returns [ctrla1::R](ctrla1::R) reader structure"]
-impl crate::Readable for CTRLA1 {}
-#[doc = "`write(|w| ..)` method takes [ctrla1::W](ctrla1::W) writer structure"]
-impl crate::Writable for CTRLA1 {}
+#[doc = "CTRLA1 (rw) register accessor: DMAC Channel Control A Register (ch_num = 1)\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrla1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrla1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ctrla1`] module"]
+#[doc(alias = "CTRLA1")]
+pub type Ctrla1 = crate::Reg<ctrla1::Ctrla1Spec>;
 #[doc = "DMAC Channel Control A Register (ch_num = 1)"]
 pub mod ctrla1;
-#[doc = "DMAC Channel Control B Register (ch_num = 1)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [ctrlb1](ctrlb1) module"]
-pub type CTRLB1 = crate::Reg<u32, _CTRLB1>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _CTRLB1;
-#[doc = "`read()` method returns [ctrlb1::R](ctrlb1::R) reader structure"]
-impl crate::Readable for CTRLB1 {}
-#[doc = "`write(|w| ..)` method takes [ctrlb1::W](ctrlb1::W) writer structure"]
-impl crate::Writable for CTRLB1 {}
+#[doc = "CTRLB1 (rw) register accessor: DMAC Channel Control B Register (ch_num = 1)\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrlb1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrlb1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ctrlb1`] module"]
+#[doc(alias = "CTRLB1")]
+pub type Ctrlb1 = crate::Reg<ctrlb1::Ctrlb1Spec>;
 #[doc = "DMAC Channel Control B Register (ch_num = 1)"]
 pub mod ctrlb1;
-#[doc = "DMAC Channel Configuration Register (ch_num = 1)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [cfg1](cfg1) module"]
-pub type CFG1 = crate::Reg<u32, _CFG1>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _CFG1;
-#[doc = "`read()` method returns [cfg1::R](cfg1::R) reader structure"]
-impl crate::Readable for CFG1 {}
-#[doc = "`write(|w| ..)` method takes [cfg1::W](cfg1::W) writer structure"]
-impl crate::Writable for CFG1 {}
+#[doc = "CFG1 (rw) register accessor: DMAC Channel Configuration Register (ch_num = 1)\n\nYou can [`read`](crate::Reg::read) this register and get [`cfg1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cfg1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cfg1`] module"]
+#[doc(alias = "CFG1")]
+pub type Cfg1 = crate::Reg<cfg1::Cfg1Spec>;
 #[doc = "DMAC Channel Configuration Register (ch_num = 1)"]
 pub mod cfg1;
-#[doc = "DMAC Channel Source Address Register (ch_num = 2)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [saddr2](saddr2) module"]
-pub type SADDR2 = crate::Reg<u32, _SADDR2>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _SADDR2;
-#[doc = "`read()` method returns [saddr2::R](saddr2::R) reader structure"]
-impl crate::Readable for SADDR2 {}
-#[doc = "`write(|w| ..)` method takes [saddr2::W](saddr2::W) writer structure"]
-impl crate::Writable for SADDR2 {}
+#[doc = "SADDR2 (rw) register accessor: DMAC Channel Source Address Register (ch_num = 2)\n\nYou can [`read`](crate::Reg::read) this register and get [`saddr2::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`saddr2::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@saddr2`] module"]
+#[doc(alias = "SADDR2")]
+pub type Saddr2 = crate::Reg<saddr2::Saddr2Spec>;
 #[doc = "DMAC Channel Source Address Register (ch_num = 2)"]
 pub mod saddr2;
-#[doc = "DMAC Channel Destination Address Register (ch_num = 2)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [daddr2](daddr2) module"]
-pub type DADDR2 = crate::Reg<u32, _DADDR2>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _DADDR2;
-#[doc = "`read()` method returns [daddr2::R](daddr2::R) reader structure"]
-impl crate::Readable for DADDR2 {}
-#[doc = "`write(|w| ..)` method takes [daddr2::W](daddr2::W) writer structure"]
-impl crate::Writable for DADDR2 {}
+#[doc = "DADDR2 (rw) register accessor: DMAC Channel Destination Address Register (ch_num = 2)\n\nYou can [`read`](crate::Reg::read) this register and get [`daddr2::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`daddr2::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@daddr2`] module"]
+#[doc(alias = "DADDR2")]
+pub type Daddr2 = crate::Reg<daddr2::Daddr2Spec>;
 #[doc = "DMAC Channel Destination Address Register (ch_num = 2)"]
 pub mod daddr2;
-#[doc = "DMAC Channel Descriptor Address Register (ch_num = 2)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [dscr2](dscr2) module"]
-pub type DSCR2 = crate::Reg<u32, _DSCR2>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _DSCR2;
-#[doc = "`read()` method returns [dscr2::R](dscr2::R) reader structure"]
-impl crate::Readable for DSCR2 {}
-#[doc = "`write(|w| ..)` method takes [dscr2::W](dscr2::W) writer structure"]
-impl crate::Writable for DSCR2 {}
+#[doc = "DSCR2 (rw) register accessor: DMAC Channel Descriptor Address Register (ch_num = 2)\n\nYou can [`read`](crate::Reg::read) this register and get [`dscr2::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dscr2::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dscr2`] module"]
+#[doc(alias = "DSCR2")]
+pub type Dscr2 = crate::Reg<dscr2::Dscr2Spec>;
 #[doc = "DMAC Channel Descriptor Address Register (ch_num = 2)"]
 pub mod dscr2;
-#[doc = "DMAC Channel Control A Register (ch_num = 2)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [ctrla2](ctrla2) module"]
-pub type CTRLA2 = crate::Reg<u32, _CTRLA2>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _CTRLA2;
-#[doc = "`read()` method returns [ctrla2::R](ctrla2::R) reader structure"]
-impl crate::Readable for CTRLA2 {}
-#[doc = "`write(|w| ..)` method takes [ctrla2::W](ctrla2::W) writer structure"]
-impl crate::Writable for CTRLA2 {}
+#[doc = "CTRLA2 (rw) register accessor: DMAC Channel Control A Register (ch_num = 2)\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrla2::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrla2::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ctrla2`] module"]
+#[doc(alias = "CTRLA2")]
+pub type Ctrla2 = crate::Reg<ctrla2::Ctrla2Spec>;
 #[doc = "DMAC Channel Control A Register (ch_num = 2)"]
 pub mod ctrla2;
-#[doc = "DMAC Channel Control B Register (ch_num = 2)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [ctrlb2](ctrlb2) module"]
-pub type CTRLB2 = crate::Reg<u32, _CTRLB2>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _CTRLB2;
-#[doc = "`read()` method returns [ctrlb2::R](ctrlb2::R) reader structure"]
-impl crate::Readable for CTRLB2 {}
-#[doc = "`write(|w| ..)` method takes [ctrlb2::W](ctrlb2::W) writer structure"]
-impl crate::Writable for CTRLB2 {}
+#[doc = "CTRLB2 (rw) register accessor: DMAC Channel Control B Register (ch_num = 2)\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrlb2::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrlb2::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ctrlb2`] module"]
+#[doc(alias = "CTRLB2")]
+pub type Ctrlb2 = crate::Reg<ctrlb2::Ctrlb2Spec>;
 #[doc = "DMAC Channel Control B Register (ch_num = 2)"]
 pub mod ctrlb2;
-#[doc = "DMAC Channel Configuration Register (ch_num = 2)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [cfg2](cfg2) module"]
-pub type CFG2 = crate::Reg<u32, _CFG2>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _CFG2;
-#[doc = "`read()` method returns [cfg2::R](cfg2::R) reader structure"]
-impl crate::Readable for CFG2 {}
-#[doc = "`write(|w| ..)` method takes [cfg2::W](cfg2::W) writer structure"]
-impl crate::Writable for CFG2 {}
+#[doc = "CFG2 (rw) register accessor: DMAC Channel Configuration Register (ch_num = 2)\n\nYou can [`read`](crate::Reg::read) this register and get [`cfg2::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cfg2::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cfg2`] module"]
+#[doc(alias = "CFG2")]
+pub type Cfg2 = crate::Reg<cfg2::Cfg2Spec>;
 #[doc = "DMAC Channel Configuration Register (ch_num = 2)"]
 pub mod cfg2;
-#[doc = "DMAC Channel Source Address Register (ch_num = 3)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [saddr3](saddr3) module"]
-pub type SADDR3 = crate::Reg<u32, _SADDR3>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _SADDR3;
-#[doc = "`read()` method returns [saddr3::R](saddr3::R) reader structure"]
-impl crate::Readable for SADDR3 {}
-#[doc = "`write(|w| ..)` method takes [saddr3::W](saddr3::W) writer structure"]
-impl crate::Writable for SADDR3 {}
+#[doc = "SADDR3 (rw) register accessor: DMAC Channel Source Address Register (ch_num = 3)\n\nYou can [`read`](crate::Reg::read) this register and get [`saddr3::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`saddr3::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@saddr3`] module"]
+#[doc(alias = "SADDR3")]
+pub type Saddr3 = crate::Reg<saddr3::Saddr3Spec>;
 #[doc = "DMAC Channel Source Address Register (ch_num = 3)"]
 pub mod saddr3;
-#[doc = "DMAC Channel Destination Address Register (ch_num = 3)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [daddr3](daddr3) module"]
-pub type DADDR3 = crate::Reg<u32, _DADDR3>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _DADDR3;
-#[doc = "`read()` method returns [daddr3::R](daddr3::R) reader structure"]
-impl crate::Readable for DADDR3 {}
-#[doc = "`write(|w| ..)` method takes [daddr3::W](daddr3::W) writer structure"]
-impl crate::Writable for DADDR3 {}
+#[doc = "DADDR3 (rw) register accessor: DMAC Channel Destination Address Register (ch_num = 3)\n\nYou can [`read`](crate::Reg::read) this register and get [`daddr3::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`daddr3::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@daddr3`] module"]
+#[doc(alias = "DADDR3")]
+pub type Daddr3 = crate::Reg<daddr3::Daddr3Spec>;
 #[doc = "DMAC Channel Destination Address Register (ch_num = 3)"]
 pub mod daddr3;
-#[doc = "DMAC Channel Descriptor Address Register (ch_num = 3)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [dscr3](dscr3) module"]
-pub type DSCR3 = crate::Reg<u32, _DSCR3>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _DSCR3;
-#[doc = "`read()` method returns [dscr3::R](dscr3::R) reader structure"]
-impl crate::Readable for DSCR3 {}
-#[doc = "`write(|w| ..)` method takes [dscr3::W](dscr3::W) writer structure"]
-impl crate::Writable for DSCR3 {}
+#[doc = "DSCR3 (rw) register accessor: DMAC Channel Descriptor Address Register (ch_num = 3)\n\nYou can [`read`](crate::Reg::read) this register and get [`dscr3::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dscr3::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dscr3`] module"]
+#[doc(alias = "DSCR3")]
+pub type Dscr3 = crate::Reg<dscr3::Dscr3Spec>;
 #[doc = "DMAC Channel Descriptor Address Register (ch_num = 3)"]
 pub mod dscr3;
-#[doc = "DMAC Channel Control A Register (ch_num = 3)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [ctrla3](ctrla3) module"]
-pub type CTRLA3 = crate::Reg<u32, _CTRLA3>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _CTRLA3;
-#[doc = "`read()` method returns [ctrla3::R](ctrla3::R) reader structure"]
-impl crate::Readable for CTRLA3 {}
-#[doc = "`write(|w| ..)` method takes [ctrla3::W](ctrla3::W) writer structure"]
-impl crate::Writable for CTRLA3 {}
+#[doc = "CTRLA3 (rw) register accessor: DMAC Channel Control A Register (ch_num = 3)\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrla3::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrla3::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ctrla3`] module"]
+#[doc(alias = "CTRLA3")]
+pub type Ctrla3 = crate::Reg<ctrla3::Ctrla3Spec>;
 #[doc = "DMAC Channel Control A Register (ch_num = 3)"]
 pub mod ctrla3;
-#[doc = "DMAC Channel Control B Register (ch_num = 3)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [ctrlb3](ctrlb3) module"]
-pub type CTRLB3 = crate::Reg<u32, _CTRLB3>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _CTRLB3;
-#[doc = "`read()` method returns [ctrlb3::R](ctrlb3::R) reader structure"]
-impl crate::Readable for CTRLB3 {}
-#[doc = "`write(|w| ..)` method takes [ctrlb3::W](ctrlb3::W) writer structure"]
-impl crate::Writable for CTRLB3 {}
+#[doc = "CTRLB3 (rw) register accessor: DMAC Channel Control B Register (ch_num = 3)\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrlb3::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrlb3::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ctrlb3`] module"]
+#[doc(alias = "CTRLB3")]
+pub type Ctrlb3 = crate::Reg<ctrlb3::Ctrlb3Spec>;
 #[doc = "DMAC Channel Control B Register (ch_num = 3)"]
 pub mod ctrlb3;
-#[doc = "DMAC Channel Configuration Register (ch_num = 3)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [cfg3](cfg3) module"]
-pub type CFG3 = crate::Reg<u32, _CFG3>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _CFG3;
-#[doc = "`read()` method returns [cfg3::R](cfg3::R) reader structure"]
-impl crate::Readable for CFG3 {}
-#[doc = "`write(|w| ..)` method takes [cfg3::W](cfg3::W) writer structure"]
-impl crate::Writable for CFG3 {}
+#[doc = "CFG3 (rw) register accessor: DMAC Channel Configuration Register (ch_num = 3)\n\nYou can [`read`](crate::Reg::read) this register and get [`cfg3::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cfg3::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cfg3`] module"]
+#[doc(alias = "CFG3")]
+pub type Cfg3 = crate::Reg<cfg3::Cfg3Spec>;
 #[doc = "DMAC Channel Configuration Register (ch_num = 3)"]
 pub mod cfg3;
-#[doc = "DMAC Channel Source Address Register (ch_num = 4)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [saddr4](saddr4) module"]
-pub type SADDR4 = crate::Reg<u32, _SADDR4>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _SADDR4;
-#[doc = "`read()` method returns [saddr4::R](saddr4::R) reader structure"]
-impl crate::Readable for SADDR4 {}
-#[doc = "`write(|w| ..)` method takes [saddr4::W](saddr4::W) writer structure"]
-impl crate::Writable for SADDR4 {}
+#[doc = "SADDR4 (rw) register accessor: DMAC Channel Source Address Register (ch_num = 4)\n\nYou can [`read`](crate::Reg::read) this register and get [`saddr4::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`saddr4::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@saddr4`] module"]
+#[doc(alias = "SADDR4")]
+pub type Saddr4 = crate::Reg<saddr4::Saddr4Spec>;
 #[doc = "DMAC Channel Source Address Register (ch_num = 4)"]
 pub mod saddr4;
-#[doc = "DMAC Channel Destination Address Register (ch_num = 4)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [daddr4](daddr4) module"]
-pub type DADDR4 = crate::Reg<u32, _DADDR4>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _DADDR4;
-#[doc = "`read()` method returns [daddr4::R](daddr4::R) reader structure"]
-impl crate::Readable for DADDR4 {}
-#[doc = "`write(|w| ..)` method takes [daddr4::W](daddr4::W) writer structure"]
-impl crate::Writable for DADDR4 {}
+#[doc = "DADDR4 (rw) register accessor: DMAC Channel Destination Address Register (ch_num = 4)\n\nYou can [`read`](crate::Reg::read) this register and get [`daddr4::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`daddr4::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@daddr4`] module"]
+#[doc(alias = "DADDR4")]
+pub type Daddr4 = crate::Reg<daddr4::Daddr4Spec>;
 #[doc = "DMAC Channel Destination Address Register (ch_num = 4)"]
 pub mod daddr4;
-#[doc = "DMAC Channel Descriptor Address Register (ch_num = 4)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [dscr4](dscr4) module"]
-pub type DSCR4 = crate::Reg<u32, _DSCR4>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _DSCR4;
-#[doc = "`read()` method returns [dscr4::R](dscr4::R) reader structure"]
-impl crate::Readable for DSCR4 {}
-#[doc = "`write(|w| ..)` method takes [dscr4::W](dscr4::W) writer structure"]
-impl crate::Writable for DSCR4 {}
+#[doc = "DSCR4 (rw) register accessor: DMAC Channel Descriptor Address Register (ch_num = 4)\n\nYou can [`read`](crate::Reg::read) this register and get [`dscr4::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dscr4::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dscr4`] module"]
+#[doc(alias = "DSCR4")]
+pub type Dscr4 = crate::Reg<dscr4::Dscr4Spec>;
 #[doc = "DMAC Channel Descriptor Address Register (ch_num = 4)"]
 pub mod dscr4;
-#[doc = "DMAC Channel Control A Register (ch_num = 4)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [ctrla4](ctrla4) module"]
-pub type CTRLA4 = crate::Reg<u32, _CTRLA4>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _CTRLA4;
-#[doc = "`read()` method returns [ctrla4::R](ctrla4::R) reader structure"]
-impl crate::Readable for CTRLA4 {}
-#[doc = "`write(|w| ..)` method takes [ctrla4::W](ctrla4::W) writer structure"]
-impl crate::Writable for CTRLA4 {}
+#[doc = "CTRLA4 (rw) register accessor: DMAC Channel Control A Register (ch_num = 4)\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrla4::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrla4::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ctrla4`] module"]
+#[doc(alias = "CTRLA4")]
+pub type Ctrla4 = crate::Reg<ctrla4::Ctrla4Spec>;
 #[doc = "DMAC Channel Control A Register (ch_num = 4)"]
 pub mod ctrla4;
-#[doc = "DMAC Channel Control B Register (ch_num = 4)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [ctrlb4](ctrlb4) module"]
-pub type CTRLB4 = crate::Reg<u32, _CTRLB4>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _CTRLB4;
-#[doc = "`read()` method returns [ctrlb4::R](ctrlb4::R) reader structure"]
-impl crate::Readable for CTRLB4 {}
-#[doc = "`write(|w| ..)` method takes [ctrlb4::W](ctrlb4::W) writer structure"]
-impl crate::Writable for CTRLB4 {}
+#[doc = "CTRLB4 (rw) register accessor: DMAC Channel Control B Register (ch_num = 4)\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrlb4::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrlb4::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ctrlb4`] module"]
+#[doc(alias = "CTRLB4")]
+pub type Ctrlb4 = crate::Reg<ctrlb4::Ctrlb4Spec>;
 #[doc = "DMAC Channel Control B Register (ch_num = 4)"]
 pub mod ctrlb4;
-#[doc = "DMAC Channel Configuration Register (ch_num = 4)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [cfg4](cfg4) module"]
-pub type CFG4 = crate::Reg<u32, _CFG4>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _CFG4;
-#[doc = "`read()` method returns [cfg4::R](cfg4::R) reader structure"]
-impl crate::Readable for CFG4 {}
-#[doc = "`write(|w| ..)` method takes [cfg4::W](cfg4::W) writer structure"]
-impl crate::Writable for CFG4 {}
+#[doc = "CFG4 (rw) register accessor: DMAC Channel Configuration Register (ch_num = 4)\n\nYou can [`read`](crate::Reg::read) this register and get [`cfg4::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cfg4::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cfg4`] module"]
+#[doc(alias = "CFG4")]
+pub type Cfg4 = crate::Reg<cfg4::Cfg4Spec>;
 #[doc = "DMAC Channel Configuration Register (ch_num = 4)"]
 pub mod cfg4;
-#[doc = "DMAC Channel Source Address Register (ch_num = 5)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [saddr5](saddr5) module"]
-pub type SADDR5 = crate::Reg<u32, _SADDR5>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _SADDR5;
-#[doc = "`read()` method returns [saddr5::R](saddr5::R) reader structure"]
-impl crate::Readable for SADDR5 {}
-#[doc = "`write(|w| ..)` method takes [saddr5::W](saddr5::W) writer structure"]
-impl crate::Writable for SADDR5 {}
+#[doc = "SADDR5 (rw) register accessor: DMAC Channel Source Address Register (ch_num = 5)\n\nYou can [`read`](crate::Reg::read) this register and get [`saddr5::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`saddr5::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@saddr5`] module"]
+#[doc(alias = "SADDR5")]
+pub type Saddr5 = crate::Reg<saddr5::Saddr5Spec>;
 #[doc = "DMAC Channel Source Address Register (ch_num = 5)"]
 pub mod saddr5;
-#[doc = "DMAC Channel Destination Address Register (ch_num = 5)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [daddr5](daddr5) module"]
-pub type DADDR5 = crate::Reg<u32, _DADDR5>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _DADDR5;
-#[doc = "`read()` method returns [daddr5::R](daddr5::R) reader structure"]
-impl crate::Readable for DADDR5 {}
-#[doc = "`write(|w| ..)` method takes [daddr5::W](daddr5::W) writer structure"]
-impl crate::Writable for DADDR5 {}
+#[doc = "DADDR5 (rw) register accessor: DMAC Channel Destination Address Register (ch_num = 5)\n\nYou can [`read`](crate::Reg::read) this register and get [`daddr5::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`daddr5::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@daddr5`] module"]
+#[doc(alias = "DADDR5")]
+pub type Daddr5 = crate::Reg<daddr5::Daddr5Spec>;
 #[doc = "DMAC Channel Destination Address Register (ch_num = 5)"]
 pub mod daddr5;
-#[doc = "DMAC Channel Descriptor Address Register (ch_num = 5)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [dscr5](dscr5) module"]
-pub type DSCR5 = crate::Reg<u32, _DSCR5>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _DSCR5;
-#[doc = "`read()` method returns [dscr5::R](dscr5::R) reader structure"]
-impl crate::Readable for DSCR5 {}
-#[doc = "`write(|w| ..)` method takes [dscr5::W](dscr5::W) writer structure"]
-impl crate::Writable for DSCR5 {}
+#[doc = "DSCR5 (rw) register accessor: DMAC Channel Descriptor Address Register (ch_num = 5)\n\nYou can [`read`](crate::Reg::read) this register and get [`dscr5::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dscr5::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dscr5`] module"]
+#[doc(alias = "DSCR5")]
+pub type Dscr5 = crate::Reg<dscr5::Dscr5Spec>;
 #[doc = "DMAC Channel Descriptor Address Register (ch_num = 5)"]
 pub mod dscr5;
-#[doc = "DMAC Channel Control A Register (ch_num = 5)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [ctrla5](ctrla5) module"]
-pub type CTRLA5 = crate::Reg<u32, _CTRLA5>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _CTRLA5;
-#[doc = "`read()` method returns [ctrla5::R](ctrla5::R) reader structure"]
-impl crate::Readable for CTRLA5 {}
-#[doc = "`write(|w| ..)` method takes [ctrla5::W](ctrla5::W) writer structure"]
-impl crate::Writable for CTRLA5 {}
+#[doc = "CTRLA5 (rw) register accessor: DMAC Channel Control A Register (ch_num = 5)\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrla5::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrla5::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ctrla5`] module"]
+#[doc(alias = "CTRLA5")]
+pub type Ctrla5 = crate::Reg<ctrla5::Ctrla5Spec>;
 #[doc = "DMAC Channel Control A Register (ch_num = 5)"]
 pub mod ctrla5;
-#[doc = "DMAC Channel Control B Register (ch_num = 5)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [ctrlb5](ctrlb5) module"]
-pub type CTRLB5 = crate::Reg<u32, _CTRLB5>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _CTRLB5;
-#[doc = "`read()` method returns [ctrlb5::R](ctrlb5::R) reader structure"]
-impl crate::Readable for CTRLB5 {}
-#[doc = "`write(|w| ..)` method takes [ctrlb5::W](ctrlb5::W) writer structure"]
-impl crate::Writable for CTRLB5 {}
+#[doc = "CTRLB5 (rw) register accessor: DMAC Channel Control B Register (ch_num = 5)\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrlb5::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrlb5::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ctrlb5`] module"]
+#[doc(alias = "CTRLB5")]
+pub type Ctrlb5 = crate::Reg<ctrlb5::Ctrlb5Spec>;
 #[doc = "DMAC Channel Control B Register (ch_num = 5)"]
 pub mod ctrlb5;
-#[doc = "DMAC Channel Configuration Register (ch_num = 5)\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [cfg5](cfg5) module"]
-pub type CFG5 = crate::Reg<u32, _CFG5>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _CFG5;
-#[doc = "`read()` method returns [cfg5::R](cfg5::R) reader structure"]
-impl crate::Readable for CFG5 {}
-#[doc = "`write(|w| ..)` method takes [cfg5::W](cfg5::W) writer structure"]
-impl crate::Writable for CFG5 {}
+#[doc = "CFG5 (rw) register accessor: DMAC Channel Configuration Register (ch_num = 5)\n\nYou can [`read`](crate::Reg::read) this register and get [`cfg5::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cfg5::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cfg5`] module"]
+#[doc(alias = "CFG5")]
+pub type Cfg5 = crate::Reg<cfg5::Cfg5Spec>;
 #[doc = "DMAC Channel Configuration Register (ch_num = 5)"]
 pub mod cfg5;
-#[doc = "DMAC Write Protect Mode Register\n\nThis register you can [`read`](crate::generic::Reg::read), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [wpmr](wpmr) module"]
-pub type WPMR = crate::Reg<u32, _WPMR>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _WPMR;
-#[doc = "`read()` method returns [wpmr::R](wpmr::R) reader structure"]
-impl crate::Readable for WPMR {}
-#[doc = "`write(|w| ..)` method takes [wpmr::W](wpmr::W) writer structure"]
-impl crate::Writable for WPMR {}
+#[doc = "WPMR (rw) register accessor: DMAC Write Protect Mode Register\n\nYou can [`read`](crate::Reg::read) this register and get [`wpmr::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`wpmr::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@wpmr`] module"]
+#[doc(alias = "WPMR")]
+pub type Wpmr = crate::Reg<wpmr::WpmrSpec>;
 #[doc = "DMAC Write Protect Mode Register"]
 pub mod wpmr;
-#[doc = "DMAC Write Protect Status Register\n\nThis register you can [`read`](crate::generic::Reg::read). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about avaliable fields see [wpsr](wpsr) module"]
-pub type WPSR = crate::Reg<u32, _WPSR>;
-#[allow(missing_docs)]
-#[doc(hidden)]
-pub struct _WPSR;
-#[doc = "`read()` method returns [wpsr::R](wpsr::R) reader structure"]
-impl crate::Readable for WPSR {}
+#[doc = "WPSR (r) register accessor: DMAC Write Protect Status Register\n\nYou can [`read`](crate::Reg::read) this register and get [`wpsr::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@wpsr`] module"]
+#[doc(alias = "WPSR")]
+pub type Wpsr = crate::Reg<wpsr::WpsrSpec>;
 #[doc = "DMAC Write Protect Status Register"]
 pub mod wpsr;

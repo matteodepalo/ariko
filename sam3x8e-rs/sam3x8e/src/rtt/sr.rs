@@ -1,18 +1,27 @@
-#[doc = "Reader of register SR"]
-pub type R = crate::R<u32, super::SR>;
-#[doc = "Reader of field `ALMS`"]
-pub type ALMS_R = crate::R<bool, bool>;
-#[doc = "Reader of field `RTTINC`"]
-pub type RTTINC_R = crate::R<bool, bool>;
+#[doc = "Register `SR` reader"]
+pub type R = crate::R<SrSpec>;
+#[doc = "Field `ALMS` reader - Real-time Alarm Status"]
+pub type AlmsR = crate::BitReader;
+#[doc = "Field `RTTINC` reader - Real-time Timer Increment"]
+pub type RttincR = crate::BitReader;
 impl R {
-    #[doc = "Bit 0 - Real-time Alarm Status"]
-    #[inline(always)]
-    pub fn alms(&self) -> ALMS_R {
-        ALMS_R::new((self.bits & 0x01) != 0)
-    }
-    #[doc = "Bit 1 - Real-time Timer Increment"]
-    #[inline(always)]
-    pub fn rttinc(&self) -> RTTINC_R {
-        RTTINC_R::new(((self.bits >> 1) & 0x01) != 0)
-    }
+  #[doc = "Bit 0 - Real-time Alarm Status"]
+  #[inline(always)]
+  pub fn alms(&self) -> AlmsR {
+    AlmsR::new((self.bits & 1) != 0)
+  }
+  #[doc = "Bit 1 - Real-time Timer Increment"]
+  #[inline(always)]
+  pub fn rttinc(&self) -> RttincR {
+    RttincR::new(((self.bits >> 1) & 1) != 0)
+  }
 }
+#[doc = "Status Register\n\nYou can [`read`](crate::Reg::read) this register and get [`sr::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct SrSpec;
+impl crate::RegisterSpec for SrSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`sr::R`](R) reader structure"]
+impl crate::Readable for SrSpec {}
+#[doc = "`reset()` method sets SR to value 0"]
+impl crate::Resettable for SrSpec {}

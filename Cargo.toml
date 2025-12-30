@@ -2,16 +2,17 @@
 name = "certabo"
 version = "0.1.0"
 authors = ["Eugenio Depalo <eugeniodepalo@gmail.com>"]
-edition = "2018"
+edition = "2024"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-cortex-m = "0.7.1"
-cortex-m-rt = "0.6.13"
+cortex-m = { version = "0.7", features = ["critical-section-single-core"] }
+cortex-m-rt = "0.7"
+critical-section = "1.2"
 panic-halt = "0.2.0"
 sam3x8e-hal = { path = "./sam3x8e-rs/sam3x8e-hal" }
-embedded-hal = "1.0.0-alpha.4"
-nb = "1.0.0"
+embedded-hal = "1.0"
+nb = "1.1"
 modular-bitfield = "0.11.2"
 log = "0.4.14"

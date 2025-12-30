@@ -15,6 +15,11 @@
  *    along with sam3x8e-hal.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+//! Random number generator
+//!
+//! Note: RNG traits were removed from embedded-hal 1.0
+//! The Read trait is defined locally for HAL compatibility.
+
 extern crate core;
 
 use core::cmp;
@@ -24,6 +29,12 @@ pub use crate::pac::{trng, PMC, TRNG};
 // TODO: Edit the SVD to include this constant
 const TRNG_PASSWORD: u32 = 0x524e47;
 
+/// RNG Read trait (removed from embedded-hal 1.0, defined locally)
+pub trait RngRead {
+  type Error;
+  fn read(&mut self, buffer: &mut [u8]) -> Result<(), Self::Error>;
+}
+
 pub struct Rng {
   rng: TRNG,
 }
@@ -32,7 +43,7 @@ impl Rng {
   pub fn new(rng: TRNG, pmc: &PMC) -> Rng {
     // Enable clock 41 (TRNG)
     // Peripheral magic number Datasheet §9.1
-    pmc.pmc_pcer1.write_with_zero(|w| w.pid41().set_bit());
+    unsafe { pmc.pmc_pcer1().write_with_zero(|w| w.pid41().set_bit()); }
 
     let mut ret = Self { rng };
 
@@ -42,35 +53,39 @@ impl Rng {
   }
 
   pub fn enable(&mut self) {
-    self
-      .rng
-      .cr
-      .write_with_zero(|w| unsafe { w.enable().set_bit().key().bits(TRNG_PASSWORD) });
+    unsafe {
+      self
+        .rng
+        .cr()
+        .write_with_zero(|w| w.enable().set_bit().key().bits(TRNG_PASSWORD));
+    }
   }
 
   pub fn disable(&mut self) {
-    self
-      .rng
-      .cr
-      .write_with_zero(|w| unsafe { w.enable().clear_bit().key().bits(TRNG_PASSWORD) });
+    unsafe {
+      self
+        .rng
+        .cr()
+        .write_with_zero(|w| w.enable().clear_bit().key().bits(TRNG_PASSWORD));
+    }
   }
 
   pub fn wait(&mut self) {
-    while self.rng.isr.read().datrdy().bit_is_clear() {}
+    while self.rng.isr().read().datrdy().bit_is_clear() {}
   }
 
   pub fn take_result(&mut self) -> u32 {
-    self.rng.odata.read().bits()
+    self.rng.odata().read().bits()
   }
 }
 
 #[derive(Debug)]
 pub enum Error {}
 
-impl crate::hal::blocking::rng::Read for Rng {
+impl RngRead for Rng {
   type Error = Error;
 
-  fn try_read(&mut self, buffer: &mut [u8]) -> Result<(), Self::Error> {
+  fn read(&mut self, buffer: &mut [u8]) -> Result<(), Self::Error> {
     let mut pos = 0;
 
     while pos < buffer.len() {

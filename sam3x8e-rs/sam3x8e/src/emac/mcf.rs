@@ -1,40 +1,35 @@
-#[doc = "Reader of register MCF"]
-pub type R = crate::R<u32, super::MCF>;
-#[doc = "Writer for register MCF"]
-pub type W = crate::W<u32, super::MCF>;
-#[doc = "Register MCF `reset()`'s with value 0"]
-impl crate::ResetValue for super::MCF {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `MCF`"]
-pub type MCF_R = crate::R<u16, u16>;
-#[doc = "Write proxy for field `MCF`"]
-pub struct MCF_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> MCF_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u16) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0xffff) | ((value as u32) & 0xffff);
-        self.w
-    }
-}
+#[doc = "Register `MCF` reader"]
+pub type R = crate::R<McfSpec>;
+#[doc = "Register `MCF` writer"]
+pub type W = crate::W<McfSpec>;
+#[doc = "Field `MCF` reader - Multicollision Frames"]
+pub type McfR = crate::FieldReader<u16>;
+#[doc = "Field `MCF` writer - Multicollision Frames"]
+pub type McfW<'a, REG> = crate::FieldWriter<'a, REG, 16, u16>;
 impl R {
-    #[doc = "Bits 0:15 - Multicollision Frames"]
-    #[inline(always)]
-    pub fn mcf(&self) -> MCF_R {
-        MCF_R::new((self.bits & 0xffff) as u16)
-    }
+  #[doc = "Bits 0:15 - Multicollision Frames"]
+  #[inline(always)]
+  pub fn mcf(&self) -> McfR {
+    McfR::new((self.bits & 0xffff) as u16)
+  }
 }
 impl W {
-    #[doc = "Bits 0:15 - Multicollision Frames"]
-    #[inline(always)]
-    pub fn mcf(&mut self) -> MCF_W {
-        MCF_W { w: self }
-    }
+  #[doc = "Bits 0:15 - Multicollision Frames"]
+  #[inline(always)]
+  pub fn mcf(&mut self) -> McfW<'_, McfSpec> {
+    McfW::new(self, 0)
+  }
 }
+#[doc = "Multiple Collision Frames Register\n\nYou can [`read`](crate::Reg::read) this register and get [`mcf::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`mcf::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct McfSpec;
+impl crate::RegisterSpec for McfSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`mcf::R`](R) reader structure"]
+impl crate::Readable for McfSpec {}
+#[doc = "`write(|w| ..)` method takes [`mcf::W`](W) writer structure"]
+impl crate::Writable for McfSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets MCF to value 0"]
+impl crate::Resettable for McfSpec {}

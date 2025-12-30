@@ -1,40 +1,35 @@
-#[doc = "Reader of register CSE"]
-pub type R = crate::R<u32, super::CSE>;
-#[doc = "Writer for register CSE"]
-pub type W = crate::W<u32, super::CSE>;
-#[doc = "Register CSE `reset()`'s with value 0"]
-impl crate::ResetValue for super::CSE {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `CSE`"]
-pub type CSE_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `CSE`"]
-pub struct CSE_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CSE_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0xff) | ((value as u32) & 0xff);
-        self.w
-    }
-}
+#[doc = "Register `CSE` reader"]
+pub type R = crate::R<CseSpec>;
+#[doc = "Register `CSE` writer"]
+pub type W = crate::W<CseSpec>;
+#[doc = "Field `CSE` reader - Carrier Sense Errors"]
+pub type CseR = crate::FieldReader;
+#[doc = "Field `CSE` writer - Carrier Sense Errors"]
+pub type CseW<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 impl R {
-    #[doc = "Bits 0:7 - Carrier Sense Errors"]
-    #[inline(always)]
-    pub fn cse(&self) -> CSE_R {
-        CSE_R::new((self.bits & 0xff) as u8)
-    }
+  #[doc = "Bits 0:7 - Carrier Sense Errors"]
+  #[inline(always)]
+  pub fn cse(&self) -> CseR {
+    CseR::new((self.bits & 0xff) as u8)
+  }
 }
 impl W {
-    #[doc = "Bits 0:7 - Carrier Sense Errors"]
-    #[inline(always)]
-    pub fn cse(&mut self) -> CSE_W {
-        CSE_W { w: self }
-    }
+  #[doc = "Bits 0:7 - Carrier Sense Errors"]
+  #[inline(always)]
+  pub fn cse(&mut self) -> CseW<'_, CseSpec> {
+    CseW::new(self, 0)
+  }
 }
+#[doc = "Carrier Sense Errors Register\n\nYou can [`read`](crate::Reg::read) this register and get [`cse::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cse::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct CseSpec;
+impl crate::RegisterSpec for CseSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`cse::R`](R) reader structure"]
+impl crate::Readable for CseSpec {}
+#[doc = "`write(|w| ..)` method takes [`cse::W`](W) writer structure"]
+impl crate::Writable for CseSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets CSE to value 0"]
+impl crate::Resettable for CseSpec {}

@@ -1,139 +1,48 @@
-#[doc = "Writer for register IER"]
-pub type W = crate::W<u32, super::IER>;
-#[doc = "Write proxy for field `ACKEN`"]
-pub struct ACKEN_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> ACKEN_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x01) | ((value as u32) & 0x01);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `ALREN`"]
-pub struct ALREN_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> ALREN_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 1)) | (((value as u32) & 0x01) << 1);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `SECEN`"]
-pub struct SECEN_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> SECEN_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 2)) | (((value as u32) & 0x01) << 2);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `TIMEN`"]
-pub struct TIMEN_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> TIMEN_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 3)) | (((value as u32) & 0x01) << 3);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `CALEN`"]
-pub struct CALEN_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CALEN_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 4)) | (((value as u32) & 0x01) << 4);
-        self.w
-    }
-}
+#[doc = "Register `IER` writer"]
+pub type W = crate::W<IerSpec>;
+#[doc = "Field `ACKEN` writer - Acknowledge Update Interrupt Enable"]
+pub type AckenW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `ALREN` writer - Alarm Interrupt Enable"]
+pub type AlrenW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `SECEN` writer - Second Event Interrupt Enable"]
+pub type SecenW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `TIMEN` writer - Time Event Interrupt Enable"]
+pub type TimenW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `CALEN` writer - Calendar Event Interrupt Enable"]
+pub type CalenW<'a, REG> = crate::BitWriter<'a, REG>;
 impl W {
-    #[doc = "Bit 0 - Acknowledge Update Interrupt Enable"]
-    #[inline(always)]
-    pub fn acken(&mut self) -> ACKEN_W {
-        ACKEN_W { w: self }
-    }
-    #[doc = "Bit 1 - Alarm Interrupt Enable"]
-    #[inline(always)]
-    pub fn alren(&mut self) -> ALREN_W {
-        ALREN_W { w: self }
-    }
-    #[doc = "Bit 2 - Second Event Interrupt Enable"]
-    #[inline(always)]
-    pub fn secen(&mut self) -> SECEN_W {
-        SECEN_W { w: self }
-    }
-    #[doc = "Bit 3 - Time Event Interrupt Enable"]
-    #[inline(always)]
-    pub fn timen(&mut self) -> TIMEN_W {
-        TIMEN_W { w: self }
-    }
-    #[doc = "Bit 4 - Calendar Event Interrupt Enable"]
-    #[inline(always)]
-    pub fn calen(&mut self) -> CALEN_W {
-        CALEN_W { w: self }
-    }
+  #[doc = "Bit 0 - Acknowledge Update Interrupt Enable"]
+  #[inline(always)]
+  pub fn acken(&mut self) -> AckenW<'_, IerSpec> {
+    AckenW::new(self, 0)
+  }
+  #[doc = "Bit 1 - Alarm Interrupt Enable"]
+  #[inline(always)]
+  pub fn alren(&mut self) -> AlrenW<'_, IerSpec> {
+    AlrenW::new(self, 1)
+  }
+  #[doc = "Bit 2 - Second Event Interrupt Enable"]
+  #[inline(always)]
+  pub fn secen(&mut self) -> SecenW<'_, IerSpec> {
+    SecenW::new(self, 2)
+  }
+  #[doc = "Bit 3 - Time Event Interrupt Enable"]
+  #[inline(always)]
+  pub fn timen(&mut self) -> TimenW<'_, IerSpec> {
+    TimenW::new(self, 3)
+  }
+  #[doc = "Bit 4 - Calendar Event Interrupt Enable"]
+  #[inline(always)]
+  pub fn calen(&mut self) -> CalenW<'_, IerSpec> {
+    CalenW::new(self, 4)
+  }
+}
+#[doc = "Interrupt Enable Register\n\nYou can [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ier::W`](W). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct IerSpec;
+impl crate::RegisterSpec for IerSpec {
+  type Ux = u32;
+}
+#[doc = "`write(|w| ..)` method takes [`ier::W`](W) writer structure"]
+impl crate::Writable for IerSpec {
+  type Safety = crate::Unsafe;
 }

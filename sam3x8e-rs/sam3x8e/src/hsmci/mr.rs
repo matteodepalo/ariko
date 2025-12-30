@@ -1,200 +1,105 @@
-#[doc = "Reader of register MR"]
-pub type R = crate::R<u32, super::MR>;
-#[doc = "Writer for register MR"]
-pub type W = crate::W<u32, super::MR>;
-#[doc = "Register MR `reset()`'s with value 0"]
-impl crate::ResetValue for super::MR {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `CLKDIV`"]
-pub type CLKDIV_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `CLKDIV`"]
-pub struct CLKDIV_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CLKDIV_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0xff) | ((value as u32) & 0xff);
-        self.w
-    }
-}
-#[doc = "Reader of field `PWSDIV`"]
-pub type PWSDIV_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `PWSDIV`"]
-pub struct PWSDIV_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PWSDIV_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x07 << 8)) | (((value as u32) & 0x07) << 8);
-        self.w
-    }
-}
-#[doc = "Reader of field `RDPROOF`"]
-pub type RDPROOF_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `RDPROOF`"]
-pub struct RDPROOF_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> RDPROOF_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 11)) | (((value as u32) & 0x01) << 11);
-        self.w
-    }
-}
-#[doc = "Reader of field `WRPROOF`"]
-pub type WRPROOF_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `WRPROOF`"]
-pub struct WRPROOF_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> WRPROOF_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 12)) | (((value as u32) & 0x01) << 12);
-        self.w
-    }
-}
-#[doc = "Reader of field `FBYTE`"]
-pub type FBYTE_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `FBYTE`"]
-pub struct FBYTE_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> FBYTE_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 13)) | (((value as u32) & 0x01) << 13);
-        self.w
-    }
-}
-#[doc = "Reader of field `PADV`"]
-pub type PADV_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `PADV`"]
-pub struct PADV_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PADV_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 14)) | (((value as u32) & 0x01) << 14);
-        self.w
-    }
-}
+#[doc = "Register `MR` reader"]
+pub type R = crate::R<MrSpec>;
+#[doc = "Register `MR` writer"]
+pub type W = crate::W<MrSpec>;
+#[doc = "Field `CLKDIV` reader - Clock Divider"]
+pub type ClkdivR = crate::FieldReader;
+#[doc = "Field `CLKDIV` writer - Clock Divider"]
+pub type ClkdivW<'a, REG> = crate::FieldWriter<'a, REG, 8>;
+#[doc = "Field `PWSDIV` reader - Power Saving Divider"]
+pub type PwsdivR = crate::FieldReader;
+#[doc = "Field `PWSDIV` writer - Power Saving Divider"]
+pub type PwsdivW<'a, REG> = crate::FieldWriter<'a, REG, 3>;
+#[doc = "Field `RDPROOF` reader - "]
+pub type RdproofR = crate::BitReader;
+#[doc = "Field `RDPROOF` writer - "]
+pub type RdproofW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `WRPROOF` reader - "]
+pub type WrproofR = crate::BitReader;
+#[doc = "Field `WRPROOF` writer - "]
+pub type WrproofW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `FBYTE` reader - Force Byte Transfer"]
+pub type FbyteR = crate::BitReader;
+#[doc = "Field `FBYTE` writer - Force Byte Transfer"]
+pub type FbyteW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `PADV` reader - Padding Value"]
+pub type PadvR = crate::BitReader;
+#[doc = "Field `PADV` writer - Padding Value"]
+pub type PadvW<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
-    #[doc = "Bits 0:7 - Clock Divider"]
-    #[inline(always)]
-    pub fn clkdiv(&self) -> CLKDIV_R {
-        CLKDIV_R::new((self.bits & 0xff) as u8)
-    }
-    #[doc = "Bits 8:10 - Power Saving Divider"]
-    #[inline(always)]
-    pub fn pwsdiv(&self) -> PWSDIV_R {
-        PWSDIV_R::new(((self.bits >> 8) & 0x07) as u8)
-    }
-    #[doc = "Bit 11 - Read Proof Enable"]
-    #[inline(always)]
-    pub fn rdproof(&self) -> RDPROOF_R {
-        RDPROOF_R::new(((self.bits >> 11) & 0x01) != 0)
-    }
-    #[doc = "Bit 12 - Write Proof Enable"]
-    #[inline(always)]
-    pub fn wrproof(&self) -> WRPROOF_R {
-        WRPROOF_R::new(((self.bits >> 12) & 0x01) != 0)
-    }
-    #[doc = "Bit 13 - Force Byte Transfer"]
-    #[inline(always)]
-    pub fn fbyte(&self) -> FBYTE_R {
-        FBYTE_R::new(((self.bits >> 13) & 0x01) != 0)
-    }
-    #[doc = "Bit 14 - Padding Value"]
-    #[inline(always)]
-    pub fn padv(&self) -> PADV_R {
-        PADV_R::new(((self.bits >> 14) & 0x01) != 0)
-    }
+  #[doc = "Bits 0:7 - Clock Divider"]
+  #[inline(always)]
+  pub fn clkdiv(&self) -> ClkdivR {
+    ClkdivR::new((self.bits & 0xff) as u8)
+  }
+  #[doc = "Bits 8:10 - Power Saving Divider"]
+  #[inline(always)]
+  pub fn pwsdiv(&self) -> PwsdivR {
+    PwsdivR::new(((self.bits >> 8) & 7) as u8)
+  }
+  #[doc = "Bit 11"]
+  #[inline(always)]
+  pub fn rdproof(&self) -> RdproofR {
+    RdproofR::new(((self.bits >> 11) & 1) != 0)
+  }
+  #[doc = "Bit 12"]
+  #[inline(always)]
+  pub fn wrproof(&self) -> WrproofR {
+    WrproofR::new(((self.bits >> 12) & 1) != 0)
+  }
+  #[doc = "Bit 13 - Force Byte Transfer"]
+  #[inline(always)]
+  pub fn fbyte(&self) -> FbyteR {
+    FbyteR::new(((self.bits >> 13) & 1) != 0)
+  }
+  #[doc = "Bit 14 - Padding Value"]
+  #[inline(always)]
+  pub fn padv(&self) -> PadvR {
+    PadvR::new(((self.bits >> 14) & 1) != 0)
+  }
 }
 impl W {
-    #[doc = "Bits 0:7 - Clock Divider"]
-    #[inline(always)]
-    pub fn clkdiv(&mut self) -> CLKDIV_W {
-        CLKDIV_W { w: self }
-    }
-    #[doc = "Bits 8:10 - Power Saving Divider"]
-    #[inline(always)]
-    pub fn pwsdiv(&mut self) -> PWSDIV_W {
-        PWSDIV_W { w: self }
-    }
-    #[doc = "Bit 11 - Read Proof Enable"]
-    #[inline(always)]
-    pub fn rdproof(&mut self) -> RDPROOF_W {
-        RDPROOF_W { w: self }
-    }
-    #[doc = "Bit 12 - Write Proof Enable"]
-    #[inline(always)]
-    pub fn wrproof(&mut self) -> WRPROOF_W {
-        WRPROOF_W { w: self }
-    }
-    #[doc = "Bit 13 - Force Byte Transfer"]
-    #[inline(always)]
-    pub fn fbyte(&mut self) -> FBYTE_W {
-        FBYTE_W { w: self }
-    }
-    #[doc = "Bit 14 - Padding Value"]
-    #[inline(always)]
-    pub fn padv(&mut self) -> PADV_W {
-        PADV_W { w: self }
-    }
+  #[doc = "Bits 0:7 - Clock Divider"]
+  #[inline(always)]
+  pub fn clkdiv(&mut self) -> ClkdivW<'_, MrSpec> {
+    ClkdivW::new(self, 0)
+  }
+  #[doc = "Bits 8:10 - Power Saving Divider"]
+  #[inline(always)]
+  pub fn pwsdiv(&mut self) -> PwsdivW<'_, MrSpec> {
+    PwsdivW::new(self, 8)
+  }
+  #[doc = "Bit 11"]
+  #[inline(always)]
+  pub fn rdproof(&mut self) -> RdproofW<'_, MrSpec> {
+    RdproofW::new(self, 11)
+  }
+  #[doc = "Bit 12"]
+  #[inline(always)]
+  pub fn wrproof(&mut self) -> WrproofW<'_, MrSpec> {
+    WrproofW::new(self, 12)
+  }
+  #[doc = "Bit 13 - Force Byte Transfer"]
+  #[inline(always)]
+  pub fn fbyte(&mut self) -> FbyteW<'_, MrSpec> {
+    FbyteW::new(self, 13)
+  }
+  #[doc = "Bit 14 - Padding Value"]
+  #[inline(always)]
+  pub fn padv(&mut self) -> PadvW<'_, MrSpec> {
+    PadvW::new(self, 14)
+  }
 }
+#[doc = "Mode Register\n\nYou can [`read`](crate::Reg::read) this register and get [`mr::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`mr::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct MrSpec;
+impl crate::RegisterSpec for MrSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`mr::R`](R) reader structure"]
+impl crate::Readable for MrSpec {}
+#[doc = "`write(|w| ..)` method takes [`mr::W`](W) writer structure"]
+impl crate::Writable for MrSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets MR to value 0"]
+impl crate::Resettable for MrSpec {}

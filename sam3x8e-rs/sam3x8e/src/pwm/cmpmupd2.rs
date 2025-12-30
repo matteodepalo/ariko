@@ -1,82 +1,41 @@
-#[doc = "Writer for register CMPMUPD2"]
-pub type W = crate::W<u32, super::CMPMUPD2>;
-#[doc = "Write proxy for field `CENUPD`"]
-pub struct CENUPD_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CENUPD_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x01) | ((value as u32) & 0x01);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `CTRUPD`"]
-pub struct CTRUPD_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CTRUPD_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x0f << 4)) | (((value as u32) & 0x0f) << 4);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `CPRUPD`"]
-pub struct CPRUPD_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CPRUPD_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x0f << 8)) | (((value as u32) & 0x0f) << 8);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `CUPRUPD`"]
-pub struct CUPRUPD_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CUPRUPD_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x0f << 16)) | (((value as u32) & 0x0f) << 16);
-        self.w
-    }
-}
+#[doc = "Register `CMPMUPD2` writer"]
+pub type W = crate::W<Cmpmupd2Spec>;
+#[doc = "Field `CENUPD` writer - Comparison x Enable Update"]
+pub type CenupdW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `CTRUPD` writer - Comparison x Trigger Update"]
+pub type CtrupdW<'a, REG> = crate::FieldWriter<'a, REG, 4>;
+#[doc = "Field `CPRUPD` writer - Comparison x Period Update"]
+pub type CprupdW<'a, REG> = crate::FieldWriter<'a, REG, 4>;
+#[doc = "Field `CUPRUPD` writer - Comparison x Update Period Update"]
+pub type CuprupdW<'a, REG> = crate::FieldWriter<'a, REG, 4>;
 impl W {
-    #[doc = "Bit 0 - Comparison x Enable Update"]
-    #[inline(always)]
-    pub fn cenupd(&mut self) -> CENUPD_W {
-        CENUPD_W { w: self }
-    }
-    #[doc = "Bits 4:7 - Comparison x Trigger Update"]
-    #[inline(always)]
-    pub fn ctrupd(&mut self) -> CTRUPD_W {
-        CTRUPD_W { w: self }
-    }
-    #[doc = "Bits 8:11 - Comparison x Period Update"]
-    #[inline(always)]
-    pub fn cprupd(&mut self) -> CPRUPD_W {
-        CPRUPD_W { w: self }
-    }
-    #[doc = "Bits 16:19 - Comparison x Update Period Update"]
-    #[inline(always)]
-    pub fn cuprupd(&mut self) -> CUPRUPD_W {
-        CUPRUPD_W { w: self }
-    }
+  #[doc = "Bit 0 - Comparison x Enable Update"]
+  #[inline(always)]
+  pub fn cenupd(&mut self) -> CenupdW<'_, Cmpmupd2Spec> {
+    CenupdW::new(self, 0)
+  }
+  #[doc = "Bits 4:7 - Comparison x Trigger Update"]
+  #[inline(always)]
+  pub fn ctrupd(&mut self) -> CtrupdW<'_, Cmpmupd2Spec> {
+    CtrupdW::new(self, 4)
+  }
+  #[doc = "Bits 8:11 - Comparison x Period Update"]
+  #[inline(always)]
+  pub fn cprupd(&mut self) -> CprupdW<'_, Cmpmupd2Spec> {
+    CprupdW::new(self, 8)
+  }
+  #[doc = "Bits 16:19 - Comparison x Update Period Update"]
+  #[inline(always)]
+  pub fn cuprupd(&mut self) -> CuprupdW<'_, Cmpmupd2Spec> {
+    CuprupdW::new(self, 16)
+  }
+}
+#[doc = "PWM Comparison 2 Mode Update Register\n\nYou can [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cmpmupd2::W`](W). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct Cmpmupd2Spec;
+impl crate::RegisterSpec for Cmpmupd2Spec {
+  type Ux = u32;
+}
+#[doc = "`write(|w| ..)` method takes [`cmpmupd2::W`](W) writer structure"]
+impl crate::Writable for Cmpmupd2Spec {
+  type Safety = crate::Unsafe;
 }

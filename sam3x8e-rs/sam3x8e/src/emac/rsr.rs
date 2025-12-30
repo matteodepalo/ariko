@@ -1,118 +1,63 @@
-#[doc = "Reader of register RSR"]
-pub type R = crate::R<u32, super::RSR>;
-#[doc = "Writer for register RSR"]
-pub type W = crate::W<u32, super::RSR>;
-#[doc = "Register RSR `reset()`'s with value 0"]
-impl crate::ResetValue for super::RSR {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `BNA`"]
-pub type BNA_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `BNA`"]
-pub struct BNA_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> BNA_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x01) | ((value as u32) & 0x01);
-        self.w
-    }
-}
-#[doc = "Reader of field `REC`"]
-pub type REC_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `REC`"]
-pub struct REC_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> REC_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 1)) | (((value as u32) & 0x01) << 1);
-        self.w
-    }
-}
-#[doc = "Reader of field `OVR`"]
-pub type OVR_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `OVR`"]
-pub struct OVR_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> OVR_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 2)) | (((value as u32) & 0x01) << 2);
-        self.w
-    }
-}
+#[doc = "Register `RSR` reader"]
+pub type R = crate::R<RsrSpec>;
+#[doc = "Register `RSR` writer"]
+pub type W = crate::W<RsrSpec>;
+#[doc = "Field `BNA` reader - Buffer Not Available"]
+pub type BnaR = crate::BitReader;
+#[doc = "Field `BNA` writer - Buffer Not Available"]
+pub type BnaW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `REC` reader - Frame Received"]
+pub type RecR = crate::BitReader;
+#[doc = "Field `REC` writer - Frame Received"]
+pub type RecW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `OVR` reader - Receive Overrun"]
+pub type OvrR = crate::BitReader;
+#[doc = "Field `OVR` writer - Receive Overrun"]
+pub type OvrW<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
-    #[doc = "Bit 0 - Buffer Not Available"]
-    #[inline(always)]
-    pub fn bna(&self) -> BNA_R {
-        BNA_R::new((self.bits & 0x01) != 0)
-    }
-    #[doc = "Bit 1 - Frame Received"]
-    #[inline(always)]
-    pub fn rec(&self) -> REC_R {
-        REC_R::new(((self.bits >> 1) & 0x01) != 0)
-    }
-    #[doc = "Bit 2 - Receive Overrun"]
-    #[inline(always)]
-    pub fn ovr(&self) -> OVR_R {
-        OVR_R::new(((self.bits >> 2) & 0x01) != 0)
-    }
+  #[doc = "Bit 0 - Buffer Not Available"]
+  #[inline(always)]
+  pub fn bna(&self) -> BnaR {
+    BnaR::new((self.bits & 1) != 0)
+  }
+  #[doc = "Bit 1 - Frame Received"]
+  #[inline(always)]
+  pub fn rec(&self) -> RecR {
+    RecR::new(((self.bits >> 1) & 1) != 0)
+  }
+  #[doc = "Bit 2 - Receive Overrun"]
+  #[inline(always)]
+  pub fn ovr(&self) -> OvrR {
+    OvrR::new(((self.bits >> 2) & 1) != 0)
+  }
 }
 impl W {
-    #[doc = "Bit 0 - Buffer Not Available"]
-    #[inline(always)]
-    pub fn bna(&mut self) -> BNA_W {
-        BNA_W { w: self }
-    }
-    #[doc = "Bit 1 - Frame Received"]
-    #[inline(always)]
-    pub fn rec(&mut self) -> REC_W {
-        REC_W { w: self }
-    }
-    #[doc = "Bit 2 - Receive Overrun"]
-    #[inline(always)]
-    pub fn ovr(&mut self) -> OVR_W {
-        OVR_W { w: self }
-    }
+  #[doc = "Bit 0 - Buffer Not Available"]
+  #[inline(always)]
+  pub fn bna(&mut self) -> BnaW<'_, RsrSpec> {
+    BnaW::new(self, 0)
+  }
+  #[doc = "Bit 1 - Frame Received"]
+  #[inline(always)]
+  pub fn rec(&mut self) -> RecW<'_, RsrSpec> {
+    RecW::new(self, 1)
+  }
+  #[doc = "Bit 2 - Receive Overrun"]
+  #[inline(always)]
+  pub fn ovr(&mut self) -> OvrW<'_, RsrSpec> {
+    OvrW::new(self, 2)
+  }
 }
+#[doc = "Receive Status Register\n\nYou can [`read`](crate::Reg::read) this register and get [`rsr::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`rsr::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct RsrSpec;
+impl crate::RegisterSpec for RsrSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`rsr::R`](R) reader structure"]
+impl crate::Readable for RsrSpec {}
+#[doc = "`write(|w| ..)` method takes [`rsr::W`](W) writer structure"]
+impl crate::Writable for RsrSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets RSR to value 0"]
+impl crate::Resettable for RsrSpec {}

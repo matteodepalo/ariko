@@ -1,40 +1,35 @@
-#[doc = "Reader of register MDL6"]
-pub type R = crate::R<u32, super::MDL6>;
-#[doc = "Writer for register MDL6"]
-pub type W = crate::W<u32, super::MDL6>;
-#[doc = "Register MDL6 `reset()`'s with value 0"]
-impl crate::ResetValue for super::MDL6 {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `MDL`"]
-pub type MDL_R = crate::R<u32, u32>;
-#[doc = "Write proxy for field `MDL`"]
-pub struct MDL_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> MDL_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u32) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0xffff_ffff) | ((value as u32) & 0xffff_ffff);
-        self.w
-    }
-}
+#[doc = "Register `MDL6` reader"]
+pub type R = crate::R<Mdl6Spec>;
+#[doc = "Register `MDL6` writer"]
+pub type W = crate::W<Mdl6Spec>;
+#[doc = "Field `MDL` reader - Message Data Low Value"]
+pub type MdlR = crate::FieldReader<u32>;
+#[doc = "Field `MDL` writer - Message Data Low Value"]
+pub type MdlW<'a, REG> = crate::FieldWriter<'a, REG, 32, u32>;
 impl R {
-    #[doc = "Bits 0:31 - Message Data Low Value"]
-    #[inline(always)]
-    pub fn mdl(&self) -> MDL_R {
-        MDL_R::new((self.bits & 0xffff_ffff) as u32)
-    }
+  #[doc = "Bits 0:31 - Message Data Low Value"]
+  #[inline(always)]
+  pub fn mdl(&self) -> MdlR {
+    MdlR::new(self.bits)
+  }
 }
 impl W {
-    #[doc = "Bits 0:31 - Message Data Low Value"]
-    #[inline(always)]
-    pub fn mdl(&mut self) -> MDL_W {
-        MDL_W { w: self }
-    }
+  #[doc = "Bits 0:31 - Message Data Low Value"]
+  #[inline(always)]
+  pub fn mdl(&mut self) -> MdlW<'_, Mdl6Spec> {
+    MdlW::new(self, 0)
+  }
 }
+#[doc = "Mailbox Data Low Register (MB = 6)\n\nYou can [`read`](crate::Reg::read) this register and get [`mdl6::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`mdl6::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct Mdl6Spec;
+impl crate::RegisterSpec for Mdl6Spec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`mdl6::R`](R) reader structure"]
+impl crate::Readable for Mdl6Spec {}
+#[doc = "`write(|w| ..)` method takes [`mdl6::W`](W) writer structure"]
+impl crate::Writable for Mdl6Spec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets MDL6 to value 0"]
+impl crate::Resettable for Mdl6Spec {}

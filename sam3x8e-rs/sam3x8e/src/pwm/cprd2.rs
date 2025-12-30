@@ -1,40 +1,35 @@
-#[doc = "Reader of register CPRD2"]
-pub type R = crate::R<u32, super::CPRD2>;
-#[doc = "Writer for register CPRD2"]
-pub type W = crate::W<u32, super::CPRD2>;
-#[doc = "Register CPRD2 `reset()`'s with value 0"]
-impl crate::ResetValue for super::CPRD2 {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `CPRD`"]
-pub type CPRD_R = crate::R<u32, u32>;
-#[doc = "Write proxy for field `CPRD`"]
-pub struct CPRD_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CPRD_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u32) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x00ff_ffff) | ((value as u32) & 0x00ff_ffff);
-        self.w
-    }
-}
+#[doc = "Register `CPRD2` reader"]
+pub type R = crate::R<Cprd2Spec>;
+#[doc = "Register `CPRD2` writer"]
+pub type W = crate::W<Cprd2Spec>;
+#[doc = "Field `CPRD` reader - Channel Period"]
+pub type CprdR = crate::FieldReader<u32>;
+#[doc = "Field `CPRD` writer - Channel Period"]
+pub type CprdW<'a, REG> = crate::FieldWriter<'a, REG, 24, u32>;
 impl R {
-    #[doc = "Bits 0:23 - Channel Period"]
-    #[inline(always)]
-    pub fn cprd(&self) -> CPRD_R {
-        CPRD_R::new((self.bits & 0x00ff_ffff) as u32)
-    }
+  #[doc = "Bits 0:23 - Channel Period"]
+  #[inline(always)]
+  pub fn cprd(&self) -> CprdR {
+    CprdR::new(self.bits & 0x00ff_ffff)
+  }
 }
 impl W {
-    #[doc = "Bits 0:23 - Channel Period"]
-    #[inline(always)]
-    pub fn cprd(&mut self) -> CPRD_W {
-        CPRD_W { w: self }
-    }
+  #[doc = "Bits 0:23 - Channel Period"]
+  #[inline(always)]
+  pub fn cprd(&mut self) -> CprdW<'_, Cprd2Spec> {
+    CprdW::new(self, 0)
+  }
 }
+#[doc = "PWM Channel Period Register (ch_num = 2)\n\nYou can [`read`](crate::Reg::read) this register and get [`cprd2::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cprd2::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct Cprd2Spec;
+impl crate::RegisterSpec for Cprd2Spec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`cprd2::R`](R) reader structure"]
+impl crate::Readable for Cprd2Spec {}
+#[doc = "`write(|w| ..)` method takes [`cprd2::W`](W) writer structure"]
+impl crate::Writable for Cprd2Spec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets CPRD2 to value 0"]
+impl crate::Resettable for Cprd2Spec {}

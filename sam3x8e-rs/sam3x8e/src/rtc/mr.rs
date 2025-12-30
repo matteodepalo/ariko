@@ -1,50 +1,35 @@
-#[doc = "Reader of register MR"]
-pub type R = crate::R<u32, super::MR>;
-#[doc = "Writer for register MR"]
-pub type W = crate::W<u32, super::MR>;
-#[doc = "Register MR `reset()`'s with value 0"]
-impl crate::ResetValue for super::MR {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `HRMOD`"]
-pub type HRMOD_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `HRMOD`"]
-pub struct HRMOD_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> HRMOD_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x01) | ((value as u32) & 0x01);
-        self.w
-    }
-}
+#[doc = "Register `MR` reader"]
+pub type R = crate::R<MrSpec>;
+#[doc = "Register `MR` writer"]
+pub type W = crate::W<MrSpec>;
+#[doc = "Field `HRMOD` reader - 12-/24-hour Mode"]
+pub type HrmodR = crate::BitReader;
+#[doc = "Field `HRMOD` writer - 12-/24-hour Mode"]
+pub type HrmodW<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
-    #[doc = "Bit 0 - 12-/24-hour Mode"]
-    #[inline(always)]
-    pub fn hrmod(&self) -> HRMOD_R {
-        HRMOD_R::new((self.bits & 0x01) != 0)
-    }
+  #[doc = "Bit 0 - 12-/24-hour Mode"]
+  #[inline(always)]
+  pub fn hrmod(&self) -> HrmodR {
+    HrmodR::new((self.bits & 1) != 0)
+  }
 }
 impl W {
-    #[doc = "Bit 0 - 12-/24-hour Mode"]
-    #[inline(always)]
-    pub fn hrmod(&mut self) -> HRMOD_W {
-        HRMOD_W { w: self }
-    }
+  #[doc = "Bit 0 - 12-/24-hour Mode"]
+  #[inline(always)]
+  pub fn hrmod(&mut self) -> HrmodW<'_, MrSpec> {
+    HrmodW::new(self, 0)
+  }
 }
+#[doc = "Mode Register\n\nYou can [`read`](crate::Reg::read) this register and get [`mr::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`mr::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct MrSpec;
+impl crate::RegisterSpec for MrSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`mr::R`](R) reader structure"]
+impl crate::Readable for MrSpec {}
+#[doc = "`write(|w| ..)` method takes [`mr::W`](W) writer structure"]
+impl crate::Writable for MrSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets MR to value 0"]
+impl crate::Resettable for MrSpec {}

@@ -1,40 +1,35 @@
-#[doc = "Reader of register RC1R"]
-pub type R = crate::R<u32, super::RC1R>;
-#[doc = "Writer for register RC1R"]
-pub type W = crate::W<u32, super::RC1R>;
-#[doc = "Register RC1R `reset()`'s with value 0"]
-impl crate::ResetValue for super::RC1R {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `CP1`"]
-pub type CP1_R = crate::R<u16, u16>;
-#[doc = "Write proxy for field `CP1`"]
-pub struct CP1_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CP1_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u16) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0xffff) | ((value as u32) & 0xffff);
-        self.w
-    }
-}
+#[doc = "Register `RC1R` reader"]
+pub type R = crate::R<Rc1rSpec>;
+#[doc = "Register `RC1R` writer"]
+pub type W = crate::W<Rc1rSpec>;
+#[doc = "Field `CP1` reader - Receive Compare Data 1"]
+pub type Cp1R = crate::FieldReader<u16>;
+#[doc = "Field `CP1` writer - Receive Compare Data 1"]
+pub type Cp1W<'a, REG> = crate::FieldWriter<'a, REG, 16, u16>;
 impl R {
-    #[doc = "Bits 0:15 - Receive Compare Data 1"]
-    #[inline(always)]
-    pub fn cp1(&self) -> CP1_R {
-        CP1_R::new((self.bits & 0xffff) as u16)
-    }
+  #[doc = "Bits 0:15 - Receive Compare Data 1"]
+  #[inline(always)]
+  pub fn cp1(&self) -> Cp1R {
+    Cp1R::new((self.bits & 0xffff) as u16)
+  }
 }
 impl W {
-    #[doc = "Bits 0:15 - Receive Compare Data 1"]
-    #[inline(always)]
-    pub fn cp1(&mut self) -> CP1_W {
-        CP1_W { w: self }
-    }
+  #[doc = "Bits 0:15 - Receive Compare Data 1"]
+  #[inline(always)]
+  pub fn cp1(&mut self) -> Cp1W<'_, Rc1rSpec> {
+    Cp1W::new(self, 0)
+  }
 }
+#[doc = "Receive Compare 1 Register\n\nYou can [`read`](crate::Reg::read) this register and get [`rc1r::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`rc1r::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct Rc1rSpec;
+impl crate::RegisterSpec for Rc1rSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`rc1r::R`](R) reader structure"]
+impl crate::Readable for Rc1rSpec {}
+#[doc = "`write(|w| ..)` method takes [`rc1r::W`](W) writer structure"]
+impl crate::Writable for Rc1rSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets RC1R to value 0"]
+impl crate::Resettable for Rc1rSpec {}

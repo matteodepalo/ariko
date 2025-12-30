@@ -1,112 +1,77 @@
-#[doc = "Reader of register HSTADDR1"]
-pub type R = crate::R<u32, super::HSTADDR1>;
-#[doc = "Writer for register HSTADDR1"]
-pub type W = crate::W<u32, super::HSTADDR1>;
-#[doc = "Register HSTADDR1 `reset()`'s with value 0"]
-impl crate::ResetValue for super::HSTADDR1 {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `HSTADDRP0`"]
-pub type HSTADDRP0_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `HSTADDRP0`"]
-pub struct HSTADDRP0_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> HSTADDRP0_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x7f) | ((value as u32) & 0x7f);
-        self.w
-    }
-}
-#[doc = "Reader of field `HSTADDRP1`"]
-pub type HSTADDRP1_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `HSTADDRP1`"]
-pub struct HSTADDRP1_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> HSTADDRP1_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x7f << 8)) | (((value as u32) & 0x7f) << 8);
-        self.w
-    }
-}
-#[doc = "Reader of field `HSTADDRP2`"]
-pub type HSTADDRP2_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `HSTADDRP2`"]
-pub struct HSTADDRP2_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> HSTADDRP2_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x7f << 16)) | (((value as u32) & 0x7f) << 16);
-        self.w
-    }
-}
-#[doc = "Reader of field `HSTADDRP3`"]
-pub type HSTADDRP3_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `HSTADDRP3`"]
-pub struct HSTADDRP3_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> HSTADDRP3_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x7f << 24)) | (((value as u32) & 0x7f) << 24);
-        self.w
-    }
-}
+#[doc = "Register `HSTADDR1` reader"]
+pub type R = crate::R<Hstaddr1Spec>;
+#[doc = "Register `HSTADDR1` writer"]
+pub type W = crate::W<Hstaddr1Spec>;
+#[doc = "Field `HSTADDRP0` reader - USB Host Address"]
+pub type Hstaddrp0R = crate::FieldReader;
+#[doc = "Field `HSTADDRP0` writer - USB Host Address"]
+pub type Hstaddrp0W<'a, REG> = crate::FieldWriter<'a, REG, 7>;
+#[doc = "Field `HSTADDRP1` reader - USB Host Address"]
+pub type Hstaddrp1R = crate::FieldReader;
+#[doc = "Field `HSTADDRP1` writer - USB Host Address"]
+pub type Hstaddrp1W<'a, REG> = crate::FieldWriter<'a, REG, 7>;
+#[doc = "Field `HSTADDRP2` reader - USB Host Address"]
+pub type Hstaddrp2R = crate::FieldReader;
+#[doc = "Field `HSTADDRP2` writer - USB Host Address"]
+pub type Hstaddrp2W<'a, REG> = crate::FieldWriter<'a, REG, 7>;
+#[doc = "Field `HSTADDRP3` reader - USB Host Address"]
+pub type Hstaddrp3R = crate::FieldReader;
+#[doc = "Field `HSTADDRP3` writer - USB Host Address"]
+pub type Hstaddrp3W<'a, REG> = crate::FieldWriter<'a, REG, 7>;
 impl R {
-    #[doc = "Bits 0:6 - USB Host Address"]
-    #[inline(always)]
-    pub fn hstaddrp0(&self) -> HSTADDRP0_R {
-        HSTADDRP0_R::new((self.bits & 0x7f) as u8)
-    }
-    #[doc = "Bits 8:14 - USB Host Address"]
-    #[inline(always)]
-    pub fn hstaddrp1(&self) -> HSTADDRP1_R {
-        HSTADDRP1_R::new(((self.bits >> 8) & 0x7f) as u8)
-    }
-    #[doc = "Bits 16:22 - USB Host Address"]
-    #[inline(always)]
-    pub fn hstaddrp2(&self) -> HSTADDRP2_R {
-        HSTADDRP2_R::new(((self.bits >> 16) & 0x7f) as u8)
-    }
-    #[doc = "Bits 24:30 - USB Host Address"]
-    #[inline(always)]
-    pub fn hstaddrp3(&self) -> HSTADDRP3_R {
-        HSTADDRP3_R::new(((self.bits >> 24) & 0x7f) as u8)
-    }
+  #[doc = "Bits 0:6 - USB Host Address"]
+  #[inline(always)]
+  pub fn hstaddrp0(&self) -> Hstaddrp0R {
+    Hstaddrp0R::new((self.bits & 0x7f) as u8)
+  }
+  #[doc = "Bits 8:14 - USB Host Address"]
+  #[inline(always)]
+  pub fn hstaddrp1(&self) -> Hstaddrp1R {
+    Hstaddrp1R::new(((self.bits >> 8) & 0x7f) as u8)
+  }
+  #[doc = "Bits 16:22 - USB Host Address"]
+  #[inline(always)]
+  pub fn hstaddrp2(&self) -> Hstaddrp2R {
+    Hstaddrp2R::new(((self.bits >> 16) & 0x7f) as u8)
+  }
+  #[doc = "Bits 24:30 - USB Host Address"]
+  #[inline(always)]
+  pub fn hstaddrp3(&self) -> Hstaddrp3R {
+    Hstaddrp3R::new(((self.bits >> 24) & 0x7f) as u8)
+  }
 }
 impl W {
-    #[doc = "Bits 0:6 - USB Host Address"]
-    #[inline(always)]
-    pub fn hstaddrp0(&mut self) -> HSTADDRP0_W {
-        HSTADDRP0_W { w: self }
-    }
-    #[doc = "Bits 8:14 - USB Host Address"]
-    #[inline(always)]
-    pub fn hstaddrp1(&mut self) -> HSTADDRP1_W {
-        HSTADDRP1_W { w: self }
-    }
-    #[doc = "Bits 16:22 - USB Host Address"]
-    #[inline(always)]
-    pub fn hstaddrp2(&mut self) -> HSTADDRP2_W {
-        HSTADDRP2_W { w: self }
-    }
-    #[doc = "Bits 24:30 - USB Host Address"]
-    #[inline(always)]
-    pub fn hstaddrp3(&mut self) -> HSTADDRP3_W {
-        HSTADDRP3_W { w: self }
-    }
+  #[doc = "Bits 0:6 - USB Host Address"]
+  #[inline(always)]
+  pub fn hstaddrp0(&mut self) -> Hstaddrp0W<'_, Hstaddr1Spec> {
+    Hstaddrp0W::new(self, 0)
+  }
+  #[doc = "Bits 8:14 - USB Host Address"]
+  #[inline(always)]
+  pub fn hstaddrp1(&mut self) -> Hstaddrp1W<'_, Hstaddr1Spec> {
+    Hstaddrp1W::new(self, 8)
+  }
+  #[doc = "Bits 16:22 - USB Host Address"]
+  #[inline(always)]
+  pub fn hstaddrp2(&mut self) -> Hstaddrp2W<'_, Hstaddr1Spec> {
+    Hstaddrp2W::new(self, 16)
+  }
+  #[doc = "Bits 24:30 - USB Host Address"]
+  #[inline(always)]
+  pub fn hstaddrp3(&mut self) -> Hstaddrp3W<'_, Hstaddr1Spec> {
+    Hstaddrp3W::new(self, 24)
+  }
 }
+#[doc = "Host Address 1 Register\n\nYou can [`read`](crate::Reg::read) this register and get [`hstaddr1::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`hstaddr1::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct Hstaddr1Spec;
+impl crate::RegisterSpec for Hstaddr1Spec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`hstaddr1::R`](R) reader structure"]
+impl crate::Readable for Hstaddr1Spec {}
+#[doc = "`write(|w| ..)` method takes [`hstaddr1::W`](W) writer structure"]
+impl crate::Writable for Hstaddr1Spec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets HSTADDR1 to value 0"]
+impl crate::Resettable for Hstaddr1Spec {}

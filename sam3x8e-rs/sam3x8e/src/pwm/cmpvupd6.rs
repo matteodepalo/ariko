@@ -1,48 +1,27 @@
-#[doc = "Writer for register CMPVUPD6"]
-pub type W = crate::W<u32, super::CMPVUPD6>;
-#[doc = "Write proxy for field `CVUPD`"]
-pub struct CVUPD_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CVUPD_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u32) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x00ff_ffff) | ((value as u32) & 0x00ff_ffff);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `CVMUPD`"]
-pub struct CVMUPD_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CVMUPD_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 24)) | (((value as u32) & 0x01) << 24);
-        self.w
-    }
-}
+#[doc = "Register `CMPVUPD6` writer"]
+pub type W = crate::W<Cmpvupd6Spec>;
+#[doc = "Field `CVUPD` writer - Comparison x Value Update"]
+pub type CvupdW<'a, REG> = crate::FieldWriter<'a, REG, 24, u32>;
+#[doc = "Field `CVMUPD` writer - Comparison x Value Mode Update"]
+pub type CvmupdW<'a, REG> = crate::BitWriter<'a, REG>;
 impl W {
-    #[doc = "Bits 0:23 - Comparison x Value Update"]
-    #[inline(always)]
-    pub fn cvupd(&mut self) -> CVUPD_W {
-        CVUPD_W { w: self }
-    }
-    #[doc = "Bit 24 - Comparison x Value Mode Update"]
-    #[inline(always)]
-    pub fn cvmupd(&mut self) -> CVMUPD_W {
-        CVMUPD_W { w: self }
-    }
+  #[doc = "Bits 0:23 - Comparison x Value Update"]
+  #[inline(always)]
+  pub fn cvupd(&mut self) -> CvupdW<'_, Cmpvupd6Spec> {
+    CvupdW::new(self, 0)
+  }
+  #[doc = "Bit 24 - Comparison x Value Mode Update"]
+  #[inline(always)]
+  pub fn cvmupd(&mut self) -> CvmupdW<'_, Cmpvupd6Spec> {
+    CvmupdW::new(self, 24)
+  }
+}
+#[doc = "PWM Comparison 6 Value Update Register\n\nYou can [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cmpvupd6::W`](W). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct Cmpvupd6Spec;
+impl crate::RegisterSpec for Cmpvupd6Spec {
+  type Ux = u32;
+}
+#[doc = "`write(|w| ..)` method takes [`cmpvupd6::W`](W) writer structure"]
+impl crate::Writable for Cmpvupd6Spec {
+  type Safety = crate::Unsafe;
 }

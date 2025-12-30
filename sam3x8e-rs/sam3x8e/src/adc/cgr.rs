@@ -1,400 +1,245 @@
-#[doc = "Reader of register CGR"]
-pub type R = crate::R<u32, super::CGR>;
-#[doc = "Writer for register CGR"]
-pub type W = crate::W<u32, super::CGR>;
-#[doc = "Register CGR `reset()`'s with value 0"]
-impl crate::ResetValue for super::CGR {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `GAIN0`"]
-pub type GAIN0_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `GAIN0`"]
-pub struct GAIN0_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> GAIN0_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x03) | ((value as u32) & 0x03);
-        self.w
-    }
-}
-#[doc = "Reader of field `GAIN1`"]
-pub type GAIN1_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `GAIN1`"]
-pub struct GAIN1_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> GAIN1_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x03 << 2)) | (((value as u32) & 0x03) << 2);
-        self.w
-    }
-}
-#[doc = "Reader of field `GAIN2`"]
-pub type GAIN2_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `GAIN2`"]
-pub struct GAIN2_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> GAIN2_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x03 << 4)) | (((value as u32) & 0x03) << 4);
-        self.w
-    }
-}
-#[doc = "Reader of field `GAIN3`"]
-pub type GAIN3_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `GAIN3`"]
-pub struct GAIN3_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> GAIN3_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x03 << 6)) | (((value as u32) & 0x03) << 6);
-        self.w
-    }
-}
-#[doc = "Reader of field `GAIN4`"]
-pub type GAIN4_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `GAIN4`"]
-pub struct GAIN4_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> GAIN4_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x03 << 8)) | (((value as u32) & 0x03) << 8);
-        self.w
-    }
-}
-#[doc = "Reader of field `GAIN5`"]
-pub type GAIN5_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `GAIN5`"]
-pub struct GAIN5_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> GAIN5_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x03 << 10)) | (((value as u32) & 0x03) << 10);
-        self.w
-    }
-}
-#[doc = "Reader of field `GAIN6`"]
-pub type GAIN6_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `GAIN6`"]
-pub struct GAIN6_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> GAIN6_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x03 << 12)) | (((value as u32) & 0x03) << 12);
-        self.w
-    }
-}
-#[doc = "Reader of field `GAIN7`"]
-pub type GAIN7_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `GAIN7`"]
-pub struct GAIN7_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> GAIN7_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x03 << 14)) | (((value as u32) & 0x03) << 14);
-        self.w
-    }
-}
-#[doc = "Reader of field `GAIN8`"]
-pub type GAIN8_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `GAIN8`"]
-pub struct GAIN8_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> GAIN8_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x03 << 16)) | (((value as u32) & 0x03) << 16);
-        self.w
-    }
-}
-#[doc = "Reader of field `GAIN9`"]
-pub type GAIN9_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `GAIN9`"]
-pub struct GAIN9_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> GAIN9_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x03 << 18)) | (((value as u32) & 0x03) << 18);
-        self.w
-    }
-}
-#[doc = "Reader of field `GAIN10`"]
-pub type GAIN10_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `GAIN10`"]
-pub struct GAIN10_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> GAIN10_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x03 << 20)) | (((value as u32) & 0x03) << 20);
-        self.w
-    }
-}
-#[doc = "Reader of field `GAIN11`"]
-pub type GAIN11_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `GAIN11`"]
-pub struct GAIN11_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> GAIN11_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x03 << 22)) | (((value as u32) & 0x03) << 22);
-        self.w
-    }
-}
-#[doc = "Reader of field `GAIN12`"]
-pub type GAIN12_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `GAIN12`"]
-pub struct GAIN12_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> GAIN12_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x03 << 24)) | (((value as u32) & 0x03) << 24);
-        self.w
-    }
-}
-#[doc = "Reader of field `GAIN13`"]
-pub type GAIN13_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `GAIN13`"]
-pub struct GAIN13_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> GAIN13_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x03 << 26)) | (((value as u32) & 0x03) << 26);
-        self.w
-    }
-}
-#[doc = "Reader of field `GAIN14`"]
-pub type GAIN14_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `GAIN14`"]
-pub struct GAIN14_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> GAIN14_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x03 << 28)) | (((value as u32) & 0x03) << 28);
-        self.w
-    }
-}
-#[doc = "Reader of field `GAIN15`"]
-pub type GAIN15_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `GAIN15`"]
-pub struct GAIN15_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> GAIN15_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x03 << 30)) | (((value as u32) & 0x03) << 30);
-        self.w
-    }
-}
+#[doc = "Register `CGR` reader"]
+pub type R = crate::R<CgrSpec>;
+#[doc = "Register `CGR` writer"]
+pub type W = crate::W<CgrSpec>;
+#[doc = "Field `GAIN0` reader - Gain for channel 0"]
+pub type Gain0R = crate::FieldReader;
+#[doc = "Field `GAIN0` writer - Gain for channel 0"]
+pub type Gain0W<'a, REG> = crate::FieldWriter<'a, REG, 2>;
+#[doc = "Field `GAIN1` reader - Gain for channel 1"]
+pub type Gain1R = crate::FieldReader;
+#[doc = "Field `GAIN1` writer - Gain for channel 1"]
+pub type Gain1W<'a, REG> = crate::FieldWriter<'a, REG, 2>;
+#[doc = "Field `GAIN2` reader - Gain for channel 2"]
+pub type Gain2R = crate::FieldReader;
+#[doc = "Field `GAIN2` writer - Gain for channel 2"]
+pub type Gain2W<'a, REG> = crate::FieldWriter<'a, REG, 2>;
+#[doc = "Field `GAIN3` reader - Gain for channel 3"]
+pub type Gain3R = crate::FieldReader;
+#[doc = "Field `GAIN3` writer - Gain for channel 3"]
+pub type Gain3W<'a, REG> = crate::FieldWriter<'a, REG, 2>;
+#[doc = "Field `GAIN4` reader - Gain for channel 4"]
+pub type Gain4R = crate::FieldReader;
+#[doc = "Field `GAIN4` writer - Gain for channel 4"]
+pub type Gain4W<'a, REG> = crate::FieldWriter<'a, REG, 2>;
+#[doc = "Field `GAIN5` reader - Gain for channel 5"]
+pub type Gain5R = crate::FieldReader;
+#[doc = "Field `GAIN5` writer - Gain for channel 5"]
+pub type Gain5W<'a, REG> = crate::FieldWriter<'a, REG, 2>;
+#[doc = "Field `GAIN6` reader - Gain for channel 6"]
+pub type Gain6R = crate::FieldReader;
+#[doc = "Field `GAIN6` writer - Gain for channel 6"]
+pub type Gain6W<'a, REG> = crate::FieldWriter<'a, REG, 2>;
+#[doc = "Field `GAIN7` reader - Gain for channel 7"]
+pub type Gain7R = crate::FieldReader;
+#[doc = "Field `GAIN7` writer - Gain for channel 7"]
+pub type Gain7W<'a, REG> = crate::FieldWriter<'a, REG, 2>;
+#[doc = "Field `GAIN8` reader - Gain for channel 8"]
+pub type Gain8R = crate::FieldReader;
+#[doc = "Field `GAIN8` writer - Gain for channel 8"]
+pub type Gain8W<'a, REG> = crate::FieldWriter<'a, REG, 2>;
+#[doc = "Field `GAIN9` reader - Gain for channel 9"]
+pub type Gain9R = crate::FieldReader;
+#[doc = "Field `GAIN9` writer - Gain for channel 9"]
+pub type Gain9W<'a, REG> = crate::FieldWriter<'a, REG, 2>;
+#[doc = "Field `GAIN10` reader - Gain for channel 10"]
+pub type Gain10R = crate::FieldReader;
+#[doc = "Field `GAIN10` writer - Gain for channel 10"]
+pub type Gain10W<'a, REG> = crate::FieldWriter<'a, REG, 2>;
+#[doc = "Field `GAIN11` reader - Gain for channel 11"]
+pub type Gain11R = crate::FieldReader;
+#[doc = "Field `GAIN11` writer - Gain for channel 11"]
+pub type Gain11W<'a, REG> = crate::FieldWriter<'a, REG, 2>;
+#[doc = "Field `GAIN12` reader - Gain for channel 12"]
+pub type Gain12R = crate::FieldReader;
+#[doc = "Field `GAIN12` writer - Gain for channel 12"]
+pub type Gain12W<'a, REG> = crate::FieldWriter<'a, REG, 2>;
+#[doc = "Field `GAIN13` reader - Gain for channel 13"]
+pub type Gain13R = crate::FieldReader;
+#[doc = "Field `GAIN13` writer - Gain for channel 13"]
+pub type Gain13W<'a, REG> = crate::FieldWriter<'a, REG, 2>;
+#[doc = "Field `GAIN14` reader - Gain for channel 14"]
+pub type Gain14R = crate::FieldReader;
+#[doc = "Field `GAIN14` writer - Gain for channel 14"]
+pub type Gain14W<'a, REG> = crate::FieldWriter<'a, REG, 2>;
+#[doc = "Field `GAIN15` reader - Gain for channel 15"]
+pub type Gain15R = crate::FieldReader;
+#[doc = "Field `GAIN15` writer - Gain for channel 15"]
+pub type Gain15W<'a, REG> = crate::FieldWriter<'a, REG, 2>;
 impl R {
-    #[doc = "Bits 0:1 - Gain for Channel 0"]
-    #[inline(always)]
-    pub fn gain0(&self) -> GAIN0_R {
-        GAIN0_R::new((self.bits & 0x03) as u8)
-    }
-    #[doc = "Bits 2:3 - Gain for Channel 1"]
-    #[inline(always)]
-    pub fn gain1(&self) -> GAIN1_R {
-        GAIN1_R::new(((self.bits >> 2) & 0x03) as u8)
-    }
-    #[doc = "Bits 4:5 - Gain for Channel 2"]
-    #[inline(always)]
-    pub fn gain2(&self) -> GAIN2_R {
-        GAIN2_R::new(((self.bits >> 4) & 0x03) as u8)
-    }
-    #[doc = "Bits 6:7 - Gain for Channel 3"]
-    #[inline(always)]
-    pub fn gain3(&self) -> GAIN3_R {
-        GAIN3_R::new(((self.bits >> 6) & 0x03) as u8)
-    }
-    #[doc = "Bits 8:9 - Gain for Channel 4"]
-    #[inline(always)]
-    pub fn gain4(&self) -> GAIN4_R {
-        GAIN4_R::new(((self.bits >> 8) & 0x03) as u8)
-    }
-    #[doc = "Bits 10:11 - Gain for Channel 5"]
-    #[inline(always)]
-    pub fn gain5(&self) -> GAIN5_R {
-        GAIN5_R::new(((self.bits >> 10) & 0x03) as u8)
-    }
-    #[doc = "Bits 12:13 - Gain for Channel 6"]
-    #[inline(always)]
-    pub fn gain6(&self) -> GAIN6_R {
-        GAIN6_R::new(((self.bits >> 12) & 0x03) as u8)
-    }
-    #[doc = "Bits 14:15 - Gain for Channel 7"]
-    #[inline(always)]
-    pub fn gain7(&self) -> GAIN7_R {
-        GAIN7_R::new(((self.bits >> 14) & 0x03) as u8)
-    }
-    #[doc = "Bits 16:17 - Gain for Channel 8"]
-    #[inline(always)]
-    pub fn gain8(&self) -> GAIN8_R {
-        GAIN8_R::new(((self.bits >> 16) & 0x03) as u8)
-    }
-    #[doc = "Bits 18:19 - Gain for Channel 9"]
-    #[inline(always)]
-    pub fn gain9(&self) -> GAIN9_R {
-        GAIN9_R::new(((self.bits >> 18) & 0x03) as u8)
-    }
-    #[doc = "Bits 20:21 - Gain for Channel 10"]
-    #[inline(always)]
-    pub fn gain10(&self) -> GAIN10_R {
-        GAIN10_R::new(((self.bits >> 20) & 0x03) as u8)
-    }
-    #[doc = "Bits 22:23 - Gain for Channel 11"]
-    #[inline(always)]
-    pub fn gain11(&self) -> GAIN11_R {
-        GAIN11_R::new(((self.bits >> 22) & 0x03) as u8)
-    }
-    #[doc = "Bits 24:25 - Gain for Channel 12"]
-    #[inline(always)]
-    pub fn gain12(&self) -> GAIN12_R {
-        GAIN12_R::new(((self.bits >> 24) & 0x03) as u8)
-    }
-    #[doc = "Bits 26:27 - Gain for Channel 13"]
-    #[inline(always)]
-    pub fn gain13(&self) -> GAIN13_R {
-        GAIN13_R::new(((self.bits >> 26) & 0x03) as u8)
-    }
-    #[doc = "Bits 28:29 - Gain for Channel 14"]
-    #[inline(always)]
-    pub fn gain14(&self) -> GAIN14_R {
-        GAIN14_R::new(((self.bits >> 28) & 0x03) as u8)
-    }
-    #[doc = "Bits 30:31 - Gain for Channel 15"]
-    #[inline(always)]
-    pub fn gain15(&self) -> GAIN15_R {
-        GAIN15_R::new(((self.bits >> 30) & 0x03) as u8)
-    }
+  #[doc = "Bits 0:1 - Gain for channel 0"]
+  #[inline(always)]
+  pub fn gain0(&self) -> Gain0R {
+    Gain0R::new((self.bits & 3) as u8)
+  }
+  #[doc = "Bits 2:3 - Gain for channel 1"]
+  #[inline(always)]
+  pub fn gain1(&self) -> Gain1R {
+    Gain1R::new(((self.bits >> 2) & 3) as u8)
+  }
+  #[doc = "Bits 4:5 - Gain for channel 2"]
+  #[inline(always)]
+  pub fn gain2(&self) -> Gain2R {
+    Gain2R::new(((self.bits >> 4) & 3) as u8)
+  }
+  #[doc = "Bits 6:7 - Gain for channel 3"]
+  #[inline(always)]
+  pub fn gain3(&self) -> Gain3R {
+    Gain3R::new(((self.bits >> 6) & 3) as u8)
+  }
+  #[doc = "Bits 8:9 - Gain for channel 4"]
+  #[inline(always)]
+  pub fn gain4(&self) -> Gain4R {
+    Gain4R::new(((self.bits >> 8) & 3) as u8)
+  }
+  #[doc = "Bits 10:11 - Gain for channel 5"]
+  #[inline(always)]
+  pub fn gain5(&self) -> Gain5R {
+    Gain5R::new(((self.bits >> 10) & 3) as u8)
+  }
+  #[doc = "Bits 12:13 - Gain for channel 6"]
+  #[inline(always)]
+  pub fn gain6(&self) -> Gain6R {
+    Gain6R::new(((self.bits >> 12) & 3) as u8)
+  }
+  #[doc = "Bits 14:15 - Gain for channel 7"]
+  #[inline(always)]
+  pub fn gain7(&self) -> Gain7R {
+    Gain7R::new(((self.bits >> 14) & 3) as u8)
+  }
+  #[doc = "Bits 16:17 - Gain for channel 8"]
+  #[inline(always)]
+  pub fn gain8(&self) -> Gain8R {
+    Gain8R::new(((self.bits >> 16) & 3) as u8)
+  }
+  #[doc = "Bits 18:19 - Gain for channel 9"]
+  #[inline(always)]
+  pub fn gain9(&self) -> Gain9R {
+    Gain9R::new(((self.bits >> 18) & 3) as u8)
+  }
+  #[doc = "Bits 20:21 - Gain for channel 10"]
+  #[inline(always)]
+  pub fn gain10(&self) -> Gain10R {
+    Gain10R::new(((self.bits >> 20) & 3) as u8)
+  }
+  #[doc = "Bits 22:23 - Gain for channel 11"]
+  #[inline(always)]
+  pub fn gain11(&self) -> Gain11R {
+    Gain11R::new(((self.bits >> 22) & 3) as u8)
+  }
+  #[doc = "Bits 24:25 - Gain for channel 12"]
+  #[inline(always)]
+  pub fn gain12(&self) -> Gain12R {
+    Gain12R::new(((self.bits >> 24) & 3) as u8)
+  }
+  #[doc = "Bits 26:27 - Gain for channel 13"]
+  #[inline(always)]
+  pub fn gain13(&self) -> Gain13R {
+    Gain13R::new(((self.bits >> 26) & 3) as u8)
+  }
+  #[doc = "Bits 28:29 - Gain for channel 14"]
+  #[inline(always)]
+  pub fn gain14(&self) -> Gain14R {
+    Gain14R::new(((self.bits >> 28) & 3) as u8)
+  }
+  #[doc = "Bits 30:31 - Gain for channel 15"]
+  #[inline(always)]
+  pub fn gain15(&self) -> Gain15R {
+    Gain15R::new(((self.bits >> 30) & 3) as u8)
+  }
 }
 impl W {
-    #[doc = "Bits 0:1 - Gain for Channel 0"]
-    #[inline(always)]
-    pub fn gain0(&mut self) -> GAIN0_W {
-        GAIN0_W { w: self }
-    }
-    #[doc = "Bits 2:3 - Gain for Channel 1"]
-    #[inline(always)]
-    pub fn gain1(&mut self) -> GAIN1_W {
-        GAIN1_W { w: self }
-    }
-    #[doc = "Bits 4:5 - Gain for Channel 2"]
-    #[inline(always)]
-    pub fn gain2(&mut self) -> GAIN2_W {
-        GAIN2_W { w: self }
-    }
-    #[doc = "Bits 6:7 - Gain for Channel 3"]
-    #[inline(always)]
-    pub fn gain3(&mut self) -> GAIN3_W {
-        GAIN3_W { w: self }
-    }
-    #[doc = "Bits 8:9 - Gain for Channel 4"]
-    #[inline(always)]
-    pub fn gain4(&mut self) -> GAIN4_W {
-        GAIN4_W { w: self }
-    }
-    #[doc = "Bits 10:11 - Gain for Channel 5"]
-    #[inline(always)]
-    pub fn gain5(&mut self) -> GAIN5_W {
-        GAIN5_W { w: self }
-    }
-    #[doc = "Bits 12:13 - Gain for Channel 6"]
-    #[inline(always)]
-    pub fn gain6(&mut self) -> GAIN6_W {
-        GAIN6_W { w: self }
-    }
-    #[doc = "Bits 14:15 - Gain for Channel 7"]
-    #[inline(always)]
-    pub fn gain7(&mut self) -> GAIN7_W {
-        GAIN7_W { w: self }
-    }
-    #[doc = "Bits 16:17 - Gain for Channel 8"]
-    #[inline(always)]
-    pub fn gain8(&mut self) -> GAIN8_W {
-        GAIN8_W { w: self }
-    }
-    #[doc = "Bits 18:19 - Gain for Channel 9"]
-    #[inline(always)]
-    pub fn gain9(&mut self) -> GAIN9_W {
-        GAIN9_W { w: self }
-    }
-    #[doc = "Bits 20:21 - Gain for Channel 10"]
-    #[inline(always)]
-    pub fn gain10(&mut self) -> GAIN10_W {
-        GAIN10_W { w: self }
-    }
-    #[doc = "Bits 22:23 - Gain for Channel 11"]
-    #[inline(always)]
-    pub fn gain11(&mut self) -> GAIN11_W {
-        GAIN11_W { w: self }
-    }
-    #[doc = "Bits 24:25 - Gain for Channel 12"]
-    #[inline(always)]
-    pub fn gain12(&mut self) -> GAIN12_W {
-        GAIN12_W { w: self }
-    }
-    #[doc = "Bits 26:27 - Gain for Channel 13"]
-    #[inline(always)]
-    pub fn gain13(&mut self) -> GAIN13_W {
-        GAIN13_W { w: self }
-    }
-    #[doc = "Bits 28:29 - Gain for Channel 14"]
-    #[inline(always)]
-    pub fn gain14(&mut self) -> GAIN14_W {
-        GAIN14_W { w: self }
-    }
-    #[doc = "Bits 30:31 - Gain for Channel 15"]
-    #[inline(always)]
-    pub fn gain15(&mut self) -> GAIN15_W {
-        GAIN15_W { w: self }
-    }
+  #[doc = "Bits 0:1 - Gain for channel 0"]
+  #[inline(always)]
+  pub fn gain0(&mut self) -> Gain0W<'_, CgrSpec> {
+    Gain0W::new(self, 0)
+  }
+  #[doc = "Bits 2:3 - Gain for channel 1"]
+  #[inline(always)]
+  pub fn gain1(&mut self) -> Gain1W<'_, CgrSpec> {
+    Gain1W::new(self, 2)
+  }
+  #[doc = "Bits 4:5 - Gain for channel 2"]
+  #[inline(always)]
+  pub fn gain2(&mut self) -> Gain2W<'_, CgrSpec> {
+    Gain2W::new(self, 4)
+  }
+  #[doc = "Bits 6:7 - Gain for channel 3"]
+  #[inline(always)]
+  pub fn gain3(&mut self) -> Gain3W<'_, CgrSpec> {
+    Gain3W::new(self, 6)
+  }
+  #[doc = "Bits 8:9 - Gain for channel 4"]
+  #[inline(always)]
+  pub fn gain4(&mut self) -> Gain4W<'_, CgrSpec> {
+    Gain4W::new(self, 8)
+  }
+  #[doc = "Bits 10:11 - Gain for channel 5"]
+  #[inline(always)]
+  pub fn gain5(&mut self) -> Gain5W<'_, CgrSpec> {
+    Gain5W::new(self, 10)
+  }
+  #[doc = "Bits 12:13 - Gain for channel 6"]
+  #[inline(always)]
+  pub fn gain6(&mut self) -> Gain6W<'_, CgrSpec> {
+    Gain6W::new(self, 12)
+  }
+  #[doc = "Bits 14:15 - Gain for channel 7"]
+  #[inline(always)]
+  pub fn gain7(&mut self) -> Gain7W<'_, CgrSpec> {
+    Gain7W::new(self, 14)
+  }
+  #[doc = "Bits 16:17 - Gain for channel 8"]
+  #[inline(always)]
+  pub fn gain8(&mut self) -> Gain8W<'_, CgrSpec> {
+    Gain8W::new(self, 16)
+  }
+  #[doc = "Bits 18:19 - Gain for channel 9"]
+  #[inline(always)]
+  pub fn gain9(&mut self) -> Gain9W<'_, CgrSpec> {
+    Gain9W::new(self, 18)
+  }
+  #[doc = "Bits 20:21 - Gain for channel 10"]
+  #[inline(always)]
+  pub fn gain10(&mut self) -> Gain10W<'_, CgrSpec> {
+    Gain10W::new(self, 20)
+  }
+  #[doc = "Bits 22:23 - Gain for channel 11"]
+  #[inline(always)]
+  pub fn gain11(&mut self) -> Gain11W<'_, CgrSpec> {
+    Gain11W::new(self, 22)
+  }
+  #[doc = "Bits 24:25 - Gain for channel 12"]
+  #[inline(always)]
+  pub fn gain12(&mut self) -> Gain12W<'_, CgrSpec> {
+    Gain12W::new(self, 24)
+  }
+  #[doc = "Bits 26:27 - Gain for channel 13"]
+  #[inline(always)]
+  pub fn gain13(&mut self) -> Gain13W<'_, CgrSpec> {
+    Gain13W::new(self, 26)
+  }
+  #[doc = "Bits 28:29 - Gain for channel 14"]
+  #[inline(always)]
+  pub fn gain14(&mut self) -> Gain14W<'_, CgrSpec> {
+    Gain14W::new(self, 28)
+  }
+  #[doc = "Bits 30:31 - Gain for channel 15"]
+  #[inline(always)]
+  pub fn gain15(&mut self) -> Gain15W<'_, CgrSpec> {
+    Gain15W::new(self, 30)
+  }
 }
+#[doc = "Channel Gain Register\n\nYou can [`read`](crate::Reg::read) this register and get [`cgr::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cgr::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct CgrSpec;
+impl crate::RegisterSpec for CgrSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`cgr::R`](R) reader structure"]
+impl crate::Readable for CgrSpec {}
+#[doc = "`write(|w| ..)` method takes [`cgr::W`](W) writer structure"]
+impl crate::Writable for CgrSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets CGR to value 0"]
+impl crate::Resettable for CgrSpec {}

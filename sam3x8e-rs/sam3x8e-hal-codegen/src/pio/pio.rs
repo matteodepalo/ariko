@@ -64,7 +64,7 @@ impl Parse for Pio {
         let inner;
         bracketed!(inner in value);
 
-        let punctuated: Punctuated<LitInt, Comma> = inner.parse_terminated(LitInt::parse)?;
+        let punctuated: Punctuated<LitInt, Comma> = inner.parse_terminated(LitInt::parse, Comma)?;
 
         pins = Some(
           punctuated
@@ -130,8 +130,7 @@ impl<'a> ToTokens for Pio {
                     PeripheralB, PioDisabled
                 };
 
-                use crate::hal::digital::InputPin;
-                use crate::hal::digital::OutputPin;
+                use crate::hal::digital::{ErrorType, InputPin, OutputPin};
 
                 use crate::pac::{#lower_name, #upper_name, PMC};
                 use crate::pmc::Pmc;
@@ -151,18 +150,18 @@ impl<'a> ToTokens for Pio {
                     type Parts = Parts;
                     fn split(self, pmc: &mut Pmc) -> Parts {
                         // Unlock everything
-                        self.wpmr.write(|w| unsafe { w.wpen().clear_bit().wpkey().bits(0x50494F) });
+                        self.wpmr().write(|w| unsafe { w.wpen().clear_bit().wpkey().bits(0x50494F) });
 
                         // PER = PIO Enable Register - enable all pins
-                        self.per.write_with_zero(|w| unsafe { w.bits(0xFFFFFFFF) });
+                        unsafe { self.per().write_with_zero(|w| w.bits(0xFFFFFFFF)); }
 
-                        pmc.pmc.pmc_wpmr.write(|w|
+                        pmc.pmc.pmc_wpmr().write(|w| unsafe {
                             w
                             .wpen().clear_bit()
-                            .wpkey().passwd()
-                        );
+                            .wpkey().bits(0x504D43) // "PMC" password
+                        });
 
-                        pmc.pmc.pmc_pcer0.write_with_zero(|w| w.#pio_clock().set_bit());
+                        unsafe { pmc.pmc.pmc_pcer0().write_with_zero(|w| w.#pio_clock().set_bit()); }
 
                         Parts {
                             absr: ABSR { _ownership: () },
@@ -204,8 +203,8 @@ impl<'a> ToTokens for Pio {
                 }
 
                 impl ABSR {
-                    pub(crate) fn absr(&mut self) -> &#lower_name::ABSR {
-                        unsafe { &(*#upper_name::ptr()).absr }
+                    pub(crate) fn absr(&mut self) -> &#lower_name::Absr {
+                        unsafe { (*#upper_name::ptr()).absr() }
                     }
                 }
 
@@ -229,8 +228,8 @@ impl<'a> ToTokens for Pio {
                 }
 
                 impl MDDR {
-                    pub(crate) fn mddr(&mut self) -> &#lower_name::MDDR {
-                        unsafe { &(*#upper_name::ptr()).mddr }
+                    pub(crate) fn mddr(&mut self) -> &#lower_name::Mddr {
+                        unsafe { (*#upper_name::ptr()).mddr() }
                     }
                 }
 
@@ -254,8 +253,8 @@ impl<'a> ToTokens for Pio {
                 }
 
                 impl MDER {
-                    pub(crate) fn mder(&mut self) -> &#lower_name::MDER {
-                        unsafe { &(*#upper_name::ptr()).mder }
+                    pub(crate) fn mder(&mut self) -> &#lower_name::Mder {
+                        unsafe { (*#upper_name::ptr()).mder() }
                     }
                 }
 
@@ -264,8 +263,8 @@ impl<'a> ToTokens for Pio {
                 }
 
                 impl PUER {
-                    pub(crate) fn puer(&mut self) -> &#lower_name::PUER {
-                        unsafe { &(*#upper_name::ptr()).puer }
+                    pub(crate) fn puer(&mut self) -> &#lower_name::Puer {
+                        unsafe { (*#upper_name::ptr()).puer() }
                     }
                 }
 
@@ -284,8 +283,8 @@ impl<'a> ToTokens for Pio {
                 }
 
                 impl OER {
-                    pub(crate) fn oer(&mut self) -> &#lower_name::OER {
-                        unsafe { &(*#upper_name::ptr()).oer }
+                    pub(crate) fn oer(&mut self) -> &#lower_name::Oer {
+                        unsafe { (*#upper_name::ptr()).oer() }
                     }
                 }
 
@@ -294,8 +293,8 @@ impl<'a> ToTokens for Pio {
                 }
 
                 impl PDR {
-                    pub(crate) fn pdr(&mut self) -> &#lower_name::PDR {
-                        unsafe { &(*#upper_name::ptr()).pdr }
+                    pub(crate) fn pdr(&mut self) -> &#lower_name::Pdr {
+                        unsafe { (*#upper_name::ptr()).pdr() }
                     }
                 }
 
@@ -319,24 +318,30 @@ impl<'a> ToTokens for Pio {
                     }
                 }
 
+                impl<MODE> ErrorType for #pio_partial_erase<Output<MODE>> {
+                    type Error = core::convert::Infallible;
+                }
+
                 impl<MODE> OutputPin for #pio_partial_erase<Output<MODE>> {
-                    type Error = ();
-                    fn try_set_high(&mut self) -> Result<(), Self::Error> {
-                        unsafe { (*#upper_name::ptr()).sodr.write_with_zero(|w| w.bits(1 << self.i)) };
+                    fn set_high(&mut self) -> Result<(), Self::Error> {
+                        unsafe { (*#upper_name::ptr()).sodr().write_with_zero(|w| w.bits(1 << self.i)) };
                         Ok(())
                     }
-                    fn try_set_low(&mut self) -> Result<(), Self::Error> {
-                        unsafe { (*#upper_name::ptr()).codr.write_with_zero(|w| w.bits(1 << self.i)) };
+                    fn set_low(&mut self) -> Result<(), Self::Error> {
+                        unsafe { (*#upper_name::ptr()).codr().write_with_zero(|w| w.bits(1 << self.i)) };
                         Ok(())
                     }
                 }
 
+                impl<MODE> ErrorType for #pio_partial_erase<Input<MODE>> {
+                    type Error = core::convert::Infallible;
+                }
+
                 impl<MODE> InputPin for #pio_partial_erase<Input<MODE>> {
-                    type Error = ();
-                    fn try_is_high(&self) -> Result<bool, Self::Error> {
+                    fn is_high(&mut self) -> Result<bool, Self::Error> {
                         unimplemented!()
                     }
-                    fn try_is_low(&self) -> Result<bool, Self::Error> {
+                    fn is_low(&mut self) -> Result<bool, Self::Error> {
                         unimplemented!()
                     }
                 }

@@ -1,40 +1,35 @@
-#[doc = "Reader of register TTGR"]
-pub type R = crate::R<u32, super::TTGR>;
-#[doc = "Writer for register TTGR"]
-pub type W = crate::W<u32, super::TTGR>;
-#[doc = "Register TTGR `reset()`'s with value 0"]
-impl crate::ResetValue for super::TTGR {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `TG`"]
-pub type TG_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `TG`"]
-pub struct TG_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> TG_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0xff) | ((value as u32) & 0xff);
-        self.w
-    }
-}
+#[doc = "Register `TTGR` reader"]
+pub type R = crate::R<TtgrSpec>;
+#[doc = "Register `TTGR` writer"]
+pub type W = crate::W<TtgrSpec>;
+#[doc = "Field `TG` reader - Timeguard Value"]
+pub type TgR = crate::FieldReader;
+#[doc = "Field `TG` writer - Timeguard Value"]
+pub type TgW<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 impl R {
-    #[doc = "Bits 0:7 - Timeguard Value"]
-    #[inline(always)]
-    pub fn tg(&self) -> TG_R {
-        TG_R::new((self.bits & 0xff) as u8)
-    }
+  #[doc = "Bits 0:7 - Timeguard Value"]
+  #[inline(always)]
+  pub fn tg(&self) -> TgR {
+    TgR::new((self.bits & 0xff) as u8)
+  }
 }
 impl W {
-    #[doc = "Bits 0:7 - Timeguard Value"]
-    #[inline(always)]
-    pub fn tg(&mut self) -> TG_W {
-        TG_W { w: self }
-    }
+  #[doc = "Bits 0:7 - Timeguard Value"]
+  #[inline(always)]
+  pub fn tg(&mut self) -> TgW<'_, TtgrSpec> {
+    TgW::new(self, 0)
+  }
 }
+#[doc = "Transmitter Timeguard Register\n\nYou can [`read`](crate::Reg::read) this register and get [`ttgr::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ttgr::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct TtgrSpec;
+impl crate::RegisterSpec for TtgrSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`ttgr::R`](R) reader structure"]
+impl crate::Readable for TtgrSpec {}
+#[doc = "`write(|w| ..)` method takes [`ttgr::W`](W) writer structure"]
+impl crate::Writable for TtgrSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets TTGR to value 0"]
+impl crate::Resettable for TtgrSpec {}

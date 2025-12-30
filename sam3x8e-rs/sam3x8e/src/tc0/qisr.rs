@@ -1,32 +1,41 @@
-#[doc = "Reader of register QISR"]
-pub type R = crate::R<u32, super::QISR>;
-#[doc = "Reader of field `IDX`"]
-pub type IDX_R = crate::R<bool, bool>;
-#[doc = "Reader of field `DIRCHG`"]
-pub type DIRCHG_R = crate::R<bool, bool>;
-#[doc = "Reader of field `QERR`"]
-pub type QERR_R = crate::R<bool, bool>;
-#[doc = "Reader of field `DIR`"]
-pub type DIR_R = crate::R<bool, bool>;
+#[doc = "Register `QISR` reader"]
+pub type R = crate::R<QisrSpec>;
+#[doc = "Field `IDX` reader - InDeX"]
+pub type IdxR = crate::BitReader;
+#[doc = "Field `DIRCHG` reader - DIRection CHanGe"]
+pub type DirchgR = crate::BitReader;
+#[doc = "Field `QERR` reader - Quadrature ERRor"]
+pub type QerrR = crate::BitReader;
+#[doc = "Field `DIR` reader - DIRection"]
+pub type DirR = crate::BitReader;
 impl R {
-    #[doc = "Bit 0 - InDeX"]
-    #[inline(always)]
-    pub fn idx(&self) -> IDX_R {
-        IDX_R::new((self.bits & 0x01) != 0)
-    }
-    #[doc = "Bit 1 - DIRection CHanGe"]
-    #[inline(always)]
-    pub fn dirchg(&self) -> DIRCHG_R {
-        DIRCHG_R::new(((self.bits >> 1) & 0x01) != 0)
-    }
-    #[doc = "Bit 2 - Quadrature ERRor"]
-    #[inline(always)]
-    pub fn qerr(&self) -> QERR_R {
-        QERR_R::new(((self.bits >> 2) & 0x01) != 0)
-    }
-    #[doc = "Bit 8 - DIRection"]
-    #[inline(always)]
-    pub fn dir(&self) -> DIR_R {
-        DIR_R::new(((self.bits >> 8) & 0x01) != 0)
-    }
+  #[doc = "Bit 0 - InDeX"]
+  #[inline(always)]
+  pub fn idx(&self) -> IdxR {
+    IdxR::new((self.bits & 1) != 0)
+  }
+  #[doc = "Bit 1 - DIRection CHanGe"]
+  #[inline(always)]
+  pub fn dirchg(&self) -> DirchgR {
+    DirchgR::new(((self.bits >> 1) & 1) != 0)
+  }
+  #[doc = "Bit 2 - Quadrature ERRor"]
+  #[inline(always)]
+  pub fn qerr(&self) -> QerrR {
+    QerrR::new(((self.bits >> 2) & 1) != 0)
+  }
+  #[doc = "Bit 8 - DIRection"]
+  #[inline(always)]
+  pub fn dir(&self) -> DirR {
+    DirR::new(((self.bits >> 8) & 1) != 0)
+  }
 }
+#[doc = "QDEC Interrupt Status Register\n\nYou can [`read`](crate::Reg::read) this register and get [`qisr::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct QisrSpec;
+impl crate::RegisterSpec for QisrSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`qisr::R`](R) reader structure"]
+impl crate::Readable for QisrSpec {}
+#[doc = "`reset()` method sets QISR to value 0"]
+impl crate::Resettable for QisrSpec {}

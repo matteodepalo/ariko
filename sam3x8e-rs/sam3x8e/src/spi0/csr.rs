@@ -1,392 +1,278 @@
-#[doc = "Reader of register CSR[%s]"]
-pub type R = crate::R<u32, super::CSR>;
-#[doc = "Writer for register CSR[%s]"]
-pub type W = crate::W<u32, super::CSR>;
-#[doc = "Reader of field `CPOL`"]
-pub type CPOL_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `CPOL`"]
-pub struct CPOL_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CPOL_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x01) | ((value as u32) & 0x01);
-        self.w
-    }
-}
-#[doc = "Reader of field `NCPHA`"]
-pub type NCPHA_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `NCPHA`"]
-pub struct NCPHA_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> NCPHA_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 1)) | (((value as u32) & 0x01) << 1);
-        self.w
-    }
-}
-#[doc = "Reader of field `CSNAAT`"]
-pub type CSNAAT_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `CSNAAT`"]
-pub struct CSNAAT_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CSNAAT_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 2)) | (((value as u32) & 0x01) << 2);
-        self.w
-    }
-}
-#[doc = "Reader of field `CSAAT`"]
-pub type CSAAT_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `CSAAT`"]
-pub struct CSAAT_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CSAAT_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 3)) | (((value as u32) & 0x01) << 3);
-        self.w
-    }
-}
+#[doc = "Register `CSR[%s]` reader"]
+pub type R = crate::R<CsrSpec>;
+#[doc = "Register `CSR[%s]` writer"]
+pub type W = crate::W<CsrSpec>;
+#[doc = "Field `CPOL` reader - Clock Polarity"]
+pub type CpolR = crate::BitReader;
+#[doc = "Field `CPOL` writer - Clock Polarity"]
+pub type CpolW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `NCPHA` reader - Clock Phase"]
+pub type NcphaR = crate::BitReader;
+#[doc = "Field `NCPHA` writer - Clock Phase"]
+pub type NcphaW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `CSNAAT` reader - Chip Select Not Active After Transfer (Ignored if CSAAT = 1)"]
+pub type CsnaatR = crate::BitReader;
+#[doc = "Field `CSNAAT` writer - Chip Select Not Active After Transfer (Ignored if CSAAT = 1)"]
+pub type CsnaatW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `CSAAT` reader - Chip Select Active After Transfer"]
+pub type CsaatR = crate::BitReader;
+#[doc = "Field `CSAAT` writer - Chip Select Active After Transfer"]
+pub type CsaatW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Bits Per Transfer"]
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub enum BITS_A {
-    #[doc = "0: 8 bits for transfer"]
-    _8_BIT,
-    #[doc = "1: 9 bits for transfer"]
-    _9_BIT,
-    #[doc = "2: 10 bits for transfer"]
-    _10_BIT,
-    #[doc = "3: 11 bits for transfer"]
-    _11_BIT,
-    #[doc = "4: 12 bits for transfer"]
-    _12_BIT,
-    #[doc = "5: 13 bits for transfer"]
-    _13_BIT,
-    #[doc = "6: 14 bits for transfer"]
-    _14_BIT,
-    #[doc = "7: 15 bits for transfer"]
-    _15_BIT,
-    #[doc = "8: 16 bits for transfer"]
-    _16_BIT,
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[repr(u8)]
+pub enum Bits {
+  #[doc = "0: 8 bits for transfer"]
+  _8Bit = 0,
+  #[doc = "1: 9 bits for transfer"]
+  _9Bit = 1,
+  #[doc = "2: 10 bits for transfer"]
+  _10Bit = 2,
+  #[doc = "3: 11 bits for transfer"]
+  _11Bit = 3,
+  #[doc = "4: 12 bits for transfer"]
+  _12Bit = 4,
+  #[doc = "5: 13 bits for transfer"]
+  _13Bit = 5,
+  #[doc = "6: 14 bits for transfer"]
+  _14Bit = 6,
+  #[doc = "7: 15 bits for transfer"]
+  _15Bit = 7,
+  #[doc = "8: 16 bits for transfer"]
+  _16Bit = 8,
 }
-impl From<BITS_A> for u8 {
-    #[inline(always)]
-    fn from(variant: BITS_A) -> Self {
-        match variant {
-            BITS_A::_8_BIT => 0,
-            BITS_A::_9_BIT => 1,
-            BITS_A::_10_BIT => 2,
-            BITS_A::_11_BIT => 3,
-            BITS_A::_12_BIT => 4,
-            BITS_A::_13_BIT => 5,
-            BITS_A::_14_BIT => 6,
-            BITS_A::_15_BIT => 7,
-            BITS_A::_16_BIT => 8,
-        }
-    }
+impl From<Bits> for u8 {
+  #[inline(always)]
+  fn from(variant: Bits) -> Self {
+    variant as _
+  }
 }
-#[doc = "Reader of field `BITS`"]
-pub type BITS_R = crate::R<u8, BITS_A>;
-impl BITS_R {
-    #[doc = r"Get enumerated values variant"]
-    #[inline(always)]
-    pub fn variant(&self) -> crate::Variant<u8, BITS_A> {
-        use crate::Variant::*;
-        match self.bits {
-            0 => Val(BITS_A::_8_BIT),
-            1 => Val(BITS_A::_9_BIT),
-            2 => Val(BITS_A::_10_BIT),
-            3 => Val(BITS_A::_11_BIT),
-            4 => Val(BITS_A::_12_BIT),
-            5 => Val(BITS_A::_13_BIT),
-            6 => Val(BITS_A::_14_BIT),
-            7 => Val(BITS_A::_15_BIT),
-            8 => Val(BITS_A::_16_BIT),
-            i => Res(i),
-        }
-    }
-    #[doc = "Checks if the value of the field is `_8_BIT`"]
-    #[inline(always)]
-    pub fn is_8_bit(&self) -> bool {
-        *self == BITS_A::_8_BIT
-    }
-    #[doc = "Checks if the value of the field is `_9_BIT`"]
-    #[inline(always)]
-    pub fn is_9_bit(&self) -> bool {
-        *self == BITS_A::_9_BIT
-    }
-    #[doc = "Checks if the value of the field is `_10_BIT`"]
-    #[inline(always)]
-    pub fn is_10_bit(&self) -> bool {
-        *self == BITS_A::_10_BIT
-    }
-    #[doc = "Checks if the value of the field is `_11_BIT`"]
-    #[inline(always)]
-    pub fn is_11_bit(&self) -> bool {
-        *self == BITS_A::_11_BIT
-    }
-    #[doc = "Checks if the value of the field is `_12_BIT`"]
-    #[inline(always)]
-    pub fn is_12_bit(&self) -> bool {
-        *self == BITS_A::_12_BIT
-    }
-    #[doc = "Checks if the value of the field is `_13_BIT`"]
-    #[inline(always)]
-    pub fn is_13_bit(&self) -> bool {
-        *self == BITS_A::_13_BIT
-    }
-    #[doc = "Checks if the value of the field is `_14_BIT`"]
-    #[inline(always)]
-    pub fn is_14_bit(&self) -> bool {
-        *self == BITS_A::_14_BIT
-    }
-    #[doc = "Checks if the value of the field is `_15_BIT`"]
-    #[inline(always)]
-    pub fn is_15_bit(&self) -> bool {
-        *self == BITS_A::_15_BIT
-    }
-    #[doc = "Checks if the value of the field is `_16_BIT`"]
-    #[inline(always)]
-    pub fn is_16_bit(&self) -> bool {
-        *self == BITS_A::_16_BIT
-    }
+impl crate::FieldSpec for Bits {
+  type Ux = u8;
 }
-#[doc = "Write proxy for field `BITS`"]
-pub struct BITS_W<'a> {
-    w: &'a mut W,
+impl crate::IsEnum for Bits {}
+#[doc = "Field `BITS` reader - Bits Per Transfer"]
+pub type BitsR = crate::FieldReader<Bits>;
+impl BitsR {
+  #[doc = "Get enumerated values variant"]
+  #[inline(always)]
+  pub const fn variant(&self) -> Option<Bits> {
+    match self.bits {
+      0 => Some(Bits::_8Bit),
+      1 => Some(Bits::_9Bit),
+      2 => Some(Bits::_10Bit),
+      3 => Some(Bits::_11Bit),
+      4 => Some(Bits::_12Bit),
+      5 => Some(Bits::_13Bit),
+      6 => Some(Bits::_14Bit),
+      7 => Some(Bits::_15Bit),
+      8 => Some(Bits::_16Bit),
+      _ => None,
+    }
+  }
+  #[doc = "8 bits for transfer"]
+  #[inline(always)]
+  pub fn is_8_bit(&self) -> bool {
+    *self == Bits::_8Bit
+  }
+  #[doc = "9 bits for transfer"]
+  #[inline(always)]
+  pub fn is_9_bit(&self) -> bool {
+    *self == Bits::_9Bit
+  }
+  #[doc = "10 bits for transfer"]
+  #[inline(always)]
+  pub fn is_10_bit(&self) -> bool {
+    *self == Bits::_10Bit
+  }
+  #[doc = "11 bits for transfer"]
+  #[inline(always)]
+  pub fn is_11_bit(&self) -> bool {
+    *self == Bits::_11Bit
+  }
+  #[doc = "12 bits for transfer"]
+  #[inline(always)]
+  pub fn is_12_bit(&self) -> bool {
+    *self == Bits::_12Bit
+  }
+  #[doc = "13 bits for transfer"]
+  #[inline(always)]
+  pub fn is_13_bit(&self) -> bool {
+    *self == Bits::_13Bit
+  }
+  #[doc = "14 bits for transfer"]
+  #[inline(always)]
+  pub fn is_14_bit(&self) -> bool {
+    *self == Bits::_14Bit
+  }
+  #[doc = "15 bits for transfer"]
+  #[inline(always)]
+  pub fn is_15_bit(&self) -> bool {
+    *self == Bits::_15Bit
+  }
+  #[doc = "16 bits for transfer"]
+  #[inline(always)]
+  pub fn is_16_bit(&self) -> bool {
+    *self == Bits::_16Bit
+  }
 }
-impl<'a> BITS_W<'a> {
-    #[doc = r"Writes `variant` to the field"]
-    #[inline(always)]
-    pub fn variant(self, variant: BITS_A) -> &'a mut W {
-        unsafe { self.bits(variant.into()) }
-    }
-    #[doc = "8 bits for transfer"]
-    #[inline(always)]
-    pub fn _8_bit(self) -> &'a mut W {
-        self.variant(BITS_A::_8_BIT)
-    }
-    #[doc = "9 bits for transfer"]
-    #[inline(always)]
-    pub fn _9_bit(self) -> &'a mut W {
-        self.variant(BITS_A::_9_BIT)
-    }
-    #[doc = "10 bits for transfer"]
-    #[inline(always)]
-    pub fn _10_bit(self) -> &'a mut W {
-        self.variant(BITS_A::_10_BIT)
-    }
-    #[doc = "11 bits for transfer"]
-    #[inline(always)]
-    pub fn _11_bit(self) -> &'a mut W {
-        self.variant(BITS_A::_11_BIT)
-    }
-    #[doc = "12 bits for transfer"]
-    #[inline(always)]
-    pub fn _12_bit(self) -> &'a mut W {
-        self.variant(BITS_A::_12_BIT)
-    }
-    #[doc = "13 bits for transfer"]
-    #[inline(always)]
-    pub fn _13_bit(self) -> &'a mut W {
-        self.variant(BITS_A::_13_BIT)
-    }
-    #[doc = "14 bits for transfer"]
-    #[inline(always)]
-    pub fn _14_bit(self) -> &'a mut W {
-        self.variant(BITS_A::_14_BIT)
-    }
-    #[doc = "15 bits for transfer"]
-    #[inline(always)]
-    pub fn _15_bit(self) -> &'a mut W {
-        self.variant(BITS_A::_15_BIT)
-    }
-    #[doc = "16 bits for transfer"]
-    #[inline(always)]
-    pub fn _16_bit(self) -> &'a mut W {
-        self.variant(BITS_A::_16_BIT)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x0f << 4)) | (((value as u32) & 0x0f) << 4);
-        self.w
-    }
+#[doc = "Field `BITS` writer - Bits Per Transfer"]
+pub type BitsW<'a, REG> = crate::FieldWriter<'a, REG, 4, Bits>;
+impl<'a, REG> BitsW<'a, REG>
+where
+  REG: crate::Writable + crate::RegisterSpec,
+  REG::Ux: From<u8>,
+{
+  #[doc = "8 bits for transfer"]
+  #[inline(always)]
+  pub fn _8_bit(self) -> &'a mut crate::W<REG> {
+    self.variant(Bits::_8Bit)
+  }
+  #[doc = "9 bits for transfer"]
+  #[inline(always)]
+  pub fn _9_bit(self) -> &'a mut crate::W<REG> {
+    self.variant(Bits::_9Bit)
+  }
+  #[doc = "10 bits for transfer"]
+  #[inline(always)]
+  pub fn _10_bit(self) -> &'a mut crate::W<REG> {
+    self.variant(Bits::_10Bit)
+  }
+  #[doc = "11 bits for transfer"]
+  #[inline(always)]
+  pub fn _11_bit(self) -> &'a mut crate::W<REG> {
+    self.variant(Bits::_11Bit)
+  }
+  #[doc = "12 bits for transfer"]
+  #[inline(always)]
+  pub fn _12_bit(self) -> &'a mut crate::W<REG> {
+    self.variant(Bits::_12Bit)
+  }
+  #[doc = "13 bits for transfer"]
+  #[inline(always)]
+  pub fn _13_bit(self) -> &'a mut crate::W<REG> {
+    self.variant(Bits::_13Bit)
+  }
+  #[doc = "14 bits for transfer"]
+  #[inline(always)]
+  pub fn _14_bit(self) -> &'a mut crate::W<REG> {
+    self.variant(Bits::_14Bit)
+  }
+  #[doc = "15 bits for transfer"]
+  #[inline(always)]
+  pub fn _15_bit(self) -> &'a mut crate::W<REG> {
+    self.variant(Bits::_15Bit)
+  }
+  #[doc = "16 bits for transfer"]
+  #[inline(always)]
+  pub fn _16_bit(self) -> &'a mut crate::W<REG> {
+    self.variant(Bits::_16Bit)
+  }
 }
-#[doc = "Reader of field `SCBR`"]
-pub type SCBR_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `SCBR`"]
-pub struct SCBR_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> SCBR_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0xff << 8)) | (((value as u32) & 0xff) << 8);
-        self.w
-    }
-}
-#[doc = "Reader of field `DLYBS`"]
-pub type DLYBS_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `DLYBS`"]
-pub struct DLYBS_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> DLYBS_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0xff << 16)) | (((value as u32) & 0xff) << 16);
-        self.w
-    }
-}
-#[doc = "Reader of field `DLYBCT`"]
-pub type DLYBCT_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `DLYBCT`"]
-pub struct DLYBCT_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> DLYBCT_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0xff << 24)) | (((value as u32) & 0xff) << 24);
-        self.w
-    }
-}
+#[doc = "Field `SCBR` reader - Serial Clock Baud Rate"]
+pub type ScbrR = crate::FieldReader;
+#[doc = "Field `SCBR` writer - Serial Clock Baud Rate"]
+pub type ScbrW<'a, REG> = crate::FieldWriter<'a, REG, 8>;
+#[doc = "Field `DLYBS` reader - Delay Before SPCK"]
+pub type DlybsR = crate::FieldReader;
+#[doc = "Field `DLYBS` writer - Delay Before SPCK"]
+pub type DlybsW<'a, REG> = crate::FieldWriter<'a, REG, 8>;
+#[doc = "Field `DLYBCT` reader - Delay Between Consecutive Transfers"]
+pub type DlybctR = crate::FieldReader;
+#[doc = "Field `DLYBCT` writer - Delay Between Consecutive Transfers"]
+pub type DlybctW<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 impl R {
-    #[doc = "Bit 0 - Clock Polarity"]
-    #[inline(always)]
-    pub fn cpol(&self) -> CPOL_R {
-        CPOL_R::new((self.bits & 0x01) != 0)
-    }
-    #[doc = "Bit 1 - Clock Phase"]
-    #[inline(always)]
-    pub fn ncpha(&self) -> NCPHA_R {
-        NCPHA_R::new(((self.bits >> 1) & 0x01) != 0)
-    }
-    #[doc = "Bit 2 - Chip Select Not Active After Transfer (Ignored if CSAAT = 1)"]
-    #[inline(always)]
-    pub fn csnaat(&self) -> CSNAAT_R {
-        CSNAAT_R::new(((self.bits >> 2) & 0x01) != 0)
-    }
-    #[doc = "Bit 3 - Chip Select Active After Transfer"]
-    #[inline(always)]
-    pub fn csaat(&self) -> CSAAT_R {
-        CSAAT_R::new(((self.bits >> 3) & 0x01) != 0)
-    }
-    #[doc = "Bits 4:7 - Bits Per Transfer"]
-    #[inline(always)]
-    pub fn bits_(&self) -> BITS_R {
-        BITS_R::new(((self.bits >> 4) & 0x0f) as u8)
-    }
-    #[doc = "Bits 8:15 - Serial Clock Baud Rate"]
-    #[inline(always)]
-    pub fn scbr(&self) -> SCBR_R {
-        SCBR_R::new(((self.bits >> 8) & 0xff) as u8)
-    }
-    #[doc = "Bits 16:23 - Delay Before SPCK"]
-    #[inline(always)]
-    pub fn dlybs(&self) -> DLYBS_R {
-        DLYBS_R::new(((self.bits >> 16) & 0xff) as u8)
-    }
-    #[doc = "Bits 24:31 - Delay Between Consecutive Transfers"]
-    #[inline(always)]
-    pub fn dlybct(&self) -> DLYBCT_R {
-        DLYBCT_R::new(((self.bits >> 24) & 0xff) as u8)
-    }
+  #[doc = "Bit 0 - Clock Polarity"]
+  #[inline(always)]
+  pub fn cpol(&self) -> CpolR {
+    CpolR::new((self.bits & 1) != 0)
+  }
+  #[doc = "Bit 1 - Clock Phase"]
+  #[inline(always)]
+  pub fn ncpha(&self) -> NcphaR {
+    NcphaR::new(((self.bits >> 1) & 1) != 0)
+  }
+  #[doc = "Bit 2 - Chip Select Not Active After Transfer (Ignored if CSAAT = 1)"]
+  #[inline(always)]
+  pub fn csnaat(&self) -> CsnaatR {
+    CsnaatR::new(((self.bits >> 2) & 1) != 0)
+  }
+  #[doc = "Bit 3 - Chip Select Active After Transfer"]
+  #[inline(always)]
+  pub fn csaat(&self) -> CsaatR {
+    CsaatR::new(((self.bits >> 3) & 1) != 0)
+  }
+  #[doc = "Bits 4:7 - Bits Per Transfer"]
+  #[inline(always)]
+  pub fn bits_(&self) -> BitsR {
+    BitsR::new(((self.bits >> 4) & 0x0f) as u8)
+  }
+  #[doc = "Bits 8:15 - Serial Clock Baud Rate"]
+  #[inline(always)]
+  pub fn scbr(&self) -> ScbrR {
+    ScbrR::new(((self.bits >> 8) & 0xff) as u8)
+  }
+  #[doc = "Bits 16:23 - Delay Before SPCK"]
+  #[inline(always)]
+  pub fn dlybs(&self) -> DlybsR {
+    DlybsR::new(((self.bits >> 16) & 0xff) as u8)
+  }
+  #[doc = "Bits 24:31 - Delay Between Consecutive Transfers"]
+  #[inline(always)]
+  pub fn dlybct(&self) -> DlybctR {
+    DlybctR::new(((self.bits >> 24) & 0xff) as u8)
+  }
 }
 impl W {
-    #[doc = "Bit 0 - Clock Polarity"]
-    #[inline(always)]
-    pub fn cpol(&mut self) -> CPOL_W {
-        CPOL_W { w: self }
-    }
-    #[doc = "Bit 1 - Clock Phase"]
-    #[inline(always)]
-    pub fn ncpha(&mut self) -> NCPHA_W {
-        NCPHA_W { w: self }
-    }
-    #[doc = "Bit 2 - Chip Select Not Active After Transfer (Ignored if CSAAT = 1)"]
-    #[inline(always)]
-    pub fn csnaat(&mut self) -> CSNAAT_W {
-        CSNAAT_W { w: self }
-    }
-    #[doc = "Bit 3 - Chip Select Active After Transfer"]
-    #[inline(always)]
-    pub fn csaat(&mut self) -> CSAAT_W {
-        CSAAT_W { w: self }
-    }
-    #[doc = "Bits 4:7 - Bits Per Transfer"]
-    #[inline(always)]
-    pub fn bits_(&mut self) -> BITS_W {
-        BITS_W { w: self }
-    }
-    #[doc = "Bits 8:15 - Serial Clock Baud Rate"]
-    #[inline(always)]
-    pub fn scbr(&mut self) -> SCBR_W {
-        SCBR_W { w: self }
-    }
-    #[doc = "Bits 16:23 - Delay Before SPCK"]
-    #[inline(always)]
-    pub fn dlybs(&mut self) -> DLYBS_W {
-        DLYBS_W { w: self }
-    }
-    #[doc = "Bits 24:31 - Delay Between Consecutive Transfers"]
-    #[inline(always)]
-    pub fn dlybct(&mut self) -> DLYBCT_W {
-        DLYBCT_W { w: self }
-    }
+  #[doc = "Bit 0 - Clock Polarity"]
+  #[inline(always)]
+  pub fn cpol(&mut self) -> CpolW<'_, CsrSpec> {
+    CpolW::new(self, 0)
+  }
+  #[doc = "Bit 1 - Clock Phase"]
+  #[inline(always)]
+  pub fn ncpha(&mut self) -> NcphaW<'_, CsrSpec> {
+    NcphaW::new(self, 1)
+  }
+  #[doc = "Bit 2 - Chip Select Not Active After Transfer (Ignored if CSAAT = 1)"]
+  #[inline(always)]
+  pub fn csnaat(&mut self) -> CsnaatW<'_, CsrSpec> {
+    CsnaatW::new(self, 2)
+  }
+  #[doc = "Bit 3 - Chip Select Active After Transfer"]
+  #[inline(always)]
+  pub fn csaat(&mut self) -> CsaatW<'_, CsrSpec> {
+    CsaatW::new(self, 3)
+  }
+  #[doc = "Bits 4:7 - Bits Per Transfer"]
+  #[inline(always)]
+  pub fn bits_(&mut self) -> BitsW<'_, CsrSpec> {
+    BitsW::new(self, 4)
+  }
+  #[doc = "Bits 8:15 - Serial Clock Baud Rate"]
+  #[inline(always)]
+  pub fn scbr(&mut self) -> ScbrW<'_, CsrSpec> {
+    ScbrW::new(self, 8)
+  }
+  #[doc = "Bits 16:23 - Delay Before SPCK"]
+  #[inline(always)]
+  pub fn dlybs(&mut self) -> DlybsW<'_, CsrSpec> {
+    DlybsW::new(self, 16)
+  }
+  #[doc = "Bits 24:31 - Delay Between Consecutive Transfers"]
+  #[inline(always)]
+  pub fn dlybct(&mut self) -> DlybctW<'_, CsrSpec> {
+    DlybctW::new(self, 24)
+  }
+}
+#[doc = "Chip Select Register\n\nYou can [`read`](crate::Reg::read) this register and get [`csr::R`](R). You can [`write_with_zero`](crate::Reg::write_with_zero) this register using [`csr::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct CsrSpec;
+impl crate::RegisterSpec for CsrSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`csr::R`](R) reader structure"]
+impl crate::Readable for CsrSpec {}
+#[doc = "`write(|w| ..)` method takes [`csr::W`](W) writer structure"]
+impl crate::Writable for CsrSpec {
+  type Safety = crate::Unsafe;
 }

@@ -1,32 +1,41 @@
-#[doc = "Reader of register VER"]
-pub type R = crate::R<u32, super::VER>;
-#[doc = "Reader of field `NVTIM`"]
-pub type NVTIM_R = crate::R<bool, bool>;
-#[doc = "Reader of field `NVCAL`"]
-pub type NVCAL_R = crate::R<bool, bool>;
-#[doc = "Reader of field `NVTIMALR`"]
-pub type NVTIMALR_R = crate::R<bool, bool>;
-#[doc = "Reader of field `NVCALALR`"]
-pub type NVCALALR_R = crate::R<bool, bool>;
+#[doc = "Register `VER` reader"]
+pub type R = crate::R<VerSpec>;
+#[doc = "Field `NVTIM` reader - Non-valid Time"]
+pub type NvtimR = crate::BitReader;
+#[doc = "Field `NVCAL` reader - Non-valid Calendar"]
+pub type NvcalR = crate::BitReader;
+#[doc = "Field `NVTIMALR` reader - Non-valid Time Alarm"]
+pub type NvtimalrR = crate::BitReader;
+#[doc = "Field `NVCALALR` reader - Non-valid Calendar Alarm"]
+pub type NvcalalrR = crate::BitReader;
 impl R {
-    #[doc = "Bit 0 - Non-valid Time"]
-    #[inline(always)]
-    pub fn nvtim(&self) -> NVTIM_R {
-        NVTIM_R::new((self.bits & 0x01) != 0)
-    }
-    #[doc = "Bit 1 - Non-valid Calendar"]
-    #[inline(always)]
-    pub fn nvcal(&self) -> NVCAL_R {
-        NVCAL_R::new(((self.bits >> 1) & 0x01) != 0)
-    }
-    #[doc = "Bit 2 - Non-valid Time Alarm"]
-    #[inline(always)]
-    pub fn nvtimalr(&self) -> NVTIMALR_R {
-        NVTIMALR_R::new(((self.bits >> 2) & 0x01) != 0)
-    }
-    #[doc = "Bit 3 - Non-valid Calendar Alarm"]
-    #[inline(always)]
-    pub fn nvcalalr(&self) -> NVCALALR_R {
-        NVCALALR_R::new(((self.bits >> 3) & 0x01) != 0)
-    }
+  #[doc = "Bit 0 - Non-valid Time"]
+  #[inline(always)]
+  pub fn nvtim(&self) -> NvtimR {
+    NvtimR::new((self.bits & 1) != 0)
+  }
+  #[doc = "Bit 1 - Non-valid Calendar"]
+  #[inline(always)]
+  pub fn nvcal(&self) -> NvcalR {
+    NvcalR::new(((self.bits >> 1) & 1) != 0)
+  }
+  #[doc = "Bit 2 - Non-valid Time Alarm"]
+  #[inline(always)]
+  pub fn nvtimalr(&self) -> NvtimalrR {
+    NvtimalrR::new(((self.bits >> 2) & 1) != 0)
+  }
+  #[doc = "Bit 3 - Non-valid Calendar Alarm"]
+  #[inline(always)]
+  pub fn nvcalalr(&self) -> NvcalalrR {
+    NvcalalrR::new(((self.bits >> 3) & 1) != 0)
+  }
 }
+#[doc = "Valid Entry Register\n\nYou can [`read`](crate::Reg::read) this register and get [`ver::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct VerSpec;
+impl crate::RegisterSpec for VerSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`ver::R`](R) reader structure"]
+impl crate::Readable for VerSpec {}
+#[doc = "`reset()` method sets VER to value 0"]
+impl crate::Resettable for VerSpec {}

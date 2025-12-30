@@ -1,394 +1,229 @@
-#[doc = "Reader of register MR"]
-pub type R = crate::R<u32, super::MR>;
-#[doc = "Writer for register MR"]
-pub type W = crate::W<u32, super::MR>;
-#[doc = "Register MR `reset()`'s with value 0"]
-impl crate::ResetValue for super::MR {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `CANEN`"]
-pub type CANEN_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `CANEN`"]
-pub struct CANEN_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CANEN_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x01) | ((value as u32) & 0x01);
-        self.w
-    }
-}
-#[doc = "Reader of field `LPM`"]
-pub type LPM_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `LPM`"]
-pub struct LPM_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> LPM_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 1)) | (((value as u32) & 0x01) << 1);
-        self.w
-    }
-}
-#[doc = "Reader of field `ABM`"]
-pub type ABM_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `ABM`"]
-pub struct ABM_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> ABM_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 2)) | (((value as u32) & 0x01) << 2);
-        self.w
-    }
-}
-#[doc = "Reader of field `OVL`"]
-pub type OVL_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `OVL`"]
-pub struct OVL_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> OVL_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 3)) | (((value as u32) & 0x01) << 3);
-        self.w
-    }
-}
-#[doc = "Reader of field `TEOF`"]
-pub type TEOF_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `TEOF`"]
-pub struct TEOF_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> TEOF_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 4)) | (((value as u32) & 0x01) << 4);
-        self.w
-    }
-}
-#[doc = "Reader of field `TTM`"]
-pub type TTM_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `TTM`"]
-pub struct TTM_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> TTM_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 5)) | (((value as u32) & 0x01) << 5);
-        self.w
-    }
-}
-#[doc = "Reader of field `TIMFRZ`"]
-pub type TIMFRZ_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `TIMFRZ`"]
-pub struct TIMFRZ_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> TIMFRZ_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 6)) | (((value as u32) & 0x01) << 6);
-        self.w
-    }
-}
-#[doc = "Reader of field `DRPT`"]
-pub type DRPT_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `DRPT`"]
-pub struct DRPT_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> DRPT_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 7)) | (((value as u32) & 0x01) << 7);
-        self.w
-    }
-}
+#[doc = "Register `MR` reader"]
+pub type R = crate::R<MrSpec>;
+#[doc = "Register `MR` writer"]
+pub type W = crate::W<MrSpec>;
+#[doc = "Field `CANEN` reader - CAN Controller Enable"]
+pub type CanenR = crate::BitReader;
+#[doc = "Field `CANEN` writer - CAN Controller Enable"]
+pub type CanenW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `LPM` reader - Disable/Enable Low Power Mode"]
+pub type LpmR = crate::BitReader;
+#[doc = "Field `LPM` writer - Disable/Enable Low Power Mode"]
+pub type LpmW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `ABM` reader - Disable/Enable Autobaud/Listen mode"]
+pub type AbmR = crate::BitReader;
+#[doc = "Field `ABM` writer - Disable/Enable Autobaud/Listen mode"]
+pub type AbmW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `OVL` reader - Disable/Enable Overload Frame"]
+pub type OvlR = crate::BitReader;
+#[doc = "Field `OVL` writer - Disable/Enable Overload Frame"]
+pub type OvlW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `TEOF` reader - Timestamp messages at each end of Frame"]
+pub type TeofR = crate::BitReader;
+#[doc = "Field `TEOF` writer - Timestamp messages at each end of Frame"]
+pub type TeofW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `TTM` reader - Disable/Enable Time Triggered Mode"]
+pub type TtmR = crate::BitReader;
+#[doc = "Field `TTM` writer - Disable/Enable Time Triggered Mode"]
+pub type TtmW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `TIMFRZ` reader - Enable Timer Freeze"]
+pub type TimfrzR = crate::BitReader;
+#[doc = "Field `TIMFRZ` writer - Enable Timer Freeze"]
+pub type TimfrzW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `DRPT` reader - Disable Repeat"]
+pub type DrptR = crate::BitReader;
+#[doc = "Field `DRPT` writer - Disable Repeat"]
+pub type DrptW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Reception Synchronization Stage (not readable)\n\nValue on reset: 0"]
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub enum RXSYNC_A {
-    #[doc = "0: Rx Signal with Double Synchro Stages (2 Positive Edges)"]
-    DOUBLE_PP,
-    #[doc = "1: Rx Signal with Double Synchro Stages (One Positive Edge and One Negative Edge)"]
-    DOUBLE_PN,
-    #[doc = "2: Rx Signal with Single Synchro Stage (Positive Edge)"]
-    SINGLE_P,
-    #[doc = "3: Rx Signal with No Synchro Stage"]
-    NONE,
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[repr(u8)]
+pub enum Rxsync {
+  #[doc = "0: Rx Signal with Double Synchro Stages (2 Positive Edges)"]
+  DoublePp = 0,
+  #[doc = "1: Rx Signal with Double Synchro Stages (One Positive Edge and One Negative Edge)"]
+  DoublePn = 1,
+  #[doc = "2: Rx Signal with Single Synchro Stage (Positive Edge)"]
+  SingleP = 2,
+  #[doc = "3: Rx Signal with No Synchro Stage"]
+  None = 3,
 }
-impl From<RXSYNC_A> for u8 {
-    #[inline(always)]
-    fn from(variant: RXSYNC_A) -> Self {
-        match variant {
-            RXSYNC_A::DOUBLE_PP => 0,
-            RXSYNC_A::DOUBLE_PN => 1,
-            RXSYNC_A::SINGLE_P => 2,
-            RXSYNC_A::NONE => 3,
-        }
-    }
+impl From<Rxsync> for u8 {
+  #[inline(always)]
+  fn from(variant: Rxsync) -> Self {
+    variant as _
+  }
 }
-#[doc = "Reader of field `RXSYNC`"]
-pub type RXSYNC_R = crate::R<u8, RXSYNC_A>;
-impl RXSYNC_R {
-    #[doc = r"Get enumerated values variant"]
-    #[inline(always)]
-    pub fn variant(&self) -> crate::Variant<u8, RXSYNC_A> {
-        use crate::Variant::*;
-        match self.bits {
-            0 => Val(RXSYNC_A::DOUBLE_PP),
-            1 => Val(RXSYNC_A::DOUBLE_PN),
-            2 => Val(RXSYNC_A::SINGLE_P),
-            3 => Val(RXSYNC_A::NONE),
-            i => Res(i),
-        }
-    }
-    #[doc = "Checks if the value of the field is `DOUBLE_PP`"]
-    #[inline(always)]
-    pub fn is_double_pp(&self) -> bool {
-        *self == RXSYNC_A::DOUBLE_PP
-    }
-    #[doc = "Checks if the value of the field is `DOUBLE_PN`"]
-    #[inline(always)]
-    pub fn is_double_pn(&self) -> bool {
-        *self == RXSYNC_A::DOUBLE_PN
-    }
-    #[doc = "Checks if the value of the field is `SINGLE_P`"]
-    #[inline(always)]
-    pub fn is_single_p(&self) -> bool {
-        *self == RXSYNC_A::SINGLE_P
-    }
-    #[doc = "Checks if the value of the field is `NONE`"]
-    #[inline(always)]
-    pub fn is_none(&self) -> bool {
-        *self == RXSYNC_A::NONE
-    }
+impl crate::FieldSpec for Rxsync {
+  type Ux = u8;
 }
-#[doc = "Write proxy for field `RXSYNC`"]
-pub struct RXSYNC_W<'a> {
-    w: &'a mut W,
+impl crate::IsEnum for Rxsync {}
+#[doc = "Field `RXSYNC` reader - Reception Synchronization Stage (not readable)"]
+pub type RxsyncR = crate::FieldReader<Rxsync>;
+impl RxsyncR {
+  #[doc = "Get enumerated values variant"]
+  #[inline(always)]
+  pub const fn variant(&self) -> Option<Rxsync> {
+    match self.bits {
+      0 => Some(Rxsync::DoublePp),
+      1 => Some(Rxsync::DoublePn),
+      2 => Some(Rxsync::SingleP),
+      3 => Some(Rxsync::None),
+      _ => None,
+    }
+  }
+  #[doc = "Rx Signal with Double Synchro Stages (2 Positive Edges)"]
+  #[inline(always)]
+  pub fn is_double_pp(&self) -> bool {
+    *self == Rxsync::DoublePp
+  }
+  #[doc = "Rx Signal with Double Synchro Stages (One Positive Edge and One Negative Edge)"]
+  #[inline(always)]
+  pub fn is_double_pn(&self) -> bool {
+    *self == Rxsync::DoublePn
+  }
+  #[doc = "Rx Signal with Single Synchro Stage (Positive Edge)"]
+  #[inline(always)]
+  pub fn is_single_p(&self) -> bool {
+    *self == Rxsync::SingleP
+  }
+  #[doc = "Rx Signal with No Synchro Stage"]
+  #[inline(always)]
+  pub fn is_none(&self) -> bool {
+    *self == Rxsync::None
+  }
 }
-impl<'a> RXSYNC_W<'a> {
-    #[doc = r"Writes `variant` to the field"]
-    #[inline(always)]
-    pub fn variant(self, variant: RXSYNC_A) -> &'a mut W {
-        unsafe { self.bits(variant.into()) }
-    }
-    #[doc = "Rx Signal with Double Synchro Stages (2 Positive Edges)"]
-    #[inline(always)]
-    pub fn double_pp(self) -> &'a mut W {
-        self.variant(RXSYNC_A::DOUBLE_PP)
-    }
-    #[doc = "Rx Signal with Double Synchro Stages (One Positive Edge and One Negative Edge)"]
-    #[inline(always)]
-    pub fn double_pn(self) -> &'a mut W {
-        self.variant(RXSYNC_A::DOUBLE_PN)
-    }
-    #[doc = "Rx Signal with Single Synchro Stage (Positive Edge)"]
-    #[inline(always)]
-    pub fn single_p(self) -> &'a mut W {
-        self.variant(RXSYNC_A::SINGLE_P)
-    }
-    #[doc = "Rx Signal with No Synchro Stage"]
-    #[inline(always)]
-    pub fn none(self) -> &'a mut W {
-        self.variant(RXSYNC_A::NONE)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x07 << 24)) | (((value as u32) & 0x07) << 24);
-        self.w
-    }
+#[doc = "Field `RXSYNC` writer - Reception Synchronization Stage (not readable)"]
+pub type RxsyncW<'a, REG> = crate::FieldWriter<'a, REG, 3, Rxsync>;
+impl<'a, REG> RxsyncW<'a, REG>
+where
+  REG: crate::Writable + crate::RegisterSpec,
+  REG::Ux: From<u8>,
+{
+  #[doc = "Rx Signal with Double Synchro Stages (2 Positive Edges)"]
+  #[inline(always)]
+  pub fn double_pp(self) -> &'a mut crate::W<REG> {
+    self.variant(Rxsync::DoublePp)
+  }
+  #[doc = "Rx Signal with Double Synchro Stages (One Positive Edge and One Negative Edge)"]
+  #[inline(always)]
+  pub fn double_pn(self) -> &'a mut crate::W<REG> {
+    self.variant(Rxsync::DoublePn)
+  }
+  #[doc = "Rx Signal with Single Synchro Stage (Positive Edge)"]
+  #[inline(always)]
+  pub fn single_p(self) -> &'a mut crate::W<REG> {
+    self.variant(Rxsync::SingleP)
+  }
+  #[doc = "Rx Signal with No Synchro Stage"]
+  #[inline(always)]
+  pub fn none(self) -> &'a mut crate::W<REG> {
+    self.variant(Rxsync::None)
+  }
 }
 impl R {
-    #[doc = "Bit 0 - CAN Controller Enable"]
-    #[inline(always)]
-    pub fn canen(&self) -> CANEN_R {
-        CANEN_R::new((self.bits & 0x01) != 0)
-    }
-    #[doc = "Bit 1 - Disable/Enable Low Power Mode"]
-    #[inline(always)]
-    pub fn lpm(&self) -> LPM_R {
-        LPM_R::new(((self.bits >> 1) & 0x01) != 0)
-    }
-    #[doc = "Bit 2 - Disable/Enable Autobaud/Listen mode"]
-    #[inline(always)]
-    pub fn abm(&self) -> ABM_R {
-        ABM_R::new(((self.bits >> 2) & 0x01) != 0)
-    }
-    #[doc = "Bit 3 - Disable/Enable Overload Frame"]
-    #[inline(always)]
-    pub fn ovl(&self) -> OVL_R {
-        OVL_R::new(((self.bits >> 3) & 0x01) != 0)
-    }
-    #[doc = "Bit 4 - Timestamp messages at each end of Frame"]
-    #[inline(always)]
-    pub fn teof(&self) -> TEOF_R {
-        TEOF_R::new(((self.bits >> 4) & 0x01) != 0)
-    }
-    #[doc = "Bit 5 - Disable/Enable Time Triggered Mode"]
-    #[inline(always)]
-    pub fn ttm(&self) -> TTM_R {
-        TTM_R::new(((self.bits >> 5) & 0x01) != 0)
-    }
-    #[doc = "Bit 6 - Enable Timer Freeze"]
-    #[inline(always)]
-    pub fn timfrz(&self) -> TIMFRZ_R {
-        TIMFRZ_R::new(((self.bits >> 6) & 0x01) != 0)
-    }
-    #[doc = "Bit 7 - Disable Repeat"]
-    #[inline(always)]
-    pub fn drpt(&self) -> DRPT_R {
-        DRPT_R::new(((self.bits >> 7) & 0x01) != 0)
-    }
-    #[doc = "Bits 24:26 - Reception Synchronization Stage (not readable)"]
-    #[inline(always)]
-    pub fn rxsync(&self) -> RXSYNC_R {
-        RXSYNC_R::new(((self.bits >> 24) & 0x07) as u8)
-    }
+  #[doc = "Bit 0 - CAN Controller Enable"]
+  #[inline(always)]
+  pub fn canen(&self) -> CanenR {
+    CanenR::new((self.bits & 1) != 0)
+  }
+  #[doc = "Bit 1 - Disable/Enable Low Power Mode"]
+  #[inline(always)]
+  pub fn lpm(&self) -> LpmR {
+    LpmR::new(((self.bits >> 1) & 1) != 0)
+  }
+  #[doc = "Bit 2 - Disable/Enable Autobaud/Listen mode"]
+  #[inline(always)]
+  pub fn abm(&self) -> AbmR {
+    AbmR::new(((self.bits >> 2) & 1) != 0)
+  }
+  #[doc = "Bit 3 - Disable/Enable Overload Frame"]
+  #[inline(always)]
+  pub fn ovl(&self) -> OvlR {
+    OvlR::new(((self.bits >> 3) & 1) != 0)
+  }
+  #[doc = "Bit 4 - Timestamp messages at each end of Frame"]
+  #[inline(always)]
+  pub fn teof(&self) -> TeofR {
+    TeofR::new(((self.bits >> 4) & 1) != 0)
+  }
+  #[doc = "Bit 5 - Disable/Enable Time Triggered Mode"]
+  #[inline(always)]
+  pub fn ttm(&self) -> TtmR {
+    TtmR::new(((self.bits >> 5) & 1) != 0)
+  }
+  #[doc = "Bit 6 - Enable Timer Freeze"]
+  #[inline(always)]
+  pub fn timfrz(&self) -> TimfrzR {
+    TimfrzR::new(((self.bits >> 6) & 1) != 0)
+  }
+  #[doc = "Bit 7 - Disable Repeat"]
+  #[inline(always)]
+  pub fn drpt(&self) -> DrptR {
+    DrptR::new(((self.bits >> 7) & 1) != 0)
+  }
+  #[doc = "Bits 24:26 - Reception Synchronization Stage (not readable)"]
+  #[inline(always)]
+  pub fn rxsync(&self) -> RxsyncR {
+    RxsyncR::new(((self.bits >> 24) & 7) as u8)
+  }
 }
 impl W {
-    #[doc = "Bit 0 - CAN Controller Enable"]
-    #[inline(always)]
-    pub fn canen(&mut self) -> CANEN_W {
-        CANEN_W { w: self }
-    }
-    #[doc = "Bit 1 - Disable/Enable Low Power Mode"]
-    #[inline(always)]
-    pub fn lpm(&mut self) -> LPM_W {
-        LPM_W { w: self }
-    }
-    #[doc = "Bit 2 - Disable/Enable Autobaud/Listen mode"]
-    #[inline(always)]
-    pub fn abm(&mut self) -> ABM_W {
-        ABM_W { w: self }
-    }
-    #[doc = "Bit 3 - Disable/Enable Overload Frame"]
-    #[inline(always)]
-    pub fn ovl(&mut self) -> OVL_W {
-        OVL_W { w: self }
-    }
-    #[doc = "Bit 4 - Timestamp messages at each end of Frame"]
-    #[inline(always)]
-    pub fn teof(&mut self) -> TEOF_W {
-        TEOF_W { w: self }
-    }
-    #[doc = "Bit 5 - Disable/Enable Time Triggered Mode"]
-    #[inline(always)]
-    pub fn ttm(&mut self) -> TTM_W {
-        TTM_W { w: self }
-    }
-    #[doc = "Bit 6 - Enable Timer Freeze"]
-    #[inline(always)]
-    pub fn timfrz(&mut self) -> TIMFRZ_W {
-        TIMFRZ_W { w: self }
-    }
-    #[doc = "Bit 7 - Disable Repeat"]
-    #[inline(always)]
-    pub fn drpt(&mut self) -> DRPT_W {
-        DRPT_W { w: self }
-    }
-    #[doc = "Bits 24:26 - Reception Synchronization Stage (not readable)"]
-    #[inline(always)]
-    pub fn rxsync(&mut self) -> RXSYNC_W {
-        RXSYNC_W { w: self }
-    }
+  #[doc = "Bit 0 - CAN Controller Enable"]
+  #[inline(always)]
+  pub fn canen(&mut self) -> CanenW<'_, MrSpec> {
+    CanenW::new(self, 0)
+  }
+  #[doc = "Bit 1 - Disable/Enable Low Power Mode"]
+  #[inline(always)]
+  pub fn lpm(&mut self) -> LpmW<'_, MrSpec> {
+    LpmW::new(self, 1)
+  }
+  #[doc = "Bit 2 - Disable/Enable Autobaud/Listen mode"]
+  #[inline(always)]
+  pub fn abm(&mut self) -> AbmW<'_, MrSpec> {
+    AbmW::new(self, 2)
+  }
+  #[doc = "Bit 3 - Disable/Enable Overload Frame"]
+  #[inline(always)]
+  pub fn ovl(&mut self) -> OvlW<'_, MrSpec> {
+    OvlW::new(self, 3)
+  }
+  #[doc = "Bit 4 - Timestamp messages at each end of Frame"]
+  #[inline(always)]
+  pub fn teof(&mut self) -> TeofW<'_, MrSpec> {
+    TeofW::new(self, 4)
+  }
+  #[doc = "Bit 5 - Disable/Enable Time Triggered Mode"]
+  #[inline(always)]
+  pub fn ttm(&mut self) -> TtmW<'_, MrSpec> {
+    TtmW::new(self, 5)
+  }
+  #[doc = "Bit 6 - Enable Timer Freeze"]
+  #[inline(always)]
+  pub fn timfrz(&mut self) -> TimfrzW<'_, MrSpec> {
+    TimfrzW::new(self, 6)
+  }
+  #[doc = "Bit 7 - Disable Repeat"]
+  #[inline(always)]
+  pub fn drpt(&mut self) -> DrptW<'_, MrSpec> {
+    DrptW::new(self, 7)
+  }
+  #[doc = "Bits 24:26 - Reception Synchronization Stage (not readable)"]
+  #[inline(always)]
+  pub fn rxsync(&mut self) -> RxsyncW<'_, MrSpec> {
+    RxsyncW::new(self, 24)
+  }
 }
+#[doc = "Mode Register\n\nYou can [`read`](crate::Reg::read) this register and get [`mr::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`mr::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct MrSpec;
+impl crate::RegisterSpec for MrSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`mr::R`](R) reader structure"]
+impl crate::Readable for MrSpec {}
+#[doc = "`write(|w| ..)` method takes [`mr::W`](W) writer structure"]
+impl crate::Writable for MrSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets MR to value 0"]
+impl crate::Resettable for MrSpec {}

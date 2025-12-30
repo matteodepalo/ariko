@@ -1,112 +1,79 @@
-#[doc = "Reader of register PULSE2"]
-pub type R = crate::R<u32, super::PULSE2>;
-#[doc = "Writer for register PULSE2"]
-pub type W = crate::W<u32, super::PULSE2>;
-#[doc = "Register PULSE2 `reset()`'s with value 0x0101_0101"]
-impl crate::ResetValue for super::PULSE2 {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0x0101_0101
-    }
-}
-#[doc = "Reader of field `NWE_PULSE`"]
-pub type NWE_PULSE_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `NWE_PULSE`"]
-pub struct NWE_PULSE_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> NWE_PULSE_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x7f) | ((value as u32) & 0x7f);
-        self.w
-    }
-}
-#[doc = "Reader of field `NCS_WR_PULSE`"]
-pub type NCS_WR_PULSE_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `NCS_WR_PULSE`"]
-pub struct NCS_WR_PULSE_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> NCS_WR_PULSE_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x7f << 8)) | (((value as u32) & 0x7f) << 8);
-        self.w
-    }
-}
-#[doc = "Reader of field `NRD_PULSE`"]
-pub type NRD_PULSE_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `NRD_PULSE`"]
-pub struct NRD_PULSE_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> NRD_PULSE_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x7f << 16)) | (((value as u32) & 0x7f) << 16);
-        self.w
-    }
-}
-#[doc = "Reader of field `NCS_RD_PULSE`"]
-pub type NCS_RD_PULSE_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `NCS_RD_PULSE`"]
-pub struct NCS_RD_PULSE_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> NCS_RD_PULSE_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x7f << 24)) | (((value as u32) & 0x7f) << 24);
-        self.w
-    }
-}
+#[doc = "Register `PULSE2` reader"]
+pub type R = crate::R<Pulse2Spec>;
+#[doc = "Register `PULSE2` writer"]
+pub type W = crate::W<Pulse2Spec>;
+#[doc = "Field `NWE_PULSE` reader - NWE Pulse Length"]
+pub type NwePulseR = crate::FieldReader;
+#[doc = "Field `NWE_PULSE` writer - NWE Pulse Length"]
+pub type NwePulseW<'a, REG> = crate::FieldWriter<'a, REG, 6>;
+#[doc = "Field `NCS_WR_PULSE` reader - NCS Pulse Length in WRITE Access"]
+pub type NcsWrPulseR = crate::FieldReader;
+#[doc = "Field `NCS_WR_PULSE` writer - NCS Pulse Length in WRITE Access"]
+pub type NcsWrPulseW<'a, REG> = crate::FieldWriter<'a, REG, 6>;
+#[doc = "Field `NRD_PULSE` reader - NRD Pulse Length"]
+pub type NrdPulseR = crate::FieldReader;
+#[doc = "Field `NRD_PULSE` writer - NRD Pulse Length"]
+pub type NrdPulseW<'a, REG> = crate::FieldWriter<'a, REG, 6>;
+#[doc = "Field `NCS_RD_PULSE` reader - NCS Pulse Length in READ Access"]
+pub type NcsRdPulseR = crate::FieldReader;
+#[doc = "Field `NCS_RD_PULSE` writer - NCS Pulse Length in READ Access"]
+pub type NcsRdPulseW<'a, REG> = crate::FieldWriter<'a, REG, 6>;
 impl R {
-    #[doc = "Bits 0:6 - NWE Pulse Length"]
-    #[inline(always)]
-    pub fn nwe_pulse(&self) -> NWE_PULSE_R {
-        NWE_PULSE_R::new((self.bits & 0x7f) as u8)
-    }
-    #[doc = "Bits 8:14 - NCS Pulse Length in WRITE Access"]
-    #[inline(always)]
-    pub fn ncs_wr_pulse(&self) -> NCS_WR_PULSE_R {
-        NCS_WR_PULSE_R::new(((self.bits >> 8) & 0x7f) as u8)
-    }
-    #[doc = "Bits 16:22 - NRD Pulse Length"]
-    #[inline(always)]
-    pub fn nrd_pulse(&self) -> NRD_PULSE_R {
-        NRD_PULSE_R::new(((self.bits >> 16) & 0x7f) as u8)
-    }
-    #[doc = "Bits 24:30 - NCS Pulse Length in READ Access"]
-    #[inline(always)]
-    pub fn ncs_rd_pulse(&self) -> NCS_RD_PULSE_R {
-        NCS_RD_PULSE_R::new(((self.bits >> 24) & 0x7f) as u8)
-    }
+  #[doc = "Bits 0:5 - NWE Pulse Length"]
+  #[inline(always)]
+  pub fn nwe_pulse(&self) -> NwePulseR {
+    NwePulseR::new((self.bits & 0x3f) as u8)
+  }
+  #[doc = "Bits 8:13 - NCS Pulse Length in WRITE Access"]
+  #[inline(always)]
+  pub fn ncs_wr_pulse(&self) -> NcsWrPulseR {
+    NcsWrPulseR::new(((self.bits >> 8) & 0x3f) as u8)
+  }
+  #[doc = "Bits 16:21 - NRD Pulse Length"]
+  #[inline(always)]
+  pub fn nrd_pulse(&self) -> NrdPulseR {
+    NrdPulseR::new(((self.bits >> 16) & 0x3f) as u8)
+  }
+  #[doc = "Bits 24:29 - NCS Pulse Length in READ Access"]
+  #[inline(always)]
+  pub fn ncs_rd_pulse(&self) -> NcsRdPulseR {
+    NcsRdPulseR::new(((self.bits >> 24) & 0x3f) as u8)
+  }
 }
 impl W {
-    #[doc = "Bits 0:6 - NWE Pulse Length"]
-    #[inline(always)]
-    pub fn nwe_pulse(&mut self) -> NWE_PULSE_W {
-        NWE_PULSE_W { w: self }
-    }
-    #[doc = "Bits 8:14 - NCS Pulse Length in WRITE Access"]
-    #[inline(always)]
-    pub fn ncs_wr_pulse(&mut self) -> NCS_WR_PULSE_W {
-        NCS_WR_PULSE_W { w: self }
-    }
-    #[doc = "Bits 16:22 - NRD Pulse Length"]
-    #[inline(always)]
-    pub fn nrd_pulse(&mut self) -> NRD_PULSE_W {
-        NRD_PULSE_W { w: self }
-    }
-    #[doc = "Bits 24:30 - NCS Pulse Length in READ Access"]
-    #[inline(always)]
-    pub fn ncs_rd_pulse(&mut self) -> NCS_RD_PULSE_W {
-        NCS_RD_PULSE_W { w: self }
-    }
+  #[doc = "Bits 0:5 - NWE Pulse Length"]
+  #[inline(always)]
+  pub fn nwe_pulse(&mut self) -> NwePulseW<'_, Pulse2Spec> {
+    NwePulseW::new(self, 0)
+  }
+  #[doc = "Bits 8:13 - NCS Pulse Length in WRITE Access"]
+  #[inline(always)]
+  pub fn ncs_wr_pulse(&mut self) -> NcsWrPulseW<'_, Pulse2Spec> {
+    NcsWrPulseW::new(self, 8)
+  }
+  #[doc = "Bits 16:21 - NRD Pulse Length"]
+  #[inline(always)]
+  pub fn nrd_pulse(&mut self) -> NrdPulseW<'_, Pulse2Spec> {
+    NrdPulseW::new(self, 16)
+  }
+  #[doc = "Bits 24:29 - NCS Pulse Length in READ Access"]
+  #[inline(always)]
+  pub fn ncs_rd_pulse(&mut self) -> NcsRdPulseW<'_, Pulse2Spec> {
+    NcsRdPulseW::new(self, 24)
+  }
+}
+#[doc = "SMC Pulse Register (CS_number = 2)\n\nYou can [`read`](crate::Reg::read) this register and get [`pulse2::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`pulse2::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct Pulse2Spec;
+impl crate::RegisterSpec for Pulse2Spec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`pulse2::R`](R) reader structure"]
+impl crate::Readable for Pulse2Spec {}
+#[doc = "`write(|w| ..)` method takes [`pulse2::W`](W) writer structure"]
+impl crate::Writable for Pulse2Spec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets PULSE2 to value 0x0101_0101"]
+impl crate::Resettable for Pulse2Spec {
+  const RESET_VALUE: u32 = 0x0101_0101;
 }

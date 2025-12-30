@@ -1,16 +1,18 @@
-use cortex_m::peripheral::NVIC;
+use core::cell::RefCell;
+use cortex_m::peripheral::{NVIC, SYST};
+use critical_section::Mutex;
 use sam3x8e_hal::gpio::pioa::PA29;
 use sam3x8e_hal::gpio::piob::PB25;
 use sam3x8e_hal::gpio::pioc::PC28;
 use sam3x8e_hal::gpio::{Input, Output, PullUp, PushPull};
 use sam3x8e_hal::pac as sam3x8e;
-use sam3x8e_hal::pac::{RTT, SYST, TWI0, UART, UOTGHS};
+use sam3x8e_hal::pac::{RTT, TWI0, UART, UOTGHS};
 use sam3x8e_hal::pmc::{Config, MainOscillator, Pmc, PmcExt};
 use sam3x8e_hal::prelude::*;
 use sam3x8e_hal::time::Hertz;
 use sam3x8e_hal::timer::Timer;
 
-static mut S_PERIPHERALS: Option<Peripherals> = None;
+static PERIPHERALS: Mutex<RefCell<Option<Peripherals>>> = Mutex::new(RefCell::new(None));
 
 pub struct Peripherals {
   pub uart: UART,
@@ -31,7 +33,7 @@ impl Peripherals {
     let cp = cortex_m::Peripherals::take().unwrap();
 
     // Disable watchdog to prevent restarts
-    p.WDT.mr.write_with_zero(|w| w.wddis().set_bit());
+    unsafe { p.WDT.mr().write_with_zero(|w| w.wddis().set_bit()); }
 
     let mut pmc = p
       .PMC
@@ -78,8 +80,8 @@ impl Peripherals {
       .pa29
       .into_push_pull_output(&mut pioa.mddr, &mut pioa.oer);
 
-    unsafe {
-      S_PERIPHERALS = Some(Peripherals {
+    critical_section::with(|cs| {
+      PERIPHERALS.borrow(cs).replace(Some(Peripherals {
         uart: p.UART,
         twi0: p.TWI0,
         uotghs: p.UOTGHS,
@@ -90,11 +92,20 @@ impl Peripherals {
         pmc,
         delay,
         timer,
-      })
-    }
+      }));
+    });
   }
 
-  pub unsafe fn get() -> &'static mut Self {
-    S_PERIPHERALS.as_mut().unwrap()
+  /// Access peripherals within a critical section.
+  /// The closure receives a mutable reference to the Peripherals struct.
+  pub fn with<F, R>(f: F) -> R
+  where
+    F: FnOnce(&mut Peripherals) -> R,
+  {
+    critical_section::with(|cs| {
+      let mut borrow = PERIPHERALS.borrow(cs).borrow_mut();
+      let peripherals = borrow.as_mut().expect("Peripherals not initialized");
+      f(peripherals)
+    })
   }
 }

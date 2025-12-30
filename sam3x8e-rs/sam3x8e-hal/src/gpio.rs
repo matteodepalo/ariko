@@ -15,8 +15,7 @@
  *    along with sam3x8e-hal.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use crate::hal::digital::InputPin;
-use crate::hal::digital::OutputPin;
+use crate::hal::digital::{ErrorType, InputPin, OutputPin};
 
 use core::marker::PhantomData;
 

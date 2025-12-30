@@ -1,11 +1,20 @@
-#[doc = "Reader of register ISR"]
-pub type R = crate::R<u32, super::ISR>;
-#[doc = "Reader of field `DATRDY`"]
-pub type DATRDY_R = crate::R<bool, bool>;
+#[doc = "Register `ISR` reader"]
+pub type R = crate::R<IsrSpec>;
+#[doc = "Field `DATRDY` reader - Data Ready"]
+pub type DatrdyR = crate::BitReader;
 impl R {
-    #[doc = "Bit 0 - Data Ready"]
-    #[inline(always)]
-    pub fn datrdy(&self) -> DATRDY_R {
-        DATRDY_R::new((self.bits & 0x01) != 0)
-    }
+  #[doc = "Bit 0 - Data Ready"]
+  #[inline(always)]
+  pub fn datrdy(&self) -> DatrdyR {
+    DatrdyR::new((self.bits & 1) != 0)
+  }
 }
+#[doc = "Interrupt Status Register\n\nYou can [`read`](crate::Reg::read) this register and get [`isr::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct IsrSpec;
+impl crate::RegisterSpec for IsrSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`isr::R`](R) reader structure"]
+impl crate::Readable for IsrSpec {}
+#[doc = "`reset()` method sets ISR to value 0"]
+impl crate::Resettable for IsrSpec {}

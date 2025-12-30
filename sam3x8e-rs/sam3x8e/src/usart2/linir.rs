@@ -1,40 +1,35 @@
-#[doc = "Reader of register LINIR"]
-pub type R = crate::R<u32, super::LINIR>;
-#[doc = "Writer for register LINIR"]
-pub type W = crate::W<u32, super::LINIR>;
-#[doc = "Register LINIR `reset()`'s with value 0"]
-impl crate::ResetValue for super::LINIR {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `IDCHR`"]
-pub type IDCHR_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `IDCHR`"]
-pub struct IDCHR_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> IDCHR_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0xff) | ((value as u32) & 0xff);
-        self.w
-    }
-}
+#[doc = "Register `LINIR` reader"]
+pub type R = crate::R<LinirSpec>;
+#[doc = "Register `LINIR` writer"]
+pub type W = crate::W<LinirSpec>;
+#[doc = "Field `IDCHR` reader - Identifier Character"]
+pub type IdchrR = crate::FieldReader;
+#[doc = "Field `IDCHR` writer - Identifier Character"]
+pub type IdchrW<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 impl R {
-    #[doc = "Bits 0:7 - Identifier Character"]
-    #[inline(always)]
-    pub fn idchr(&self) -> IDCHR_R {
-        IDCHR_R::new((self.bits & 0xff) as u8)
-    }
+  #[doc = "Bits 0:7 - Identifier Character"]
+  #[inline(always)]
+  pub fn idchr(&self) -> IdchrR {
+    IdchrR::new((self.bits & 0xff) as u8)
+  }
 }
 impl W {
-    #[doc = "Bits 0:7 - Identifier Character"]
-    #[inline(always)]
-    pub fn idchr(&mut self) -> IDCHR_W {
-        IDCHR_W { w: self }
-    }
+  #[doc = "Bits 0:7 - Identifier Character"]
+  #[inline(always)]
+  pub fn idchr(&mut self) -> IdchrW<'_, LinirSpec> {
+    IdchrW::new(self, 0)
+  }
 }
+#[doc = "LIN Identifier Register\n\nYou can [`read`](crate::Reg::read) this register and get [`linir::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`linir::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct LinirSpec;
+impl crate::RegisterSpec for LinirSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`linir::R`](R) reader structure"]
+impl crate::Readable for LinirSpec {}
+#[doc = "`write(|w| ..)` method takes [`linir::W`](W) writer structure"]
+impl crate::Writable for LinirSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets LINIR to value 0"]
+impl crate::Resettable for LinirSpec {}

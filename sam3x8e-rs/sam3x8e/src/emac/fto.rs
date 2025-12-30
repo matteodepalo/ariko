@@ -1,40 +1,35 @@
-#[doc = "Reader of register FTO"]
-pub type R = crate::R<u32, super::FTO>;
-#[doc = "Writer for register FTO"]
-pub type W = crate::W<u32, super::FTO>;
-#[doc = "Register FTO `reset()`'s with value 0"]
-impl crate::ResetValue for super::FTO {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `FTOK`"]
-pub type FTOK_R = crate::R<u32, u32>;
-#[doc = "Write proxy for field `FTOK`"]
-pub struct FTOK_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> FTOK_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u32) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x00ff_ffff) | ((value as u32) & 0x00ff_ffff);
-        self.w
-    }
-}
+#[doc = "Register `FTO` reader"]
+pub type R = crate::R<FtoSpec>;
+#[doc = "Register `FTO` writer"]
+pub type W = crate::W<FtoSpec>;
+#[doc = "Field `FTOK` reader - Frames Transmitted OK"]
+pub type FtokR = crate::FieldReader<u32>;
+#[doc = "Field `FTOK` writer - Frames Transmitted OK"]
+pub type FtokW<'a, REG> = crate::FieldWriter<'a, REG, 24, u32>;
 impl R {
-    #[doc = "Bits 0:23 - Frames Transmitted OK"]
-    #[inline(always)]
-    pub fn ftok(&self) -> FTOK_R {
-        FTOK_R::new((self.bits & 0x00ff_ffff) as u32)
-    }
+  #[doc = "Bits 0:23 - Frames Transmitted OK"]
+  #[inline(always)]
+  pub fn ftok(&self) -> FtokR {
+    FtokR::new(self.bits & 0x00ff_ffff)
+  }
 }
 impl W {
-    #[doc = "Bits 0:23 - Frames Transmitted OK"]
-    #[inline(always)]
-    pub fn ftok(&mut self) -> FTOK_W {
-        FTOK_W { w: self }
-    }
+  #[doc = "Bits 0:23 - Frames Transmitted OK"]
+  #[inline(always)]
+  pub fn ftok(&mut self) -> FtokW<'_, FtoSpec> {
+    FtokW::new(self, 0)
+  }
 }
+#[doc = "Frames Transmitted Ok Register\n\nYou can [`read`](crate::Reg::read) this register and get [`fto::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`fto::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct FtoSpec;
+impl crate::RegisterSpec for FtoSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`fto::R`](R) reader structure"]
+impl crate::Readable for FtoSpec {}
+#[doc = "`write(|w| ..)` method takes [`fto::W`](W) writer structure"]
+impl crate::Writable for FtoSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets FTO to value 0"]
+impl crate::Resettable for FtoSpec {}

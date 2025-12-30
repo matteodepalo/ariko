@@ -1,40 +1,35 @@
-#[doc = "Reader of register USF"]
-pub type R = crate::R<u32, super::USF>;
-#[doc = "Writer for register USF"]
-pub type W = crate::W<u32, super::USF>;
-#[doc = "Register USF `reset()`'s with value 0"]
-impl crate::ResetValue for super::USF {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `USF`"]
-pub type USF_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `USF`"]
-pub struct USF_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> USF_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0xff) | ((value as u32) & 0xff);
-        self.w
-    }
-}
+#[doc = "Register `USF` reader"]
+pub type R = crate::R<UsfSpec>;
+#[doc = "Register `USF` writer"]
+pub type W = crate::W<UsfSpec>;
+#[doc = "Field `USF` reader - Undersize frames"]
+pub type UsfR = crate::FieldReader;
+#[doc = "Field `USF` writer - Undersize frames"]
+pub type UsfW<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 impl R {
-    #[doc = "Bits 0:7 - Undersize frames"]
-    #[inline(always)]
-    pub fn usf(&self) -> USF_R {
-        USF_R::new((self.bits & 0xff) as u8)
-    }
+  #[doc = "Bits 0:7 - Undersize frames"]
+  #[inline(always)]
+  pub fn usf(&self) -> UsfR {
+    UsfR::new((self.bits & 0xff) as u8)
+  }
 }
 impl W {
-    #[doc = "Bits 0:7 - Undersize frames"]
-    #[inline(always)]
-    pub fn usf(&mut self) -> USF_W {
-        USF_W { w: self }
-    }
+  #[doc = "Bits 0:7 - Undersize frames"]
+  #[inline(always)]
+  pub fn usf(&mut self) -> UsfW<'_, UsfSpec> {
+    UsfW::new(self, 0)
+  }
 }
+#[doc = "Undersize Frames Register\n\nYou can [`read`](crate::Reg::read) this register and get [`usf::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`usf::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct UsfSpec;
+impl crate::RegisterSpec for UsfSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`usf::R`](R) reader structure"]
+impl crate::Readable for UsfSpec {}
+#[doc = "`write(|w| ..)` method takes [`usf::W`](W) writer structure"]
+impl crate::Writable for UsfSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets USF to value 0"]
+impl crate::Resettable for UsfSpec {}

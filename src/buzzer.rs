@@ -1,10 +1,12 @@
 #![allow(dead_code)]
 
 use crate::peripherals::Peripherals;
-use embedded_hal::blocking::delay::DelayUs;
+use core::cell::RefCell;
+use critical_section::Mutex;
+use embedded_hal::delay::DelayNs;
 use embedded_hal::digital::OutputPin;
 
-static mut S_BUZZER: Option<Buzzer> = None;
+static BUZZER: Mutex<RefCell<Option<Buzzer>>> = Mutex::new(RefCell::new(None));
 
 const NOTE_D0: u32 = 0;
 const NOTE_D1: u32 = 294;
@@ -160,31 +162,38 @@ pub struct Buzzer;
 
 impl Buzzer {
   pub fn init() {
-    unsafe { S_BUZZER = Some(Buzzer) }
+    critical_section::with(|cs| {
+      BUZZER.borrow(cs).replace(Some(Buzzer));
+    });
   }
 
-  pub fn get() -> &'static mut Self {
-    unsafe { S_BUZZER.as_mut().unwrap() }
+  pub fn with<F, R>(f: F) -> R
+  where
+    F: FnOnce(&mut Buzzer) -> R,
+  {
+    critical_section::with(|cs| {
+      let mut borrow = BUZZER.borrow(cs).borrow_mut();
+      let buzzer = borrow.as_mut().expect("Buzzer not initialized");
+      f(buzzer)
+    })
   }
-}
 
-impl Buzzer {
   // fn play_tune() {
-  //   let p = Peripherals::get();
-  //
-  //   for (i, x) in TUNE.iter().enumerate() {
-  //     tone(tonePin, x); //output the "x" note
-  //     p.delay.try_delay_ms(400 * DURATION[i]); // rhythm of the music,it can be tuned fast and slow by change the number"400"
-  //     noTone(tonePin); //stop the current note and go to the next note
-  //   }
+  //   Peripherals::with(|p| {
+  //     for (i, x) in TUNE.iter().enumerate() {
+  //       tone(tonePin, x); //output the "x" note
+  //       p.delay.try_delay_ms(400 * DURATION[i]); // rhythm of the music,it can be tuned fast and slow by change the number"400"
+  //       noTone(tonePin); //stop the current note and go to the next note
+  //     }
+  //   });
   // }
 
   pub fn beep(&self) {
-    let p = unsafe { Peripherals::get() };
-
-    p.buzzer.try_set_high().unwrap();
-    p.delay.try_delay_us(CYCLE / 2).unwrap();
-    p.buzzer.try_set_low().unwrap();
-    p.delay.try_delay_us(CYCLE / 2).unwrap(); // run the PMW cycle
+    Peripherals::with(|p| {
+      p.buzzer.set_high().unwrap();
+      p.delay.delay_us(CYCLE / 2);
+      p.buzzer.set_low().unwrap();
+      p.delay.delay_us(CYCLE / 2); // run the PMW cycle
+    });
   }
 }

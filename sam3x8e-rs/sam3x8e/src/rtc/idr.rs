@@ -1,139 +1,48 @@
-#[doc = "Writer for register IDR"]
-pub type W = crate::W<u32, super::IDR>;
-#[doc = "Write proxy for field `ACKDIS`"]
-pub struct ACKDIS_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> ACKDIS_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x01) | ((value as u32) & 0x01);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `ALRDIS`"]
-pub struct ALRDIS_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> ALRDIS_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 1)) | (((value as u32) & 0x01) << 1);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `SECDIS`"]
-pub struct SECDIS_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> SECDIS_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 2)) | (((value as u32) & 0x01) << 2);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `TIMDIS`"]
-pub struct TIMDIS_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> TIMDIS_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 3)) | (((value as u32) & 0x01) << 3);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `CALDIS`"]
-pub struct CALDIS_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CALDIS_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 4)) | (((value as u32) & 0x01) << 4);
-        self.w
-    }
-}
+#[doc = "Register `IDR` writer"]
+pub type W = crate::W<IdrSpec>;
+#[doc = "Field `ACKDIS` writer - Acknowledge Update Interrupt Disable"]
+pub type AckdisW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `ALRDIS` writer - Alarm Interrupt Disable"]
+pub type AlrdisW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `SECDIS` writer - Second Event Interrupt Disable"]
+pub type SecdisW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `TIMDIS` writer - Time Event Interrupt Disable"]
+pub type TimdisW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `CALDIS` writer - Calendar Event Interrupt Disable"]
+pub type CaldisW<'a, REG> = crate::BitWriter<'a, REG>;
 impl W {
-    #[doc = "Bit 0 - Acknowledge Update Interrupt Disable"]
-    #[inline(always)]
-    pub fn ackdis(&mut self) -> ACKDIS_W {
-        ACKDIS_W { w: self }
-    }
-    #[doc = "Bit 1 - Alarm Interrupt Disable"]
-    #[inline(always)]
-    pub fn alrdis(&mut self) -> ALRDIS_W {
-        ALRDIS_W { w: self }
-    }
-    #[doc = "Bit 2 - Second Event Interrupt Disable"]
-    #[inline(always)]
-    pub fn secdis(&mut self) -> SECDIS_W {
-        SECDIS_W { w: self }
-    }
-    #[doc = "Bit 3 - Time Event Interrupt Disable"]
-    #[inline(always)]
-    pub fn timdis(&mut self) -> TIMDIS_W {
-        TIMDIS_W { w: self }
-    }
-    #[doc = "Bit 4 - Calendar Event Interrupt Disable"]
-    #[inline(always)]
-    pub fn caldis(&mut self) -> CALDIS_W {
-        CALDIS_W { w: self }
-    }
+  #[doc = "Bit 0 - Acknowledge Update Interrupt Disable"]
+  #[inline(always)]
+  pub fn ackdis(&mut self) -> AckdisW<'_, IdrSpec> {
+    AckdisW::new(self, 0)
+  }
+  #[doc = "Bit 1 - Alarm Interrupt Disable"]
+  #[inline(always)]
+  pub fn alrdis(&mut self) -> AlrdisW<'_, IdrSpec> {
+    AlrdisW::new(self, 1)
+  }
+  #[doc = "Bit 2 - Second Event Interrupt Disable"]
+  #[inline(always)]
+  pub fn secdis(&mut self) -> SecdisW<'_, IdrSpec> {
+    SecdisW::new(self, 2)
+  }
+  #[doc = "Bit 3 - Time Event Interrupt Disable"]
+  #[inline(always)]
+  pub fn timdis(&mut self) -> TimdisW<'_, IdrSpec> {
+    TimdisW::new(self, 3)
+  }
+  #[doc = "Bit 4 - Calendar Event Interrupt Disable"]
+  #[inline(always)]
+  pub fn caldis(&mut self) -> CaldisW<'_, IdrSpec> {
+    CaldisW::new(self, 4)
+  }
+}
+#[doc = "Interrupt Disable Register\n\nYou can [`write_with_zero`](crate::Reg::write_with_zero) this register using [`idr::W`](W). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct IdrSpec;
+impl crate::RegisterSpec for IdrSpec {
+  type Ux = u32;
+}
+#[doc = "`write(|w| ..)` method takes [`idr::W`](W) writer structure"]
+impl crate::Writable for IdrSpec {
+  type Safety = crate::Unsafe;
 }

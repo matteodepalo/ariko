@@ -1,11 +1,20 @@
-#[doc = "Reader of register ODATA"]
-pub type R = crate::R<u32, super::ODATA>;
-#[doc = "Reader of field `ODATA`"]
-pub type ODATA_R = crate::R<u32, u32>;
+#[doc = "Register `ODATA` reader"]
+pub type R = crate::R<OdataSpec>;
+#[doc = "Field `ODATA` reader - Output Data"]
+pub type OdataR = crate::FieldReader<u32>;
 impl R {
-    #[doc = "Bits 0:31 - Output Data"]
-    #[inline(always)]
-    pub fn odata(&self) -> ODATA_R {
-        ODATA_R::new((self.bits & 0xffff_ffff) as u32)
-    }
+  #[doc = "Bits 0:31 - Output Data"]
+  #[inline(always)]
+  pub fn odata(&self) -> OdataR {
+    OdataR::new(self.bits)
+  }
 }
+#[doc = "Output Data Register\n\nYou can [`read`](crate::Reg::read) this register and get [`odata::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct OdataSpec;
+impl crate::RegisterSpec for OdataSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`odata::R`](R) reader structure"]
+impl crate::Readable for OdataSpec {}
+#[doc = "`reset()` method sets ODATA to value 0"]
+impl crate::Resettable for OdataSpec {}

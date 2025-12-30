@@ -1,268 +1,133 @@
-#[doc = "Reader of register MR"]
-pub type R = crate::R<u32, super::MR>;
-#[doc = "Writer for register MR"]
-pub type W = crate::W<u32, super::MR>;
-#[doc = "Register MR `reset()`'s with value 0"]
-impl crate::ResetValue for super::MR {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `MSTR`"]
-pub type MSTR_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `MSTR`"]
-pub struct MSTR_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> MSTR_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x01) | ((value as u32) & 0x01);
-        self.w
-    }
-}
-#[doc = "Reader of field `PS`"]
-pub type PS_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `PS`"]
-pub struct PS_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PS_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 1)) | (((value as u32) & 0x01) << 1);
-        self.w
-    }
-}
-#[doc = "Reader of field `PCSDEC`"]
-pub type PCSDEC_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `PCSDEC`"]
-pub struct PCSDEC_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PCSDEC_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 2)) | (((value as u32) & 0x01) << 2);
-        self.w
-    }
-}
-#[doc = "Reader of field `MODFDIS`"]
-pub type MODFDIS_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `MODFDIS`"]
-pub struct MODFDIS_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> MODFDIS_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 4)) | (((value as u32) & 0x01) << 4);
-        self.w
-    }
-}
-#[doc = "Reader of field `WDRBT`"]
-pub type WDRBT_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `WDRBT`"]
-pub struct WDRBT_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> WDRBT_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 5)) | (((value as u32) & 0x01) << 5);
-        self.w
-    }
-}
-#[doc = "Reader of field `LLB`"]
-pub type LLB_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `LLB`"]
-pub struct LLB_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> LLB_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 7)) | (((value as u32) & 0x01) << 7);
-        self.w
-    }
-}
-#[doc = "Reader of field `PCS`"]
-pub type PCS_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `PCS`"]
-pub struct PCS_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> PCS_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x0f << 16)) | (((value as u32) & 0x0f) << 16);
-        self.w
-    }
-}
-#[doc = "Reader of field `DLYBCS`"]
-pub type DLYBCS_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `DLYBCS`"]
-pub struct DLYBCS_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> DLYBCS_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0xff << 24)) | (((value as u32) & 0xff) << 24);
-        self.w
-    }
-}
+#[doc = "Register `MR` reader"]
+pub type R = crate::R<MrSpec>;
+#[doc = "Register `MR` writer"]
+pub type W = crate::W<MrSpec>;
+#[doc = "Field `MSTR` reader - Master/Slave Mode"]
+pub type MstrR = crate::BitReader;
+#[doc = "Field `MSTR` writer - Master/Slave Mode"]
+pub type MstrW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `PS` reader - Peripheral Select"]
+pub type PsR = crate::BitReader;
+#[doc = "Field `PS` writer - Peripheral Select"]
+pub type PsW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `PCSDEC` reader - Chip Select Decode"]
+pub type PcsdecR = crate::BitReader;
+#[doc = "Field `PCSDEC` writer - Chip Select Decode"]
+pub type PcsdecW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `MODFDIS` reader - Mode Fault Detection"]
+pub type ModfdisR = crate::BitReader;
+#[doc = "Field `MODFDIS` writer - Mode Fault Detection"]
+pub type ModfdisW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `WDRBT` reader - Wait Data Read Before Transfer"]
+pub type WdrbtR = crate::BitReader;
+#[doc = "Field `WDRBT` writer - Wait Data Read Before Transfer"]
+pub type WdrbtW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `LLB` reader - Local Loopback Enable"]
+pub type LlbR = crate::BitReader;
+#[doc = "Field `LLB` writer - Local Loopback Enable"]
+pub type LlbW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `PCS` reader - Peripheral Chip Select"]
+pub type PcsR = crate::FieldReader;
+#[doc = "Field `PCS` writer - Peripheral Chip Select"]
+pub type PcsW<'a, REG> = crate::FieldWriter<'a, REG, 4>;
+#[doc = "Field `DLYBCS` reader - Delay Between Chip Selects"]
+pub type DlybcsR = crate::FieldReader;
+#[doc = "Field `DLYBCS` writer - Delay Between Chip Selects"]
+pub type DlybcsW<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 impl R {
-    #[doc = "Bit 0 - Master/Slave Mode"]
-    #[inline(always)]
-    pub fn mstr(&self) -> MSTR_R {
-        MSTR_R::new((self.bits & 0x01) != 0)
-    }
-    #[doc = "Bit 1 - Peripheral Select"]
-    #[inline(always)]
-    pub fn ps(&self) -> PS_R {
-        PS_R::new(((self.bits >> 1) & 0x01) != 0)
-    }
-    #[doc = "Bit 2 - Chip Select Decode"]
-    #[inline(always)]
-    pub fn pcsdec(&self) -> PCSDEC_R {
-        PCSDEC_R::new(((self.bits >> 2) & 0x01) != 0)
-    }
-    #[doc = "Bit 4 - Mode Fault Detection"]
-    #[inline(always)]
-    pub fn modfdis(&self) -> MODFDIS_R {
-        MODFDIS_R::new(((self.bits >> 4) & 0x01) != 0)
-    }
-    #[doc = "Bit 5 - Wait Data Read Before Transfer"]
-    #[inline(always)]
-    pub fn wdrbt(&self) -> WDRBT_R {
-        WDRBT_R::new(((self.bits >> 5) & 0x01) != 0)
-    }
-    #[doc = "Bit 7 - Local Loopback Enable"]
-    #[inline(always)]
-    pub fn llb(&self) -> LLB_R {
-        LLB_R::new(((self.bits >> 7) & 0x01) != 0)
-    }
-    #[doc = "Bits 16:19 - Peripheral Chip Select"]
-    #[inline(always)]
-    pub fn pcs(&self) -> PCS_R {
-        PCS_R::new(((self.bits >> 16) & 0x0f) as u8)
-    }
-    #[doc = "Bits 24:31 - Delay Between Chip Selects"]
-    #[inline(always)]
-    pub fn dlybcs(&self) -> DLYBCS_R {
-        DLYBCS_R::new(((self.bits >> 24) & 0xff) as u8)
-    }
+  #[doc = "Bit 0 - Master/Slave Mode"]
+  #[inline(always)]
+  pub fn mstr(&self) -> MstrR {
+    MstrR::new((self.bits & 1) != 0)
+  }
+  #[doc = "Bit 1 - Peripheral Select"]
+  #[inline(always)]
+  pub fn ps(&self) -> PsR {
+    PsR::new(((self.bits >> 1) & 1) != 0)
+  }
+  #[doc = "Bit 2 - Chip Select Decode"]
+  #[inline(always)]
+  pub fn pcsdec(&self) -> PcsdecR {
+    PcsdecR::new(((self.bits >> 2) & 1) != 0)
+  }
+  #[doc = "Bit 4 - Mode Fault Detection"]
+  #[inline(always)]
+  pub fn modfdis(&self) -> ModfdisR {
+    ModfdisR::new(((self.bits >> 4) & 1) != 0)
+  }
+  #[doc = "Bit 5 - Wait Data Read Before Transfer"]
+  #[inline(always)]
+  pub fn wdrbt(&self) -> WdrbtR {
+    WdrbtR::new(((self.bits >> 5) & 1) != 0)
+  }
+  #[doc = "Bit 7 - Local Loopback Enable"]
+  #[inline(always)]
+  pub fn llb(&self) -> LlbR {
+    LlbR::new(((self.bits >> 7) & 1) != 0)
+  }
+  #[doc = "Bits 16:19 - Peripheral Chip Select"]
+  #[inline(always)]
+  pub fn pcs(&self) -> PcsR {
+    PcsR::new(((self.bits >> 16) & 0x0f) as u8)
+  }
+  #[doc = "Bits 24:31 - Delay Between Chip Selects"]
+  #[inline(always)]
+  pub fn dlybcs(&self) -> DlybcsR {
+    DlybcsR::new(((self.bits >> 24) & 0xff) as u8)
+  }
 }
 impl W {
-    #[doc = "Bit 0 - Master/Slave Mode"]
-    #[inline(always)]
-    pub fn mstr(&mut self) -> MSTR_W {
-        MSTR_W { w: self }
-    }
-    #[doc = "Bit 1 - Peripheral Select"]
-    #[inline(always)]
-    pub fn ps(&mut self) -> PS_W {
-        PS_W { w: self }
-    }
-    #[doc = "Bit 2 - Chip Select Decode"]
-    #[inline(always)]
-    pub fn pcsdec(&mut self) -> PCSDEC_W {
-        PCSDEC_W { w: self }
-    }
-    #[doc = "Bit 4 - Mode Fault Detection"]
-    #[inline(always)]
-    pub fn modfdis(&mut self) -> MODFDIS_W {
-        MODFDIS_W { w: self }
-    }
-    #[doc = "Bit 5 - Wait Data Read Before Transfer"]
-    #[inline(always)]
-    pub fn wdrbt(&mut self) -> WDRBT_W {
-        WDRBT_W { w: self }
-    }
-    #[doc = "Bit 7 - Local Loopback Enable"]
-    #[inline(always)]
-    pub fn llb(&mut self) -> LLB_W {
-        LLB_W { w: self }
-    }
-    #[doc = "Bits 16:19 - Peripheral Chip Select"]
-    #[inline(always)]
-    pub fn pcs(&mut self) -> PCS_W {
-        PCS_W { w: self }
-    }
-    #[doc = "Bits 24:31 - Delay Between Chip Selects"]
-    #[inline(always)]
-    pub fn dlybcs(&mut self) -> DLYBCS_W {
-        DLYBCS_W { w: self }
-    }
+  #[doc = "Bit 0 - Master/Slave Mode"]
+  #[inline(always)]
+  pub fn mstr(&mut self) -> MstrW<'_, MrSpec> {
+    MstrW::new(self, 0)
+  }
+  #[doc = "Bit 1 - Peripheral Select"]
+  #[inline(always)]
+  pub fn ps(&mut self) -> PsW<'_, MrSpec> {
+    PsW::new(self, 1)
+  }
+  #[doc = "Bit 2 - Chip Select Decode"]
+  #[inline(always)]
+  pub fn pcsdec(&mut self) -> PcsdecW<'_, MrSpec> {
+    PcsdecW::new(self, 2)
+  }
+  #[doc = "Bit 4 - Mode Fault Detection"]
+  #[inline(always)]
+  pub fn modfdis(&mut self) -> ModfdisW<'_, MrSpec> {
+    ModfdisW::new(self, 4)
+  }
+  #[doc = "Bit 5 - Wait Data Read Before Transfer"]
+  #[inline(always)]
+  pub fn wdrbt(&mut self) -> WdrbtW<'_, MrSpec> {
+    WdrbtW::new(self, 5)
+  }
+  #[doc = "Bit 7 - Local Loopback Enable"]
+  #[inline(always)]
+  pub fn llb(&mut self) -> LlbW<'_, MrSpec> {
+    LlbW::new(self, 7)
+  }
+  #[doc = "Bits 16:19 - Peripheral Chip Select"]
+  #[inline(always)]
+  pub fn pcs(&mut self) -> PcsW<'_, MrSpec> {
+    PcsW::new(self, 16)
+  }
+  #[doc = "Bits 24:31 - Delay Between Chip Selects"]
+  #[inline(always)]
+  pub fn dlybcs(&mut self) -> DlybcsW<'_, MrSpec> {
+    DlybcsW::new(self, 24)
+  }
 }
+#[doc = "Mode Register\n\nYou can [`read`](crate::Reg::read) this register and get [`mr::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`mr::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct MrSpec;
+impl crate::RegisterSpec for MrSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`mr::R`](R) reader structure"]
+impl crate::Readable for MrSpec {}
+#[doc = "`write(|w| ..)` method takes [`mr::W`](W) writer structure"]
+impl crate::Writable for MrSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets MR to value 0"]
+impl crate::Resettable for MrSpec {}

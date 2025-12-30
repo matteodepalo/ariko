@@ -1,40 +1,35 @@
-#[doc = "Reader of register RNPR"]
-pub type R = crate::R<u32, super::RNPR>;
-#[doc = "Writer for register RNPR"]
-pub type W = crate::W<u32, super::RNPR>;
-#[doc = "Register RNPR `reset()`'s with value 0"]
-impl crate::ResetValue for super::RNPR {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `RXNPTR`"]
-pub type RXNPTR_R = crate::R<u32, u32>;
-#[doc = "Write proxy for field `RXNPTR`"]
-pub struct RXNPTR_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> RXNPTR_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u32) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0xffff_ffff) | ((value as u32) & 0xffff_ffff);
-        self.w
-    }
-}
+#[doc = "Register `RNPR` reader"]
+pub type R = crate::R<RnprSpec>;
+#[doc = "Register `RNPR` writer"]
+pub type W = crate::W<RnprSpec>;
+#[doc = "Field `RXNPTR` reader - Receive Next Pointer"]
+pub type RxnptrR = crate::FieldReader<u32>;
+#[doc = "Field `RXNPTR` writer - Receive Next Pointer"]
+pub type RxnptrW<'a, REG> = crate::FieldWriter<'a, REG, 32, u32>;
 impl R {
-    #[doc = "Bits 0:31 - Receive Next Pointer"]
-    #[inline(always)]
-    pub fn rxnptr(&self) -> RXNPTR_R {
-        RXNPTR_R::new((self.bits & 0xffff_ffff) as u32)
-    }
+  #[doc = "Bits 0:31 - Receive Next Pointer"]
+  #[inline(always)]
+  pub fn rxnptr(&self) -> RxnptrR {
+    RxnptrR::new(self.bits)
+  }
 }
 impl W {
-    #[doc = "Bits 0:31 - Receive Next Pointer"]
-    #[inline(always)]
-    pub fn rxnptr(&mut self) -> RXNPTR_W {
-        RXNPTR_W { w: self }
-    }
+  #[doc = "Bits 0:31 - Receive Next Pointer"]
+  #[inline(always)]
+  pub fn rxnptr(&mut self) -> RxnptrW<'_, RnprSpec> {
+    RxnptrW::new(self, 0)
+  }
 }
+#[doc = "Receive Next Pointer Register\n\nYou can [`read`](crate::Reg::read) this register and get [`rnpr::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`rnpr::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct RnprSpec;
+impl crate::RegisterSpec for RnprSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`rnpr::R`](R) reader structure"]
+impl crate::Readable for RnprSpec {}
+#[doc = "`write(|w| ..)` method takes [`rnpr::W`](W) writer structure"]
+impl crate::Writable for RnprSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets RNPR to value 0"]
+impl crate::Resettable for RnprSpec {}

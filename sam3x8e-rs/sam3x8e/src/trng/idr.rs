@@ -1,31 +1,20 @@
-#[doc = "Writer for register IDR"]
-pub type W = crate::W<u32, super::IDR>;
-#[doc = "Write proxy for field `DATRDY`"]
-pub struct DATRDY_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> DATRDY_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x01) | ((value as u32) & 0x01);
-        self.w
-    }
-}
+#[doc = "Register `IDR` writer"]
+pub type W = crate::W<IdrSpec>;
+#[doc = "Field `DATRDY` writer - Data Ready Interrupt Disable"]
+pub type DatrdyW<'a, REG> = crate::BitWriter<'a, REG>;
 impl W {
-    #[doc = "Bit 0 - Data Ready Interrupt Disable"]
-    #[inline(always)]
-    pub fn datrdy(&mut self) -> DATRDY_W {
-        DATRDY_W { w: self }
-    }
+  #[doc = "Bit 0 - Data Ready Interrupt Disable"]
+  #[inline(always)]
+  pub fn datrdy(&mut self) -> DatrdyW<'_, IdrSpec> {
+    DatrdyW::new(self, 0)
+  }
+}
+#[doc = "Interrupt Disable Register\n\nYou can [`write_with_zero`](crate::Reg::write_with_zero) this register using [`idr::W`](W). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct IdrSpec;
+impl crate::RegisterSpec for IdrSpec {
+  type Ux = u32;
+}
+#[doc = "`write(|w| ..)` method takes [`idr::W`](W) writer structure"]
+impl crate::Writable for IdrSpec {
+  type Safety = crate::Unsafe;
 }

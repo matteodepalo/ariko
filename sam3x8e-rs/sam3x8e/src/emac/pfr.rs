@@ -1,40 +1,35 @@
-#[doc = "Reader of register PFR"]
-pub type R = crate::R<u32, super::PFR>;
-#[doc = "Writer for register PFR"]
-pub type W = crate::W<u32, super::PFR>;
-#[doc = "Register PFR `reset()`'s with value 0"]
-impl crate::ResetValue for super::PFR {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `FROK`"]
-pub type FROK_R = crate::R<u16, u16>;
-#[doc = "Write proxy for field `FROK`"]
-pub struct FROK_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> FROK_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u16) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0xffff) | ((value as u32) & 0xffff);
-        self.w
-    }
-}
+#[doc = "Register `PFR` reader"]
+pub type R = crate::R<PfrSpec>;
+#[doc = "Register `PFR` writer"]
+pub type W = crate::W<PfrSpec>;
+#[doc = "Field `FROK` reader - Pause Frames received OK"]
+pub type FrokR = crate::FieldReader<u16>;
+#[doc = "Field `FROK` writer - Pause Frames received OK"]
+pub type FrokW<'a, REG> = crate::FieldWriter<'a, REG, 16, u16>;
 impl R {
-    #[doc = "Bits 0:15 - Pause Frames received OK"]
-    #[inline(always)]
-    pub fn frok(&self) -> FROK_R {
-        FROK_R::new((self.bits & 0xffff) as u16)
-    }
+  #[doc = "Bits 0:15 - Pause Frames received OK"]
+  #[inline(always)]
+  pub fn frok(&self) -> FrokR {
+    FrokR::new((self.bits & 0xffff) as u16)
+  }
 }
 impl W {
-    #[doc = "Bits 0:15 - Pause Frames received OK"]
-    #[inline(always)]
-    pub fn frok(&mut self) -> FROK_W {
-        FROK_W { w: self }
-    }
+  #[doc = "Bits 0:15 - Pause Frames received OK"]
+  #[inline(always)]
+  pub fn frok(&mut self) -> FrokW<'_, PfrSpec> {
+    FrokW::new(self, 0)
+  }
 }
+#[doc = "Pause Frames Received Register\n\nYou can [`read`](crate::Reg::read) this register and get [`pfr::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`pfr::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct PfrSpec;
+impl crate::RegisterSpec for PfrSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`pfr::R`](R) reader structure"]
+impl crate::Readable for PfrSpec {}
+#[doc = "`write(|w| ..)` method takes [`pfr::W`](W) writer structure"]
+impl crate::Writable for PfrSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets PFR to value 0"]
+impl crate::Resettable for PfrSpec {}

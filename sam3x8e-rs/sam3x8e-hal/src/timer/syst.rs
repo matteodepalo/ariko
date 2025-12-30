@@ -15,13 +15,10 @@
  *    along with sam3x8e-hal.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use crate::hal::timer::{CountDown, Periodic};
-use crate::prelude::*;
-use crate::time::Hertz;
+use super::{CountDown, Periodic, Timer, TimerExt};
+use crate::time::{Hertz, U32Ext};
 use cortex_m::peripheral::syst::SystClkSource;
 use cortex_m::peripheral::SYST;
-
-use super::{Timer, TimerExt};
 
 impl Timer<SYST> {
   /// Configures the SYST clock as a periodic count down timer

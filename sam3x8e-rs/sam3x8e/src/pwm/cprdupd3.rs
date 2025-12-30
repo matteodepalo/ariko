@@ -1,21 +1,20 @@
-#[doc = "Writer for register CPRDUPD3"]
-pub type W = crate::W<u32, super::CPRDUPD3>;
-#[doc = "Write proxy for field `CPRDUPD`"]
-pub struct CPRDUPD_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CPRDUPD_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u32) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x00ff_ffff) | ((value as u32) & 0x00ff_ffff);
-        self.w
-    }
-}
+#[doc = "Register `CPRDUPD3` writer"]
+pub type W = crate::W<Cprdupd3Spec>;
+#[doc = "Field `CPRDUPD` writer - Channel Period Update"]
+pub type CprdupdW<'a, REG> = crate::FieldWriter<'a, REG, 24, u32>;
 impl W {
-    #[doc = "Bits 0:23 - Channel Period Update"]
-    #[inline(always)]
-    pub fn cprdupd(&mut self) -> CPRDUPD_W {
-        CPRDUPD_W { w: self }
-    }
+  #[doc = "Bits 0:23 - Channel Period Update"]
+  #[inline(always)]
+  pub fn cprdupd(&mut self) -> CprdupdW<'_, Cprdupd3Spec> {
+    CprdupdW::new(self, 0)
+  }
+}
+#[doc = "PWM Channel Period Update Register (ch_num = 3)\n\nYou can [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cprdupd3::W`](W). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct Cprdupd3Spec;
+impl crate::RegisterSpec for Cprdupd3Spec {
+  type Ux = u32;
+}
+#[doc = "`write(|w| ..)` method takes [`cprdupd3::W`](W) writer structure"]
+impl crate::Writable for Cprdupd3Spec {
+  type Safety = crate::Unsafe;
 }

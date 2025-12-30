@@ -1,122 +1,77 @@
-#[doc = "Reader of register TIMR"]
-pub type R = crate::R<u32, super::TIMR>;
-#[doc = "Writer for register TIMR"]
-pub type W = crate::W<u32, super::TIMR>;
-#[doc = "Register TIMR `reset()`'s with value 0"]
-impl crate::ResetValue for super::TIMR {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `SEC`"]
-pub type SEC_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `SEC`"]
-pub struct SEC_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> SEC_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x7f) | ((value as u32) & 0x7f);
-        self.w
-    }
-}
-#[doc = "Reader of field `MIN`"]
-pub type MIN_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `MIN`"]
-pub struct MIN_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> MIN_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x7f << 8)) | (((value as u32) & 0x7f) << 8);
-        self.w
-    }
-}
-#[doc = "Reader of field `HOUR`"]
-pub type HOUR_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `HOUR`"]
-pub struct HOUR_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> HOUR_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x3f << 16)) | (((value as u32) & 0x3f) << 16);
-        self.w
-    }
-}
-#[doc = "Reader of field `AMPM`"]
-pub type AMPM_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `AMPM`"]
-pub struct AMPM_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> AMPM_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 22)) | (((value as u32) & 0x01) << 22);
-        self.w
-    }
-}
+#[doc = "Register `TIMR` reader"]
+pub type R = crate::R<TimrSpec>;
+#[doc = "Register `TIMR` writer"]
+pub type W = crate::W<TimrSpec>;
+#[doc = "Field `SEC` reader - Current Second"]
+pub type SecR = crate::FieldReader;
+#[doc = "Field `SEC` writer - Current Second"]
+pub type SecW<'a, REG> = crate::FieldWriter<'a, REG, 7>;
+#[doc = "Field `MIN` reader - Current Minute"]
+pub type MinR = crate::FieldReader;
+#[doc = "Field `MIN` writer - Current Minute"]
+pub type MinW<'a, REG> = crate::FieldWriter<'a, REG, 7>;
+#[doc = "Field `HOUR` reader - Current Hour"]
+pub type HourR = crate::FieldReader;
+#[doc = "Field `HOUR` writer - Current Hour"]
+pub type HourW<'a, REG> = crate::FieldWriter<'a, REG, 6>;
+#[doc = "Field `AMPM` reader - Ante Meridiem Post Meridiem Indicator"]
+pub type AmpmR = crate::BitReader;
+#[doc = "Field `AMPM` writer - Ante Meridiem Post Meridiem Indicator"]
+pub type AmpmW<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
-    #[doc = "Bits 0:6 - Current Second"]
-    #[inline(always)]
-    pub fn sec(&self) -> SEC_R {
-        SEC_R::new((self.bits & 0x7f) as u8)
-    }
-    #[doc = "Bits 8:14 - Current Minute"]
-    #[inline(always)]
-    pub fn min(&self) -> MIN_R {
-        MIN_R::new(((self.bits >> 8) & 0x7f) as u8)
-    }
-    #[doc = "Bits 16:21 - Current Hour"]
-    #[inline(always)]
-    pub fn hour(&self) -> HOUR_R {
-        HOUR_R::new(((self.bits >> 16) & 0x3f) as u8)
-    }
-    #[doc = "Bit 22 - Ante Meridiem Post Meridiem Indicator"]
-    #[inline(always)]
-    pub fn ampm(&self) -> AMPM_R {
-        AMPM_R::new(((self.bits >> 22) & 0x01) != 0)
-    }
+  #[doc = "Bits 0:6 - Current Second"]
+  #[inline(always)]
+  pub fn sec(&self) -> SecR {
+    SecR::new((self.bits & 0x7f) as u8)
+  }
+  #[doc = "Bits 8:14 - Current Minute"]
+  #[inline(always)]
+  pub fn min(&self) -> MinR {
+    MinR::new(((self.bits >> 8) & 0x7f) as u8)
+  }
+  #[doc = "Bits 16:21 - Current Hour"]
+  #[inline(always)]
+  pub fn hour(&self) -> HourR {
+    HourR::new(((self.bits >> 16) & 0x3f) as u8)
+  }
+  #[doc = "Bit 22 - Ante Meridiem Post Meridiem Indicator"]
+  #[inline(always)]
+  pub fn ampm(&self) -> AmpmR {
+    AmpmR::new(((self.bits >> 22) & 1) != 0)
+  }
 }
 impl W {
-    #[doc = "Bits 0:6 - Current Second"]
-    #[inline(always)]
-    pub fn sec(&mut self) -> SEC_W {
-        SEC_W { w: self }
-    }
-    #[doc = "Bits 8:14 - Current Minute"]
-    #[inline(always)]
-    pub fn min(&mut self) -> MIN_W {
-        MIN_W { w: self }
-    }
-    #[doc = "Bits 16:21 - Current Hour"]
-    #[inline(always)]
-    pub fn hour(&mut self) -> HOUR_W {
-        HOUR_W { w: self }
-    }
-    #[doc = "Bit 22 - Ante Meridiem Post Meridiem Indicator"]
-    #[inline(always)]
-    pub fn ampm(&mut self) -> AMPM_W {
-        AMPM_W { w: self }
-    }
+  #[doc = "Bits 0:6 - Current Second"]
+  #[inline(always)]
+  pub fn sec(&mut self) -> SecW<'_, TimrSpec> {
+    SecW::new(self, 0)
+  }
+  #[doc = "Bits 8:14 - Current Minute"]
+  #[inline(always)]
+  pub fn min(&mut self) -> MinW<'_, TimrSpec> {
+    MinW::new(self, 8)
+  }
+  #[doc = "Bits 16:21 - Current Hour"]
+  #[inline(always)]
+  pub fn hour(&mut self) -> HourW<'_, TimrSpec> {
+    HourW::new(self, 16)
+  }
+  #[doc = "Bit 22 - Ante Meridiem Post Meridiem Indicator"]
+  #[inline(always)]
+  pub fn ampm(&mut self) -> AmpmW<'_, TimrSpec> {
+    AmpmW::new(self, 22)
+  }
 }
+#[doc = "Time Register\n\nYou can [`read`](crate::Reg::read) this register and get [`timr::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`timr::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct TimrSpec;
+impl crate::RegisterSpec for TimrSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`timr::R`](R) reader structure"]
+impl crate::Readable for TimrSpec {}
+#[doc = "`write(|w| ..)` method takes [`timr::W`](W) writer structure"]
+impl crate::Writable for TimrSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets TIMR to value 0"]
+impl crate::Resettable for TimrSpec {}

@@ -1,29 +1,22 @@
-#[doc = "Writer for register SCUPUPD"]
-pub type W = crate::W<u32, super::SCUPUPD>;
-#[doc = "Register SCUPUPD `reset()`'s with value 0"]
-impl crate::ResetValue for super::SCUPUPD {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Write proxy for field `UPRUPD`"]
-pub struct UPRUPD_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> UPRUPD_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x0f) | ((value as u32) & 0x0f);
-        self.w
-    }
-}
+#[doc = "Register `SCUPUPD` writer"]
+pub type W = crate::W<ScupupdSpec>;
+#[doc = "Field `UPRUPD` writer - Update Period Update"]
+pub type UprupdW<'a, REG> = crate::FieldWriter<'a, REG, 4>;
 impl W {
-    #[doc = "Bits 0:3 - Update Period Update"]
-    #[inline(always)]
-    pub fn uprupd(&mut self) -> UPRUPD_W {
-        UPRUPD_W { w: self }
-    }
+  #[doc = "Bits 0:3 - Update Period Update"]
+  #[inline(always)]
+  pub fn uprupd(&mut self) -> UprupdW<'_, ScupupdSpec> {
+    UprupdW::new(self, 0)
+  }
 }
+#[doc = "PWM Sync Channels Update Period Update Register\n\nYou can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`scupupd::W`](W). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct ScupupdSpec;
+impl crate::RegisterSpec for ScupupdSpec {
+  type Ux = u32;
+}
+#[doc = "`write(|w| ..)` method takes [`scupupd::W`](W) writer structure"]
+impl crate::Writable for ScupupdSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets SCUPUPD to value 0"]
+impl crate::Resettable for ScupupdSpec {}

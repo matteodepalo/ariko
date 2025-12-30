@@ -1,50 +1,35 @@
-#[doc = "Reader of register CCFG_SYSIO"]
-pub type R = crate::R<u32, super::CCFG_SYSIO>;
-#[doc = "Writer for register CCFG_SYSIO"]
-pub type W = crate::W<u32, super::CCFG_SYSIO>;
-#[doc = "Register CCFG_SYSIO `reset()`'s with value 0"]
-impl crate::ResetValue for super::CCFG_SYSIO {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `SYSIO12`"]
-pub type SYSIO12_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `SYSIO12`"]
-pub struct SYSIO12_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> SYSIO12_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 12)) | (((value as u32) & 0x01) << 12);
-        self.w
-    }
-}
+#[doc = "Register `CCFG_SYSIO` reader"]
+pub type R = crate::R<CcfgSysioSpec>;
+#[doc = "Register `CCFG_SYSIO` writer"]
+pub type W = crate::W<CcfgSysioSpec>;
+#[doc = "Field `SYSIO12` reader - PC0 or ERASE Assignment"]
+pub type Sysio12R = crate::BitReader;
+#[doc = "Field `SYSIO12` writer - PC0 or ERASE Assignment"]
+pub type Sysio12W<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
-    #[doc = "Bit 12 - PC0 or ERASE Assignment"]
-    #[inline(always)]
-    pub fn sysio12(&self) -> SYSIO12_R {
-        SYSIO12_R::new(((self.bits >> 12) & 0x01) != 0)
-    }
+  #[doc = "Bit 12 - PC0 or ERASE Assignment"]
+  #[inline(always)]
+  pub fn sysio12(&self) -> Sysio12R {
+    Sysio12R::new(((self.bits >> 12) & 1) != 0)
+  }
 }
 impl W {
-    #[doc = "Bit 12 - PC0 or ERASE Assignment"]
-    #[inline(always)]
-    pub fn sysio12(&mut self) -> SYSIO12_W {
-        SYSIO12_W { w: self }
-    }
+  #[doc = "Bit 12 - PC0 or ERASE Assignment"]
+  #[inline(always)]
+  pub fn sysio12(&mut self) -> Sysio12W<'_, CcfgSysioSpec> {
+    Sysio12W::new(self, 12)
+  }
 }
+#[doc = "System I/O Configuration register\n\nYou can [`read`](crate::Reg::read) this register and get [`ccfg_sysio::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ccfg_sysio::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct CcfgSysioSpec;
+impl crate::RegisterSpec for CcfgSysioSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`ccfg_sysio::R`](R) reader structure"]
+impl crate::Readable for CcfgSysioSpec {}
+#[doc = "`write(|w| ..)` method takes [`ccfg_sysio::W`](W) writer structure"]
+impl crate::Writable for CcfgSysioSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets CCFG_SYSIO to value 0"]
+impl crate::Resettable for CcfgSysioSpec {}

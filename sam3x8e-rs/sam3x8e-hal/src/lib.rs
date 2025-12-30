@@ -47,7 +47,7 @@ extern crate nb;
 extern crate void;
 
 #[cfg(feature = "sam3x")]
-pub use sam3x8e as pac;
+pub use atsam3x8e as pac;
 
 pub mod delay;
 pub mod efc;

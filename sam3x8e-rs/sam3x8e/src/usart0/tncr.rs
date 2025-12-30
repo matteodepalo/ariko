@@ -1,40 +1,35 @@
-#[doc = "Reader of register TNCR"]
-pub type R = crate::R<u32, super::TNCR>;
-#[doc = "Writer for register TNCR"]
-pub type W = crate::W<u32, super::TNCR>;
-#[doc = "Register TNCR `reset()`'s with value 0"]
-impl crate::ResetValue for super::TNCR {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `TXNCTR`"]
-pub type TXNCTR_R = crate::R<u16, u16>;
-#[doc = "Write proxy for field `TXNCTR`"]
-pub struct TXNCTR_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> TXNCTR_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u16) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0xffff) | ((value as u32) & 0xffff);
-        self.w
-    }
-}
+#[doc = "Register `TNCR` reader"]
+pub type R = crate::R<TncrSpec>;
+#[doc = "Register `TNCR` writer"]
+pub type W = crate::W<TncrSpec>;
+#[doc = "Field `TXNCTR` reader - Transmit Counter Next"]
+pub type TxnctrR = crate::FieldReader<u16>;
+#[doc = "Field `TXNCTR` writer - Transmit Counter Next"]
+pub type TxnctrW<'a, REG> = crate::FieldWriter<'a, REG, 16, u16>;
 impl R {
-    #[doc = "Bits 0:15 - Transmit Counter Next"]
-    #[inline(always)]
-    pub fn txnctr(&self) -> TXNCTR_R {
-        TXNCTR_R::new((self.bits & 0xffff) as u16)
-    }
+  #[doc = "Bits 0:15 - Transmit Counter Next"]
+  #[inline(always)]
+  pub fn txnctr(&self) -> TxnctrR {
+    TxnctrR::new((self.bits & 0xffff) as u16)
+  }
 }
 impl W {
-    #[doc = "Bits 0:15 - Transmit Counter Next"]
-    #[inline(always)]
-    pub fn txnctr(&mut self) -> TXNCTR_W {
-        TXNCTR_W { w: self }
-    }
+  #[doc = "Bits 0:15 - Transmit Counter Next"]
+  #[inline(always)]
+  pub fn txnctr(&mut self) -> TxnctrW<'_, TncrSpec> {
+    TxnctrW::new(self, 0)
+  }
 }
+#[doc = "Transmit Next Counter Register\n\nYou can [`read`](crate::Reg::read) this register and get [`tncr::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`tncr::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct TncrSpec;
+impl crate::RegisterSpec for TncrSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`tncr::R`](R) reader structure"]
+impl crate::Readable for TncrSpec {}
+#[doc = "`write(|w| ..)` method takes [`tncr::W`](W) writer structure"]
+impl crate::Writable for TncrSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets TNCR to value 0"]
+impl crate::Resettable for TncrSpec {}

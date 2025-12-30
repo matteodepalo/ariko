@@ -1,436 +1,125 @@
-#[doc = "Writer for register CHDR"]
-pub type W = crate::W<u32, super::CHDR>;
-#[doc = "Write proxy for field `CH0`"]
-pub struct CH0_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CH0_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x01) | ((value as u32) & 0x01);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `CH1`"]
-pub struct CH1_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CH1_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 1)) | (((value as u32) & 0x01) << 1);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `CH2`"]
-pub struct CH2_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CH2_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 2)) | (((value as u32) & 0x01) << 2);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `CH3`"]
-pub struct CH3_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CH3_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 3)) | (((value as u32) & 0x01) << 3);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `CH4`"]
-pub struct CH4_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CH4_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 4)) | (((value as u32) & 0x01) << 4);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `CH5`"]
-pub struct CH5_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CH5_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 5)) | (((value as u32) & 0x01) << 5);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `CH6`"]
-pub struct CH6_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CH6_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 6)) | (((value as u32) & 0x01) << 6);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `CH7`"]
-pub struct CH7_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CH7_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 7)) | (((value as u32) & 0x01) << 7);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `CH8`"]
-pub struct CH8_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CH8_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 8)) | (((value as u32) & 0x01) << 8);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `CH9`"]
-pub struct CH9_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CH9_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 9)) | (((value as u32) & 0x01) << 9);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `CH10`"]
-pub struct CH10_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CH10_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 10)) | (((value as u32) & 0x01) << 10);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `CH11`"]
-pub struct CH11_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CH11_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 11)) | (((value as u32) & 0x01) << 11);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `CH12`"]
-pub struct CH12_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CH12_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 12)) | (((value as u32) & 0x01) << 12);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `CH13`"]
-pub struct CH13_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CH13_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 13)) | (((value as u32) & 0x01) << 13);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `CH14`"]
-pub struct CH14_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CH14_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 14)) | (((value as u32) & 0x01) << 14);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `CH15`"]
-pub struct CH15_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> CH15_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 15)) | (((value as u32) & 0x01) << 15);
-        self.w
-    }
-}
+#[doc = "Register `CHDR` writer"]
+pub type W = crate::W<ChdrSpec>;
+#[doc = "Field `CH0` writer - Channel 0 Disable"]
+pub type Ch0W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `CH1` writer - Channel 1 Disable"]
+pub type Ch1W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `CH2` writer - Channel 2 Disable"]
+pub type Ch2W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `CH3` writer - Channel 3 Disable"]
+pub type Ch3W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `CH4` writer - Channel 4 Disable"]
+pub type Ch4W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `CH5` writer - Channel 5 Disable"]
+pub type Ch5W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `CH6` writer - Channel 6 Disable"]
+pub type Ch6W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `CH7` writer - Channel 7 Disable"]
+pub type Ch7W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `CH8` writer - Channel 8 Disable"]
+pub type Ch8W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `CH9` writer - Channel 9 Disable"]
+pub type Ch9W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `CH10` writer - Channel 10 Disable"]
+pub type Ch10W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `CH11` writer - Channel 11 Disable"]
+pub type Ch11W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `CH12` writer - Channel 12 Disable"]
+pub type Ch12W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `CH13` writer - Channel 13 Disable"]
+pub type Ch13W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `CH14` writer - Channel 14 Disable"]
+pub type Ch14W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `CH15` writer - Channel 15 Disable"]
+pub type Ch15W<'a, REG> = crate::BitWriter<'a, REG>;
 impl W {
-    #[doc = "Bit 0 - Channel 0 Disable"]
-    #[inline(always)]
-    pub fn ch0(&mut self) -> CH0_W {
-        CH0_W { w: self }
-    }
-    #[doc = "Bit 1 - Channel 1 Disable"]
-    #[inline(always)]
-    pub fn ch1(&mut self) -> CH1_W {
-        CH1_W { w: self }
-    }
-    #[doc = "Bit 2 - Channel 2 Disable"]
-    #[inline(always)]
-    pub fn ch2(&mut self) -> CH2_W {
-        CH2_W { w: self }
-    }
-    #[doc = "Bit 3 - Channel 3 Disable"]
-    #[inline(always)]
-    pub fn ch3(&mut self) -> CH3_W {
-        CH3_W { w: self }
-    }
-    #[doc = "Bit 4 - Channel 4 Disable"]
-    #[inline(always)]
-    pub fn ch4(&mut self) -> CH4_W {
-        CH4_W { w: self }
-    }
-    #[doc = "Bit 5 - Channel 5 Disable"]
-    #[inline(always)]
-    pub fn ch5(&mut self) -> CH5_W {
-        CH5_W { w: self }
-    }
-    #[doc = "Bit 6 - Channel 6 Disable"]
-    #[inline(always)]
-    pub fn ch6(&mut self) -> CH6_W {
-        CH6_W { w: self }
-    }
-    #[doc = "Bit 7 - Channel 7 Disable"]
-    #[inline(always)]
-    pub fn ch7(&mut self) -> CH7_W {
-        CH7_W { w: self }
-    }
-    #[doc = "Bit 8 - Channel 8 Disable"]
-    #[inline(always)]
-    pub fn ch8(&mut self) -> CH8_W {
-        CH8_W { w: self }
-    }
-    #[doc = "Bit 9 - Channel 9 Disable"]
-    #[inline(always)]
-    pub fn ch9(&mut self) -> CH9_W {
-        CH9_W { w: self }
-    }
-    #[doc = "Bit 10 - Channel 10 Disable"]
-    #[inline(always)]
-    pub fn ch10(&mut self) -> CH10_W {
-        CH10_W { w: self }
-    }
-    #[doc = "Bit 11 - Channel 11 Disable"]
-    #[inline(always)]
-    pub fn ch11(&mut self) -> CH11_W {
-        CH11_W { w: self }
-    }
-    #[doc = "Bit 12 - Channel 12 Disable"]
-    #[inline(always)]
-    pub fn ch12(&mut self) -> CH12_W {
-        CH12_W { w: self }
-    }
-    #[doc = "Bit 13 - Channel 13 Disable"]
-    #[inline(always)]
-    pub fn ch13(&mut self) -> CH13_W {
-        CH13_W { w: self }
-    }
-    #[doc = "Bit 14 - Channel 14 Disable"]
-    #[inline(always)]
-    pub fn ch14(&mut self) -> CH14_W {
-        CH14_W { w: self }
-    }
-    #[doc = "Bit 15 - Channel 15 Disable"]
-    #[inline(always)]
-    pub fn ch15(&mut self) -> CH15_W {
-        CH15_W { w: self }
-    }
+  #[doc = "Bit 0 - Channel 0 Disable"]
+  #[inline(always)]
+  pub fn ch0(&mut self) -> Ch0W<'_, ChdrSpec> {
+    Ch0W::new(self, 0)
+  }
+  #[doc = "Bit 1 - Channel 1 Disable"]
+  #[inline(always)]
+  pub fn ch1(&mut self) -> Ch1W<'_, ChdrSpec> {
+    Ch1W::new(self, 1)
+  }
+  #[doc = "Bit 2 - Channel 2 Disable"]
+  #[inline(always)]
+  pub fn ch2(&mut self) -> Ch2W<'_, ChdrSpec> {
+    Ch2W::new(self, 2)
+  }
+  #[doc = "Bit 3 - Channel 3 Disable"]
+  #[inline(always)]
+  pub fn ch3(&mut self) -> Ch3W<'_, ChdrSpec> {
+    Ch3W::new(self, 3)
+  }
+  #[doc = "Bit 4 - Channel 4 Disable"]
+  #[inline(always)]
+  pub fn ch4(&mut self) -> Ch4W<'_, ChdrSpec> {
+    Ch4W::new(self, 4)
+  }
+  #[doc = "Bit 5 - Channel 5 Disable"]
+  #[inline(always)]
+  pub fn ch5(&mut self) -> Ch5W<'_, ChdrSpec> {
+    Ch5W::new(self, 5)
+  }
+  #[doc = "Bit 6 - Channel 6 Disable"]
+  #[inline(always)]
+  pub fn ch6(&mut self) -> Ch6W<'_, ChdrSpec> {
+    Ch6W::new(self, 6)
+  }
+  #[doc = "Bit 7 - Channel 7 Disable"]
+  #[inline(always)]
+  pub fn ch7(&mut self) -> Ch7W<'_, ChdrSpec> {
+    Ch7W::new(self, 7)
+  }
+  #[doc = "Bit 8 - Channel 8 Disable"]
+  #[inline(always)]
+  pub fn ch8(&mut self) -> Ch8W<'_, ChdrSpec> {
+    Ch8W::new(self, 8)
+  }
+  #[doc = "Bit 9 - Channel 9 Disable"]
+  #[inline(always)]
+  pub fn ch9(&mut self) -> Ch9W<'_, ChdrSpec> {
+    Ch9W::new(self, 9)
+  }
+  #[doc = "Bit 10 - Channel 10 Disable"]
+  #[inline(always)]
+  pub fn ch10(&mut self) -> Ch10W<'_, ChdrSpec> {
+    Ch10W::new(self, 10)
+  }
+  #[doc = "Bit 11 - Channel 11 Disable"]
+  #[inline(always)]
+  pub fn ch11(&mut self) -> Ch11W<'_, ChdrSpec> {
+    Ch11W::new(self, 11)
+  }
+  #[doc = "Bit 12 - Channel 12 Disable"]
+  #[inline(always)]
+  pub fn ch12(&mut self) -> Ch12W<'_, ChdrSpec> {
+    Ch12W::new(self, 12)
+  }
+  #[doc = "Bit 13 - Channel 13 Disable"]
+  #[inline(always)]
+  pub fn ch13(&mut self) -> Ch13W<'_, ChdrSpec> {
+    Ch13W::new(self, 13)
+  }
+  #[doc = "Bit 14 - Channel 14 Disable"]
+  #[inline(always)]
+  pub fn ch14(&mut self) -> Ch14W<'_, ChdrSpec> {
+    Ch14W::new(self, 14)
+  }
+  #[doc = "Bit 15 - Channel 15 Disable"]
+  #[inline(always)]
+  pub fn ch15(&mut self) -> Ch15W<'_, ChdrSpec> {
+    Ch15W::new(self, 15)
+  }
+}
+#[doc = "Channel Disable Register\n\nYou can [`write_with_zero`](crate::Reg::write_with_zero) this register using [`chdr::W`](W). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct ChdrSpec;
+impl crate::RegisterSpec for ChdrSpec {
+  type Ux = u32;
+}
+#[doc = "`write(|w| ..)` method takes [`chdr::W`](W) writer structure"]
+impl crate::Writable for ChdrSpec {
+  type Safety = crate::Unsafe;
 }

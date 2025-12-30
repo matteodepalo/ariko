@@ -1,215 +1,188 @@
-#[doc = "Writer for register FCR"]
-pub type W = crate::W<u32, super::FCR>;
+#[doc = "Register `FCR` writer"]
+pub type W = crate::W<FcrSpec>;
 #[doc = "Flash Command"]
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub enum FCMD_AW {
-    #[doc = "0: Get Flash Descriptor"]
-    GETD,
-    #[doc = "1: Write page"]
-    WP,
-    #[doc = "2: Write page and lock"]
-    WPL,
-    #[doc = "3: Erase page and write page"]
-    EWP,
-    #[doc = "4: Erase page and write page then lock"]
-    EWPL,
-    #[doc = "5: Erase all"]
-    EA,
-    #[doc = "8: Set Lock Bit"]
-    SLB,
-    #[doc = "9: Clear Lock Bit"]
-    CLB,
-    #[doc = "10: Get Lock Bit"]
-    GLB,
-    #[doc = "11: Set GPNVM Bit"]
-    SGPB,
-    #[doc = "12: Clear GPNVM Bit"]
-    CGPB,
-    #[doc = "13: Get GPNVM Bit"]
-    GGPB,
-    #[doc = "14: Start Read Unique Identifier"]
-    STUI,
-    #[doc = "15: Stop Read Unique Identifier"]
-    SPUI,
-    #[doc = "16: Get CALIB Bit"]
-    GCALB,
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[repr(u8)]
+pub enum Fcmd {
+  #[doc = "0: Get Flash Descriptor"]
+  Getd = 0,
+  #[doc = "1: Write page"]
+  Wp = 1,
+  #[doc = "2: Write page and lock"]
+  Wpl = 2,
+  #[doc = "3: Erase page and write page"]
+  Ewp = 3,
+  #[doc = "4: Erase page and write page then lock"]
+  Ewpl = 4,
+  #[doc = "5: Erase all"]
+  Ea = 5,
+  #[doc = "8: Set Lock Bit"]
+  Slb = 8,
+  #[doc = "9: Clear Lock Bit"]
+  Clb = 9,
+  #[doc = "10: Get Lock Bit"]
+  Glb = 10,
+  #[doc = "11: Set GPNVM Bit"]
+  Sgpb = 11,
+  #[doc = "12: Clear GPNVM Bit"]
+  Cgpb = 12,
+  #[doc = "13: Get GPNVM Bit"]
+  Ggpb = 13,
+  #[doc = "14: Start Read Unique Identifier"]
+  Stui = 14,
+  #[doc = "15: Stop Read Unique Identifier"]
+  Spui = 15,
+  #[doc = "16: Get CALIB Bit"]
+  Gcalb = 16,
 }
-impl From<FCMD_AW> for u8 {
-    #[inline(always)]
-    fn from(variant: FCMD_AW) -> Self {
-        match variant {
-            FCMD_AW::GETD => 0,
-            FCMD_AW::WP => 1,
-            FCMD_AW::WPL => 2,
-            FCMD_AW::EWP => 3,
-            FCMD_AW::EWPL => 4,
-            FCMD_AW::EA => 5,
-            FCMD_AW::SLB => 8,
-            FCMD_AW::CLB => 9,
-            FCMD_AW::GLB => 10,
-            FCMD_AW::SGPB => 11,
-            FCMD_AW::CGPB => 12,
-            FCMD_AW::GGPB => 13,
-            FCMD_AW::STUI => 14,
-            FCMD_AW::SPUI => 15,
-            FCMD_AW::GCALB => 16,
-        }
-    }
+impl From<Fcmd> for u8 {
+  #[inline(always)]
+  fn from(variant: Fcmd) -> Self {
+    variant as _
+  }
 }
-#[doc = "Write proxy for field `FCMD`"]
-pub struct FCMD_W<'a> {
-    w: &'a mut W,
+impl crate::FieldSpec for Fcmd {
+  type Ux = u8;
 }
-impl<'a> FCMD_W<'a> {
-    #[doc = r"Writes `variant` to the field"]
-    #[inline(always)]
-    pub fn variant(self, variant: FCMD_AW) -> &'a mut W {
-        unsafe { self.bits(variant.into()) }
-    }
-    #[doc = "Get Flash Descriptor"]
-    #[inline(always)]
-    pub fn getd(self) -> &'a mut W {
-        self.variant(FCMD_AW::GETD)
-    }
-    #[doc = "Write page"]
-    #[inline(always)]
-    pub fn wp(self) -> &'a mut W {
-        self.variant(FCMD_AW::WP)
-    }
-    #[doc = "Write page and lock"]
-    #[inline(always)]
-    pub fn wpl(self) -> &'a mut W {
-        self.variant(FCMD_AW::WPL)
-    }
-    #[doc = "Erase page and write page"]
-    #[inline(always)]
-    pub fn ewp(self) -> &'a mut W {
-        self.variant(FCMD_AW::EWP)
-    }
-    #[doc = "Erase page and write page then lock"]
-    #[inline(always)]
-    pub fn ewpl(self) -> &'a mut W {
-        self.variant(FCMD_AW::EWPL)
-    }
-    #[doc = "Erase all"]
-    #[inline(always)]
-    pub fn ea(self) -> &'a mut W {
-        self.variant(FCMD_AW::EA)
-    }
-    #[doc = "Set Lock Bit"]
-    #[inline(always)]
-    pub fn slb(self) -> &'a mut W {
-        self.variant(FCMD_AW::SLB)
-    }
-    #[doc = "Clear Lock Bit"]
-    #[inline(always)]
-    pub fn clb(self) -> &'a mut W {
-        self.variant(FCMD_AW::CLB)
-    }
-    #[doc = "Get Lock Bit"]
-    #[inline(always)]
-    pub fn glb(self) -> &'a mut W {
-        self.variant(FCMD_AW::GLB)
-    }
-    #[doc = "Set GPNVM Bit"]
-    #[inline(always)]
-    pub fn sgpb(self) -> &'a mut W {
-        self.variant(FCMD_AW::SGPB)
-    }
-    #[doc = "Clear GPNVM Bit"]
-    #[inline(always)]
-    pub fn cgpb(self) -> &'a mut W {
-        self.variant(FCMD_AW::CGPB)
-    }
-    #[doc = "Get GPNVM Bit"]
-    #[inline(always)]
-    pub fn ggpb(self) -> &'a mut W {
-        self.variant(FCMD_AW::GGPB)
-    }
-    #[doc = "Start Read Unique Identifier"]
-    #[inline(always)]
-    pub fn stui(self) -> &'a mut W {
-        self.variant(FCMD_AW::STUI)
-    }
-    #[doc = "Stop Read Unique Identifier"]
-    #[inline(always)]
-    pub fn spui(self) -> &'a mut W {
-        self.variant(FCMD_AW::SPUI)
-    }
-    #[doc = "Get CALIB Bit"]
-    #[inline(always)]
-    pub fn gcalb(self) -> &'a mut W {
-        self.variant(FCMD_AW::GCALB)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0xff) | ((value as u32) & 0xff);
-        self.w
-    }
+impl crate::IsEnum for Fcmd {}
+#[doc = "Field `FCMD` writer - Flash Command"]
+pub type FcmdW<'a, REG> = crate::FieldWriter<'a, REG, 8, Fcmd>;
+impl<'a, REG> FcmdW<'a, REG>
+where
+  REG: crate::Writable + crate::RegisterSpec,
+  REG::Ux: From<u8>,
+{
+  #[doc = "Get Flash Descriptor"]
+  #[inline(always)]
+  pub fn getd(self) -> &'a mut crate::W<REG> {
+    self.variant(Fcmd::Getd)
+  }
+  #[doc = "Write page"]
+  #[inline(always)]
+  pub fn wp(self) -> &'a mut crate::W<REG> {
+    self.variant(Fcmd::Wp)
+  }
+  #[doc = "Write page and lock"]
+  #[inline(always)]
+  pub fn wpl(self) -> &'a mut crate::W<REG> {
+    self.variant(Fcmd::Wpl)
+  }
+  #[doc = "Erase page and write page"]
+  #[inline(always)]
+  pub fn ewp(self) -> &'a mut crate::W<REG> {
+    self.variant(Fcmd::Ewp)
+  }
+  #[doc = "Erase page and write page then lock"]
+  #[inline(always)]
+  pub fn ewpl(self) -> &'a mut crate::W<REG> {
+    self.variant(Fcmd::Ewpl)
+  }
+  #[doc = "Erase all"]
+  #[inline(always)]
+  pub fn ea(self) -> &'a mut crate::W<REG> {
+    self.variant(Fcmd::Ea)
+  }
+  #[doc = "Set Lock Bit"]
+  #[inline(always)]
+  pub fn slb(self) -> &'a mut crate::W<REG> {
+    self.variant(Fcmd::Slb)
+  }
+  #[doc = "Clear Lock Bit"]
+  #[inline(always)]
+  pub fn clb(self) -> &'a mut crate::W<REG> {
+    self.variant(Fcmd::Clb)
+  }
+  #[doc = "Get Lock Bit"]
+  #[inline(always)]
+  pub fn glb(self) -> &'a mut crate::W<REG> {
+    self.variant(Fcmd::Glb)
+  }
+  #[doc = "Set GPNVM Bit"]
+  #[inline(always)]
+  pub fn sgpb(self) -> &'a mut crate::W<REG> {
+    self.variant(Fcmd::Sgpb)
+  }
+  #[doc = "Clear GPNVM Bit"]
+  #[inline(always)]
+  pub fn cgpb(self) -> &'a mut crate::W<REG> {
+    self.variant(Fcmd::Cgpb)
+  }
+  #[doc = "Get GPNVM Bit"]
+  #[inline(always)]
+  pub fn ggpb(self) -> &'a mut crate::W<REG> {
+    self.variant(Fcmd::Ggpb)
+  }
+  #[doc = "Start Read Unique Identifier"]
+  #[inline(always)]
+  pub fn stui(self) -> &'a mut crate::W<REG> {
+    self.variant(Fcmd::Stui)
+  }
+  #[doc = "Stop Read Unique Identifier"]
+  #[inline(always)]
+  pub fn spui(self) -> &'a mut crate::W<REG> {
+    self.variant(Fcmd::Spui)
+  }
+  #[doc = "Get CALIB Bit"]
+  #[inline(always)]
+  pub fn gcalb(self) -> &'a mut crate::W<REG> {
+    self.variant(Fcmd::Gcalb)
+  }
 }
-#[doc = "Write proxy for field `FARG`"]
-pub struct FARG_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> FARG_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u16) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0xffff << 8)) | (((value as u32) & 0xffff) << 8);
-        self.w
-    }
-}
+#[doc = "Field `FARG` writer - Flash Command Argument"]
+pub type FargW<'a, REG> = crate::FieldWriter<'a, REG, 16, u16>;
 #[doc = "Flash Writing Protection Key"]
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub enum FKEY_AW {
-    #[doc = "90: The 0x5A value enables the command defined by the bits of the register. If the field is written with a different value, the write is not performed and no action is started."]
-    PASSWD,
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[repr(u8)]
+pub enum Fkey {
+  #[doc = "90: The 0x5A value enables the command defined by the bits of the register. If the field is written with a different value, the write is not performed and no action is started."]
+  Passwd = 90,
 }
-impl From<FKEY_AW> for u8 {
-    #[inline(always)]
-    fn from(variant: FKEY_AW) -> Self {
-        match variant {
-            FKEY_AW::PASSWD => 90,
-        }
-    }
+impl From<Fkey> for u8 {
+  #[inline(always)]
+  fn from(variant: Fkey) -> Self {
+    variant as _
+  }
 }
-#[doc = "Write proxy for field `FKEY`"]
-pub struct FKEY_W<'a> {
-    w: &'a mut W,
+impl crate::FieldSpec for Fkey {
+  type Ux = u8;
 }
-impl<'a> FKEY_W<'a> {
-    #[doc = r"Writes `variant` to the field"]
-    #[inline(always)]
-    pub fn variant(self, variant: FKEY_AW) -> &'a mut W {
-        unsafe { self.bits(variant.into()) }
-    }
-    #[doc = "The 0x5A value enables the command defined by the bits of the register. If the field is written with a different value, the write is not performed and no action is started."]
-    #[inline(always)]
-    pub fn passwd(self) -> &'a mut W {
-        self.variant(FKEY_AW::PASSWD)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0xff << 24)) | (((value as u32) & 0xff) << 24);
-        self.w
-    }
+impl crate::IsEnum for Fkey {}
+#[doc = "Field `FKEY` writer - Flash Writing Protection Key"]
+pub type FkeyW<'a, REG> = crate::FieldWriter<'a, REG, 8, Fkey>;
+impl<'a, REG> FkeyW<'a, REG>
+where
+  REG: crate::Writable + crate::RegisterSpec,
+  REG::Ux: From<u8>,
+{
+  #[doc = "The 0x5A value enables the command defined by the bits of the register. If the field is written with a different value, the write is not performed and no action is started."]
+  #[inline(always)]
+  pub fn passwd(self) -> &'a mut crate::W<REG> {
+    self.variant(Fkey::Passwd)
+  }
 }
 impl W {
-    #[doc = "Bits 0:7 - Flash Command"]
-    #[inline(always)]
-    pub fn fcmd(&mut self) -> FCMD_W {
-        FCMD_W { w: self }
-    }
-    #[doc = "Bits 8:23 - Flash Command Argument"]
-    #[inline(always)]
-    pub fn farg(&mut self) -> FARG_W {
-        FARG_W { w: self }
-    }
-    #[doc = "Bits 24:31 - Flash Writing Protection Key"]
-    #[inline(always)]
-    pub fn fkey(&mut self) -> FKEY_W {
-        FKEY_W { w: self }
-    }
+  #[doc = "Bits 0:7 - Flash Command"]
+  #[inline(always)]
+  pub fn fcmd(&mut self) -> FcmdW<'_, FcrSpec> {
+    FcmdW::new(self, 0)
+  }
+  #[doc = "Bits 8:23 - Flash Command Argument"]
+  #[inline(always)]
+  pub fn farg(&mut self) -> FargW<'_, FcrSpec> {
+    FargW::new(self, 8)
+  }
+  #[doc = "Bits 24:31 - Flash Writing Protection Key"]
+  #[inline(always)]
+  pub fn fkey(&mut self) -> FkeyW<'_, FcrSpec> {
+    FkeyW::new(self, 24)
+  }
+}
+#[doc = "EEFC Flash Command Register\n\nYou can [`write_with_zero`](crate::Reg::write_with_zero) this register using [`fcr::W`](W). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct FcrSpec;
+impl crate::RegisterSpec for FcrSpec {
+  type Ux = u32;
+}
+#[doc = "`write(|w| ..)` method takes [`fcr::W`](W) writer structure"]
+impl crate::Writable for FcrSpec {
+  type Safety = crate::Unsafe;
 }

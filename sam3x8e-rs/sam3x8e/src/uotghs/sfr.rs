@@ -1,247 +1,76 @@
-#[doc = "Writer for register SFR"]
-pub type W = crate::W<u32, super::SFR>;
-#[doc = "Write proxy for field `IDTIS`"]
-pub struct IDTIS_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> IDTIS_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x01) | ((value as u32) & 0x01);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `VBUSTIS`"]
-pub struct VBUSTIS_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> VBUSTIS_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 1)) | (((value as u32) & 0x01) << 1);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `SRPIS`"]
-pub struct SRPIS_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> SRPIS_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 2)) | (((value as u32) & 0x01) << 2);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `VBERRIS`"]
-pub struct VBERRIS_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> VBERRIS_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 3)) | (((value as u32) & 0x01) << 3);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `BCERRIS`"]
-pub struct BCERRIS_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> BCERRIS_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 4)) | (((value as u32) & 0x01) << 4);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `ROLEEXIS`"]
-pub struct ROLEEXIS_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> ROLEEXIS_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 5)) | (((value as u32) & 0x01) << 5);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `HNPERRIS`"]
-pub struct HNPERRIS_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> HNPERRIS_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 6)) | (((value as u32) & 0x01) << 6);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `STOIS`"]
-pub struct STOIS_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> STOIS_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 7)) | (((value as u32) & 0x01) << 7);
-        self.w
-    }
-}
-#[doc = "Write proxy for field `VBUSRQS`"]
-pub struct VBUSRQS_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> VBUSRQS_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 9)) | (((value as u32) & 0x01) << 9);
-        self.w
-    }
-}
+#[doc = "Register `SFR` writer"]
+pub type W = crate::W<SfrSpec>;
+#[doc = "Field `IDTIS` writer - ID Transition Interrupt Set"]
+pub type IdtisW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `VBUSTIS` writer - VBus Transition Interrupt Set"]
+pub type VbustisW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `SRPIS` writer - SRP Interrupt Set"]
+pub type SrpisW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `VBERRIS` writer - VBus Error Interrupt Set"]
+pub type VberrisW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `BCERRIS` writer - B-Connection Error Interrupt Set"]
+pub type BcerrisW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `ROLEEXIS` writer - Role Exchange Interrupt Set"]
+pub type RoleexisW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `HNPERRIS` writer - HNP Error Interrupt Set"]
+pub type HnperrisW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `STOIS` writer - Suspend Time-Out Interrupt Set"]
+pub type StoisW<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `VBUSRQS` writer - VBus Request Set"]
+pub type VbusrqsW<'a, REG> = crate::BitWriter<'a, REG>;
 impl W {
-    #[doc = "Bit 0 - ID Transition Interrupt Set"]
-    #[inline(always)]
-    pub fn idtis(&mut self) -> IDTIS_W {
-        IDTIS_W { w: self }
-    }
-    #[doc = "Bit 1 - VBus Transition Interrupt Set"]
-    #[inline(always)]
-    pub fn vbustis(&mut self) -> VBUSTIS_W {
-        VBUSTIS_W { w: self }
-    }
-    #[doc = "Bit 2 - SRP Interrupt Set"]
-    #[inline(always)]
-    pub fn srpis(&mut self) -> SRPIS_W {
-        SRPIS_W { w: self }
-    }
-    #[doc = "Bit 3 - VBus Error Interrupt Set"]
-    #[inline(always)]
-    pub fn vberris(&mut self) -> VBERRIS_W {
-        VBERRIS_W { w: self }
-    }
-    #[doc = "Bit 4 - B-Connection Error Interrupt Set"]
-    #[inline(always)]
-    pub fn bcerris(&mut self) -> BCERRIS_W {
-        BCERRIS_W { w: self }
-    }
-    #[doc = "Bit 5 - Role Exchange Interrupt Set"]
-    #[inline(always)]
-    pub fn roleexis(&mut self) -> ROLEEXIS_W {
-        ROLEEXIS_W { w: self }
-    }
-    #[doc = "Bit 6 - HNP Error Interrupt Set"]
-    #[inline(always)]
-    pub fn hnperris(&mut self) -> HNPERRIS_W {
-        HNPERRIS_W { w: self }
-    }
-    #[doc = "Bit 7 - Suspend Time-Out Interrupt Set"]
-    #[inline(always)]
-    pub fn stois(&mut self) -> STOIS_W {
-        STOIS_W { w: self }
-    }
-    #[doc = "Bit 9 - VBus Request Set"]
-    #[inline(always)]
-    pub fn vbusrqs(&mut self) -> VBUSRQS_W {
-        VBUSRQS_W { w: self }
-    }
+  #[doc = "Bit 0 - ID Transition Interrupt Set"]
+  #[inline(always)]
+  pub fn idtis(&mut self) -> IdtisW<'_, SfrSpec> {
+    IdtisW::new(self, 0)
+  }
+  #[doc = "Bit 1 - VBus Transition Interrupt Set"]
+  #[inline(always)]
+  pub fn vbustis(&mut self) -> VbustisW<'_, SfrSpec> {
+    VbustisW::new(self, 1)
+  }
+  #[doc = "Bit 2 - SRP Interrupt Set"]
+  #[inline(always)]
+  pub fn srpis(&mut self) -> SrpisW<'_, SfrSpec> {
+    SrpisW::new(self, 2)
+  }
+  #[doc = "Bit 3 - VBus Error Interrupt Set"]
+  #[inline(always)]
+  pub fn vberris(&mut self) -> VberrisW<'_, SfrSpec> {
+    VberrisW::new(self, 3)
+  }
+  #[doc = "Bit 4 - B-Connection Error Interrupt Set"]
+  #[inline(always)]
+  pub fn bcerris(&mut self) -> BcerrisW<'_, SfrSpec> {
+    BcerrisW::new(self, 4)
+  }
+  #[doc = "Bit 5 - Role Exchange Interrupt Set"]
+  #[inline(always)]
+  pub fn roleexis(&mut self) -> RoleexisW<'_, SfrSpec> {
+    RoleexisW::new(self, 5)
+  }
+  #[doc = "Bit 6 - HNP Error Interrupt Set"]
+  #[inline(always)]
+  pub fn hnperris(&mut self) -> HnperrisW<'_, SfrSpec> {
+    HnperrisW::new(self, 6)
+  }
+  #[doc = "Bit 7 - Suspend Time-Out Interrupt Set"]
+  #[inline(always)]
+  pub fn stois(&mut self) -> StoisW<'_, SfrSpec> {
+    StoisW::new(self, 7)
+  }
+  #[doc = "Bit 9 - VBus Request Set"]
+  #[inline(always)]
+  pub fn vbusrqs(&mut self) -> VbusrqsW<'_, SfrSpec> {
+    VbusrqsW::new(self, 9)
+  }
+}
+#[doc = "General Status Set Register\n\nYou can [`write_with_zero`](crate::Reg::write_with_zero) this register using [`sfr::W`](W). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct SfrSpec;
+impl crate::RegisterSpec for SfrSpec {
+  type Ux = u32;
+}
+#[doc = "`write(|w| ..)` method takes [`sfr::W`](W) writer structure"]
+impl crate::Writable for SfrSpec {
+  type Safety = crate::Unsafe;
 }

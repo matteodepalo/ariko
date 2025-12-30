@@ -2,14 +2,14 @@
 name = "sam3x8e-hal-codegen"
 version = "0.1.0"
 authors = ["Alex Zepeda <alex@inferiorhumanorgans.com>"]
-edition = "2018"
+edition = "2024"
 
 [lib]
 proc-macro = true
 
 [dependencies]
-syn = { version = "1.0", features = ["extra-traits", "full"] }
+syn = { version = "2.0", features = ["extra-traits", "full"] }
 quote = "1.0"
-Inflector = "*"
-maplit = "*"
-proc-macro2 = "1.0.2"
+Inflector = "0.11.4"
+maplit = "1.0.2"
+proc-macro2 = "1.0"

@@ -1,40 +1,35 @@
-#[doc = "Reader of register RLE"]
-pub type R = crate::R<u32, super::RLE>;
-#[doc = "Writer for register RLE"]
-pub type W = crate::W<u32, super::RLE>;
-#[doc = "Register RLE `reset()`'s with value 0"]
-impl crate::ResetValue for super::RLE {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
-#[doc = "Reader of field `RLFM`"]
-pub type RLFM_R = crate::R<u8, u8>;
-#[doc = "Write proxy for field `RLFM`"]
-pub struct RLFM_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> RLFM_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0xff) | ((value as u32) & 0xff);
-        self.w
-    }
-}
+#[doc = "Register `RLE` reader"]
+pub type R = crate::R<RleSpec>;
+#[doc = "Register `RLE` writer"]
+pub type W = crate::W<RleSpec>;
+#[doc = "Field `RLFM` reader - Receive Length Field Mismatch"]
+pub type RlfmR = crate::FieldReader;
+#[doc = "Field `RLFM` writer - Receive Length Field Mismatch"]
+pub type RlfmW<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 impl R {
-    #[doc = "Bits 0:7 - Receive Length Field Mismatch"]
-    #[inline(always)]
-    pub fn rlfm(&self) -> RLFM_R {
-        RLFM_R::new((self.bits & 0xff) as u8)
-    }
+  #[doc = "Bits 0:7 - Receive Length Field Mismatch"]
+  #[inline(always)]
+  pub fn rlfm(&self) -> RlfmR {
+    RlfmR::new((self.bits & 0xff) as u8)
+  }
 }
 impl W {
-    #[doc = "Bits 0:7 - Receive Length Field Mismatch"]
-    #[inline(always)]
-    pub fn rlfm(&mut self) -> RLFM_W {
-        RLFM_W { w: self }
-    }
+  #[doc = "Bits 0:7 - Receive Length Field Mismatch"]
+  #[inline(always)]
+  pub fn rlfm(&mut self) -> RlfmW<'_, RleSpec> {
+    RlfmW::new(self, 0)
+  }
 }
+#[doc = "Received Length Field Mismatch Register\n\nYou can [`read`](crate::Reg::read) this register and get [`rle::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`rle::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct RleSpec;
+impl crate::RegisterSpec for RleSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`rle::R`](R) reader structure"]
+impl crate::Readable for RleSpec {}
+#[doc = "`write(|w| ..)` method takes [`rle::W`](W) writer structure"]
+impl crate::Writable for RleSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets RLE to value 0"]
+impl crate::Resettable for RleSpec {}

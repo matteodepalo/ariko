@@ -1,5 +1,4 @@
-use super::{Timer, TimerExt};
-use crate::hal::timer::CountDown;
+use super::{CountDown, Timer, TimerExt};
 use crate::pac::RTT;
 use crate::time::Hertz;
 
@@ -11,7 +10,7 @@ impl Timer<RTT> {
     T: Into<Hertz>,
   {
     // Configure RTT resolution to approx. 1ms
-    rtt.mr.write_with_zero(|w| unsafe { w.rtpres().bits(0x20) });
+    unsafe { rtt.mr().write_with_zero(|w| w.rtpres().bits(0x20)); }
 
     let mut timer = Timer { tim: rtt };
 
@@ -28,14 +27,14 @@ impl CountDown for Timer<RTT> {
   where
     T: Into<Hertz>,
   {
-    unsafe { EXPIRES_AT = self.tim.vr.read().bits() + timeout.into().0 };
+    unsafe { EXPIRES_AT = self.tim.vr().read().bits() + timeout.into().0 };
     Ok(())
   }
 
   fn try_wait(&mut self) -> nb::Result<(), Self::Error> {
     let expires_at = unsafe { EXPIRES_AT };
 
-    if self.tim.vr.read().bits() >= expires_at {
+    if self.tim.vr().read().bits() >= expires_at {
       Ok(())
     } else {
       Err(nb::Error::WouldBlock)

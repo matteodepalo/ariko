@@ -1,1096 +1,467 @@
-#[doc = "Reader of register ODSR"]
-pub type R = crate::R<u32, super::ODSR>;
-#[doc = "Writer for register ODSR"]
-pub type W = crate::W<u32, super::ODSR>;
-#[doc = "Reader of field `P0`"]
-pub type P0_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `P0`"]
-pub struct P0_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> P0_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x01) | ((value as u32) & 0x01);
-        self.w
-    }
-}
-#[doc = "Reader of field `P1`"]
-pub type P1_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `P1`"]
-pub struct P1_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> P1_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 1)) | (((value as u32) & 0x01) << 1);
-        self.w
-    }
-}
-#[doc = "Reader of field `P2`"]
-pub type P2_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `P2`"]
-pub struct P2_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> P2_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 2)) | (((value as u32) & 0x01) << 2);
-        self.w
-    }
-}
-#[doc = "Reader of field `P3`"]
-pub type P3_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `P3`"]
-pub struct P3_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> P3_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 3)) | (((value as u32) & 0x01) << 3);
-        self.w
-    }
-}
-#[doc = "Reader of field `P4`"]
-pub type P4_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `P4`"]
-pub struct P4_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> P4_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 4)) | (((value as u32) & 0x01) << 4);
-        self.w
-    }
-}
-#[doc = "Reader of field `P5`"]
-pub type P5_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `P5`"]
-pub struct P5_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> P5_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 5)) | (((value as u32) & 0x01) << 5);
-        self.w
-    }
-}
-#[doc = "Reader of field `P6`"]
-pub type P6_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `P6`"]
-pub struct P6_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> P6_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 6)) | (((value as u32) & 0x01) << 6);
-        self.w
-    }
-}
-#[doc = "Reader of field `P7`"]
-pub type P7_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `P7`"]
-pub struct P7_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> P7_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 7)) | (((value as u32) & 0x01) << 7);
-        self.w
-    }
-}
-#[doc = "Reader of field `P8`"]
-pub type P8_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `P8`"]
-pub struct P8_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> P8_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 8)) | (((value as u32) & 0x01) << 8);
-        self.w
-    }
-}
-#[doc = "Reader of field `P9`"]
-pub type P9_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `P9`"]
-pub struct P9_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> P9_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 9)) | (((value as u32) & 0x01) << 9);
-        self.w
-    }
-}
-#[doc = "Reader of field `P10`"]
-pub type P10_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `P10`"]
-pub struct P10_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> P10_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 10)) | (((value as u32) & 0x01) << 10);
-        self.w
-    }
-}
-#[doc = "Reader of field `P11`"]
-pub type P11_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `P11`"]
-pub struct P11_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> P11_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 11)) | (((value as u32) & 0x01) << 11);
-        self.w
-    }
-}
-#[doc = "Reader of field `P12`"]
-pub type P12_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `P12`"]
-pub struct P12_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> P12_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 12)) | (((value as u32) & 0x01) << 12);
-        self.w
-    }
-}
-#[doc = "Reader of field `P13`"]
-pub type P13_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `P13`"]
-pub struct P13_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> P13_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 13)) | (((value as u32) & 0x01) << 13);
-        self.w
-    }
-}
-#[doc = "Reader of field `P14`"]
-pub type P14_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `P14`"]
-pub struct P14_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> P14_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 14)) | (((value as u32) & 0x01) << 14);
-        self.w
-    }
-}
-#[doc = "Reader of field `P15`"]
-pub type P15_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `P15`"]
-pub struct P15_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> P15_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 15)) | (((value as u32) & 0x01) << 15);
-        self.w
-    }
-}
-#[doc = "Reader of field `P16`"]
-pub type P16_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `P16`"]
-pub struct P16_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> P16_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 16)) | (((value as u32) & 0x01) << 16);
-        self.w
-    }
-}
-#[doc = "Reader of field `P17`"]
-pub type P17_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `P17`"]
-pub struct P17_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> P17_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 17)) | (((value as u32) & 0x01) << 17);
-        self.w
-    }
-}
-#[doc = "Reader of field `P18`"]
-pub type P18_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `P18`"]
-pub struct P18_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> P18_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 18)) | (((value as u32) & 0x01) << 18);
-        self.w
-    }
-}
-#[doc = "Reader of field `P19`"]
-pub type P19_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `P19`"]
-pub struct P19_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> P19_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 19)) | (((value as u32) & 0x01) << 19);
-        self.w
-    }
-}
-#[doc = "Reader of field `P20`"]
-pub type P20_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `P20`"]
-pub struct P20_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> P20_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 20)) | (((value as u32) & 0x01) << 20);
-        self.w
-    }
-}
-#[doc = "Reader of field `P21`"]
-pub type P21_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `P21`"]
-pub struct P21_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> P21_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 21)) | (((value as u32) & 0x01) << 21);
-        self.w
-    }
-}
-#[doc = "Reader of field `P22`"]
-pub type P22_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `P22`"]
-pub struct P22_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> P22_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 22)) | (((value as u32) & 0x01) << 22);
-        self.w
-    }
-}
-#[doc = "Reader of field `P23`"]
-pub type P23_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `P23`"]
-pub struct P23_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> P23_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 23)) | (((value as u32) & 0x01) << 23);
-        self.w
-    }
-}
-#[doc = "Reader of field `P24`"]
-pub type P24_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `P24`"]
-pub struct P24_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> P24_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 24)) | (((value as u32) & 0x01) << 24);
-        self.w
-    }
-}
-#[doc = "Reader of field `P25`"]
-pub type P25_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `P25`"]
-pub struct P25_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> P25_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 25)) | (((value as u32) & 0x01) << 25);
-        self.w
-    }
-}
-#[doc = "Reader of field `P26`"]
-pub type P26_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `P26`"]
-pub struct P26_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> P26_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 26)) | (((value as u32) & 0x01) << 26);
-        self.w
-    }
-}
-#[doc = "Reader of field `P27`"]
-pub type P27_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `P27`"]
-pub struct P27_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> P27_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 27)) | (((value as u32) & 0x01) << 27);
-        self.w
-    }
-}
-#[doc = "Reader of field `P28`"]
-pub type P28_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `P28`"]
-pub struct P28_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> P28_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 28)) | (((value as u32) & 0x01) << 28);
-        self.w
-    }
-}
-#[doc = "Reader of field `P29`"]
-pub type P29_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `P29`"]
-pub struct P29_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> P29_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 29)) | (((value as u32) & 0x01) << 29);
-        self.w
-    }
-}
-#[doc = "Reader of field `P30`"]
-pub type P30_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `P30`"]
-pub struct P30_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> P30_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 30)) | (((value as u32) & 0x01) << 30);
-        self.w
-    }
-}
-#[doc = "Reader of field `P31`"]
-pub type P31_R = crate::R<bool, bool>;
-#[doc = "Write proxy for field `P31`"]
-pub struct P31_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> P31_W<'a> {
-    #[doc = r"Sets the field bit"]
-    #[inline(always)]
-    pub fn set_bit(self) -> &'a mut W {
-        self.bit(true)
-    }
-    #[doc = r"Clears the field bit"]
-    #[inline(always)]
-    pub fn clear_bit(self) -> &'a mut W {
-        self.bit(false)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bit(self, value: bool) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x01 << 31)) | (((value as u32) & 0x01) << 31);
-        self.w
-    }
-}
+#[doc = "Register `ODSR` reader"]
+pub type R = crate::R<OdsrSpec>;
+#[doc = "Register `ODSR` writer"]
+pub type W = crate::W<OdsrSpec>;
+#[doc = "Field `P0` reader - Output Data Status"]
+pub type P0R = crate::BitReader;
+#[doc = "Field `P0` writer - Output Data Status"]
+pub type P0W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `P1` reader - Output Data Status"]
+pub type P1R = crate::BitReader;
+#[doc = "Field `P1` writer - Output Data Status"]
+pub type P1W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `P2` reader - Output Data Status"]
+pub type P2R = crate::BitReader;
+#[doc = "Field `P2` writer - Output Data Status"]
+pub type P2W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `P3` reader - Output Data Status"]
+pub type P3R = crate::BitReader;
+#[doc = "Field `P3` writer - Output Data Status"]
+pub type P3W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `P4` reader - Output Data Status"]
+pub type P4R = crate::BitReader;
+#[doc = "Field `P4` writer - Output Data Status"]
+pub type P4W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `P5` reader - Output Data Status"]
+pub type P5R = crate::BitReader;
+#[doc = "Field `P5` writer - Output Data Status"]
+pub type P5W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `P6` reader - Output Data Status"]
+pub type P6R = crate::BitReader;
+#[doc = "Field `P6` writer - Output Data Status"]
+pub type P6W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `P7` reader - Output Data Status"]
+pub type P7R = crate::BitReader;
+#[doc = "Field `P7` writer - Output Data Status"]
+pub type P7W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `P8` reader - Output Data Status"]
+pub type P8R = crate::BitReader;
+#[doc = "Field `P8` writer - Output Data Status"]
+pub type P8W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `P9` reader - Output Data Status"]
+pub type P9R = crate::BitReader;
+#[doc = "Field `P9` writer - Output Data Status"]
+pub type P9W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `P10` reader - Output Data Status"]
+pub type P10R = crate::BitReader;
+#[doc = "Field `P10` writer - Output Data Status"]
+pub type P10W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `P11` reader - Output Data Status"]
+pub type P11R = crate::BitReader;
+#[doc = "Field `P11` writer - Output Data Status"]
+pub type P11W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `P12` reader - Output Data Status"]
+pub type P12R = crate::BitReader;
+#[doc = "Field `P12` writer - Output Data Status"]
+pub type P12W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `P13` reader - Output Data Status"]
+pub type P13R = crate::BitReader;
+#[doc = "Field `P13` writer - Output Data Status"]
+pub type P13W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `P14` reader - Output Data Status"]
+pub type P14R = crate::BitReader;
+#[doc = "Field `P14` writer - Output Data Status"]
+pub type P14W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `P15` reader - Output Data Status"]
+pub type P15R = crate::BitReader;
+#[doc = "Field `P15` writer - Output Data Status"]
+pub type P15W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `P16` reader - Output Data Status"]
+pub type P16R = crate::BitReader;
+#[doc = "Field `P16` writer - Output Data Status"]
+pub type P16W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `P17` reader - Output Data Status"]
+pub type P17R = crate::BitReader;
+#[doc = "Field `P17` writer - Output Data Status"]
+pub type P17W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `P18` reader - Output Data Status"]
+pub type P18R = crate::BitReader;
+#[doc = "Field `P18` writer - Output Data Status"]
+pub type P18W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `P19` reader - Output Data Status"]
+pub type P19R = crate::BitReader;
+#[doc = "Field `P19` writer - Output Data Status"]
+pub type P19W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `P20` reader - Output Data Status"]
+pub type P20R = crate::BitReader;
+#[doc = "Field `P20` writer - Output Data Status"]
+pub type P20W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `P21` reader - Output Data Status"]
+pub type P21R = crate::BitReader;
+#[doc = "Field `P21` writer - Output Data Status"]
+pub type P21W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `P22` reader - Output Data Status"]
+pub type P22R = crate::BitReader;
+#[doc = "Field `P22` writer - Output Data Status"]
+pub type P22W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `P23` reader - Output Data Status"]
+pub type P23R = crate::BitReader;
+#[doc = "Field `P23` writer - Output Data Status"]
+pub type P23W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `P24` reader - Output Data Status"]
+pub type P24R = crate::BitReader;
+#[doc = "Field `P24` writer - Output Data Status"]
+pub type P24W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `P25` reader - Output Data Status"]
+pub type P25R = crate::BitReader;
+#[doc = "Field `P25` writer - Output Data Status"]
+pub type P25W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `P26` reader - Output Data Status"]
+pub type P26R = crate::BitReader;
+#[doc = "Field `P26` writer - Output Data Status"]
+pub type P26W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `P27` reader - Output Data Status"]
+pub type P27R = crate::BitReader;
+#[doc = "Field `P27` writer - Output Data Status"]
+pub type P27W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `P28` reader - Output Data Status"]
+pub type P28R = crate::BitReader;
+#[doc = "Field `P28` writer - Output Data Status"]
+pub type P28W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `P29` reader - Output Data Status"]
+pub type P29R = crate::BitReader;
+#[doc = "Field `P29` writer - Output Data Status"]
+pub type P29W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `P30` reader - Output Data Status"]
+pub type P30R = crate::BitReader;
+#[doc = "Field `P30` writer - Output Data Status"]
+pub type P30W<'a, REG> = crate::BitWriter<'a, REG>;
+#[doc = "Field `P31` reader - Output Data Status"]
+pub type P31R = crate::BitReader;
+#[doc = "Field `P31` writer - Output Data Status"]
+pub type P31W<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
-    #[doc = "Bit 0 - Output Data Status"]
-    #[inline(always)]
-    pub fn p0(&self) -> P0_R {
-        P0_R::new((self.bits & 0x01) != 0)
-    }
-    #[doc = "Bit 1 - Output Data Status"]
-    #[inline(always)]
-    pub fn p1(&self) -> P1_R {
-        P1_R::new(((self.bits >> 1) & 0x01) != 0)
-    }
-    #[doc = "Bit 2 - Output Data Status"]
-    #[inline(always)]
-    pub fn p2(&self) -> P2_R {
-        P2_R::new(((self.bits >> 2) & 0x01) != 0)
-    }
-    #[doc = "Bit 3 - Output Data Status"]
-    #[inline(always)]
-    pub fn p3(&self) -> P3_R {
-        P3_R::new(((self.bits >> 3) & 0x01) != 0)
-    }
-    #[doc = "Bit 4 - Output Data Status"]
-    #[inline(always)]
-    pub fn p4(&self) -> P4_R {
-        P4_R::new(((self.bits >> 4) & 0x01) != 0)
-    }
-    #[doc = "Bit 5 - Output Data Status"]
-    #[inline(always)]
-    pub fn p5(&self) -> P5_R {
-        P5_R::new(((self.bits >> 5) & 0x01) != 0)
-    }
-    #[doc = "Bit 6 - Output Data Status"]
-    #[inline(always)]
-    pub fn p6(&self) -> P6_R {
-        P6_R::new(((self.bits >> 6) & 0x01) != 0)
-    }
-    #[doc = "Bit 7 - Output Data Status"]
-    #[inline(always)]
-    pub fn p7(&self) -> P7_R {
-        P7_R::new(((self.bits >> 7) & 0x01) != 0)
-    }
-    #[doc = "Bit 8 - Output Data Status"]
-    #[inline(always)]
-    pub fn p8(&self) -> P8_R {
-        P8_R::new(((self.bits >> 8) & 0x01) != 0)
-    }
-    #[doc = "Bit 9 - Output Data Status"]
-    #[inline(always)]
-    pub fn p9(&self) -> P9_R {
-        P9_R::new(((self.bits >> 9) & 0x01) != 0)
-    }
-    #[doc = "Bit 10 - Output Data Status"]
-    #[inline(always)]
-    pub fn p10(&self) -> P10_R {
-        P10_R::new(((self.bits >> 10) & 0x01) != 0)
-    }
-    #[doc = "Bit 11 - Output Data Status"]
-    #[inline(always)]
-    pub fn p11(&self) -> P11_R {
-        P11_R::new(((self.bits >> 11) & 0x01) != 0)
-    }
-    #[doc = "Bit 12 - Output Data Status"]
-    #[inline(always)]
-    pub fn p12(&self) -> P12_R {
-        P12_R::new(((self.bits >> 12) & 0x01) != 0)
-    }
-    #[doc = "Bit 13 - Output Data Status"]
-    #[inline(always)]
-    pub fn p13(&self) -> P13_R {
-        P13_R::new(((self.bits >> 13) & 0x01) != 0)
-    }
-    #[doc = "Bit 14 - Output Data Status"]
-    #[inline(always)]
-    pub fn p14(&self) -> P14_R {
-        P14_R::new(((self.bits >> 14) & 0x01) != 0)
-    }
-    #[doc = "Bit 15 - Output Data Status"]
-    #[inline(always)]
-    pub fn p15(&self) -> P15_R {
-        P15_R::new(((self.bits >> 15) & 0x01) != 0)
-    }
-    #[doc = "Bit 16 - Output Data Status"]
-    #[inline(always)]
-    pub fn p16(&self) -> P16_R {
-        P16_R::new(((self.bits >> 16) & 0x01) != 0)
-    }
-    #[doc = "Bit 17 - Output Data Status"]
-    #[inline(always)]
-    pub fn p17(&self) -> P17_R {
-        P17_R::new(((self.bits >> 17) & 0x01) != 0)
-    }
-    #[doc = "Bit 18 - Output Data Status"]
-    #[inline(always)]
-    pub fn p18(&self) -> P18_R {
-        P18_R::new(((self.bits >> 18) & 0x01) != 0)
-    }
-    #[doc = "Bit 19 - Output Data Status"]
-    #[inline(always)]
-    pub fn p19(&self) -> P19_R {
-        P19_R::new(((self.bits >> 19) & 0x01) != 0)
-    }
-    #[doc = "Bit 20 - Output Data Status"]
-    #[inline(always)]
-    pub fn p20(&self) -> P20_R {
-        P20_R::new(((self.bits >> 20) & 0x01) != 0)
-    }
-    #[doc = "Bit 21 - Output Data Status"]
-    #[inline(always)]
-    pub fn p21(&self) -> P21_R {
-        P21_R::new(((self.bits >> 21) & 0x01) != 0)
-    }
-    #[doc = "Bit 22 - Output Data Status"]
-    #[inline(always)]
-    pub fn p22(&self) -> P22_R {
-        P22_R::new(((self.bits >> 22) & 0x01) != 0)
-    }
-    #[doc = "Bit 23 - Output Data Status"]
-    #[inline(always)]
-    pub fn p23(&self) -> P23_R {
-        P23_R::new(((self.bits >> 23) & 0x01) != 0)
-    }
-    #[doc = "Bit 24 - Output Data Status"]
-    #[inline(always)]
-    pub fn p24(&self) -> P24_R {
-        P24_R::new(((self.bits >> 24) & 0x01) != 0)
-    }
-    #[doc = "Bit 25 - Output Data Status"]
-    #[inline(always)]
-    pub fn p25(&self) -> P25_R {
-        P25_R::new(((self.bits >> 25) & 0x01) != 0)
-    }
-    #[doc = "Bit 26 - Output Data Status"]
-    #[inline(always)]
-    pub fn p26(&self) -> P26_R {
-        P26_R::new(((self.bits >> 26) & 0x01) != 0)
-    }
-    #[doc = "Bit 27 - Output Data Status"]
-    #[inline(always)]
-    pub fn p27(&self) -> P27_R {
-        P27_R::new(((self.bits >> 27) & 0x01) != 0)
-    }
-    #[doc = "Bit 28 - Output Data Status"]
-    #[inline(always)]
-    pub fn p28(&self) -> P28_R {
-        P28_R::new(((self.bits >> 28) & 0x01) != 0)
-    }
-    #[doc = "Bit 29 - Output Data Status"]
-    #[inline(always)]
-    pub fn p29(&self) -> P29_R {
-        P29_R::new(((self.bits >> 29) & 0x01) != 0)
-    }
-    #[doc = "Bit 30 - Output Data Status"]
-    #[inline(always)]
-    pub fn p30(&self) -> P30_R {
-        P30_R::new(((self.bits >> 30) & 0x01) != 0)
-    }
-    #[doc = "Bit 31 - Output Data Status"]
-    #[inline(always)]
-    pub fn p31(&self) -> P31_R {
-        P31_R::new(((self.bits >> 31) & 0x01) != 0)
-    }
+  #[doc = "Bit 0 - Output Data Status"]
+  #[inline(always)]
+  pub fn p0(&self) -> P0R {
+    P0R::new((self.bits & 1) != 0)
+  }
+  #[doc = "Bit 1 - Output Data Status"]
+  #[inline(always)]
+  pub fn p1(&self) -> P1R {
+    P1R::new(((self.bits >> 1) & 1) != 0)
+  }
+  #[doc = "Bit 2 - Output Data Status"]
+  #[inline(always)]
+  pub fn p2(&self) -> P2R {
+    P2R::new(((self.bits >> 2) & 1) != 0)
+  }
+  #[doc = "Bit 3 - Output Data Status"]
+  #[inline(always)]
+  pub fn p3(&self) -> P3R {
+    P3R::new(((self.bits >> 3) & 1) != 0)
+  }
+  #[doc = "Bit 4 - Output Data Status"]
+  #[inline(always)]
+  pub fn p4(&self) -> P4R {
+    P4R::new(((self.bits >> 4) & 1) != 0)
+  }
+  #[doc = "Bit 5 - Output Data Status"]
+  #[inline(always)]
+  pub fn p5(&self) -> P5R {
+    P5R::new(((self.bits >> 5) & 1) != 0)
+  }
+  #[doc = "Bit 6 - Output Data Status"]
+  #[inline(always)]
+  pub fn p6(&self) -> P6R {
+    P6R::new(((self.bits >> 6) & 1) != 0)
+  }
+  #[doc = "Bit 7 - Output Data Status"]
+  #[inline(always)]
+  pub fn p7(&self) -> P7R {
+    P7R::new(((self.bits >> 7) & 1) != 0)
+  }
+  #[doc = "Bit 8 - Output Data Status"]
+  #[inline(always)]
+  pub fn p8(&self) -> P8R {
+    P8R::new(((self.bits >> 8) & 1) != 0)
+  }
+  #[doc = "Bit 9 - Output Data Status"]
+  #[inline(always)]
+  pub fn p9(&self) -> P9R {
+    P9R::new(((self.bits >> 9) & 1) != 0)
+  }
+  #[doc = "Bit 10 - Output Data Status"]
+  #[inline(always)]
+  pub fn p10(&self) -> P10R {
+    P10R::new(((self.bits >> 10) & 1) != 0)
+  }
+  #[doc = "Bit 11 - Output Data Status"]
+  #[inline(always)]
+  pub fn p11(&self) -> P11R {
+    P11R::new(((self.bits >> 11) & 1) != 0)
+  }
+  #[doc = "Bit 12 - Output Data Status"]
+  #[inline(always)]
+  pub fn p12(&self) -> P12R {
+    P12R::new(((self.bits >> 12) & 1) != 0)
+  }
+  #[doc = "Bit 13 - Output Data Status"]
+  #[inline(always)]
+  pub fn p13(&self) -> P13R {
+    P13R::new(((self.bits >> 13) & 1) != 0)
+  }
+  #[doc = "Bit 14 - Output Data Status"]
+  #[inline(always)]
+  pub fn p14(&self) -> P14R {
+    P14R::new(((self.bits >> 14) & 1) != 0)
+  }
+  #[doc = "Bit 15 - Output Data Status"]
+  #[inline(always)]
+  pub fn p15(&self) -> P15R {
+    P15R::new(((self.bits >> 15) & 1) != 0)
+  }
+  #[doc = "Bit 16 - Output Data Status"]
+  #[inline(always)]
+  pub fn p16(&self) -> P16R {
+    P16R::new(((self.bits >> 16) & 1) != 0)
+  }
+  #[doc = "Bit 17 - Output Data Status"]
+  #[inline(always)]
+  pub fn p17(&self) -> P17R {
+    P17R::new(((self.bits >> 17) & 1) != 0)
+  }
+  #[doc = "Bit 18 - Output Data Status"]
+  #[inline(always)]
+  pub fn p18(&self) -> P18R {
+    P18R::new(((self.bits >> 18) & 1) != 0)
+  }
+  #[doc = "Bit 19 - Output Data Status"]
+  #[inline(always)]
+  pub fn p19(&self) -> P19R {
+    P19R::new(((self.bits >> 19) & 1) != 0)
+  }
+  #[doc = "Bit 20 - Output Data Status"]
+  #[inline(always)]
+  pub fn p20(&self) -> P20R {
+    P20R::new(((self.bits >> 20) & 1) != 0)
+  }
+  #[doc = "Bit 21 - Output Data Status"]
+  #[inline(always)]
+  pub fn p21(&self) -> P21R {
+    P21R::new(((self.bits >> 21) & 1) != 0)
+  }
+  #[doc = "Bit 22 - Output Data Status"]
+  #[inline(always)]
+  pub fn p22(&self) -> P22R {
+    P22R::new(((self.bits >> 22) & 1) != 0)
+  }
+  #[doc = "Bit 23 - Output Data Status"]
+  #[inline(always)]
+  pub fn p23(&self) -> P23R {
+    P23R::new(((self.bits >> 23) & 1) != 0)
+  }
+  #[doc = "Bit 24 - Output Data Status"]
+  #[inline(always)]
+  pub fn p24(&self) -> P24R {
+    P24R::new(((self.bits >> 24) & 1) != 0)
+  }
+  #[doc = "Bit 25 - Output Data Status"]
+  #[inline(always)]
+  pub fn p25(&self) -> P25R {
+    P25R::new(((self.bits >> 25) & 1) != 0)
+  }
+  #[doc = "Bit 26 - Output Data Status"]
+  #[inline(always)]
+  pub fn p26(&self) -> P26R {
+    P26R::new(((self.bits >> 26) & 1) != 0)
+  }
+  #[doc = "Bit 27 - Output Data Status"]
+  #[inline(always)]
+  pub fn p27(&self) -> P27R {
+    P27R::new(((self.bits >> 27) & 1) != 0)
+  }
+  #[doc = "Bit 28 - Output Data Status"]
+  #[inline(always)]
+  pub fn p28(&self) -> P28R {
+    P28R::new(((self.bits >> 28) & 1) != 0)
+  }
+  #[doc = "Bit 29 - Output Data Status"]
+  #[inline(always)]
+  pub fn p29(&self) -> P29R {
+    P29R::new(((self.bits >> 29) & 1) != 0)
+  }
+  #[doc = "Bit 30 - Output Data Status"]
+  #[inline(always)]
+  pub fn p30(&self) -> P30R {
+    P30R::new(((self.bits >> 30) & 1) != 0)
+  }
+  #[doc = "Bit 31 - Output Data Status"]
+  #[inline(always)]
+  pub fn p31(&self) -> P31R {
+    P31R::new(((self.bits >> 31) & 1) != 0)
+  }
 }
 impl W {
-    #[doc = "Bit 0 - Output Data Status"]
-    #[inline(always)]
-    pub fn p0(&mut self) -> P0_W {
-        P0_W { w: self }
-    }
-    #[doc = "Bit 1 - Output Data Status"]
-    #[inline(always)]
-    pub fn p1(&mut self) -> P1_W {
-        P1_W { w: self }
-    }
-    #[doc = "Bit 2 - Output Data Status"]
-    #[inline(always)]
-    pub fn p2(&mut self) -> P2_W {
-        P2_W { w: self }
-    }
-    #[doc = "Bit 3 - Output Data Status"]
-    #[inline(always)]
-    pub fn p3(&mut self) -> P3_W {
-        P3_W { w: self }
-    }
-    #[doc = "Bit 4 - Output Data Status"]
-    #[inline(always)]
-    pub fn p4(&mut self) -> P4_W {
-        P4_W { w: self }
-    }
-    #[doc = "Bit 5 - Output Data Status"]
-    #[inline(always)]
-    pub fn p5(&mut self) -> P5_W {
-        P5_W { w: self }
-    }
-    #[doc = "Bit 6 - Output Data Status"]
-    #[inline(always)]
-    pub fn p6(&mut self) -> P6_W {
-        P6_W { w: self }
-    }
-    #[doc = "Bit 7 - Output Data Status"]
-    #[inline(always)]
-    pub fn p7(&mut self) -> P7_W {
-        P7_W { w: self }
-    }
-    #[doc = "Bit 8 - Output Data Status"]
-    #[inline(always)]
-    pub fn p8(&mut self) -> P8_W {
-        P8_W { w: self }
-    }
-    #[doc = "Bit 9 - Output Data Status"]
-    #[inline(always)]
-    pub fn p9(&mut self) -> P9_W {
-        P9_W { w: self }
-    }
-    #[doc = "Bit 10 - Output Data Status"]
-    #[inline(always)]
-    pub fn p10(&mut self) -> P10_W {
-        P10_W { w: self }
-    }
-    #[doc = "Bit 11 - Output Data Status"]
-    #[inline(always)]
-    pub fn p11(&mut self) -> P11_W {
-        P11_W { w: self }
-    }
-    #[doc = "Bit 12 - Output Data Status"]
-    #[inline(always)]
-    pub fn p12(&mut self) -> P12_W {
-        P12_W { w: self }
-    }
-    #[doc = "Bit 13 - Output Data Status"]
-    #[inline(always)]
-    pub fn p13(&mut self) -> P13_W {
-        P13_W { w: self }
-    }
-    #[doc = "Bit 14 - Output Data Status"]
-    #[inline(always)]
-    pub fn p14(&mut self) -> P14_W {
-        P14_W { w: self }
-    }
-    #[doc = "Bit 15 - Output Data Status"]
-    #[inline(always)]
-    pub fn p15(&mut self) -> P15_W {
-        P15_W { w: self }
-    }
-    #[doc = "Bit 16 - Output Data Status"]
-    #[inline(always)]
-    pub fn p16(&mut self) -> P16_W {
-        P16_W { w: self }
-    }
-    #[doc = "Bit 17 - Output Data Status"]
-    #[inline(always)]
-    pub fn p17(&mut self) -> P17_W {
-        P17_W { w: self }
-    }
-    #[doc = "Bit 18 - Output Data Status"]
-    #[inline(always)]
-    pub fn p18(&mut self) -> P18_W {
-        P18_W { w: self }
-    }
-    #[doc = "Bit 19 - Output Data Status"]
-    #[inline(always)]
-    pub fn p19(&mut self) -> P19_W {
-        P19_W { w: self }
-    }
-    #[doc = "Bit 20 - Output Data Status"]
-    #[inline(always)]
-    pub fn p20(&mut self) -> P20_W {
-        P20_W { w: self }
-    }
-    #[doc = "Bit 21 - Output Data Status"]
-    #[inline(always)]
-    pub fn p21(&mut self) -> P21_W {
-        P21_W { w: self }
-    }
-    #[doc = "Bit 22 - Output Data Status"]
-    #[inline(always)]
-    pub fn p22(&mut self) -> P22_W {
-        P22_W { w: self }
-    }
-    #[doc = "Bit 23 - Output Data Status"]
-    #[inline(always)]
-    pub fn p23(&mut self) -> P23_W {
-        P23_W { w: self }
-    }
-    #[doc = "Bit 24 - Output Data Status"]
-    #[inline(always)]
-    pub fn p24(&mut self) -> P24_W {
-        P24_W { w: self }
-    }
-    #[doc = "Bit 25 - Output Data Status"]
-    #[inline(always)]
-    pub fn p25(&mut self) -> P25_W {
-        P25_W { w: self }
-    }
-    #[doc = "Bit 26 - Output Data Status"]
-    #[inline(always)]
-    pub fn p26(&mut self) -> P26_W {
-        P26_W { w: self }
-    }
-    #[doc = "Bit 27 - Output Data Status"]
-    #[inline(always)]
-    pub fn p27(&mut self) -> P27_W {
-        P27_W { w: self }
-    }
-    #[doc = "Bit 28 - Output Data Status"]
-    #[inline(always)]
-    pub fn p28(&mut self) -> P28_W {
-        P28_W { w: self }
-    }
-    #[doc = "Bit 29 - Output Data Status"]
-    #[inline(always)]
-    pub fn p29(&mut self) -> P29_W {
-        P29_W { w: self }
-    }
-    #[doc = "Bit 30 - Output Data Status"]
-    #[inline(always)]
-    pub fn p30(&mut self) -> P30_W {
-        P30_W { w: self }
-    }
-    #[doc = "Bit 31 - Output Data Status"]
-    #[inline(always)]
-    pub fn p31(&mut self) -> P31_W {
-        P31_W { w: self }
-    }
+  #[doc = "Bit 0 - Output Data Status"]
+  #[inline(always)]
+  pub fn p0(&mut self) -> P0W<'_, OdsrSpec> {
+    P0W::new(self, 0)
+  }
+  #[doc = "Bit 1 - Output Data Status"]
+  #[inline(always)]
+  pub fn p1(&mut self) -> P1W<'_, OdsrSpec> {
+    P1W::new(self, 1)
+  }
+  #[doc = "Bit 2 - Output Data Status"]
+  #[inline(always)]
+  pub fn p2(&mut self) -> P2W<'_, OdsrSpec> {
+    P2W::new(self, 2)
+  }
+  #[doc = "Bit 3 - Output Data Status"]
+  #[inline(always)]
+  pub fn p3(&mut self) -> P3W<'_, OdsrSpec> {
+    P3W::new(self, 3)
+  }
+  #[doc = "Bit 4 - Output Data Status"]
+  #[inline(always)]
+  pub fn p4(&mut self) -> P4W<'_, OdsrSpec> {
+    P4W::new(self, 4)
+  }
+  #[doc = "Bit 5 - Output Data Status"]
+  #[inline(always)]
+  pub fn p5(&mut self) -> P5W<'_, OdsrSpec> {
+    P5W::new(self, 5)
+  }
+  #[doc = "Bit 6 - Output Data Status"]
+  #[inline(always)]
+  pub fn p6(&mut self) -> P6W<'_, OdsrSpec> {
+    P6W::new(self, 6)
+  }
+  #[doc = "Bit 7 - Output Data Status"]
+  #[inline(always)]
+  pub fn p7(&mut self) -> P7W<'_, OdsrSpec> {
+    P7W::new(self, 7)
+  }
+  #[doc = "Bit 8 - Output Data Status"]
+  #[inline(always)]
+  pub fn p8(&mut self) -> P8W<'_, OdsrSpec> {
+    P8W::new(self, 8)
+  }
+  #[doc = "Bit 9 - Output Data Status"]
+  #[inline(always)]
+  pub fn p9(&mut self) -> P9W<'_, OdsrSpec> {
+    P9W::new(self, 9)
+  }
+  #[doc = "Bit 10 - Output Data Status"]
+  #[inline(always)]
+  pub fn p10(&mut self) -> P10W<'_, OdsrSpec> {
+    P10W::new(self, 10)
+  }
+  #[doc = "Bit 11 - Output Data Status"]
+  #[inline(always)]
+  pub fn p11(&mut self) -> P11W<'_, OdsrSpec> {
+    P11W::new(self, 11)
+  }
+  #[doc = "Bit 12 - Output Data Status"]
+  #[inline(always)]
+  pub fn p12(&mut self) -> P12W<'_, OdsrSpec> {
+    P12W::new(self, 12)
+  }
+  #[doc = "Bit 13 - Output Data Status"]
+  #[inline(always)]
+  pub fn p13(&mut self) -> P13W<'_, OdsrSpec> {
+    P13W::new(self, 13)
+  }
+  #[doc = "Bit 14 - Output Data Status"]
+  #[inline(always)]
+  pub fn p14(&mut self) -> P14W<'_, OdsrSpec> {
+    P14W::new(self, 14)
+  }
+  #[doc = "Bit 15 - Output Data Status"]
+  #[inline(always)]
+  pub fn p15(&mut self) -> P15W<'_, OdsrSpec> {
+    P15W::new(self, 15)
+  }
+  #[doc = "Bit 16 - Output Data Status"]
+  #[inline(always)]
+  pub fn p16(&mut self) -> P16W<'_, OdsrSpec> {
+    P16W::new(self, 16)
+  }
+  #[doc = "Bit 17 - Output Data Status"]
+  #[inline(always)]
+  pub fn p17(&mut self) -> P17W<'_, OdsrSpec> {
+    P17W::new(self, 17)
+  }
+  #[doc = "Bit 18 - Output Data Status"]
+  #[inline(always)]
+  pub fn p18(&mut self) -> P18W<'_, OdsrSpec> {
+    P18W::new(self, 18)
+  }
+  #[doc = "Bit 19 - Output Data Status"]
+  #[inline(always)]
+  pub fn p19(&mut self) -> P19W<'_, OdsrSpec> {
+    P19W::new(self, 19)
+  }
+  #[doc = "Bit 20 - Output Data Status"]
+  #[inline(always)]
+  pub fn p20(&mut self) -> P20W<'_, OdsrSpec> {
+    P20W::new(self, 20)
+  }
+  #[doc = "Bit 21 - Output Data Status"]
+  #[inline(always)]
+  pub fn p21(&mut self) -> P21W<'_, OdsrSpec> {
+    P21W::new(self, 21)
+  }
+  #[doc = "Bit 22 - Output Data Status"]
+  #[inline(always)]
+  pub fn p22(&mut self) -> P22W<'_, OdsrSpec> {
+    P22W::new(self, 22)
+  }
+  #[doc = "Bit 23 - Output Data Status"]
+  #[inline(always)]
+  pub fn p23(&mut self) -> P23W<'_, OdsrSpec> {
+    P23W::new(self, 23)
+  }
+  #[doc = "Bit 24 - Output Data Status"]
+  #[inline(always)]
+  pub fn p24(&mut self) -> P24W<'_, OdsrSpec> {
+    P24W::new(self, 24)
+  }
+  #[doc = "Bit 25 - Output Data Status"]
+  #[inline(always)]
+  pub fn p25(&mut self) -> P25W<'_, OdsrSpec> {
+    P25W::new(self, 25)
+  }
+  #[doc = "Bit 26 - Output Data Status"]
+  #[inline(always)]
+  pub fn p26(&mut self) -> P26W<'_, OdsrSpec> {
+    P26W::new(self, 26)
+  }
+  #[doc = "Bit 27 - Output Data Status"]
+  #[inline(always)]
+  pub fn p27(&mut self) -> P27W<'_, OdsrSpec> {
+    P27W::new(self, 27)
+  }
+  #[doc = "Bit 28 - Output Data Status"]
+  #[inline(always)]
+  pub fn p28(&mut self) -> P28W<'_, OdsrSpec> {
+    P28W::new(self, 28)
+  }
+  #[doc = "Bit 29 - Output Data Status"]
+  #[inline(always)]
+  pub fn p29(&mut self) -> P29W<'_, OdsrSpec> {
+    P29W::new(self, 29)
+  }
+  #[doc = "Bit 30 - Output Data Status"]
+  #[inline(always)]
+  pub fn p30(&mut self) -> P30W<'_, OdsrSpec> {
+    P30W::new(self, 30)
+  }
+  #[doc = "Bit 31 - Output Data Status"]
+  #[inline(always)]
+  pub fn p31(&mut self) -> P31W<'_, OdsrSpec> {
+    P31W::new(self, 31)
+  }
+}
+#[doc = "Output Data Status Register\n\nYou can [`read`](crate::Reg::read) this register and get [`odsr::R`](R). You can [`write_with_zero`](crate::Reg::write_with_zero) this register using [`odsr::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct OdsrSpec;
+impl crate::RegisterSpec for OdsrSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`odsr::R`](R) reader structure"]
+impl crate::Readable for OdsrSpec {}
+#[doc = "`write(|w| ..)` method takes [`odsr::W`](W) writer structure"]
+impl crate::Writable for OdsrSpec {
+  type Safety = crate::Unsafe;
 }

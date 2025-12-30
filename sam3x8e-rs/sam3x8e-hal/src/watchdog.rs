@@ -15,9 +15,39 @@
  *    along with sam3x8e-hal.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use crate::hal::watchdog;
+//! Watchdog module
+//!
+//! Note: Watchdog traits were removed from embedded-hal 1.0
+//! These are defined locally for HAL compatibility.
+
 use crate::pac::WDT;
 use crate::time::Hertz;
+
+/// Watchdog trait (removed from embedded-hal 1.0, defined locally)
+pub trait WatchdogFeed {
+  /// The error type
+  type Error;
+
+  /// Feeds the watchdog to prevent a reset
+  fn try_feed(&mut self) -> Result<(), Self::Error>;
+}
+
+/// Enable trait for watchdog (removed from embedded-hal 1.0, defined locally)
+pub trait WatchdogEnable {
+  /// The error type
+  type Error;
+
+  /// The unit of time used by this timer
+  type Time;
+
+  /// The target type after enabling
+  type Target;
+
+  /// Starts the watchdog with the given timeout
+  fn try_start<T>(self, period: T) -> Result<Self::Target, Self::Error>
+  where
+    T: Into<Self::Time>;
+}
 
 pub enum WatchdogResetMode {
   ResetAll,
@@ -85,7 +115,7 @@ impl Watchdog {
 
     let timeout = config.counter_value;
 
-    self.wdt.mr.write(|w| unsafe {
+    self.wdt.mr().write(|w| unsafe {
       let mut w = w.wdv().bits(timeout).wddis().clear_bit();
 
       w = match config.interrupt_enabled {
@@ -116,19 +146,21 @@ impl Watchdog {
   }
 }
 
-impl watchdog::Watchdog for Watchdog {
+impl WatchdogFeed for Watchdog {
   type Error = ();
 
   fn try_feed(&mut self) -> Result<(), Self::Error> {
-    self
-      .wdt
-      .cr
-      .write_with_zero(|w| w.key().passwd().wdrstt().set_bit());
+    unsafe {
+      self
+        .wdt
+        .cr()
+        .write_with_zero(|w| w.key().bits(0xA5).wdrstt().set_bit()); // WDT password
+    }
     Ok(())
   }
 }
 
-impl watchdog::Enable for Watchdog {
+impl WatchdogEnable for Watchdog {
   type Error = ();
   type Time = Hertz;
   type Target = Watchdog;

@@ -1,215 +1,200 @@
-#[doc = "Reader of register ECC_MD"]
-pub type R = crate::R<u32, super::ECC_MD>;
-#[doc = "Writer for register ECC_MD"]
-pub type W = crate::W<u32, super::ECC_MD>;
-#[doc = "Register ECC_MD `reset()`'s with value 0"]
-impl crate::ResetValue for super::ECC_MD {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0
-    }
-}
+#[doc = "Register `ECC_MD` reader"]
+pub type R = crate::R<EccMdSpec>;
+#[doc = "Register `ECC_MD` writer"]
+pub type W = crate::W<EccMdSpec>;
 #[doc = "ECC Page Size\n\nValue on reset: 0"]
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub enum ECC_PAGESIZE_A {
-    #[doc = "0: Main area 512 Words"]
-    PS512,
-    #[doc = "1: Main area 1024 Words"]
-    PS1024,
-    #[doc = "2: Main area 2048 Words"]
-    PS2048,
-    #[doc = "3: Main area 4096 Words"]
-    PS4096,
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[repr(u8)]
+pub enum EccPagesize {
+  #[doc = "0: Main area 512 Bytes + Spare area 16 Bytes = 528 Bytes"]
+  Ps512_16 = 0,
+  #[doc = "1: Main area 1024 Bytes + Spare area 32 Bytes = 1056 Bytes"]
+  Ps1024_32 = 1,
+  #[doc = "2: Main area 2048 Bytes + Spare area 64 Bytes = 2112 Bytes"]
+  Ps2048_64 = 2,
+  #[doc = "3: Main area 4096 Bytes + Spare area 128 Bytes = 4224 Bytes"]
+  Ps4096_128 = 3,
 }
-impl From<ECC_PAGESIZE_A> for u8 {
-    #[inline(always)]
-    fn from(variant: ECC_PAGESIZE_A) -> Self {
-        match variant {
-            ECC_PAGESIZE_A::PS512 => 0,
-            ECC_PAGESIZE_A::PS1024 => 1,
-            ECC_PAGESIZE_A::PS2048 => 2,
-            ECC_PAGESIZE_A::PS4096 => 3,
-        }
-    }
+impl From<EccPagesize> for u8 {
+  #[inline(always)]
+  fn from(variant: EccPagesize) -> Self {
+    variant as _
+  }
 }
-#[doc = "Reader of field `ECC_PAGESIZE`"]
-pub type ECC_PAGESIZE_R = crate::R<u8, ECC_PAGESIZE_A>;
-impl ECC_PAGESIZE_R {
-    #[doc = r"Get enumerated values variant"]
-    #[inline(always)]
-    pub fn variant(&self) -> ECC_PAGESIZE_A {
-        match self.bits {
-            0 => ECC_PAGESIZE_A::PS512,
-            1 => ECC_PAGESIZE_A::PS1024,
-            2 => ECC_PAGESIZE_A::PS2048,
-            3 => ECC_PAGESIZE_A::PS4096,
-            _ => unreachable!(),
-        }
-    }
-    #[doc = "Checks if the value of the field is `PS512`"]
-    #[inline(always)]
-    pub fn is_ps512(&self) -> bool {
-        *self == ECC_PAGESIZE_A::PS512
-    }
-    #[doc = "Checks if the value of the field is `PS1024`"]
-    #[inline(always)]
-    pub fn is_ps1024(&self) -> bool {
-        *self == ECC_PAGESIZE_A::PS1024
-    }
-    #[doc = "Checks if the value of the field is `PS2048`"]
-    #[inline(always)]
-    pub fn is_ps2048(&self) -> bool {
-        *self == ECC_PAGESIZE_A::PS2048
-    }
-    #[doc = "Checks if the value of the field is `PS4096`"]
-    #[inline(always)]
-    pub fn is_ps4096(&self) -> bool {
-        *self == ECC_PAGESIZE_A::PS4096
-    }
+impl crate::FieldSpec for EccPagesize {
+  type Ux = u8;
 }
-#[doc = "Write proxy for field `ECC_PAGESIZE`"]
-pub struct ECC_PAGESIZE_W<'a> {
-    w: &'a mut W,
+impl crate::IsEnum for EccPagesize {}
+#[doc = "Field `ECC_PAGESIZE` reader - ECC Page Size"]
+pub type EccPagesizeR = crate::FieldReader<EccPagesize>;
+impl EccPagesizeR {
+  #[doc = "Get enumerated values variant"]
+  #[inline(always)]
+  pub const fn variant(&self) -> EccPagesize {
+    match self.bits {
+      0 => EccPagesize::Ps512_16,
+      1 => EccPagesize::Ps1024_32,
+      2 => EccPagesize::Ps2048_64,
+      3 => EccPagesize::Ps4096_128,
+      _ => unreachable!(),
+    }
+  }
+  #[doc = "Main area 512 Bytes + Spare area 16 Bytes = 528 Bytes"]
+  #[inline(always)]
+  pub fn is_ps512_16(&self) -> bool {
+    *self == EccPagesize::Ps512_16
+  }
+  #[doc = "Main area 1024 Bytes + Spare area 32 Bytes = 1056 Bytes"]
+  #[inline(always)]
+  pub fn is_ps1024_32(&self) -> bool {
+    *self == EccPagesize::Ps1024_32
+  }
+  #[doc = "Main area 2048 Bytes + Spare area 64 Bytes = 2112 Bytes"]
+  #[inline(always)]
+  pub fn is_ps2048_64(&self) -> bool {
+    *self == EccPagesize::Ps2048_64
+  }
+  #[doc = "Main area 4096 Bytes + Spare area 128 Bytes = 4224 Bytes"]
+  #[inline(always)]
+  pub fn is_ps4096_128(&self) -> bool {
+    *self == EccPagesize::Ps4096_128
+  }
 }
-impl<'a> ECC_PAGESIZE_W<'a> {
-    #[doc = r"Writes `variant` to the field"]
-    #[inline(always)]
-    pub fn variant(self, variant: ECC_PAGESIZE_A) -> &'a mut W {
-        {
-            self.bits(variant.into())
-        }
-    }
-    #[doc = "Main area 512 Words"]
-    #[inline(always)]
-    pub fn ps512(self) -> &'a mut W {
-        self.variant(ECC_PAGESIZE_A::PS512)
-    }
-    #[doc = "Main area 1024 Words"]
-    #[inline(always)]
-    pub fn ps1024(self) -> &'a mut W {
-        self.variant(ECC_PAGESIZE_A::PS1024)
-    }
-    #[doc = "Main area 2048 Words"]
-    #[inline(always)]
-    pub fn ps2048(self) -> &'a mut W {
-        self.variant(ECC_PAGESIZE_A::PS2048)
-    }
-    #[doc = "Main area 4096 Words"]
-    #[inline(always)]
-    pub fn ps4096(self) -> &'a mut W {
-        self.variant(ECC_PAGESIZE_A::PS4096)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0x03) | ((value as u32) & 0x03);
-        self.w
-    }
+#[doc = "Field `ECC_PAGESIZE` writer - ECC Page Size"]
+pub type EccPagesizeW<'a, REG> = crate::FieldWriter<'a, REG, 2, EccPagesize, crate::Safe>;
+impl<'a, REG> EccPagesizeW<'a, REG>
+where
+  REG: crate::Writable + crate::RegisterSpec,
+  REG::Ux: From<u8>,
+{
+  #[doc = "Main area 512 Bytes + Spare area 16 Bytes = 528 Bytes"]
+  #[inline(always)]
+  pub fn ps512_16(self) -> &'a mut crate::W<REG> {
+    self.variant(EccPagesize::Ps512_16)
+  }
+  #[doc = "Main area 1024 Bytes + Spare area 32 Bytes = 1056 Bytes"]
+  #[inline(always)]
+  pub fn ps1024_32(self) -> &'a mut crate::W<REG> {
+    self.variant(EccPagesize::Ps1024_32)
+  }
+  #[doc = "Main area 2048 Bytes + Spare area 64 Bytes = 2112 Bytes"]
+  #[inline(always)]
+  pub fn ps2048_64(self) -> &'a mut crate::W<REG> {
+    self.variant(EccPagesize::Ps2048_64)
+  }
+  #[doc = "Main area 4096 Bytes + Spare area 128 Bytes = 4224 Bytes"]
+  #[inline(always)]
+  pub fn ps4096_128(self) -> &'a mut crate::W<REG> {
+    self.variant(EccPagesize::Ps4096_128)
+  }
 }
 #[doc = "Type of Correction\n\nValue on reset: 0"]
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub enum TYPCORREC_A {
-    #[doc = "0: 1 bit correction for a page of 512/1024/2048/4096 Bytes  (for 8 or 16-bit NAND Flash)"]
-    CPAGE,
-    #[doc = "1: 1 bit correction for 256 Bytes of data for a page of 512/2048/4096 bytes (for 8-bit NAND Flash only)"]
-    C256B,
-    #[doc = "2: 1 bit correction for 512 Bytes of data for a page of 512/2048/4096 bytes (for 8-bit NAND Flash only)"]
-    C512B,
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[repr(u8)]
+pub enum Typcorrec {
+  #[doc = "0: 1 bit correction for a page of 512/1024/2048/4096 Bytes (for 8 or 16-bit NAND Flash)"]
+  Cpage = 0,
+  #[doc = "1: 1 bit correction for 256 Bytes of data for a page of 512/2048/4096 bytes (for 8-bit NAND Flash only)"]
+  C256b = 1,
+  #[doc = "2: 1 bit correction for 512 Bytes of data for a page of 512/2048/4096 bytes (for 8-bit NAND Flash only)"]
+  C512b = 2,
 }
-impl From<TYPCORREC_A> for u8 {
-    #[inline(always)]
-    fn from(variant: TYPCORREC_A) -> Self {
-        match variant {
-            TYPCORREC_A::CPAGE => 0,
-            TYPCORREC_A::C256B => 1,
-            TYPCORREC_A::C512B => 2,
-        }
-    }
+impl From<Typcorrec> for u8 {
+  #[inline(always)]
+  fn from(variant: Typcorrec) -> Self {
+    variant as _
+  }
 }
-#[doc = "Reader of field `TYPCORREC`"]
-pub type TYPCORREC_R = crate::R<u8, TYPCORREC_A>;
-impl TYPCORREC_R {
-    #[doc = r"Get enumerated values variant"]
-    #[inline(always)]
-    pub fn variant(&self) -> crate::Variant<u8, TYPCORREC_A> {
-        use crate::Variant::*;
-        match self.bits {
-            0 => Val(TYPCORREC_A::CPAGE),
-            1 => Val(TYPCORREC_A::C256B),
-            2 => Val(TYPCORREC_A::C512B),
-            i => Res(i),
-        }
-    }
-    #[doc = "Checks if the value of the field is `CPAGE`"]
-    #[inline(always)]
-    pub fn is_cpage(&self) -> bool {
-        *self == TYPCORREC_A::CPAGE
-    }
-    #[doc = "Checks if the value of the field is `C256B`"]
-    #[inline(always)]
-    pub fn is_c256b(&self) -> bool {
-        *self == TYPCORREC_A::C256B
-    }
-    #[doc = "Checks if the value of the field is `C512B`"]
-    #[inline(always)]
-    pub fn is_c512b(&self) -> bool {
-        *self == TYPCORREC_A::C512B
-    }
+impl crate::FieldSpec for Typcorrec {
+  type Ux = u8;
 }
-#[doc = "Write proxy for field `TYPCORREC`"]
-pub struct TYPCORREC_W<'a> {
-    w: &'a mut W,
+impl crate::IsEnum for Typcorrec {}
+#[doc = "Field `TYPCORREC` reader - Type of Correction"]
+pub type TypcorrecR = crate::FieldReader<Typcorrec>;
+impl TypcorrecR {
+  #[doc = "Get enumerated values variant"]
+  #[inline(always)]
+  pub const fn variant(&self) -> Option<Typcorrec> {
+    match self.bits {
+      0 => Some(Typcorrec::Cpage),
+      1 => Some(Typcorrec::C256b),
+      2 => Some(Typcorrec::C512b),
+      _ => None,
+    }
+  }
+  #[doc = "1 bit correction for a page of 512/1024/2048/4096 Bytes (for 8 or 16-bit NAND Flash)"]
+  #[inline(always)]
+  pub fn is_cpage(&self) -> bool {
+    *self == Typcorrec::Cpage
+  }
+  #[doc = "1 bit correction for 256 Bytes of data for a page of 512/2048/4096 bytes (for 8-bit NAND Flash only)"]
+  #[inline(always)]
+  pub fn is_c256b(&self) -> bool {
+    *self == Typcorrec::C256b
+  }
+  #[doc = "1 bit correction for 512 Bytes of data for a page of 512/2048/4096 bytes (for 8-bit NAND Flash only)"]
+  #[inline(always)]
+  pub fn is_c512b(&self) -> bool {
+    *self == Typcorrec::C512b
+  }
 }
-impl<'a> TYPCORREC_W<'a> {
-    #[doc = r"Writes `variant` to the field"]
-    #[inline(always)]
-    pub fn variant(self, variant: TYPCORREC_A) -> &'a mut W {
-        unsafe { self.bits(variant.into()) }
-    }
-    #[doc = "1 bit correction for a page of 512/1024/2048/4096 Bytes (for 8 or 16-bit NAND Flash)"]
-    #[inline(always)]
-    pub fn cpage(self) -> &'a mut W {
-        self.variant(TYPCORREC_A::CPAGE)
-    }
-    #[doc = "1 bit correction for 256 Bytes of data for a page of 512/2048/4096 bytes (for 8-bit NAND Flash only)"]
-    #[inline(always)]
-    pub fn c256b(self) -> &'a mut W {
-        self.variant(TYPCORREC_A::C256B)
-    }
-    #[doc = "1 bit correction for 512 Bytes of data for a page of 512/2048/4096 bytes (for 8-bit NAND Flash only)"]
-    #[inline(always)]
-    pub fn c512b(self) -> &'a mut W {
-        self.variant(TYPCORREC_A::C512B)
-    }
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u8) -> &'a mut W {
-        self.w.bits = (self.w.bits & !(0x03 << 4)) | (((value as u32) & 0x03) << 4);
-        self.w
-    }
+#[doc = "Field `TYPCORREC` writer - Type of Correction"]
+pub type TypcorrecW<'a, REG> = crate::FieldWriter<'a, REG, 2, Typcorrec>;
+impl<'a, REG> TypcorrecW<'a, REG>
+where
+  REG: crate::Writable + crate::RegisterSpec,
+  REG::Ux: From<u8>,
+{
+  #[doc = "1 bit correction for a page of 512/1024/2048/4096 Bytes (for 8 or 16-bit NAND Flash)"]
+  #[inline(always)]
+  pub fn cpage(self) -> &'a mut crate::W<REG> {
+    self.variant(Typcorrec::Cpage)
+  }
+  #[doc = "1 bit correction for 256 Bytes of data for a page of 512/2048/4096 bytes (for 8-bit NAND Flash only)"]
+  #[inline(always)]
+  pub fn c256b(self) -> &'a mut crate::W<REG> {
+    self.variant(Typcorrec::C256b)
+  }
+  #[doc = "1 bit correction for 512 Bytes of data for a page of 512/2048/4096 bytes (for 8-bit NAND Flash only)"]
+  #[inline(always)]
+  pub fn c512b(self) -> &'a mut crate::W<REG> {
+    self.variant(Typcorrec::C512b)
+  }
 }
 impl R {
-    #[doc = "Bits 0:1 - ECC Page Size"]
-    #[inline(always)]
-    pub fn ecc_pagesize(&self) -> ECC_PAGESIZE_R {
-        ECC_PAGESIZE_R::new((self.bits & 0x03) as u8)
-    }
-    #[doc = "Bits 4:5 - Type of Correction"]
-    #[inline(always)]
-    pub fn typcorrec(&self) -> TYPCORREC_R {
-        TYPCORREC_R::new(((self.bits >> 4) & 0x03) as u8)
-    }
+  #[doc = "Bits 0:1 - ECC Page Size"]
+  #[inline(always)]
+  pub fn ecc_pagesize(&self) -> EccPagesizeR {
+    EccPagesizeR::new((self.bits & 3) as u8)
+  }
+  #[doc = "Bits 4:5 - Type of Correction"]
+  #[inline(always)]
+  pub fn typcorrec(&self) -> TypcorrecR {
+    TypcorrecR::new(((self.bits >> 4) & 3) as u8)
+  }
 }
 impl W {
-    #[doc = "Bits 0:1 - ECC Page Size"]
-    #[inline(always)]
-    pub fn ecc_pagesize(&mut self) -> ECC_PAGESIZE_W {
-        ECC_PAGESIZE_W { w: self }
-    }
-    #[doc = "Bits 4:5 - Type of Correction"]
-    #[inline(always)]
-    pub fn typcorrec(&mut self) -> TYPCORREC_W {
-        TYPCORREC_W { w: self }
-    }
+  #[doc = "Bits 0:1 - ECC Page Size"]
+  #[inline(always)]
+  pub fn ecc_pagesize(&mut self) -> EccPagesizeW<'_, EccMdSpec> {
+    EccPagesizeW::new(self, 0)
+  }
+  #[doc = "Bits 4:5 - Type of Correction"]
+  #[inline(always)]
+  pub fn typcorrec(&mut self) -> TypcorrecW<'_, EccMdSpec> {
+    TypcorrecW::new(self, 4)
+  }
 }
+#[doc = "SMC ECC Mode Register\n\nYou can [`read`](crate::Reg::read) this register and get [`ecc_md::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ecc_md::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct EccMdSpec;
+impl crate::RegisterSpec for EccMdSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`ecc_md::R`](R) reader structure"]
+impl crate::Readable for EccMdSpec {}
+#[doc = "`write(|w| ..)` method takes [`ecc_md::W`](W) writer structure"]
+impl crate::Writable for EccMdSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets ECC_MD to value 0"]
+impl crate::Resettable for EccMdSpec {}

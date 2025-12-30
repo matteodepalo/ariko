@@ -1,40 +1,37 @@
-#[doc = "Reader of register AR"]
-pub type R = crate::R<u32, super::AR>;
-#[doc = "Writer for register AR"]
-pub type W = crate::W<u32, super::AR>;
-#[doc = "Register AR `reset()`'s with value 0xffff_ffff"]
-impl crate::ResetValue for super::AR {
-    type Type = u32;
-    #[inline(always)]
-    fn reset_value() -> Self::Type {
-        0xffff_ffff
-    }
-}
-#[doc = "Reader of field `ALMV`"]
-pub type ALMV_R = crate::R<u32, u32>;
-#[doc = "Write proxy for field `ALMV`"]
-pub struct ALMV_W<'a> {
-    w: &'a mut W,
-}
-impl<'a> ALMV_W<'a> {
-    #[doc = r"Writes raw bits to the field"]
-    #[inline(always)]
-    pub unsafe fn bits(self, value: u32) -> &'a mut W {
-        self.w.bits = (self.w.bits & !0xffff_ffff) | ((value as u32) & 0xffff_ffff);
-        self.w
-    }
-}
+#[doc = "Register `AR` reader"]
+pub type R = crate::R<ArSpec>;
+#[doc = "Register `AR` writer"]
+pub type W = crate::W<ArSpec>;
+#[doc = "Field `ALMV` reader - Alarm Value"]
+pub type AlmvR = crate::FieldReader<u32>;
+#[doc = "Field `ALMV` writer - Alarm Value"]
+pub type AlmvW<'a, REG> = crate::FieldWriter<'a, REG, 32, u32>;
 impl R {
-    #[doc = "Bits 0:31 - Alarm Value"]
-    #[inline(always)]
-    pub fn almv(&self) -> ALMV_R {
-        ALMV_R::new((self.bits & 0xffff_ffff) as u32)
-    }
+  #[doc = "Bits 0:31 - Alarm Value"]
+  #[inline(always)]
+  pub fn almv(&self) -> AlmvR {
+    AlmvR::new(self.bits)
+  }
 }
 impl W {
-    #[doc = "Bits 0:31 - Alarm Value"]
-    #[inline(always)]
-    pub fn almv(&mut self) -> ALMV_W {
-        ALMV_W { w: self }
-    }
+  #[doc = "Bits 0:31 - Alarm Value"]
+  #[inline(always)]
+  pub fn almv(&mut self) -> AlmvW<'_, ArSpec> {
+    AlmvW::new(self, 0)
+  }
+}
+#[doc = "Alarm Register\n\nYou can [`read`](crate::Reg::read) this register and get [`ar::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ar::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct ArSpec;
+impl crate::RegisterSpec for ArSpec {
+  type Ux = u32;
+}
+#[doc = "`read()` method returns [`ar::R`](R) reader structure"]
+impl crate::Readable for ArSpec {}
+#[doc = "`write(|w| ..)` method takes [`ar::W`](W) writer structure"]
+impl crate::Writable for ArSpec {
+  type Safety = crate::Unsafe;
+}
+#[doc = "`reset()` method sets AR to value 0xffff_ffff"]
+impl crate::Resettable for ArSpec {
+  const RESET_VALUE: u32 = 0xffff_ffff;
 }
