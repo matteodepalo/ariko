@@ -96,3 +96,84 @@ impl JHD1802 {
     self.send_byte(value, false);
   }
 }
+
+// Helper function for cursor position calculation (testable without hardware)
+pub fn calculate_cursor_address(col: u8, row: u8) -> u8 {
+  if row == 0 {
+    col | 0x80
+  } else {
+    col | 0xc0
+  }
+}
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+
+  #[test]
+  fn test_command_constants() {
+    // Verify LCD command values match HD44780 spec
+    assert_eq!(CMD_CLEAR_DISPLAY, 0x01);
+    assert_eq!(CMD_ENTRY_MODE_SET, 0x04);
+    assert_eq!(CMD_DISPLAY_CONTROL, 0x08);
+    assert_eq!(CMD_FUNCTION_SET, 0x20);
+  }
+
+  #[test]
+  fn test_entry_mode_bits() {
+    assert_eq!(ENTRY_MODE_INCREMENT, 0b00000010);
+  }
+
+  #[test]
+  fn test_display_control_bits() {
+    assert_eq!(DISPLAY_CONTROL_DISPLAY_ON, 0b00000100);
+    assert_eq!(DISPLAY_CONTROL_CURSOR_ON, 0b00000010);
+    assert_eq!(DISPLAY_CONTROL_CURSOR_BLINKING_ON, 0b00000001);
+  }
+
+  #[test]
+  fn test_function_set_bits() {
+    assert_eq!(FUNCTION_SET_2_LINES, 0b00001000);
+  }
+
+  #[test]
+  fn test_control_byte() {
+    // RS bit is bit 6
+    assert_eq!(CONTROL_BYTE_RS, 0b01000000);
+  }
+
+  #[test]
+  fn test_cursor_position_row_0() {
+    // Row 0 starts at DDRAM address 0x00, with bit 7 set
+    assert_eq!(calculate_cursor_address(0, 0), 0x80);
+    assert_eq!(calculate_cursor_address(1, 0), 0x81);
+    assert_eq!(calculate_cursor_address(15, 0), 0x8F);
+  }
+
+  #[test]
+  fn test_cursor_position_row_1() {
+    // Row 1 starts at DDRAM address 0x40, with bit 7 set = 0xC0
+    assert_eq!(calculate_cursor_address(0, 1), 0xC0);
+    assert_eq!(calculate_cursor_address(1, 1), 0xC1);
+    assert_eq!(calculate_cursor_address(15, 1), 0xCF);
+  }
+
+  #[test]
+  fn test_init_commands() {
+    // Test that initialization commands are correct
+    let function_set_cmd = CMD_FUNCTION_SET | INIT_FUNCTION_SET;
+    assert_eq!(function_set_cmd, 0x28); // 0x20 | 0x08 = 2-line mode
+
+    let entry_mode_cmd = CMD_ENTRY_MODE_SET | ENTRY_MODE_INCREMENT;
+    assert_eq!(entry_mode_cmd, 0x06); // 0x04 | 0x02 = increment, no shift
+
+    let display_on_cmd = CMD_DISPLAY_CONTROL | INIT_DISPLAY_CONTROL | DISPLAY_CONTROL_DISPLAY_ON;
+    assert_eq!(display_on_cmd, 0x0C); // 0x08 | 0x00 | 0x04 = display on, cursor off
+  }
+
+  #[test]
+  fn test_device_address() {
+    // JHD1802 I2C address
+    assert_eq!(DEVICE_ADDRESS, 0x3E);
+  }
+}

@@ -137,3 +137,85 @@ impl GenericDeviceClass {
     Ok(Device::Generic(generic_device.clone()))
   }
 }
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+
+  #[test]
+  fn test_device_descriptor_size() {
+    // USB Device Descriptor is 18 bytes
+    assert_eq!(size_of::<DeviceDescriptor>(), 18);
+  }
+
+  #[test]
+  fn test_device_descriptor_parsing() {
+    // Example USB device descriptor bytes (CP210x UART Bridge)
+    let bytes: [u8; 18] = [
+      0x12,       // bLength (18)
+      0x01,       // bDescriptorType (Device)
+      0x00, 0x02, // bcdUSB (2.00)
+      0x00,       // bDeviceClass
+      0x00,       // bDeviceSubClass
+      0x00,       // bDeviceProtocol
+      0x40,       // bMaxPacketSize0 (64)
+      0xc4, 0x10, // idVendor (0x10c4 - Silicon Labs)
+      0x60, 0xea, // idProduct (0xea60 - CP210x)
+      0x00, 0x01, // bcdDevice (1.00)
+      0x01,       // iManufacturer
+      0x02,       // iProduct
+      0x03,       // iSerialNumber
+      0x01,       // bNumConfigurations
+    ];
+
+    let descriptor = DeviceDescriptor::from_bytes(bytes);
+
+    assert_eq!(descriptor.length(), 0x12);
+    assert_eq!(descriptor.kind(), 0x01);
+    assert_eq!(descriptor.usb_bcd(), 0x0200);
+    assert_eq!(descriptor.device_class(), 0x00);
+    assert_eq!(descriptor.device_sub_class(), 0x00);
+    assert_eq!(descriptor.device_protocol(), 0x00);
+    assert_eq!(descriptor.max_packet_size(), 64);
+    assert_eq!(descriptor.vendor_id(), 0x10c4);
+    assert_eq!(descriptor.product_id(), 0xea60);
+    assert_eq!(descriptor.device_bcd(), 0x0100);
+    assert_eq!(descriptor.manufacturer_index(), 1);
+    assert_eq!(descriptor.product_index(), 2);
+    assert_eq!(descriptor.serial_number_index(), 3);
+    assert_eq!(descriptor.num_configurations(), 1);
+  }
+
+  #[test]
+  fn test_cp210x_device_identification() {
+    // CP210x has vendor_id 0x10c4 and product_id 0xea60
+    let bytes: [u8; 18] = [
+      0x12, 0x01, 0x00, 0x02, 0x00, 0x00, 0x00, 0x40,
+      0xc4, 0x10, // vendor_id = 0x10c4
+      0x60, 0xea, // product_id = 0xea60
+      0x00, 0x01, 0x01, 0x02, 0x03, 0x01,
+    ];
+
+    let descriptor = DeviceDescriptor::from_bytes(bytes);
+
+    // This is how CP210x device is identified
+    assert_eq!(descriptor.vendor_id(), 0x10c4);
+    assert_eq!(descriptor.product_id(), 0xea60);
+  }
+
+  #[test]
+  fn test_generic_device_default() {
+    let device = GenericDevice::default();
+    assert_eq!(device.address, 0);
+  }
+
+  #[test]
+  fn test_device_descriptor_zero_bytes() {
+    let bytes: [u8; 18] = [0; 18];
+    let descriptor = DeviceDescriptor::from_bytes(bytes);
+
+    assert_eq!(descriptor.length(), 0);
+    assert_eq!(descriptor.vendor_id(), 0);
+    assert_eq!(descriptor.product_id(), 0);
+  }
+}

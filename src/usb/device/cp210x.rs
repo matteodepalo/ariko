@@ -219,3 +219,81 @@ impl CP210xDeviceClass {
     }
   }
 }
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+
+  #[test]
+  fn test_status_response_size() {
+    // StatusResponse should be 19 bytes based on the bitfield definition
+    // 4 + 4 + 4 + 4 + 1 + 1 + 1 = 19 bytes
+    assert_eq!(size_of::<StatusResponse>(), 19);
+  }
+
+  #[test]
+  fn test_status_response_empty_queue() {
+    // All zeros - empty queue, no errors
+    let bytes: [u8; 19] = [0; 19];
+    let response = StatusResponse::from_bytes(bytes);
+
+    assert_eq!(response.errors(), 0);
+    assert_eq!(response.hold_reasons(), 0);
+    assert_eq!(response.amount_in_in_queue(), 0);
+    assert_eq!(response.amount_in_out_queue(), 0);
+    assert_eq!(response.eof_received(), 0);
+    assert_eq!(response.wait_for_immediate(), 0);
+  }
+
+  #[test]
+  fn test_status_response_with_data_in_queue() {
+    // Create a response with some data in the input queue
+    let mut bytes: [u8; 19] = [0; 19];
+    // Set amount_in_in_queue to 64 (bytes 8-11, little-endian)
+    bytes[8] = 64;
+    bytes[9] = 0;
+    bytes[10] = 0;
+    bytes[11] = 0;
+
+    let response = StatusResponse::from_bytes(bytes);
+
+    assert_eq!(response.amount_in_in_queue(), 64);
+    assert_eq!(response.amount_in_out_queue(), 0);
+  }
+
+  #[test]
+  fn test_status_response_with_errors() {
+    let mut bytes: [u8; 19] = [0; 19];
+    // Set errors field (bytes 0-3, little-endian) to 0x01 (some error)
+    bytes[0] = 0x01;
+
+    let response = StatusResponse::from_bytes(bytes);
+
+    assert_eq!(response.errors(), 1);
+  }
+
+  #[test]
+  fn test_status_response_eof_received() {
+    let mut bytes: [u8; 19] = [0; 19];
+    // Set eof_received (byte 16) to 1
+    bytes[16] = 1;
+
+    let response = StatusResponse::from_bytes(bytes);
+
+    assert_eq!(response.eof_received(), 1);
+  }
+
+  #[test]
+  fn test_status_response_large_queue() {
+    let mut bytes: [u8; 19] = [0; 19];
+    // Set amount_in_in_queue to 1024 (0x400)
+    bytes[8] = 0x00;
+    bytes[9] = 0x04;
+    bytes[10] = 0x00;
+    bytes[11] = 0x00;
+
+    let response = StatusResponse::from_bytes(bytes);
+
+    assert_eq!(response.amount_in_in_queue(), 1024);
+  }
+}

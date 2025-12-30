@@ -440,3 +440,116 @@ impl<'a> DataInPacket<'a> {
     Message::new(index, self.0.data()).receive()
   }
 }
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+
+  #[test]
+  fn test_setup_request_type_default() {
+    let rt = SetupRequestType::default();
+
+    assert!(matches!(rt.recipient(), SetupRequestRecipient::Device));
+    assert!(matches!(rt.direction(), SetupRequestDirection::DeviceToHost));
+    assert!(matches!(rt.kind(), SetupRequestKind::Standard));
+  }
+
+  #[test]
+  fn test_setup_request_type_builder() {
+    let rt = SetupRequestType::new()
+      .with_recipient(SetupRequestRecipient::Interface)
+      .with_direction(SetupRequestDirection::HostToDevice)
+      .with_kind(SetupRequestKind::Vendor);
+
+    assert!(matches!(rt.recipient(), SetupRequestRecipient::Interface));
+    assert!(matches!(rt.direction(), SetupRequestDirection::HostToDevice));
+    assert!(matches!(rt.kind(), SetupRequestKind::Vendor));
+  }
+
+  #[test]
+  fn test_setup_request_type_byte_layout() {
+    // USB spec: bmRequestType byte layout
+    // Bits 0-4: Recipient (Device=0, Interface=1, Endpoint=2, Other=3)
+    // Bits 5-6: Type (Standard=0, Class=1, Vendor=2)
+    // Bit 7: Direction (HostToDevice=0, DeviceToHost=1)
+
+    // Device, Standard, DeviceToHost = 0b10000000 = 0x80
+    let rt = SetupRequestType::default();
+    assert_eq!(rt.into_bytes()[0], 0x80);
+
+    // Interface, Vendor, HostToDevice = 0b01000001 = 0x41
+    let rt = SetupRequestType::new()
+      .with_recipient(SetupRequestRecipient::Interface)
+      .with_direction(SetupRequestDirection::HostToDevice)
+      .with_kind(SetupRequestKind::Vendor);
+    assert_eq!(rt.into_bytes()[0], 0x41);
+
+    // Endpoint, Class, DeviceToHost = 0b10100010 = 0xA2
+    let rt = SetupRequestType::new()
+      .with_recipient(SetupRequestRecipient::Endpoint)
+      .with_direction(SetupRequestDirection::DeviceToHost)
+      .with_kind(SetupRequestKind::Class);
+    assert_eq!(rt.into_bytes()[0], 0xA2);
+  }
+
+  #[test]
+  fn test_setup_packet_new() {
+    let rt = SetupRequestType::default();
+    let packet = SetupPacket::new(rt, 0x06, [0x00, 0x01], 0x0000);
+
+    assert_eq!(packet.request, 0x06);
+    assert_eq!(packet.value, [0x00, 0x01]);
+    assert_eq!(packet.index, 0x0000);
+    assert_eq!(packet.length, 0); // Default length is 0
+  }
+
+  #[test]
+  fn test_setup_packet_size() {
+    // SetupPacket should be 8 bytes per USB spec
+    assert_eq!(size_of::<SetupPacket>(), 8);
+  }
+
+  #[test]
+  fn test_setup_packet_byte_layout() {
+    // USB Setup Packet layout (8 bytes):
+    // Byte 0: bmRequestType
+    // Byte 1: bRequest
+    // Bytes 2-3: wValue (little-endian)
+    // Bytes 4-5: wIndex (little-endian)
+    // Bytes 6-7: wLength (little-endian)
+
+    let rt = SetupRequestType::default(); // 0x80
+    let mut packet = SetupPacket::new(rt, 0x06, [0x00, 0x01], 0x0409);
+    packet.length = 0x0012;
+
+    // Get raw bytes
+    let bytes: &[u8] = unsafe {
+      core::slice::from_raw_parts(
+        &packet as *const SetupPacket as *const u8,
+        size_of::<SetupPacket>()
+      )
+    };
+
+    assert_eq!(bytes[0], 0x80); // bmRequestType
+    assert_eq!(bytes[1], 0x06); // bRequest (GET_DESCRIPTOR)
+    assert_eq!(bytes[2], 0x00); // wValue low byte
+    assert_eq!(bytes[3], 0x01); // wValue high byte (descriptor type)
+    assert_eq!(bytes[4], 0x09); // wIndex low byte
+    assert_eq!(bytes[5], 0x04); // wIndex high byte
+    assert_eq!(bytes[6], 0x12); // wLength low byte
+    assert_eq!(bytes[7], 0x00); // wLength high byte
+  }
+
+  #[test]
+  fn test_get_device_descriptor_packet() {
+    // Standard GET_DESCRIPTOR request for device descriptor
+    let rt = SetupRequestType::default();
+    let packet = SetupPacket::new(rt, 0x06, [0x00, 0x01], 0x0000);
+
+    assert!(matches!(packet.request_type.direction(), SetupRequestDirection::DeviceToHost));
+    assert!(matches!(packet.request_type.kind(), SetupRequestKind::Standard));
+    assert!(matches!(packet.request_type.recipient(), SetupRequestRecipient::Device));
+    assert_eq!(packet.request, 0x06); // GET_DESCRIPTOR
+    assert_eq!(packet.value[1], 0x01); // Device descriptor type
+  }
+}

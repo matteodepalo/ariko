@@ -8,3 +8,7 @@ pub mod logger;
 pub mod peripherals;
 pub mod serial;
 pub mod usb;
+
+// Enable std for tests (tests run on host, not embedded target)
+#[cfg(test)]
+extern crate std;
