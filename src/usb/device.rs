@@ -1,12 +1,15 @@
 #![allow(dead_code)]
 
-use crate::usb::device::cp210x::{CP210xDevice, CP210xDeviceClass};
-use crate::usb::device::generic::{GenericDevice, GenericDeviceClass};
-use crate::usb::Error;
-use log::debug;
-
 mod cp210x;
 mod generic;
+
+// Re-export CP210xDevice for use in main
+pub use cp210x::CP210xDevice;
+
+use cp210x::CP210xDeviceClass;
+use generic::{GenericDevice, GenericDeviceClass};
+use crate::usb::Error;
+use log::debug;
 
 const DEVICE_CLASSES: [DeviceClass; 2] = [
   DeviceClass::CP210x(CP210xDeviceClass),

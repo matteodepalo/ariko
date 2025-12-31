@@ -8,6 +8,7 @@ use core::panic::PanicInfo;
 
 use certabo::buzzer::Buzzer;
 use certabo::certabo::calibration::CalibrationData;
+use certabo::certabo::buffer::MAX_LINE_LEN;
 use certabo::certabo::leds::LedState;
 use certabo::certabo::protocol::RfidReading;
 use certabo::display::Display;
@@ -17,7 +18,7 @@ use certabo::i2c::I2C;
 use certabo::logger::Logger;
 use certabo::peripherals::Peripherals;
 use certabo::serial::Serial;
-use certabo::usb::USB;
+use certabo::usb::{CP210xDevice, USB};
 use core::fmt::Write;
 use cortex_m_rt::entry;
 use embedded_hal::delay::DelayNs;
@@ -49,6 +50,7 @@ struct App {
   game: GameState,
   last_reading: Option<RfidReading>,
   led_state: LedState,
+  led_dirty: bool,
   last_tick_ms: u32,
 }
 
@@ -60,6 +62,7 @@ impl App {
       game: GameState::new(),
       last_reading: None,
       led_state: LedState::new(),
+      led_dirty: false,
       last_tick_ms: 0,
     }
   }
@@ -187,7 +190,7 @@ impl App {
           for dest in destinations {
             self.led_state.set(dest);
           }
-          // TODO: Send LED state to board via USB
+          self.led_dirty = true;
         }
       }
 
@@ -198,6 +201,7 @@ impl App {
           self.game.make_move(from, to);
           Buzzer::with(|b| b.move_sound());
           self.led_state.clear_all();
+          self.led_dirty = true;
         } else {
           // Invalid move
           Buzzer::with(|b| b.error_sound());
@@ -324,15 +328,21 @@ fn main() -> ! {
     });
 
     // Poll USB for board data
-    USB::with(|usb| {
-      usb.poll();
-      // TODO: Check if data received and parse as RfidReading
-      // if let Some(data) = usb.get_received_data() {
-      //   if let Some(reading) = RfidReading::parse(&data) {
-      //     app.on_board_reading(reading);
-      //   }
-      // }
-    });
+    USB::with(|usb| usb.poll());
+
+    // Check for complete RFID reading from Certabo board
+    let mut line_buffer = [0u8; MAX_LINE_LEN];
+    if let Some(len) = CP210xDevice::read_line(&mut line_buffer) {
+      if let Some(reading) = RfidReading::parse(&line_buffer[..len]) {
+        app.on_board_reading(reading);
+      }
+    }
+
+    // Send LED updates to board when changed
+    if app.led_dirty {
+      let _ = CP210xDevice::send_leds(app.led_state.as_bytes());
+      app.led_dirty = false;
+    }
 
     // Update timer (approximate timing using delay)
     // In real implementation, use RTT or hardware timer

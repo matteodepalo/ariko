@@ -14,6 +14,9 @@ mod device;
 mod packet;
 mod pipe;
 
+// Re-export CP210xDevice for use in main
+pub use device::CP210xDevice;
+
 static USB_INSTANCE: Mutex<RefCell<Option<USB>>> = Mutex::new(RefCell::new(None));
 
 const CONNECTION_DELAY: u32 = 200;

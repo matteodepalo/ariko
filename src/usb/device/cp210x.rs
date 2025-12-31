@@ -1,6 +1,6 @@
 #![allow(unused_parens)] // modular_bitfield macro generates spurious warnings
 
-use crate::peripherals::Peripherals;
+use crate::certabo::buffer::LineBuffer;
 use crate::usb::device::generic::GenericDevice;
 use crate::usb::packet::{
   SetupPacket, SetupRequestDirection, SetupRequestKind, SetupRequestRecipient, SetupRequestType,
@@ -10,7 +10,6 @@ use crate::usb::{Device, Error, USB};
 use core::cell::RefCell;
 use core::mem::size_of;
 use critical_section::Mutex;
-use embedded_hal::delay::DelayNs;
 use log::debug;
 use modular_bitfield::prelude::*;
 
@@ -26,8 +25,12 @@ pub struct StatusResponse {
   pub reserved: u8,
 }
 
-// Store the pipe index instead of a reference
+// Store pipe indices
 static IN_PIPE_INDEX: Mutex<RefCell<Option<u8>>> = Mutex::new(RefCell::new(None));
+static OUT_PIPE_INDEX: Mutex<RefCell<Option<u8>>> = Mutex::new(RefCell::new(None));
+
+// Line buffer for accumulating RFID data
+static LINE_BUFFER: Mutex<RefCell<LineBuffer>> = Mutex::new(RefCell::new(LineBuffer::new()));
 
 #[derive(Debug)]
 pub struct CP210xDevice {
@@ -38,7 +41,7 @@ pub struct CP210xDeviceClass;
 
 impl CP210xDevice {
   pub fn poll(&self) -> Result<(), Error> {
-    let mut buffer = [0_u8; size_of::<StatusResponse>()];
+    let mut status_buffer = [0_u8; size_of::<StatusResponse>()];
 
     let setup_packet = SetupPacket::new(
       SetupRequestType::new()
@@ -50,55 +53,85 @@ impl CP210xDevice {
       0,
     );
 
-    debug!("[USB :: Device :: CP210x] Get comm status for {:?}", self);
-
     self
       .generic_device
-      .control(&setup_packet, Some(&mut buffer))?;
-    let status_response = StatusResponse::from_bytes(buffer);
+      .control(&setup_packet, Some(&mut status_buffer))?;
+    let status_response = StatusResponse::from_bytes(status_buffer);
 
-    debug!(
-      "[USB :: Device :: CP210x] Status response {:?}",
-      status_response
-    );
-
-    if status_response.amount_in_in_queue() > 0 {
-      let mut buffer = [0_u8; 512];
+    let queue_len = status_response.amount_in_in_queue();
+    if queue_len > 0 {
+      let mut data_buffer = [0_u8; 512];
+      let bytes_to_read = (queue_len as usize).min(512);
 
       USB::with(|usb| {
-        let pipe_index = critical_section::with(|cs| {
-          *IN_PIPE_INDEX.borrow(cs).borrow()
-        }).expect("IN_PIPE not configured");
+        let pipe_index = critical_section::with(|cs| *IN_PIPE_INDEX.borrow(cs).borrow())
+          .expect("IN_PIPE not configured");
 
         if let Some(pipe) = usb.get_pipe(pipe_index) {
-          pipe.as_stream_in().in_transfer(&mut buffer)
+          pipe.as_stream_in().in_transfer(&mut data_buffer[..bytes_to_read])
         } else {
           Err(Error::TooManyPipes)
         }
       })?;
-      debug!("[USB] Buffer: {:?}", buffer);
 
-      let setup_packet = SetupPacket::new(
-        SetupRequestType::new()
-          .with_direction(SetupRequestDirection::HostToDevice)
-          .with_recipient(SetupRequestRecipient::Interface)
-          .with_kind(SetupRequestKind::Vendor),
-        18,
-        [0x0a, 0],
-        0,
-      );
+      // Push received data to line buffer
+      critical_section::with(|cs| {
+        LINE_BUFFER
+          .borrow(cs)
+          .borrow_mut()
+          .push(&data_buffer[..bytes_to_read]);
+      });
 
-      debug!("[USB :: Device :: CP210x] Purged receive queue");
-
-      self.generic_device.control(&setup_packet, None)?;
+      debug!("[USB :: CP210x] Received {} bytes", bytes_to_read);
     }
-
-    Peripherals::with(|p| p.delay.delay_ms(1000_u32));
 
     Ok(())
   }
 
   pub fn release(&self) {}
+}
+
+impl CP210xDevice {
+  /// Check if a complete line is available from the Certabo board
+  pub fn has_line() -> bool {
+    critical_section::with(|cs| LINE_BUFFER.borrow(cs).borrow().has_complete_line())
+  }
+
+  /// Read a complete line from the Certabo board
+  ///
+  /// Returns the line data and length if available.
+  pub fn read_line(out: &mut [u8]) -> Option<usize> {
+    critical_section::with(|cs| LINE_BUFFER.borrow(cs).borrow_mut().take_line_into(out))
+  }
+
+  /// Send LED state to the Certabo board
+  ///
+  /// Takes 8 bytes, one per file (a-h), where each bit represents a rank.
+  pub fn send_leds(data: &[u8; 8]) -> Result<(), Error> {
+    USB::with(|usb| {
+      let pipe_index = critical_section::with(|cs| *OUT_PIPE_INDEX.borrow(cs).borrow());
+
+      match pipe_index {
+        Some(index) => {
+          if let Some(pipe) = usb.get_pipe(index) {
+            let mut buf = *data;
+            pipe.as_stream_out().out_transfer(&mut buf)
+          } else {
+            Err(Error::TooManyPipes)
+          }
+        }
+        None => {
+          debug!("[USB :: CP210x] OUT pipe not configured");
+          Ok(()) // Silently ignore if not configured
+        }
+      }
+    })
+  }
+
+  /// Clear the line buffer
+  pub fn clear_buffer() {
+    critical_section::with(|cs| LINE_BUFFER.borrow(cs).borrow_mut().clear());
+  }
 }
 
 impl CP210xDeviceClass {
@@ -183,7 +216,7 @@ impl CP210xDeviceClass {
           [0, 0],
           0,
         ),
-        Some(&mut [0, 0xc2, 0x01, 0]),
+        Some(&mut [0x00, 0x96, 0x00, 0x00]),  // 38400 baud for Certabo
       )?;
 
       generic_device.control(
@@ -204,13 +237,25 @@ impl CP210xDeviceClass {
       };
 
       USB::with(|usb| {
-        let pipe = usb.alloc_pipe(|p| p.into_stream_in())?;
-        pipe.configure(generic_device.address, 1, Transfer::Bulk);
-        let pipe_index = pipe.index();
+        // Configure IN pipe for receiving RFID data (endpoint 1)
+        let in_pipe = usb.alloc_pipe(|p| p.into_stream_in())?;
+        in_pipe.configure(generic_device.address, 1, Transfer::Bulk);
+        let in_pipe_index = in_pipe.index();
 
         critical_section::with(|cs| {
-          IN_PIPE_INDEX.borrow(cs).replace(Some(pipe_index));
+          IN_PIPE_INDEX.borrow(cs).replace(Some(in_pipe_index));
         });
+
+        // Configure OUT pipe for sending LED commands (endpoint 2)
+        let out_pipe = usb.alloc_pipe(|p| p.into_stream_out())?;
+        out_pipe.configure(generic_device.address, 2, Transfer::Bulk);
+        let out_pipe_index = out_pipe.index();
+
+        critical_section::with(|cs| {
+          OUT_PIPE_INDEX.borrow(cs).replace(Some(out_pipe_index));
+        });
+
+        debug!("[USB :: CP210x] Configured IN pipe {} and OUT pipe {}", in_pipe_index, out_pipe_index);
 
         Ok::<(), Error>(())
       })?;
