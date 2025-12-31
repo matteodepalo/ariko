@@ -1,7 +1,8 @@
 //! Game state management
 //!
-//! Simple board state tracking for MVP. No move validation.
+//! Tracks chess board state with move validation.
 
+use crate::game::chess::{ChessBoard, Destinations, PieceColor};
 use crate::game::timer::{ChessTimer, Color};
 
 /// Current game status
@@ -31,6 +32,8 @@ pub struct GameState {
   status: GameStatus,
   /// Chess timer
   timer: ChessTimer,
+  /// Chess board position
+  board: ChessBoard,
   /// Square index of currently lifted piece (if any)
   lifted_piece: Option<u8>,
   /// Square from which a piece was lifted (for move detection)
@@ -52,6 +55,7 @@ impl GameState {
       turn: Color::White,
       status: GameStatus::WaitingForCalibration,
       timer: ChessTimer::new(),
+      board: ChessBoard::starting_position(),
       lifted_piece: None,
       lift_square: None,
       move_count: 0,
@@ -93,21 +97,35 @@ impl GameState {
   }
 
   /// Check if a move from one square to another is legal
-  /// For MVP, all moves are considered legal (physical board enforces this)
-  pub fn is_legal_move(&self, _from: u8, _to: u8) -> bool {
-    true
+  pub fn is_legal_move(&self, from: u8, to: u8) -> bool {
+    self.board.is_pseudo_legal(from, to)
   }
 
   /// Get all legal destination squares for a piece at the given square
-  /// For MVP, returns empty (no highlights)
-  pub fn legal_destinations(&self, _from: u8) -> [u8; 0] {
-    []
+  pub fn legal_destinations(&self, from: u8) -> Destinations {
+    // Only return destinations if it's the right player's piece
+    if let Some(piece) = self.board.get(from) {
+      let expected_color = match self.turn {
+        Color::White => PieceColor::White,
+        Color::Black => PieceColor::Black,
+      };
+      if piece.color == expected_color {
+        return self.board.legal_destinations(from);
+      }
+    }
+    Destinations::new()
   }
 
   /// Make a move on the board
   ///
-  /// For MVP, just switches turn. Returns `true` always.
-  pub fn make_move(&mut self, _from: u8, _to: u8) -> bool {
+  /// Returns `true` if move was successful, `false` if illegal.
+  pub fn make_move(&mut self, from: u8, to: u8) -> bool {
+    if !self.is_legal_move(from, to) {
+      return false;
+    }
+
+    self.board.make_move(from, to);
+
     // Switch turns
     self.turn = match self.turn {
       Color::White => Color::Black,
@@ -116,6 +134,7 @@ impl GameState {
     self.move_count += 1;
     self.lifted_piece = None;
     self.lift_square = None;
+
     true
   }
 
@@ -149,6 +168,7 @@ impl GameState {
   pub fn reset(&mut self) {
     self.turn = Color::White;
     self.timer.reset();
+    self.board = ChessBoard::starting_position();
     self.lifted_piece = None;
     self.lift_square = None;
     self.move_count = 0;
@@ -208,10 +228,37 @@ mod tests {
     game.set_status(GameStatus::InProgress);
 
     assert_eq!(game.current_turn(), Color::White);
-    game.make_move(12, 28);
+    assert!(game.make_move(12, 28)); // e2-e4
     assert_eq!(game.current_turn(), Color::Black);
-    game.make_move(52, 36);
+    assert!(game.make_move(52, 36)); // e7-e5
     assert_eq!(game.current_turn(), Color::White);
+  }
+
+  #[test]
+  fn test_illegal_move_rejected() {
+    let mut game = GameState::new();
+    game.set_status(GameStatus::InProgress);
+
+    // Try to move opponent's piece
+    assert!(!game.make_move(52, 36)); // e7-e5 on white's turn
+    assert_eq!(game.current_turn(), Color::White);
+
+    // Try illegal pawn move
+    assert!(!game.make_move(12, 13)); // e2-e2+1 (sideways)
+    assert_eq!(game.current_turn(), Color::White);
+  }
+
+  #[test]
+  fn test_legal_destinations() {
+    let game = GameState::new();
+
+    // e2 pawn should have 2 destinations
+    let dests = game.legal_destinations(12);
+    assert_eq!(dests.len(), 2);
+
+    // Black pawn on e7 should have 0 (not black's turn)
+    let dests = game.legal_destinations(52);
+    assert_eq!(dests.len(), 0);
   }
 
   #[test]

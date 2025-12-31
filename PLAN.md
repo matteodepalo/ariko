@@ -62,16 +62,16 @@ No computer or phone required during gameplay.
 - [x] Turn tracking
 - [x] Piece lift/place detection
 
-### Phase 5: USB Data Flow (IN PROGRESS)
-- [ ] USB bulk IN - receive RFID data from board
-- [ ] Message buffering and framing
-- [ ] USB bulk OUT - send LED commands to board
-- [ ] Integration with main loop
+### Phase 5: USB Data Flow (COMPLETE)
+- [x] USB bulk IN - receive RFID data from board
+- [x] Message buffering and framing (LineBuffer module)
+- [x] USB bulk OUT - send LED commands to board
+- [x] Integration with main loop (interrupt-driven architecture)
 
-### Phase 6: Polish (NOT STARTED)
-- [ ] Hardware timer (RTT) for accurate timing
-- [ ] Move validation with chess engine
-- [ ] Legal move LED highlighting
+### Phase 6: Polish (IN PROGRESS)
+- [ ] Hardware timer (RTT) for accurate timing (TC0 at 100ms is sufficient for now)
+- [x] Move validation with lightweight chess module (no external deps)
+- [x] Legal move LED highlighting (integrated with game state)
 - [ ] Calibration persistence (EEPROM)
 
 ---
@@ -239,10 +239,10 @@ loop {
 
 ## Nice-to-Have Features (Future)
 
-### Move Validation
-- Integrate no_std chess engine (need to find one that actually works)
-- Reject illegal moves with error buzzer
-- Show legal destinations via LEDs when piece lifted
+### Move Validation (DONE)
+- ~~Integrate no_std chess engine~~ Implemented lightweight chess module (~300 lines, no lookup tables)
+- Reject illegal moves with error buzzer ✓
+- Show legal destinations via LEDs when piece lifted ✓
 
 ### Persistence
 - Store calibration data in EEPROM/flash
@@ -277,8 +277,8 @@ loop {
 - 96KB SRAM available on SAM3X8E
 
 ### Timing
-- Current: Fake 10ms loop approximation
-- Ideal: RTT (Real-Time Timer) interrupt at 1ms
+- Current: TC0 interrupt at 100ms with WFI-based main loop
+- Ideal: RTT (Real-Time Timer) interrupt at 1ms (not critical for chess)
 - Acceptable drift: ±1 second per 10 minutes
 
 ### USB Considerations
@@ -299,6 +299,8 @@ loop {
 | `src/certabo/protocol.rs` | RFID message parser |
 | `src/certabo/calibration.rs` | RFID → piece mapping |
 | `src/certabo/leds.rs` | LED state management |
+| `src/certabo/buffer.rs` | Line buffering for USB data |
+| `src/game/chess.rs` | Lightweight chess move validation |
 | `src/game/state.rs` | Game state machine |
 | `src/game/timer.rs` | Chess clock |
 | `src/display.rs` | LCD output |
