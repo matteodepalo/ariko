@@ -6,6 +6,7 @@ extern crate cortex_m_rt;
 
 use core::panic::PanicInfo;
 use core::sync::atomic::Ordering;
+use log::debug;
 
 use certabo::buzzer::Buzzer;
 use certabo::certabo::buffer::MAX_LINE_LEN;
@@ -69,12 +70,16 @@ impl App {
 
   /// Handle blue button press (Calibrate)
   fn on_blue_button(&mut self) {
+    debug!("[App] Blue button pressed, state: {:?}", self.state);
     match self.state {
       AppState::WaitingForCalibration | AppState::WaitingForSetup | AppState::GameEnded => {
+        debug!("[App] Starting calibration");
         self.state = AppState::Calibrating;
         Display::with(|d| d.show_calibration_prompt());
       }
-      _ => {}
+      _ => {
+        debug!("[App] Button ignored in current state");
+      }
     }
   }
 
@@ -102,6 +107,7 @@ impl App {
 
   /// Process new RFID reading from board
   fn on_board_reading(&mut self, reading: RfidReading) {
+    debug!("[App] Board reading received, state: {:?}", self.state);
     match self.state {
       AppState::Calibrating => {
         self.do_calibration(&reading);
@@ -112,7 +118,9 @@ impl App {
       AppState::GameInProgress => {
         self.process_game_move(&reading);
       }
-      _ => {}
+      _ => {
+        debug!("[App] Reading ignored in current state");
+      }
     }
 
     self.last_reading = Some(reading);
@@ -121,10 +129,12 @@ impl App {
   /// Perform calibration from current board reading
   fn do_calibration(&mut self, reading: &RfidReading) {
     let count = self.calibration.calibrate_from_starting_position(reading);
+    debug!("[App] Calibration: {}/32 pieces identified", count);
 
     Display::with(|d| d.show_calibration_progress(count as u8));
 
     if self.calibration.is_complete() {
+      debug!("[App] Calibration complete!");
       self.state = AppState::WaitingForSetup;
       Buzzer::with(|b| b.calibration_complete());
       Display::with(|d| d.show_calibration_complete());
@@ -329,8 +339,30 @@ fn main() -> ! {
     // Check for complete RFID reading from Certabo board
     let mut line_buffer = [0u8; MAX_LINE_LEN];
     if let Some(len) = CP210xDevice::read_line(&mut line_buffer) {
-      if let Some(reading) = RfidReading::parse(&line_buffer[..len]) {
-        app.on_board_reading(reading);
+      debug!(
+        "[App] Received {} bytes, raw start: {:02x} {:02x} {:02x} {:02x} {:02x} {:02x} {:02x} {:02x}",
+        len,
+        line_buffer.get(0).copied().unwrap_or(0),
+        line_buffer.get(1).copied().unwrap_or(0),
+        line_buffer.get(2).copied().unwrap_or(0),
+        line_buffer.get(3).copied().unwrap_or(0),
+        line_buffer.get(4).copied().unwrap_or(0),
+        line_buffer.get(5).copied().unwrap_or(0),
+        line_buffer.get(6).copied().unwrap_or(0),
+        line_buffer.get(7).copied().unwrap_or(0)
+      );
+
+      // Strip first char and last char (as per Certabo protocol)
+      // Format: ":<data>\r" (we already excluded \n) -> strip to get "<data>"
+      if len > 2 {
+        let trimmed = &line_buffer[1..len - 1];
+        if let Some(reading) = RfidReading::parse(trimmed) {
+          app.on_board_reading(reading);
+        } else {
+          debug!("[App] Failed to parse ({} bytes)", trimmed.len());
+        }
+      } else {
+        debug!("[App] Line too short: {} bytes", len);
       }
     }
 
@@ -340,8 +372,8 @@ fn main() -> ! {
       app.led_dirty = false;
     }
 
-    // Sleep until next interrupt (button, timer, or any other)
-    cortex_m::asm::wfi();
+    // Small delay instead of WFI to ensure USB polling happens frequently
+    Peripherals::with(|p| p.delay.delay_ms(10u32));
   }
 }
 

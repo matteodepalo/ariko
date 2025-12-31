@@ -33,6 +33,7 @@ impl LineBuffer {
         self.buffer[self.len] = byte;
         self.len += 1;
 
+        // Only use LF as line terminator (matching Python usbtool.py)
         if byte == b'\n' {
           has_complete_line = true;
         }
@@ -50,7 +51,7 @@ impl LineBuffer {
 
   /// Check if a complete line is available
   pub fn has_complete_line(&self) -> bool {
-    self.buffer[..self.len].contains(&b'\n')
+    self.buffer[..self.len].iter().any(|&b| b == b'\n')
   }
 
   /// Take a complete line from the buffer
@@ -58,7 +59,7 @@ impl LineBuffer {
   /// Returns the line (without newline) if available, or None.
   /// Removes the line from the buffer, keeping any remaining data.
   pub fn take_line(&mut self) -> Option<&[u8]> {
-    // Find newline position
+    // Find LF position (matching Python usbtool.py)
     let newline_pos = self.buffer[..self.len].iter().position(|&b| b == b'\n')?;
 
     // The line is everything before the newline
@@ -83,7 +84,7 @@ impl LineBuffer {
   ///
   /// Returns the number of bytes written, or None if no complete line available.
   pub fn take_line_into(&mut self, out: &mut [u8]) -> Option<usize> {
-    // Find newline position
+    // Find LF position (matching Python usbtool.py)
     let newline_pos = self.buffer[..self.len].iter().position(|&b| b == b'\n')?;
 
     // Copy line to output (without newline)

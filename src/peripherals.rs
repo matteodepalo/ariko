@@ -132,7 +132,11 @@ fn configure_button_interrupts() {
     let piob = &*PIOB::ptr();
     let pioc = &*PIOC::ptr();
 
-    // Blue button on PB25: falling edge interrupt
+    // Blue button on PB25: enable PIO and configure falling edge interrupt
+    // PER: PIO Enable Register - enable PIO control of this pin
+    piob.per().write_with_zero(|w| w.bits(1 << 25));
+    // ODR: Output Disable Register - configure as input
+    piob.odr().write_with_zero(|w| w.bits(1 << 25));
     // AIMER: Additional Interrupt Modes Enable
     piob.aimer().write_with_zero(|w| w.bits(1 << 25));
     // ESR: Edge Select Register (1 = edge, not level)
@@ -144,7 +148,9 @@ fn configure_button_interrupts() {
     // IER: Interrupt Enable Register
     piob.ier().write_with_zero(|w| w.bits(1 << 25));
 
-    // White button on PC28: falling edge interrupt
+    // White button on PC28: enable PIO and configure falling edge interrupt
+    pioc.per().write_with_zero(|w| w.bits(1 << 28));
+    pioc.odr().write_with_zero(|w| w.bits(1 << 28));
     pioc.aimer().write_with_zero(|w| w.bits(1 << 28));
     pioc.esr().write_with_zero(|w| w.bits(1 << 28));
     pioc.fellsr().write_with_zero(|w| w.bits(1 << 28));

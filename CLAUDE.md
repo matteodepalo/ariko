@@ -88,6 +88,24 @@ impl Peripheral {
 - **No allocator:** MVP doesn't use heap allocation
 - **Certabo protocol:** 38400 baud, space-separated ASCII values
 
+## Serial Monitoring
+
+The serial port cannot be monitored directly with blocking commands (e.g., `cat /dev/ttyACM0`) as they block the terminal completely. Use background logging instead:
+
+```bash
+# Kill any existing monitors
+fuser -k /dev/ttyACM0 2>/dev/null
+
+# Configure and start background logging
+stty -F /dev/ttyACM0 57600 cs8 -cstopb -parenb raw -echo
+cat /dev/ttyACM0 > /tmp/serial.log 2>&1 &
+
+# View output
+tail -f /tmp/serial.log
+```
+
+Note: `picocom` and interactive serial monitors don't work in non-TTY environments.
+
 ## Testing
 
 Tests require host target and std:

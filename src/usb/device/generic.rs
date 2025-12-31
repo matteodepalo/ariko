@@ -1,10 +1,9 @@
 #![allow(unused_parens)] // modular_bitfield macro generates spurious warnings
 
 use crate::usb::packet::{SetupPacket, SetupRequestDirection, SetupRequestType};
-use crate::usb::{Device, Error, USB};
+use crate::usb::{Device, Error};
 use core::fmt;
 use core::mem::size_of;
-use log::debug;
 use modular_bitfield::prelude::*;
 
 pub struct GenericDeviceClass;
@@ -81,8 +80,6 @@ impl GenericDevice {
         0,
       );
 
-      debug!("[USB :: Device :: Generic] Get descriptor for {:?}", self);
-
       self.control(&setup_packet, Some(&mut buffer))?;
       self.descriptor = Some(DeviceDescriptor::from_bytes(buffer))
     }
@@ -96,11 +93,6 @@ impl GenericDevice {
       RequestType::SetAddress as u8,
       [address, 0],
       0,
-    );
-
-    debug!(
-      "[USB :: Device :: Generic] Set address {} for {:?}",
-      address, self
     );
 
     self.control(&setup_packet, None)?;
@@ -117,20 +109,14 @@ impl GenericDevice {
       0,
     );
 
-    debug!(
-      "[USB :: Device :: Generic] Set configuration {} for device {:?}",
-      configuration, self
-    );
-
     self.control(&setup_packet, None)
   }
 
   pub fn control(&self, setup_packet: &SetupPacket, data: Option<&mut [u8]>) -> Result<(), Error> {
-    USB::with(|usb| {
-      usb
-        .control_pipe()
-        .control_transfer(self.address, setup_packet, data)
-    })
+    use crate::usb::pipe::{InnerPipe, MessagePipe};
+    // Access control pipe directly without USB::with() to avoid nested borrow
+    let pipe = MessagePipe::new(InnerPipe::new(0));
+    pipe.control_transfer(self.address, setup_packet, data)
   }
 }
 

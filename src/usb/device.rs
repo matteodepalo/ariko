@@ -8,7 +8,7 @@ pub use cp210x::CP210xDevice;
 
 use cp210x::CP210xDeviceClass;
 use generic::{GenericDevice, GenericDeviceClass};
-use crate::usb::Error;
+use crate::usb::{Error, USB};
 use log::debug;
 
 const DEVICE_CLASSES: [DeviceClass; 2] = [
@@ -28,14 +28,14 @@ enum DeviceClass {
 }
 
 impl Device {
-  pub fn configure(address: u8) -> Result<Self, Error> {
+  pub fn configure(address: u8, usb: &mut USB) -> Result<Self, Error> {
     let mut generic_device = GenericDevice::default();
     let mut result = Err(Error::DeviceNotSupported);
 
     generic_device.set_address(address)?;
 
     for device_class in DEVICE_CLASSES.iter() {
-      match device_class.configure(&mut generic_device) {
+      match device_class.configure(&mut generic_device, usb) {
         Ok(device) => {
           debug!("[USB :: Device] Configured: {:?}", device);
           result = Ok(device);
@@ -52,9 +52,9 @@ impl Device {
     result
   }
 
-  pub fn poll(&self) -> Result<(), Error> {
+  pub fn poll(&self, usb: &USB) -> Result<(), Error> {
     match self {
-      Device::CP210x(cp210x) => cp210x.poll(),
+      Device::CP210x(cp210x) => cp210x.poll(usb),
       Device::Generic(generic) => generic.poll(),
     }
   }
@@ -68,9 +68,9 @@ impl Device {
 }
 
 impl DeviceClass {
-  fn configure(&self, generic_device: &mut GenericDevice) -> Result<Device, Error> {
+  fn configure(&self, generic_device: &mut GenericDevice, usb: &mut USB) -> Result<Device, Error> {
     match self {
-      DeviceClass::CP210x(cp210x) => cp210x.configure(generic_device),
+      DeviceClass::CP210x(cp210x) => cp210x.configure(generic_device, usb),
       DeviceClass::Generic(generic) => generic.configure(generic_device),
     }
   }

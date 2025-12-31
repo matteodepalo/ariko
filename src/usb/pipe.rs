@@ -1,7 +1,6 @@
 use crate::usb::packet::{DataInPacket, DataOutPacket, Packet, SetupPacket, SetupRequestDirection};
 use crate::usb::Error;
 use core::cmp::min;
-use log::debug;
 use sam3x8e_hal::pac::{uotghs, UOTGHS};
 
 const PIPE_SIZE: usize = 64;
@@ -167,7 +166,7 @@ impl InnerPipe {
     pipe
   }
 
-  fn transfer(&self, packet: &mut Packet) -> Result<(), Error> {
+  fn transfer(&self, packet: &mut Packet) -> Result<usize, Error> {
     let uotghs = self.uotghs();
     with_hstpipcfg!(uotghs, self.0, |cfg| {
       cfg.modify(|_, w| match packet {
@@ -182,39 +181,41 @@ impl InnerPipe {
     });
 
     match packet {
-      Packet::DataOut(_) => Ok(for i in 0..(packet.len() / PIPE_SIZE) {
-        let start = i * PIPE_SIZE;
-        let end = min(packet.len(), start + PIPE_SIZE);
-        let mut slice = DataOutPacket::new(packet.slice(start..end));
-
-        slice.send(self.0)?
-      }),
+      Packet::DataOut(_) => {
+        for i in 0..(packet.len() / PIPE_SIZE) {
+          let start = i * PIPE_SIZE;
+          let end = min(packet.len(), start + PIPE_SIZE);
+          let mut slice = DataOutPacket::new(packet.slice(start..end));
+          slice.send(self.0)?
+        }
+        Ok(packet.len())
+      }
       Packet::DataIn(packet) => packet.receive(self.0),
-      Packet::Setup(packet) => packet.send(self.0),
+      Packet::Setup(packet) => {
+        packet.send(self.0)?;
+        Ok(8)
+      }
     }
   }
 
   pub fn configure(&self, address: u8, endpoint: u8, transfer: Transfer) {
-    debug!(
-      "[USB :: Pipe] Configuring pipe #{} with address: {}, endpoint: {}, transfer: {:#?}",
-      self.0, address, endpoint, transfer
-    );
 
     let uotghs = self.uotghs();
     let hstaddr1 = uotghs.hstaddr1();
     let hstaddr2 = uotghs.hstaddr2();
     let hstaddr3 = uotghs.hstaddr3();
 
+    // Use modify instead of write to preserve other pipe addresses
     match self.0 {
-      0 => hstaddr1.write(|w| unsafe { w.hstaddrp0().bits(address) }),
-      1 => hstaddr1.write(|w| unsafe { w.hstaddrp1().bits(address) }),
-      2 => hstaddr1.write(|w| unsafe { w.hstaddrp2().bits(address) }),
-      3 => hstaddr1.write(|w| unsafe { w.hstaddrp3().bits(address) }),
-      4 => hstaddr2.write(|w| unsafe { w.hstaddrp4().bits(address) }),
-      5 => hstaddr2.write(|w| unsafe { w.hstaddrp5().bits(address) }),
-      6 => hstaddr2.write(|w| unsafe { w.hstaddrp6().bits(address) }),
-      7 => hstaddr2.write(|w| unsafe { w.hstaddrp7().bits(address) }),
-      8 => hstaddr3.write(|w| unsafe { w.hstaddrp8().bits(address) }),
+      0 => hstaddr1.modify(|_, w| unsafe { w.hstaddrp0().bits(address) }),
+      1 => hstaddr1.modify(|_, w| unsafe { w.hstaddrp1().bits(address) }),
+      2 => hstaddr1.modify(|_, w| unsafe { w.hstaddrp2().bits(address) }),
+      3 => hstaddr1.modify(|_, w| unsafe { w.hstaddrp3().bits(address) }),
+      4 => hstaddr2.modify(|_, w| unsafe { w.hstaddrp4().bits(address) }),
+      5 => hstaddr2.modify(|_, w| unsafe { w.hstaddrp5().bits(address) }),
+      6 => hstaddr2.modify(|_, w| unsafe { w.hstaddrp6().bits(address) }),
+      7 => hstaddr2.modify(|_, w| unsafe { w.hstaddrp7().bits(address) }),
+      8 => hstaddr3.modify(|_, w| unsafe { w.hstaddrp8().bits(address) }),
       _ => panic!(),
     };
 
@@ -240,7 +241,6 @@ impl InnerPipe {
   }
 
   pub fn release(&self) {
-    debug!("[USB :: Pipe] Releasing pipe #{}", self.0);
 
     let uotghs = self.uotghs();
     with_hstpipcfg!(uotghs, self.0, |cfg| {
@@ -252,7 +252,6 @@ impl InnerPipe {
     let uotghs = self.uotghs();
     let hstpip = uotghs.hstpip();
 
-    debug!("[USB :: Pipe] Allocating pipe #{}", self.0);
 
     match self.0 {
       0 => hstpip.modify(|_, w| w.pen0().set_bit()),
@@ -301,10 +300,6 @@ impl MessagePipe {
       setup_packet.length = data.len() as u16
     }
 
-    debug!(
-      "[USB :: Pipe] Control transfer at address: {}, {:?}",
-      address, setup_packet
-    );
 
     pipe.configure(address, 0, Transfer::Control);
     pipe.transfer(&mut Packet::Setup(setup_packet))?;
@@ -320,15 +315,18 @@ impl MessagePipe {
 
         match direction {
           SetupRequestDirection::HostToDevice => {
-            pipe.transfer(&mut Packet::DataIn(DataInPacket::empty()))
+            pipe.transfer(&mut Packet::DataIn(DataInPacket::empty()))?;
           }
           SetupRequestDirection::DeviceToHost => {
-            pipe.transfer(&mut Packet::DataOut(DataOutPacket::empty()))
+            pipe.transfer(&mut Packet::DataOut(DataOutPacket::empty()))?;
           }
         }
       }
-      None => pipe.transfer(&mut Packet::DataIn(DataInPacket::empty())),
+      None => {
+        pipe.transfer(&mut Packet::DataIn(DataInPacket::empty()))?;
+      }
     }
+    Ok(())
   }
 }
 
@@ -337,7 +335,7 @@ impl StreamInPipe {
     Self(pipe)
   }
 
-  pub fn in_transfer(&self, data: &mut [u8]) -> Result<(), Error> {
+  pub fn in_transfer(&self, data: &mut [u8]) -> Result<usize, Error> {
     self
       .0
       .transfer(&mut Packet::DataIn(DataInPacket::new(data)))
@@ -349,7 +347,7 @@ impl StreamOutPipe {
     Self(pipe)
   }
 
-  pub fn out_transfer(&self, data: &mut [u8]) -> Result<(), Error> {
+  pub fn out_transfer(&self, data: &mut [u8]) -> Result<usize, Error> {
     self
       .0
       .transfer(&mut Packet::DataOut(DataOutPacket::new(data)))

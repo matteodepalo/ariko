@@ -7,7 +7,6 @@ use core::ops::Range;
 use core::ptr::write_volatile;
 use core::slice;
 use sam3x8e_hal::timer::CountDown;
-use log::debug;
 use modular_bitfield::prelude::*;
 use sam3x8e_hal::pac::{uotghs, UOTGHS};
 use sam3x8e_hal::time::U32Ext;
@@ -240,11 +239,7 @@ impl<'a> Message<'a> {
     })
   }
 
-  fn receive(&mut self) -> Result<(), Error> {
-    debug!(
-      "[USB :: Packet] Receiving Data packet ({} bytes)",
-      self.data.len()
-    );
+  fn receive(&mut self) -> Result<usize, Error> {
 
     self.start_timer();
 
@@ -278,8 +273,10 @@ impl<'a> Message<'a> {
       let pbyct = with_hstpipisr!(uotghs, index, |isr| {
         isr.read().pbyct().bits()
       });
-      for i in 0..pbyct {
-        self.data[i as usize] = self.fifo()[i as usize]
+      // Cap copy at buffer size - device may send more than we asked for
+      let bytes_to_copy = (pbyct as usize).min(self.data.len());
+      for i in 0..bytes_to_copy {
+        self.data[i] = self.fifo()[i]
       }
 
       with_hstpipicr!(uotghs, index, |icr| {
@@ -289,12 +286,7 @@ impl<'a> Message<'a> {
         unsafe { idr.write_with_zero(|w| w.fifoconc().set_bit()) }
       });
 
-      debug!(
-        "[USB :: Packet] Finished receiving Data packet ({} bytes)",
-        self.data.len()
-      );
-
-      Ok(())
+      Ok(bytes_to_copy)
     } else {
       Err(Error::TransferTimeout)
     }
@@ -350,8 +342,6 @@ impl SetupPacket {
     let data = unsafe { slice::from_raw_parts_mut(data_pointer, size_of::<Self>()) };
     let mut message = Message::new(index, data);
 
-    debug!("[USB :: Packet] Sending Setup packet");
-
     message.send();
 
     let mut result = Err(Error::TransferTimeout);
@@ -370,8 +360,6 @@ impl SetupPacket {
         with_hstpipier!(uotghs, index, |ier| {
           unsafe { ier.write_with_zero(|w| w.pfreezes().set_bit()) }
         });
-
-        debug!("[USB :: Packet] Finished sending Setup packet");
 
         result = Ok(());
         break;
@@ -394,10 +382,6 @@ impl<'a> DataOutPacket<'a> {
   pub fn send(&mut self, index: u8) -> Result<(), Error> {
     let mut message = Message::new(index, self.0.data());
 
-    debug!(
-      "[USB :: Packet] Sending Data packet ({} bytes)",
-      message.len()
-    );
 
     message.send();
 
@@ -418,8 +402,6 @@ impl<'a> DataOutPacket<'a> {
           unsafe { ier.write_with_zero(|w| w.pfreezes().set_bit()) }
         });
 
-        debug!("[USB :: Packet] Finished sending Data packet");
-
         result = Ok(());
         break;
       }
@@ -438,7 +420,7 @@ impl<'a> DataInPacket<'a> {
     Self(DataPacket::empty())
   }
 
-  pub fn receive(&mut self, index: u8) -> Result<(), Error> {
+  pub fn receive(&mut self, index: u8) -> Result<usize, Error> {
     Message::new(index, self.0.data()).receive()
   }
 }

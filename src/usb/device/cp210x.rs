@@ -10,6 +10,7 @@ use crate::usb::{Device, Error, USB};
 use core::cell::RefCell;
 use core::mem::size_of;
 use critical_section::Mutex;
+use embedded_hal::delay::DelayNs;
 use log::debug;
 use modular_bitfield::prelude::*;
 
@@ -40,7 +41,16 @@ pub struct CP210xDevice {
 pub struct CP210xDeviceClass;
 
 impl CP210xDevice {
-  pub fn poll(&self) -> Result<(), Error> {
+  pub fn poll(&self, usb: &USB) -> Result<(), Error> {
+    // Send LED heartbeat (8 zeros) to keep board active
+    let out_pipe_index = critical_section::with(|cs| *OUT_PIPE_INDEX.borrow(cs).borrow());
+    if let Some(index) = out_pipe_index {
+      if let Some(pipe) = usb.get_pipe(index) {
+        let mut led_msg = [0x00u8; 8];
+        let _ = pipe.as_stream_out().out_transfer(&mut led_msg);
+      }
+    }
+
     let mut status_buffer = [0_u8; size_of::<StatusResponse>()];
 
     let setup_packet = SetupPacket::new(
@@ -56,33 +66,53 @@ impl CP210xDevice {
     self
       .generic_device
       .control(&setup_packet, Some(&mut status_buffer))?;
+    debug!("[CP210x] Status raw: {:02x} {:02x} {:02x} {:02x} {:02x} {:02x} {:02x} {:02x} {:02x} {:02x}",
+      status_buffer[0], status_buffer[1], status_buffer[2], status_buffer[3], status_buffer[4],
+      status_buffer[5], status_buffer[6], status_buffer[7], status_buffer[8], status_buffer[9]);
     let status_response = StatusResponse::from_bytes(status_buffer);
-
     let queue_len = status_response.amount_in_in_queue();
+    debug!("[CP210x] Queue len: {}, errors: {}", queue_len, status_response.errors());
     if queue_len > 0 {
-      let mut data_buffer = [0_u8; 512];
-      let bytes_to_read = (queue_len as usize).min(512);
+      let pipe_index = critical_section::with(|cs| *IN_PIPE_INDEX.borrow(cs).borrow())
+        .expect("IN_PIPE not configured");
 
-      USB::with(|usb| {
-        let pipe_index = critical_section::with(|cs| *IN_PIPE_INDEX.borrow(cs).borrow())
-          .expect("IN_PIPE not configured");
+      if let Some(pipe) = usb.get_pipe(pipe_index) {
+        // Read in 64-byte chunks (max packet size) since the hardware
+        // only handles one packet per IN request
+        let mut remaining = queue_len as usize;
+        let mut first_bytes = [0u8; 8];
+        let mut is_first = true;
+        while remaining > 0 {
+          let mut chunk_buffer = [0_u8; 64];
 
-        if let Some(pipe) = usb.get_pipe(pipe_index) {
-          pipe.as_stream_in().in_transfer(&mut data_buffer[..bytes_to_read])
-        } else {
-          Err(Error::TooManyPipes)
+          // Read data and get actual byte count from USB
+          let bytes_received = pipe.as_stream_in().in_transfer(&mut chunk_buffer)?;
+
+          // Save first 8 bytes for debugging
+          if is_first && bytes_received >= 8 {
+            first_bytes.copy_from_slice(&chunk_buffer[..8]);
+            is_first = false;
+          }
+
+          // Push only the bytes we actually received
+          critical_section::with(|cs| {
+            LINE_BUFFER
+              .borrow(cs)
+              .borrow_mut()
+              .push(&chunk_buffer[..bytes_received]);
+          });
+
+          remaining = remaining.saturating_sub(bytes_received);
         }
-      })?;
-
-      // Push received data to line buffer
-      critical_section::with(|cs| {
-        LINE_BUFFER
-          .borrow(cs)
-          .borrow_mut()
-          .push(&data_buffer[..bytes_to_read]);
-      });
-
-      debug!("[USB :: CP210x] Received {} bytes", bytes_to_read);
+        // Log first few bytes as both hex and ASCII
+        debug!("[CP210x] Hex: {:02x} {:02x} {:02x} {:02x} {:02x} {:02x} {:02x} {:02x} | ASCII: {} {} {} {} {} {} {} {}",
+          first_bytes[0], first_bytes[1], first_bytes[2], first_bytes[3],
+          first_bytes[4], first_bytes[5], first_bytes[6], first_bytes[7],
+          first_bytes[0] as char, first_bytes[1] as char, first_bytes[2] as char, first_bytes[3] as char,
+          first_bytes[4] as char, first_bytes[5] as char, first_bytes[6] as char, first_bytes[7] as char);
+      } else {
+        return Err(Error::TooManyPipes);
+      }
     }
 
     Ok(())
@@ -115,7 +145,8 @@ impl CP210xDevice {
         Some(index) => {
           if let Some(pipe) = usb.get_pipe(index) {
             let mut buf = *data;
-            pipe.as_stream_out().out_transfer(&mut buf)
+            pipe.as_stream_out().out_transfer(&mut buf)?;
+            Ok(())
           } else {
             Err(Error::TooManyPipes)
           }
@@ -135,11 +166,14 @@ impl CP210xDevice {
 }
 
 impl CP210xDeviceClass {
-  pub fn configure(&self, generic_device: &mut GenericDevice) -> Result<Device, Error> {
+  pub fn configure(&self, generic_device: &mut GenericDevice, usb: &mut USB) -> Result<Device, Error> {
     let descriptor = generic_device.descriptor().unwrap();
 
     if descriptor.product_id() == 0xea60 && descriptor.vendor_id() == 0x10c4 {
+      debug!("[CP210x] Starting configuration for VID:PID {:04x}:{:04x}",
+        descriptor.vendor_id(), descriptor.product_id());
       generic_device.set_configuration(1)?;
+      debug!("[CP210x] Configuration set");
 
       generic_device.control(
         &SetupPacket::new(
@@ -206,18 +240,56 @@ impl CP210xDeviceClass {
         Some(&mut [0, 0, 0, 0, 0x11, 0x13]),
       )?;
 
+      debug!("[CP210x] Setting baud rate to 38400...");
+
+      // Try SET_BAUDDIV first (works on CP2101/2/3)
+      // Divisor = 3686400 / baud = 3686400 / 38400 = 96 = 0x0060
       generic_device.control(
         &SetupPacket::new(
           SetupRequestType::default()
             .with_direction(SetupRequestDirection::HostToDevice)
             .with_recipient(SetupRequestRecipient::Interface)
             .with_kind(SetupRequestKind::Vendor),
-          30,
+          1,  // SET_BAUDDIV
+          [0x60, 0x00],  // divisor 96 for 38400 baud
+          0,
+        ),
+        None,
+      )?;
+      debug!("[CP210x] SET_BAUDDIV sent (divisor=96)");
+
+      // Also try SET_BAUDRATE (works on CP2104+)
+      generic_device.control(
+        &SetupPacket::new(
+          SetupRequestType::default()
+            .with_direction(SetupRequestDirection::HostToDevice)
+            .with_recipient(SetupRequestRecipient::Interface)
+            .with_kind(SetupRequestKind::Vendor),
+          30,  // SET_BAUDRATE
           [0, 0],
           0,
         ),
-        Some(&mut [0x00, 0x96, 0x00, 0x00]),  // 38400 baud for Certabo
+        Some(&mut [0x00, 0x96, 0x00, 0x00]),  // 38400 baud (little-endian)
       )?;
+      debug!("[CP210x] SET_BAUDRATE sent");
+
+      // Read back baud rate to verify
+      let mut baud_readback = [0u8; 4];
+      generic_device.control(
+        &SetupPacket::new(
+          SetupRequestType::default()
+            .with_direction(SetupRequestDirection::DeviceToHost)
+            .with_recipient(SetupRequestRecipient::Interface)
+            .with_kind(SetupRequestKind::Vendor),
+          29,  // GET_BAUDRATE
+          [0, 0],
+          0,
+        ),
+        Some(&mut baud_readback),
+      )?;
+      let baud_rate = u32::from_le_bytes(baud_readback);
+      debug!("[CP210x] Baud rate readback: {} (raw: {:02x} {:02x} {:02x} {:02x})",
+        baud_rate, baud_readback[0], baud_readback[1], baud_readback[2], baud_readback[3]);
 
       generic_device.control(
         &SetupPacket::new(
@@ -236,29 +308,37 @@ impl CP210xDeviceClass {
         generic_device: generic_device.clone(),
       };
 
-      USB::with(|usb| {
-        // Configure IN pipe for receiving RFID data (endpoint 1)
-        let in_pipe = usb.alloc_pipe(|p| p.into_stream_in())?;
-        in_pipe.configure(generic_device.address, 1, Transfer::Bulk);
-        let in_pipe_index = in_pipe.index();
+      // Configure IN pipe for receiving RFID data (endpoint 1)
+      let in_pipe = usb.alloc_pipe(|p| p.into_stream_in())?;
+      in_pipe.configure(generic_device.address, 1, Transfer::Bulk);
+      let in_pipe_index = in_pipe.index();
 
-        critical_section::with(|cs| {
-          IN_PIPE_INDEX.borrow(cs).replace(Some(in_pipe_index));
-        });
+      critical_section::with(|cs| {
+        IN_PIPE_INDEX.borrow(cs).replace(Some(in_pipe_index));
+      });
 
-        // Configure OUT pipe for sending LED commands (endpoint 2)
-        let out_pipe = usb.alloc_pipe(|p| p.into_stream_out())?;
-        out_pipe.configure(generic_device.address, 2, Transfer::Bulk);
-        let out_pipe_index = out_pipe.index();
+      // Configure OUT pipe for sending LED commands (endpoint 2)
+      let out_pipe = usb.alloc_pipe(|p| p.into_stream_out())?;
+      out_pipe.configure(generic_device.address, 2, Transfer::Bulk);
+      let out_pipe_index = out_pipe.index();
 
-        critical_section::with(|cs| {
-          OUT_PIPE_INDEX.borrow(cs).replace(Some(out_pipe_index));
-        });
+      critical_section::with(|cs| {
+        OUT_PIPE_INDEX.borrow(cs).replace(Some(out_pipe_index));
+      });
 
-        debug!("[USB :: CP210x] Configured IN pipe {} and OUT pipe {}", in_pipe_index, out_pipe_index);
+      debug!("[USB :: CP210x] Configured IN pipe {} and OUT pipe {}", in_pipe_index, out_pipe_index);
 
-        Ok::<(), Error>(())
-      })?;
+      // Send Certabo initialization sequence (matches official run.py)
+      // 1. All LEDs on (0xFF * 8)
+      let mut init1 = [0xFFu8; 8];
+      out_pipe.as_stream_out().out_transfer(&mut init1)?;
+      crate::peripherals::Peripherals::with(|p| p.delay.delay_ms(2000u32));
+
+      // 2. All LEDs off (0x00 * 8)
+      let mut init2 = [0x00u8; 8];
+      out_pipe.as_stream_out().out_transfer(&mut init2)?;
+
+      debug!("[USB :: CP210x] Sent initialization sequence (LEDs flash)");
 
       Ok(Device::CP210x(device))
     } else {

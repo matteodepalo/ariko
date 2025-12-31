@@ -147,33 +147,52 @@ impl USB {
   }
 
   fn set_state(&mut self, state: State) {
-    debug!(
-      "[USB] Transitioning state from {:?} to {:?}",
-      self.state, state
-    );
-
+    debug!("[USB] {:?} -> {:?}", self.state, state);
     self.state = state;
   }
 
   fn enable(&mut self) {
-    debug!("[USB] Enabling");
 
     Peripherals::with(|p| p.pmc.enable_clock(PeripheralClock::UOtgHs));
 
-    self.uotghs().ctrl().write(|w| w.uide().clear_bit());
-    self.uotghs().ctrl().modify(|_, w| w.uimod().clear_bit());
-    self.uotghs().ctrl().modify(|_, w| w.vbuspo().clear_bit());
-    self.uotghs().ctrl().modify(|_, w| w.otgpade().set_bit());
-    self.uotghs().ctrl().modify(|_, w| w.usbe().set_bit());
+    // Configure USB in host mode with all settings at once
+    // UIDE=0: Mode from UIMOD bit (not ID pin)
+    // UIMOD=0: Host mode (using .host() method)
+    // VBUSPO=0: VBUS power active low (Arduino Due circuit)
+    // OTGPADE=1: Enable OTG pad
+    // USBE=1: Enable USB
+    // FRZCLK=1: Keep clock frozen initially
+    self.uotghs().ctrl().write(|w| {
+      w.uide().clear_bit()
+       .uimod().host()
+       .vbuspo().clear_bit()
+       .otgpade().set_bit()
+       .usbe().set_bit()
+       .frzclk().set_bit()
+    });
+
+    // Now unfreeze the clock
     self.uotghs().ctrl().modify(|_, w| w.frzclk().clear_bit());
 
     while self.uotghs().sr().read().clkusable().bit_is_clear() {}
 
+    // Enable host mode features
+    self.uotghs().hstctrl().write(|w| w.sofe().set_bit());  // Enable SOF generation
+
+    // Clear all pending host interrupts
     unsafe {
       self
         .uotghs()
         .hsticr()
         .write_with_zero(|w| w.bits(u32::max_value()));
+    }
+
+    // Enable device connection/disconnection interrupts
+    unsafe {
+      self
+        .uotghs()
+        .hstier()
+        .write_with_zero(|w| w.dconnies().set_bit().ddiscies().set_bit());
     }
 
     unsafe {
@@ -186,11 +205,9 @@ impl USB {
     self.uotghs().ctrl().modify(|_, w| w.vbushwc().set_bit());
     unsafe { self.uotghs().sfr().write_with_zero(|w| w.vbusrqs().set_bit()); }
 
-    debug!("[USB] Finished enabling")
   }
 
   fn start(&mut self) -> Result<(), Error> {
-    debug!("[USB] Starting");
 
     unsafe {
       self
@@ -204,8 +221,6 @@ impl USB {
   }
 
   fn stop(&mut self) {
-    debug!("[USB] Stopping");
-
     unsafe {
       self
         .uotghs()
@@ -227,8 +242,6 @@ impl USB {
   }
 
   fn reset(&mut self) -> Result<(), Error> {
-    debug!("[USB] Resetting");
-
     self.uotghs().hstctrl().modify(|_, w| w.reset().set_bit());
 
     while self.uotghs().hstisr().read().rsti().bit_is_clear() {}
@@ -242,20 +255,14 @@ impl USB {
 
     self.delay(RESET_DELAY);
 
-    debug!("[USB] Finished resetting");
-
     self.configure()
   }
 
   fn configure(&mut self) -> Result<(), Error> {
-    debug!("[USB] Configuring");
-
     let address = self.next_device_address()?;
-    let device = Device::configure(address)?;
+    let device = Device::configure(address, self)?;
 
     self.devices[(address - 1) as usize] = Some(device);
-
-    debug!("[USB] Finished configuring");
 
     Ok(())
   }
@@ -263,7 +270,7 @@ impl USB {
   fn poll_devices(&self) -> Result<(), Error> {
     for option in self.devices.iter() {
       if let Some(device) = option {
-        device.poll()?
+        device.poll(self)?
       }
     }
 
