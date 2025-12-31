@@ -9,7 +9,6 @@ use nb::block;
 use sam3x8e_hal::pac::{uotghs, UOTGHS};
 use sam3x8e_hal::pmc::PeripheralClock;
 use sam3x8e_hal::time::U32Ext;
-use sam3x8e_hal::timer::Timer;
 
 mod device;
 mod packet;

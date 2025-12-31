@@ -25,9 +25,6 @@ use crate::time::Hertz;
 mod rtt;
 mod syst;
 
-pub use rtt::*;
-pub use syst::*;
-
 /// CountDown trait (removed from embedded-hal 1.0, defined locally)
 pub trait CountDown {
   /// The error type

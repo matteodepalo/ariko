@@ -23,7 +23,6 @@ use crate::pmc::Clocks;
 mod syst;
 mod tc;
 
-pub use syst::*;
 pub use tc::*;
 
 pub trait DelayExt<S> {

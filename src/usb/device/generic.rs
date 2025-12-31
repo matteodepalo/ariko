@@ -1,3 +1,5 @@
+#![allow(unused_parens)] // modular_bitfield macro generates spurious warnings
+
 use crate::usb::packet::{SetupPacket, SetupRequestDirection, SetupRequestType};
 use crate::usb::{Device, Error, USB};
 use core::fmt;

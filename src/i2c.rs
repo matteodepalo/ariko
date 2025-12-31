@@ -68,29 +68,6 @@ impl I2C {
     })
   }
 
-  fn wait_byte_sent(&mut self) -> Result<(), <I2C as I2cWrite>::Error> {
-    let mut timeout = TRANSMIT_TIMEOUT;
-
-    Peripherals::with(|peripherals| {
-      let twi0 = &peripherals.twi0;
-
-      loop {
-        if twi0.sr().read().txrdy().bit_is_set() {
-          return Ok(());
-        }
-
-        if twi0.sr().read().nack().bit_is_set() {
-          return Err(());
-        }
-
-        timeout -= 1;
-
-        if timeout == 0 {
-          return Err(());
-        }
-      }
-    })
-  }
 }
 
 impl I2cWrite for I2C {

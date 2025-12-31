@@ -1,3 +1,5 @@
+#![allow(unused_parens)] // modular_bitfield macro generates spurious warnings
+
 use crate::peripherals::Peripherals;
 use crate::usb::device::generic::GenericDevice;
 use crate::usb::packet::{

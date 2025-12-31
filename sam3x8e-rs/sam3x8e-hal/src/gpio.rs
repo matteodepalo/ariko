@@ -98,7 +98,7 @@ gpio! {
 }
 
 // SAM3X8H PIO config
-#[cfg(feature = "sam3x8h")]
+#[cfg(feature = "sam38h")]
 gpio! {
     A: {
         id: 11,
