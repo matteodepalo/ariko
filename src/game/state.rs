@@ -2,7 +2,7 @@
 //!
 //! Tracks chess board state with move validation.
 
-use crate::game::chess::{ChessBoard, Destinations, PieceColor};
+use crate::game::chess::{BoardStatus, ChessBoard, Destinations, PieceColor};
 use crate::game::timer::{ChessTimer, Color};
 
 /// Current game status
@@ -96,13 +96,30 @@ impl GameState {
     &mut self.timer
   }
 
-  /// Check if a move from one square to another is legal
+  /// Check if a move from one square to another is legal (including check rules)
   pub fn is_legal_move(&self, from: u8, to: u8) -> bool {
-    self.board.is_pseudo_legal(from, to)
+    self.board.is_legal(from, to)
+  }
+
+  /// Check if the current player is in check
+  pub fn is_in_check(&self) -> bool {
+    let color = match self.turn {
+      Color::White => PieceColor::White,
+      Color::Black => PieceColor::Black,
+    };
+    self.board.is_in_check(color)
+  }
+
+  /// Get board status (checkmate, stalemate, or ongoing)
+  pub fn board_status(&self) -> BoardStatus {
+    self.board.status()
   }
 
   /// Get all legal destination squares for a piece at the given square
+  /// Only returns moves that don't leave the king in check
   pub fn legal_destinations(&self, from: u8) -> Destinations {
+    let mut result = Destinations::new();
+
     // Only return destinations if it's the right player's piece
     if let Some(piece) = self.board.get(from) {
       let expected_color = match self.turn {
@@ -110,10 +127,16 @@ impl GameState {
         Color::Black => PieceColor::Black,
       };
       if piece.color == expected_color {
-        return self.board.legal_destinations(from);
+        // Get pseudo-legal moves and filter to fully legal ones
+        let pseudo_legal = self.board.legal_destinations(from);
+        for to in pseudo_legal {
+          if self.board.is_legal(from, to) {
+            result.push(to);
+          }
+        }
       }
     }
-    Destinations::new()
+    result
   }
 
   /// Make a move on the board

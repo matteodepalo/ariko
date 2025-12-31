@@ -15,12 +15,14 @@ use certabo::certabo::leds::LedState;
 use certabo::certabo::protocol::RfidReading;
 use certabo::display::Display;
 use certabo::events::{consume, BLUE_BUTTON_PRESSED, MILLIS, TIMER_TICK, WHITE_BUTTON_PRESSED};
+use certabo::game::chess::BoardStatus;
 use certabo::game::state::{GameState, GameStatus};
 use certabo::game::timer::Color;
 use certabo::i2c::I2C;
 use certabo::logger::Logger;
 use certabo::peripherals::Peripherals;
 use certabo::serial::Serial;
+use certabo::tm1637::ChessClockDisplays;
 use certabo::usb::{CP210xDevice, USB};
 use core::fmt::Write;
 use cortex_m_rt::entry;
@@ -54,6 +56,12 @@ struct App {
   last_reading: Option<RfidReading>,
   led_state: LedState,
   led_dirty: bool,
+  /// Tick counter for colon blink timing (toggles every 5 ticks = 500ms)
+  tick_count: u8,
+  /// Last move made (from_square, to_square)
+  last_move: Option<(u8, u8)>,
+  /// Spinner frame for calibration animation
+  spinner_frame: u8,
 }
 
 impl App {
@@ -65,6 +73,9 @@ impl App {
       last_reading: None,
       led_state: LedState::new(),
       led_dirty: false,
+      tick_count: 0,
+      last_move: None,
+      spinner_frame: 0,
     }
   }
 
@@ -136,6 +147,8 @@ impl App {
     if self.calibration.is_complete() {
       debug!("[App] Calibration complete!");
       self.state = AppState::WaitingForSetup;
+      self.led_state.clear_all();
+      self.led_dirty = true;
       Buzzer::with(|b| b.calibration_complete());
       Display::with(|d| d.show_calibration_complete());
 
@@ -185,7 +198,10 @@ impl App {
           // Piece was lifted
           lifted_from = Some(square);
         } else if prev.is_none() && curr.is_some() {
-          // Piece was placed
+          // Piece was placed on empty square
+          placed_to = Some(square);
+        } else if prev.is_some() && curr.is_some() && prev != curr {
+          // Piece changed on square (capture - different piece now occupies it)
           placed_to = Some(square);
         }
       }
@@ -209,46 +225,90 @@ impl App {
         if self.game.is_legal_move(from, to) {
           // Valid move
           self.game.make_move(from, to);
+          self.last_move = Some((from, to));
           Buzzer::with(|b| b.move_sound());
           self.led_state.clear_all();
           self.led_dirty = true;
+
+          // Check for game end and update display
+          self.check_game_end();
+          self.update_display();
         } else {
-          // Invalid move
+          // Invalid move - show error (don't overwrite with update_display)
           Buzzer::with(|b| b.error_sound());
           Display::with(|d| d.show_invalid_move());
         }
-
-        // Check for game end
-        self.check_game_end();
-        self.update_display();
       }
     }
   }
 
   /// Check if game has ended
   fn check_game_end(&mut self) {
+    // First check for timeout (already handled in GameStatus)
     match self.game.status() {
       GameStatus::WhiteWins => {
         self.state = AppState::GameEnded;
         Buzzer::with(|b| b.game_over_sound());
-        Display::with(|d| d.show_game_over("White", "Checkmate"));
+        Display::with(|d| d.show_game_over("White", "Timeout"));
+        return;
       }
       GameStatus::BlackWins => {
         self.state = AppState::GameEnded;
         Buzzer::with(|b| b.game_over_sound());
-        Display::with(|d| d.show_game_over("Black", "Checkmate"));
+        Display::with(|d| d.show_game_over("Black", "Timeout"));
+        return;
       }
-      GameStatus::Draw => {
+      _ => {}
+    }
+
+    // Check for checkmate/stalemate from board state
+    match self.game.board_status() {
+      BoardStatus::Checkmate => {
+        self.state = AppState::GameEnded;
+        Buzzer::with(|b| b.game_over_sound());
+        // The side to move is in checkmate, so they lost
+        let winner = match self.game.current_turn() {
+          Color::White => "Black",
+          Color::Black => "White",
+        };
+        Display::with(|d| d.show_game_over(winner, "Checkmate"));
+      }
+      BoardStatus::Stalemate => {
         self.state = AppState::GameEnded;
         Buzzer::with(|b| b.game_over_sound());
         Display::with(|d| d.show_draw("Stalemate"));
       }
-      _ => {}
+      BoardStatus::Ongoing => {}
     }
   }
 
   /// Update timer and check for timeout
   fn tick(&mut self, elapsed_ms: u32) {
+    // Update tick counter for colon blink (every 5 ticks = 500ms)
+    self.tick_count = (self.tick_count + 1) % 5;
+    if self.tick_count == 0 {
+      ChessClockDisplays::with(|d| d.toggle_colon());
+    }
+
+    // Update clock displays regardless of game state
+    self.update_clock_displays();
+
+    // Animate wave on startup (waiting for calibration)
+    if self.state == AppState::WaitingForCalibration {
+      self.spinner_frame = self.spinner_frame.wrapping_add(1);
+      self.led_state = LedState::wave(self.spinner_frame);
+      self.led_dirty = true;
+      return;
+    }
+
+    // Animate spinner during calibration
+    if self.state == AppState::Calibrating {
+      self.spinner_frame = self.spinner_frame.wrapping_add(1);
+      self.led_state = LedState::spinner(self.spinner_frame, 4);
+      self.led_dirty = true;
+      return;
+    }
+
     if self.state != AppState::GameInProgress {
       return;
     }
@@ -274,6 +334,29 @@ impl App {
     }
   }
 
+  /// Update both chess clock displays
+  fn update_clock_displays(&self) {
+    let timer = self.game.timer();
+    let current_turn = self.game.current_turn();
+    let game_active = self.state == AppState::GameInProgress;
+
+    let (white_min, white_sec) = timer.formatted_time(Color::White);
+    let (black_min, black_sec) = timer.formatted_time(Color::Black);
+
+    ChessClockDisplays::with(|d| {
+      d.update_white(
+        white_min,
+        white_sec,
+        game_active && matches!(current_turn, Color::White),
+      );
+      d.update_black(
+        black_min,
+        black_sec,
+        game_active && matches!(current_turn, Color::Black),
+      );
+    });
+  }
+
   /// Update display with current game status
   fn update_display(&self) {
     if self.state != AppState::GameInProgress {
@@ -281,11 +364,13 @@ impl App {
     }
 
     let turn = self.game.current_turn();
-    let (minutes, seconds) = self.game.timer().formatted_time(turn);
     let is_white = matches!(turn, Color::White);
 
     Display::with(|d| {
-      d.show_game_status(is_white, minutes, seconds, "Your move");
+      d.show_turn(is_white);
+      if let Some((from, to)) = self.last_move {
+        d.show_last_move(from, to);
+      }
     });
   }
 }
@@ -300,6 +385,7 @@ fn main() -> ! {
   Display::init();
   USB::init();
   Buzzer::init();
+  ChessClockDisplays::init();
 
   // Create application context
   let mut app = App::new();

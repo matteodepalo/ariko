@@ -113,7 +113,19 @@ impl Iterator for DestinationsIter {
   }
 }
 
+/// Game status from board perspective
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum BoardStatus {
+  /// Game ongoing
+  Ongoing,
+  /// Checkmate - side to move has lost
+  Checkmate,
+  /// Stalemate - draw
+  Stalemate,
+}
+
 /// Chess board state
+#[derive(Clone)]
 pub struct ChessBoard {
   squares: [Option<Piece>; 64],
   side_to_move: PieceColor,
@@ -228,6 +240,173 @@ impl ChessBoard {
     }
 
     dests
+  }
+
+  /// Find the king's square for a given color
+  pub fn find_king(&self, color: PieceColor) -> Option<u8> {
+    for sq in 0..64 {
+      if let Some(piece) = self.squares[sq] {
+        if piece.piece_type == PieceType::King && piece.color == color {
+          return Some(sq as u8);
+        }
+      }
+    }
+    None
+  }
+
+  /// Check if a square is attacked by the given color
+  pub fn is_square_attacked(&self, sq: u8, by_color: PieceColor) -> bool {
+    let sq_file = (sq % 8) as i8;
+    let sq_rank = (sq / 8) as i8;
+
+    // Check pawn attacks
+    let pawn_dir: i8 = match by_color {
+      PieceColor::White => -8, // White pawns attack upward, so look down for attackers
+      PieceColor::Black => 8,  // Black pawns attack downward, so look up for attackers
+    };
+    for &df in &[-1i8, 1i8] {
+      if let Some(attacker_sq) = add_offset(sq, pawn_dir + df) {
+        let att_file = (attacker_sq % 8) as i8;
+        if (att_file - sq_file).abs() == 1 {
+          if let Some(piece) = self.get(attacker_sq) {
+            if piece.piece_type == PieceType::Pawn && piece.color == by_color {
+              return true;
+            }
+          }
+        }
+      }
+    }
+
+    // Check knight attacks
+    let knight_offsets: [i8; 8] = [-17, -15, -10, -6, 6, 10, 15, 17];
+    for &offset in &knight_offsets {
+      if let Some(attacker_sq) = add_offset(sq, offset) {
+        let att_file = (attacker_sq % 8) as i8;
+        let att_rank = (attacker_sq / 8) as i8;
+        let df = (att_file - sq_file).abs();
+        let dr = (att_rank - sq_rank).abs();
+        if (df == 1 && dr == 2) || (df == 2 && dr == 1) {
+          if let Some(piece) = self.get(attacker_sq) {
+            if piece.piece_type == PieceType::Knight && piece.color == by_color {
+              return true;
+            }
+          }
+        }
+      }
+    }
+
+    // Check king attacks (for adjacent squares)
+    for &(df, dr) in &ALL_DIRS {
+      if let Some(attacker_sq) = add_offset(sq, dr * 8 + df) {
+        let att_file = (attacker_sq % 8) as i8;
+        if (att_file - sq_file).abs() <= 1 {
+          if let Some(piece) = self.get(attacker_sq) {
+            if piece.piece_type == PieceType::King && piece.color == by_color {
+              return true;
+            }
+          }
+        }
+      }
+    }
+
+    // Check sliding piece attacks (bishop/queen diagonals)
+    for &(df, dr) in &BISHOP_DIRS {
+      if self.is_attacked_from_direction(sq, by_color, df, dr, &[PieceType::Bishop, PieceType::Queen]) {
+        return true;
+      }
+    }
+
+    // Check sliding piece attacks (rook/queen lines)
+    for &(df, dr) in &ROOK_DIRS {
+      if self.is_attacked_from_direction(sq, by_color, df, dr, &[PieceType::Rook, PieceType::Queen]) {
+        return true;
+      }
+    }
+
+    false
+  }
+
+  /// Helper: check if square is attacked from a sliding direction
+  fn is_attacked_from_direction(&self, sq: u8, by_color: PieceColor, df: i8, dr: i8, piece_types: &[PieceType]) -> bool {
+    let mut curr_sq = sq;
+    let mut prev_file = (sq % 8) as i8;
+
+    loop {
+      let offset = dr * 8 + df;
+      match add_offset(curr_sq, offset) {
+        Some(next_sq) => {
+          let next_file = (next_sq % 8) as i8;
+          if (next_file - prev_file).abs() > 1 {
+            break;
+          }
+
+          if let Some(piece) = self.get(next_sq) {
+            if piece.color == by_color && piece_types.contains(&piece.piece_type) {
+              return true;
+            }
+            break; // Blocked by a piece
+          }
+
+          curr_sq = next_sq;
+          prev_file = next_file;
+        }
+        None => break,
+      }
+    }
+
+    false
+  }
+
+  /// Check if the given color's king is in check
+  pub fn is_in_check(&self, color: PieceColor) -> bool {
+    if let Some(king_sq) = self.find_king(color) {
+      self.is_square_attacked(king_sq, color.opponent())
+    } else {
+      false // No king found (shouldn't happen in valid game)
+    }
+  }
+
+  /// Check if a move is fully legal (doesn't leave own king in check)
+  pub fn is_legal(&self, from: u8, to: u8) -> bool {
+    if !self.is_pseudo_legal(from, to) {
+      return false;
+    }
+
+    // Make the move on a copy and check if king is in check
+    let mut test_board = self.clone();
+    test_board.make_move(from, to);
+
+    // After the move, check if the moving side's king is in check
+    // Note: make_move switches side_to_move, so we check the opponent (original mover)
+    !test_board.is_in_check(self.side_to_move)
+  }
+
+  /// Check if the side to move has any legal moves
+  pub fn has_legal_moves(&self) -> bool {
+    for from in 0..64u8 {
+      if let Some(piece) = self.get(from) {
+        if piece.color == self.side_to_move {
+          let dests = self.legal_destinations(from);
+          for to in dests {
+            if self.is_legal(from, to) {
+              return true;
+            }
+          }
+        }
+      }
+    }
+    false
+  }
+
+  /// Get the current board status (checkmate, stalemate, or ongoing)
+  pub fn status(&self) -> BoardStatus {
+    if self.has_legal_moves() {
+      BoardStatus::Ongoing
+    } else if self.is_in_check(self.side_to_move) {
+      BoardStatus::Checkmate
+    } else {
+      BoardStatus::Stalemate
+    }
   }
 
   fn pawn_moves(&self, from: u8, color: PieceColor, dests: &mut Destinations) {
@@ -440,5 +619,142 @@ mod tests {
 
     // Illegal - no piece
     assert!(!board.is_pseudo_legal(32, 40));
+  }
+
+  #[test]
+  fn test_find_king() {
+    let board = ChessBoard::starting_position();
+    assert_eq!(board.find_king(PieceColor::White), Some(4)); // e1
+    assert_eq!(board.find_king(PieceColor::Black), Some(60)); // e8
+  }
+
+  #[test]
+  fn test_not_in_check_at_start() {
+    let board = ChessBoard::starting_position();
+    assert!(!board.is_in_check(PieceColor::White));
+    assert!(!board.is_in_check(PieceColor::Black));
+  }
+
+  #[test]
+  fn test_check_by_rook() {
+    // Set up position: White King on e1, Black Rook on e8
+    let mut board = ChessBoard::empty();
+    board.squares[4] = Some(Piece::new(PieceType::King, PieceColor::White));
+    board.squares[60] = Some(Piece::new(PieceType::Rook, PieceColor::Black));
+
+    assert!(board.is_in_check(PieceColor::White));
+    assert!(!board.is_in_check(PieceColor::Black));
+  }
+
+  #[test]
+  fn test_check_by_bishop() {
+    // White King on e1, Black Bishop on h4 (diagonal)
+    let mut board = ChessBoard::empty();
+    board.squares[4] = Some(Piece::new(PieceType::King, PieceColor::White));
+    board.squares[31] = Some(Piece::new(PieceType::Bishop, PieceColor::Black)); // h4
+
+    assert!(board.is_in_check(PieceColor::White));
+  }
+
+  #[test]
+  fn test_check_by_knight() {
+    // White King on e1 (4), Black Knight on f3 (21)
+    let mut board = ChessBoard::empty();
+    board.squares[4] = Some(Piece::new(PieceType::King, PieceColor::White));
+    board.squares[21] = Some(Piece::new(PieceType::Knight, PieceColor::Black)); // f3
+
+    assert!(board.is_in_check(PieceColor::White));
+  }
+
+  #[test]
+  fn test_check_by_pawn() {
+    // White King on e4 (28), Black Pawn on d5 (35)
+    let mut board = ChessBoard::empty();
+    board.squares[28] = Some(Piece::new(PieceType::King, PieceColor::White));
+    board.squares[35] = Some(Piece::new(PieceType::Pawn, PieceColor::Black)); // d5
+
+    assert!(board.is_in_check(PieceColor::White));
+  }
+
+  #[test]
+  fn test_blocked_check() {
+    // White King on e1, Black Rook on e8, White Pawn on e2 (blocks)
+    let mut board = ChessBoard::empty();
+    board.squares[4] = Some(Piece::new(PieceType::King, PieceColor::White));
+    board.squares[60] = Some(Piece::new(PieceType::Rook, PieceColor::Black));
+    board.squares[12] = Some(Piece::new(PieceType::Pawn, PieceColor::White)); // e2
+
+    assert!(!board.is_in_check(PieceColor::White)); // Pawn blocks
+  }
+
+  #[test]
+  fn test_is_legal_blocks_self_check() {
+    // White King on e1, Black Rook on e8, White Pawn on e2
+    // Moving the pawn would expose king to check - should be illegal
+    let mut board = ChessBoard::empty();
+    board.squares[4] = Some(Piece::new(PieceType::King, PieceColor::White));
+    board.squares[60] = Some(Piece::new(PieceType::Rook, PieceColor::Black));
+    board.squares[12] = Some(Piece::new(PieceType::Pawn, PieceColor::White));
+
+    // Pawn moving forward is pseudo-legal but not fully legal (exposes king)
+    assert!(board.is_pseudo_legal(12, 20)); // e2-e3
+    assert!(!board.is_legal(12, 20)); // Can't move - would expose king
+  }
+
+  #[test]
+  fn test_must_escape_check() {
+    // White King on e1, Black Rook on e8, White's turn
+    // King must move, other pieces can't move
+    let mut board = ChessBoard::empty();
+    board.squares[4] = Some(Piece::new(PieceType::King, PieceColor::White));
+    board.squares[60] = Some(Piece::new(PieceType::Rook, PieceColor::Black));
+    board.squares[0] = Some(Piece::new(PieceType::Rook, PieceColor::White)); // a1
+
+    assert!(board.is_in_check(PieceColor::White));
+
+    // King can escape to d1, d2, f1, f2
+    assert!(board.is_legal(4, 3)); // e1-d1
+    assert!(board.is_legal(4, 5)); // e1-f1
+
+    // White rook can't move - doesn't help with check
+    assert!(!board.is_legal(0, 8)); // a1-a2 doesn't help
+  }
+
+  #[test]
+  fn test_checkmate() {
+    // Fool's mate position: Black queen on h4, bishop on c5, White king on e1
+    // Actually, let's use a simpler back-rank mate
+    let mut board = ChessBoard::empty();
+    board.squares[4] = Some(Piece::new(PieceType::King, PieceColor::White)); // e1
+    board.squares[8] = Some(Piece::new(PieceType::Pawn, PieceColor::White)); // a2
+    board.squares[9] = Some(Piece::new(PieceType::Pawn, PieceColor::White)); // b2
+    board.squares[12] = Some(Piece::new(PieceType::Pawn, PieceColor::White)); // e2
+    board.squares[13] = Some(Piece::new(PieceType::Pawn, PieceColor::White)); // f2
+    board.squares[14] = Some(Piece::new(PieceType::Pawn, PieceColor::White)); // g2
+    board.squares[60] = Some(Piece::new(PieceType::Rook, PieceColor::Black)); // e8
+
+    assert!(board.is_in_check(PieceColor::White));
+    assert!(!board.has_legal_moves());
+    assert_eq!(board.status(), BoardStatus::Checkmate);
+  }
+
+  #[test]
+  fn test_stalemate() {
+    // King on a1 with no legal moves, not in check
+    let mut board = ChessBoard::empty();
+    board.squares[0] = Some(Piece::new(PieceType::King, PieceColor::White)); // a1
+    board.squares[17] = Some(Piece::new(PieceType::Queen, PieceColor::Black)); // b3
+    board.squares[10] = Some(Piece::new(PieceType::King, PieceColor::Black)); // c2
+
+    assert!(!board.is_in_check(PieceColor::White));
+    assert!(!board.has_legal_moves());
+    assert_eq!(board.status(), BoardStatus::Stalemate);
+  }
+
+  #[test]
+  fn test_ongoing_game() {
+    let board = ChessBoard::starting_position();
+    assert_eq!(board.status(), BoardStatus::Ongoing);
+    assert!(board.has_legal_moves());
   }
 }

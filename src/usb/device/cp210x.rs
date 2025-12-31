@@ -42,15 +42,6 @@ pub struct CP210xDeviceClass;
 
 impl CP210xDevice {
   pub fn poll(&self, usb: &USB) -> Result<(), Error> {
-    // Send LED heartbeat (8 zeros) to keep board active
-    let out_pipe_index = critical_section::with(|cs| *OUT_PIPE_INDEX.borrow(cs).borrow());
-    if let Some(index) = out_pipe_index {
-      if let Some(pipe) = usb.get_pipe(index) {
-        let mut led_msg = [0x00u8; 8];
-        let _ = pipe.as_stream_out().out_transfer(&mut led_msg);
-      }
-    }
-
     let mut status_buffer = [0_u8; size_of::<StatusResponse>()];
 
     let setup_packet = SetupPacket::new(
@@ -136,7 +127,8 @@ impl CP210xDevice {
 
   /// Send LED state to the Certabo board
   ///
-  /// Takes 8 bytes, one per file (a-h), where each bit represents a rank.
+  /// Takes 8 bytes, one per rank (byte 0 = rank 8, byte 7 = rank 1).
+  /// Each bit represents a file (bit 0 = file a, bit 7 = file h).
   pub fn send_leds(data: &[u8; 8]) -> Result<(), Error> {
     USB::with(|usb| {
       let pipe_index = critical_section::with(|cs| *OUT_PIPE_INDEX.borrow(cs).borrow());
@@ -317,9 +309,10 @@ impl CP210xDeviceClass {
         IN_PIPE_INDEX.borrow(cs).replace(Some(in_pipe_index));
       });
 
-      // Configure OUT pipe for sending LED commands (endpoint 2)
+      // Configure OUT pipe for sending LED commands (endpoint 1)
+      // CP210x uses endpoint 1 for both IN and OUT (direction determined by pipe type)
       let out_pipe = usb.alloc_pipe(|p| p.into_stream_out())?;
-      out_pipe.configure(generic_device.address, 2, Transfer::Bulk);
+      out_pipe.configure(generic_device.address, 1, Transfer::Bulk);
       let out_pipe_index = out_pipe.index();
 
       critical_section::with(|cs| {

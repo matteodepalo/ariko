@@ -10,6 +10,7 @@ pub mod jhd1802;
 pub mod logger;
 pub mod peripherals;
 pub mod serial;
+pub mod tm1637;
 pub mod usb;
 
 // Enable std for tests (tests run on host, not embedded target)

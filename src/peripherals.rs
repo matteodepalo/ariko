@@ -3,7 +3,7 @@ use cortex_m::peripheral::{NVIC, SYST};
 use critical_section::Mutex;
 use sam3x8e_hal::gpio::pioa::PA29;
 use sam3x8e_hal::gpio::piob::PB25;
-use sam3x8e_hal::gpio::pioc::PC28;
+use sam3x8e_hal::gpio::pioc::{PC22, PC23, PC24, PC25, PC28};
 use sam3x8e_hal::gpio::{Input, Output, PullUp, PushPull};
 use sam3x8e_hal::pac as sam3x8e;
 use sam3x8e_hal::pac::{Interrupt, PIOB, PIOC, RTT, TC0, TWI0, UART, UOTGHS};
@@ -24,6 +24,11 @@ pub struct Peripherals {
   pub white_button: PC28<Input<PullUp>>,
   pub buzzer: PA29<Output<PushPull>>,
   pub timer: Timer<RTT>,
+  // TM1637 display pins (Grove D7 = White clock, D5 = Black clock)
+  pub white_clk: PC23<Output<PushPull>>,
+  pub white_dio: PC22<Output<PushPull>>,
+  pub black_clk: PC25<Output<PushPull>>,
+  pub black_dio: PC24<Output<PushPull>>,
 }
 
 impl Peripherals {
@@ -81,6 +86,20 @@ impl Peripherals {
       .pa29
       .into_push_pull_output(&mut pioa.mddr, &mut pioa.oer);
 
+    // TM1637 display pins (Grove D7 = White clock, D5 = Black clock)
+    let white_clk = pioc
+      .pc23
+      .into_push_pull_output(&mut pioc.mddr, &mut pioc.oer);
+    let white_dio = pioc
+      .pc22
+      .into_push_pull_output(&mut pioc.mddr, &mut pioc.oer);
+    let black_clk = pioc
+      .pc25
+      .into_push_pull_output(&mut pioc.mddr, &mut pioc.oer);
+    let black_dio = pioc
+      .pc24
+      .into_push_pull_output(&mut pioc.mddr, &mut pioc.oer);
+
     // Configure button interrupts (falling edge on PB25 and PC28)
     configure_button_interrupts();
 
@@ -108,6 +127,10 @@ impl Peripherals {
         pmc,
         delay,
         timer,
+        white_clk,
+        white_dio,
+        black_clk,
+        black_dio,
       }));
     });
   }
@@ -185,8 +208,10 @@ fn configure_timer_interrupt(tc0: &TC0, pmc: &mut Pmc) {
     });
 
     // Set RC compare value for 100ms period
-    // 656,250 Hz * 0.1s = 65,625 counts
-    tc0.rc0().write(|w| w.rc().bits(65625));
+    // Empirically adjusted - system clock appears to be ~21MHz (84/4)
+    // 21MHz / 128 = 164,062.5 Hz
+    // 164,062.5 * 0.1s = 16,406 counts
+    tc0.rc0().write(|w| w.rc().bits(16406));
 
     // Enable RC compare interrupt (CPCS)
     tc0.ier0().write_with_zero(|w| w.cpcs().set_bit());

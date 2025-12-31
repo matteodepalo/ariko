@@ -182,7 +182,9 @@ impl InnerPipe {
 
     match packet {
       Packet::DataOut(_) => {
-        for i in 0..(packet.len() / PIPE_SIZE) {
+        // Use ceiling division to ensure packets smaller than PIPE_SIZE are sent
+        let num_chunks = (packet.len() + PIPE_SIZE - 1) / PIPE_SIZE;
+        for i in 0..num_chunks {
           let start = i * PIPE_SIZE;
           let end = min(packet.len(), start + PIPE_SIZE);
           let mut slice = DataOutPacket::new(packet.slice(start..end));

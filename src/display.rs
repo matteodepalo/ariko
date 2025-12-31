@@ -45,33 +45,51 @@ impl Display {
     JHD1802::with(|jhd1802| jhd1802.clear());
   }
 
-  /// Display game status with turn and timer
-  /// Line 1: "White 09:45" or "Black 08:30"
-  /// Line 2: Status message or last move
-  pub fn show_game_status(&self, is_white_turn: bool, minutes: u8, seconds: u8, line2: &str) {
+  /// Display game status with turn and last move
+  /// Line 1: "White to move" or "Black to move"
+  /// Line 2: Last move (e.g., "Last: e2-e4")
+  pub fn show_turn(&self, is_white_turn: bool) {
     JHD1802::with(|jhd1802| {
       jhd1802.clear();
       jhd1802.set_cursor(0, 0);
-
-      // Line 1: Turn and timer
       if is_white_turn {
-        jhd1802.send_str("White ");
+        jhd1802.send_str("White to move");
       } else {
-        jhd1802.send_str("Black ");
+        jhd1802.send_str("Black to move");
       }
-
-      // Format time as MM:SS
-      let m1 = b'0' + (minutes / 10);
-      let m2 = b'0' + (minutes % 10);
-      let s1 = b'0' + (seconds / 10);
-      let s2 = b'0' + (seconds % 10);
-
-      jhd1802.send_str(core::str::from_utf8(&[m1, m2, b':', s1, s2]).unwrap_or("??:??"));
-
-      // Line 2: Status or move
-      jhd1802.set_cursor(0, 1);
-      jhd1802.send_str(line2);
     });
+  }
+
+  /// Display last move on line 2
+  /// Format: "Last: e2-e4" or "Last: Nf3xg5"
+  pub fn show_last_move(&self, from_sq: u8, to_sq: u8) {
+    JHD1802::with(|jhd1802| {
+      jhd1802.set_cursor(0, 1);
+      jhd1802.send_str("Last: ");
+      jhd1802.send_str(Self::square_name(from_sq));
+      jhd1802.send_str("-");
+      jhd1802.send_str(Self::square_name(to_sq));
+      jhd1802.send_str("        "); // Clear rest of line
+    });
+  }
+
+  /// Convert square index (0-63) to algebraic notation
+  fn square_name(sq: u8) -> &'static str {
+    const SQUARES: [&str; 64] = [
+      "a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1",
+      "a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2",
+      "a3", "b3", "c3", "d3", "e3", "f3", "g3", "h3",
+      "a4", "b4", "c4", "d4", "e4", "f4", "g4", "h4",
+      "a5", "b5", "c5", "d5", "e5", "f5", "g5", "h5",
+      "a6", "b6", "c6", "d6", "e6", "f6", "g6", "h6",
+      "a7", "b7", "c7", "d7", "e7", "f7", "g7", "h7",
+      "a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8",
+    ];
+    if sq < 64 {
+      SQUARES[sq as usize]
+    } else {
+      "??"
+    }
   }
 
   /// Display calibration prompt
