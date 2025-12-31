@@ -6,8 +6,8 @@ use sam3x8e_hal::gpio::piob::PB25;
 use sam3x8e_hal::gpio::pioc::PC28;
 use sam3x8e_hal::gpio::{Input, Output, PullUp, PushPull};
 use sam3x8e_hal::pac as sam3x8e;
-use sam3x8e_hal::pac::{RTT, TWI0, UART, UOTGHS};
-use sam3x8e_hal::pmc::{Config, MainOscillator, Pmc, PmcExt};
+use sam3x8e_hal::pac::{Interrupt, PIOB, PIOC, RTT, TC0, TWI0, UART, UOTGHS};
+use sam3x8e_hal::pmc::{Config, MainOscillator, PeripheralClock, Pmc, PmcExt};
 use sam3x8e_hal::prelude::*;
 use sam3x8e_hal::time::Hertz;
 use sam3x8e_hal::timer::Timer;
@@ -18,7 +18,6 @@ pub struct Peripherals {
   pub uart: UART,
   pub twi0: TWI0,
   pub uotghs: UOTGHS,
-  pub nvic: NVIC,
   pub pmc: Pmc,
   pub delay: Delay<SYST>,
   pub blue_button: PB25<Input<PullUp>>,
@@ -30,10 +29,12 @@ pub struct Peripherals {
 impl Peripherals {
   pub fn init() {
     let p = sam3x8e::Peripherals::take().unwrap();
-    let cp = cortex_m::Peripherals::take().unwrap();
+    let mut cp = cortex_m::Peripherals::take().unwrap();
 
     // Disable watchdog to prevent restarts
-    unsafe { p.WDT.mr().write_with_zero(|w| w.wddis().set_bit()); }
+    unsafe {
+      p.WDT.mr().write_with_zero(|w| w.wddis().set_bit());
+    }
 
     let mut pmc = p
       .PMC
@@ -80,12 +81,27 @@ impl Peripherals {
       .pa29
       .into_push_pull_output(&mut pioa.mddr, &mut pioa.oer);
 
+    // Configure button interrupts (falling edge on PB25 and PC28)
+    configure_button_interrupts();
+
+    // Configure TC0 for 100ms periodic interrupt
+    configure_timer_interrupt(&p.TC0, &mut pmc);
+
+    // Enable interrupts in NVIC
+    unsafe {
+      cp.NVIC.set_priority(Interrupt::PIOB, 2);
+      cp.NVIC.set_priority(Interrupt::PIOC, 2);
+      cp.NVIC.set_priority(Interrupt::TC0, 1);
+      NVIC::unmask(Interrupt::PIOB);
+      NVIC::unmask(Interrupt::PIOC);
+      NVIC::unmask(Interrupt::TC0);
+    }
+
     critical_section::with(|cs| {
       PERIPHERALS.borrow(cs).replace(Some(Peripherals {
         uart: p.UART,
         twi0: p.TWI0,
         uotghs: p.UOTGHS,
-        nvic: cp.NVIC,
         blue_button,
         white_button,
         buzzer,
@@ -107,5 +123,69 @@ impl Peripherals {
       let peripherals = borrow.as_mut().expect("Peripherals not initialized");
       f(peripherals)
     })
+  }
+}
+
+/// Configure PIO interrupts for buttons (falling edge).
+fn configure_button_interrupts() {
+  unsafe {
+    let piob = &*PIOB::ptr();
+    let pioc = &*PIOC::ptr();
+
+    // Blue button on PB25: falling edge interrupt
+    // AIMER: Additional Interrupt Modes Enable
+    piob.aimer().write_with_zero(|w| w.bits(1 << 25));
+    // ESR: Edge Select Register (1 = edge, not level)
+    piob.esr().write_with_zero(|w| w.bits(1 << 25));
+    // FELLSR: Falling Edge/Low Level Select (1 = falling edge)
+    piob.fellsr().write_with_zero(|w| w.bits(1 << 25));
+    // Clear any pending interrupt by reading ISR
+    let _ = piob.isr().read();
+    // IER: Interrupt Enable Register
+    piob.ier().write_with_zero(|w| w.bits(1 << 25));
+
+    // White button on PC28: falling edge interrupt
+    pioc.aimer().write_with_zero(|w| w.bits(1 << 28));
+    pioc.esr().write_with_zero(|w| w.bits(1 << 28));
+    pioc.fellsr().write_with_zero(|w| w.bits(1 << 28));
+    let _ = pioc.isr().read();
+    pioc.ier().write_with_zero(|w| w.bits(1 << 28));
+  }
+}
+
+/// Configure TC0 channel 0 for 100ms periodic interrupt.
+///
+/// Clock: MCK/128 (84MHz/128 = 656,250 Hz)
+/// For 100ms: RC = 656,250 * 0.1 = 65,625 counts
+fn configure_timer_interrupt(tc0: &TC0, pmc: &mut Pmc) {
+  // Enable TC0 peripheral clock
+  pmc.enable_clock(PeripheralClock::Tc0);
+
+  unsafe {
+    // Disable clock first
+    tc0.ccr0().write_with_zero(|w| w.clkdis().set_bit());
+
+    // Configure channel mode:
+    // - WAVE = 1 (waveform mode)
+    // - WAVSEL = UP_RC (UP mode with automatic trigger on RC compare)
+    // - TCCLKS = TIMER_CLOCK4 (MCK/128)
+    tc0.wave_eq_1_cmr0_wave_eq_1().write(|w| {
+      w.tcclks()
+        .timer_clock4() // MCK/128 = 656,250 Hz
+        .wave()
+        .set_bit()
+        .wavsel()
+        .up_rc() // UP mode, reset on RC compare
+    });
+
+    // Set RC compare value for 100ms period
+    // 656,250 Hz * 0.1s = 65,625 counts
+    tc0.rc0().write(|w| w.rc().bits(65625));
+
+    // Enable RC compare interrupt (CPCS)
+    tc0.ier0().write_with_zero(|w| w.cpcs().set_bit());
+
+    // Enable clock and trigger
+    tc0.ccr0().write_with_zero(|w| w.clken().set_bit().swtrg().set_bit());
   }
 }

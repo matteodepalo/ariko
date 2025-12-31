@@ -5,13 +5,15 @@
 extern crate cortex_m_rt;
 
 use core::panic::PanicInfo;
+use core::sync::atomic::Ordering;
 
 use certabo::buzzer::Buzzer;
-use certabo::certabo::calibration::CalibrationData;
 use certabo::certabo::buffer::MAX_LINE_LEN;
+use certabo::certabo::calibration::CalibrationData;
 use certabo::certabo::leds::LedState;
 use certabo::certabo::protocol::RfidReading;
 use certabo::display::Display;
+use certabo::events::{consume, BLUE_BUTTON_PRESSED, MILLIS, TIMER_TICK, WHITE_BUTTON_PRESSED};
 use certabo::game::state::{GameState, GameStatus};
 use certabo::game::timer::Color;
 use certabo::i2c::I2C;
@@ -22,7 +24,7 @@ use certabo::usb::{CP210xDevice, USB};
 use core::fmt::Write;
 use cortex_m_rt::entry;
 use embedded_hal::delay::DelayNs;
-use embedded_hal::digital::InputPin;
+use sam3x8e_hal::pac::{PIOB, PIOC, TC0};
 
 /// Application state machine
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -51,7 +53,6 @@ struct App {
   last_reading: Option<RfidReading>,
   led_state: LedState,
   led_dirty: bool,
-  last_tick_ms: u32,
 }
 
 impl App {
@@ -63,7 +64,6 @@ impl App {
       last_reading: None,
       led_state: LedState::new(),
       led_dirty: false,
-      last_tick_ms: 0,
     }
   }
 
@@ -306,28 +306,24 @@ fn main() -> ! {
     d.show_calibration_prompt();
   });
 
-  // Main loop
-  let mut last_time_ms: u32 = 0;
-
+  // Main loop - event driven with WFI
   loop {
-    // Check buttons
-    Peripherals::with(|p| {
-      // Blue button = Calibrate
-      if p.blue_button.is_low().unwrap_or(false) {
-        app.on_blue_button();
-        // Debounce
-        p.delay.delay_ms(200);
-      }
+    // Process button events (set by interrupt handlers)
+    if consume(&BLUE_BUTTON_PRESSED) {
+      app.on_blue_button();
+    }
 
-      // White button = Pause/Resume
-      if p.white_button.is_low().unwrap_or(false) {
-        app.on_white_button();
-        // Debounce
-        p.delay.delay_ms(200);
-      }
-    });
+    if consume(&WHITE_BUTTON_PRESSED) {
+      app.on_white_button();
+    }
 
-    // Poll USB for board data
+    // Process timer tick (100ms, set by TC0 interrupt)
+    if consume(&TIMER_TICK) {
+      app.tick(100);
+      app.update_display();
+    }
+
+    // Poll USB for board data (still polling, but runs on each wake)
     USB::with(|usb| usb.poll());
 
     // Check for complete RFID reading from Certabo board
@@ -344,16 +340,46 @@ fn main() -> ! {
       app.led_dirty = false;
     }
 
-    // Update timer (approximate timing using delay)
-    // In real implementation, use RTT or hardware timer
-    let current_time_ms = last_time_ms + 10; // Approximate 10ms per loop
-    let elapsed = current_time_ms - last_time_ms;
-    app.tick(elapsed);
-    last_time_ms = current_time_ms;
-
-    // Small delay to prevent busy loop
-    Peripherals::with(|p| p.delay.delay_ms(10));
+    // Sleep until next interrupt (button, timer, or any other)
+    cortex_m::asm::wfi();
   }
+}
+
+// Interrupt handlers
+// These are extern "C" functions that match the vector table entries
+
+#[unsafe(no_mangle)]
+pub extern "C" fn PIOB() {
+  // Read ISR to clear interrupt and get triggered pins
+  let isr = unsafe { (*PIOB::ptr()).isr().read().bits() };
+
+  // Blue button on PB25
+  if isr & (1 << 25) != 0 {
+    BLUE_BUTTON_PRESSED.store(true, Ordering::SeqCst);
+  }
+}
+
+#[unsafe(no_mangle)]
+pub extern "C" fn PIOC() {
+  // Read ISR to clear interrupt and get triggered pins
+  let isr = unsafe { (*PIOC::ptr()).isr().read().bits() };
+
+  // White button on PC28
+  if isr & (1 << 28) != 0 {
+    WHITE_BUTTON_PRESSED.store(true, Ordering::SeqCst);
+  }
+}
+
+#[unsafe(no_mangle)]
+pub extern "C" fn TC0() {
+  // Read SR to clear interrupt flag
+  let _ = unsafe { (*TC0::ptr()).sr0().read() };
+
+  // Increment monotonic counter by 100ms
+  MILLIS.fetch_add(100, Ordering::Relaxed);
+
+  // Signal timer tick to main loop
+  TIMER_TICK.store(true, Ordering::SeqCst);
 }
 
 #[inline(never)]

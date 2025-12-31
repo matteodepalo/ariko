@@ -2,6 +2,7 @@
 
 pub mod buzzer;
 pub mod certabo;
+pub mod events;
 pub mod game;
 pub mod display;
 pub mod i2c;
