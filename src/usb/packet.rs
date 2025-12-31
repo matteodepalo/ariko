@@ -7,7 +7,7 @@ use core::slice;
 use sam3x8e_hal::timer::CountDown;
 use log::debug;
 use modular_bitfield::prelude::*;
-use sam3x8e_hal::pac::UOTGHS;
+use sam3x8e_hal::pac::{uotghs, UOTGHS};
 use sam3x8e_hal::time::U32Ext;
 
 // Macros for indexed pipe register access
@@ -314,7 +314,7 @@ impl<'a> Message<'a> {
     })
   }
 
-  fn uotghs(&self) -> &UOTGHS {
+  fn uotghs(&self) -> &uotghs::RegisterBlock {
     unsafe { &*UOTGHS::ptr() }
   }
 

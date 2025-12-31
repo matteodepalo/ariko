@@ -2,7 +2,7 @@ use crate::usb::packet::{DataInPacket, DataOutPacket, Packet, SetupPacket, Setup
 use crate::usb::Error;
 use core::cmp::min;
 use log::debug;
-use sam3x8e_hal::pac::UOTGHS;
+use sam3x8e_hal::pac::{uotghs, UOTGHS};
 
 const PIPE_SIZE: usize = 64;
 
@@ -272,7 +272,7 @@ impl InnerPipe {
     });
   }
 
-  fn uotghs(&self) -> &UOTGHS {
+  fn uotghs(&self) -> &uotghs::RegisterBlock {
     // Use pointer to get a static reference to the UOTGHS peripheral
     unsafe { &*UOTGHS::ptr() }
   }

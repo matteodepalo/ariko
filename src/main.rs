@@ -2,10 +2,8 @@
 #![no_main]
 #![allow(dead_code)]
 
-extern crate alloc;
 extern crate cortex_m_rt;
 
-use core::mem::MaybeUninit;
 use core::panic::PanicInfo;
 
 use certabo::buzzer::Buzzer;
@@ -22,11 +20,8 @@ use certabo::serial::Serial;
 use certabo::usb::USB;
 use core::fmt::Write;
 use cortex_m_rt::entry;
-use embedded_alloc::LlffHeap as Heap;
 use embedded_hal::delay::DelayNs;
-
-#[global_allocator]
-static HEAP: Heap = Heap::empty();
+use embedded_hal::digital::InputPin;
 
 /// Application state machine
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -283,13 +278,6 @@ impl App {
 
 #[entry]
 fn main() -> ! {
-  // Initialize heap allocator (8KB)
-  {
-    const HEAP_SIZE: usize = 8192;
-    static mut HEAP_MEM: [MaybeUninit<u8>; HEAP_SIZE] = [MaybeUninit::uninit(); HEAP_SIZE];
-    unsafe { HEAP.init(HEAP_MEM.as_ptr() as usize, HEAP_SIZE) }
-  }
-
   // Initialize peripherals
   Peripherals::init();
   Serial::init(57600);
@@ -321,14 +309,14 @@ fn main() -> ! {
     // Check buttons
     Peripherals::with(|p| {
       // Blue button = Calibrate
-      if p.blue_button.try_is_low().unwrap_or(false) {
+      if p.blue_button.is_low().unwrap_or(false) {
         app.on_blue_button();
         // Debounce
         p.delay.delay_ms(200);
       }
 
       // White button = Pause/Resume
-      if p.white_button.try_is_low().unwrap_or(false) {
+      if p.white_button.is_low().unwrap_or(false) {
         app.on_white_button();
         // Debounce
         p.delay.delay_ms(200);

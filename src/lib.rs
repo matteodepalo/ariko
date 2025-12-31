@@ -1,7 +1,5 @@
 #![no_std]
 
-extern crate alloc;
-
 pub mod buzzer;
 pub mod certabo;
 pub mod game;

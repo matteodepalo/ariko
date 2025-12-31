@@ -1,9 +1,6 @@
 //! Game state management
 //!
-//! Wraps the chess-engine crate for move validation and game state tracking.
-
-use alloc::vec::Vec;
-use chess_engine::{Board, Color as ChessColor, GameResult, Move, Position};
+//! Simple board state tracking for MVP. No move validation.
 
 use crate::game::timer::{ChessTimer, Color};
 
@@ -28,8 +25,8 @@ pub enum GameStatus {
 
 /// Main game state
 pub struct GameState {
-  /// Chess board state (from chess-engine crate)
-  board: Board,
+  /// Current turn
+  turn: Color,
   /// Current game status
   status: GameStatus,
   /// Chess timer
@@ -38,6 +35,8 @@ pub struct GameState {
   lifted_piece: Option<u8>,
   /// Square from which a piece was lifted (for move detection)
   lift_square: Option<u8>,
+  /// Move count (half-moves)
+  move_count: u16,
 }
 
 impl Default for GameState {
@@ -50,11 +49,12 @@ impl GameState {
   /// Create a new game state
   pub fn new() -> Self {
     Self {
-      board: Board::default(),
+      turn: Color::White,
       status: GameStatus::WaitingForCalibration,
       timer: ChessTimer::new(),
       lifted_piece: None,
       lift_square: None,
+      move_count: 0,
     }
   }
 
@@ -79,10 +79,7 @@ impl GameState {
 
   /// Get the current turn color
   pub fn current_turn(&self) -> Color {
-    match self.board.get_turn_color() {
-      ChessColor::White => Color::White,
-      ChessColor::Black => Color::Black,
-    }
+    self.turn
   }
 
   /// Get timer reference
@@ -96,71 +93,30 @@ impl GameState {
   }
 
   /// Check if a move from one square to another is legal
-  pub fn is_legal_move(&self, from: u8, to: u8) -> bool {
-    let from_pos = index_to_position(from);
-    let to_pos = index_to_position(to);
-
-    self
-      .board
-      .get_legal_moves()
-      .iter()
-      .any(|m| m.get_from() == from_pos && m.get_to() == to_pos)
+  /// For MVP, all moves are considered legal (physical board enforces this)
+  pub fn is_legal_move(&self, _from: u8, _to: u8) -> bool {
+    true
   }
 
   /// Get all legal destination squares for a piece at the given square
-  pub fn legal_destinations(&self, from: u8) -> Vec<u8> {
-    let from_pos = index_to_position(from);
-
-    self
-      .board
-      .get_legal_moves()
-      .iter()
-      .filter(|m| m.get_from() == from_pos)
-      .map(|m| position_to_index(m.get_to()))
-      .collect()
+  /// For MVP, returns empty (no highlights)
+  pub fn legal_destinations(&self, _from: u8) -> [u8; 0] {
+    []
   }
 
   /// Make a move on the board
   ///
-  /// Returns `true` if the move was legal and made, `false` otherwise.
-  pub fn make_move(&mut self, from: u8, to: u8) -> bool {
-    let from_pos = index_to_position(from);
-    let to_pos = index_to_position(to);
-
-    // Find the matching legal move
-    let legal_moves = self.board.get_legal_moves();
-    let chess_move = legal_moves
-      .iter()
-      .find(|m| m.get_from() == from_pos && m.get_to() == to_pos);
-
-    if let Some(m) = chess_move {
-      self.board = self.board.play_move(*m);
-
-      // Check for game end conditions
-      self.check_game_result();
-
-      true
-    } else {
-      false
-    }
-  }
-
-  /// Check game result and update status
-  fn check_game_result(&mut self) {
-    match self.board.get_game_result() {
-      Some(GameResult::WhiteWins) => {
-        self.set_status(GameStatus::WhiteWins);
-      }
-      Some(GameResult::BlackWins) => {
-        self.set_status(GameStatus::BlackWins);
-      }
-      Some(GameResult::Draw) => {
-        self.set_status(GameStatus::Draw);
-      }
-      None => {
-        // Game continues
-      }
-    }
+  /// For MVP, just switches turn. Returns `true` always.
+  pub fn make_move(&mut self, _from: u8, _to: u8) -> bool {
+    // Switch turns
+    self.turn = match self.turn {
+      Color::White => Color::Black,
+      Color::Black => Color::White,
+    };
+    self.move_count += 1;
+    self.lifted_piece = None;
+    self.lift_square = None;
+    true
   }
 
   /// Record that a piece was lifted from a square
@@ -191,10 +147,11 @@ impl GameState {
 
   /// Reset the game to starting position
   pub fn reset(&mut self) {
-    self.board = Board::default();
+    self.turn = Color::White;
     self.timer.reset();
     self.lifted_piece = None;
     self.lift_square = None;
+    self.move_count = 0;
     self.status = GameStatus::WaitingForSetup;
   }
 
@@ -227,20 +184,11 @@ impl GameState {
       _ => {}
     }
   }
-}
 
-/// Convert square index (0-63) to chess-engine Position
-fn index_to_position(index: u8) -> Position {
-  let file = index % 8;
-  let rank = index / 8;
-  Position::new(file as i32, rank as i32)
-}
-
-/// Convert chess-engine Position to square index (0-63)
-fn position_to_index(pos: Position) -> u8 {
-  let file = pos.get_col() as u8;
-  let rank = pos.get_row() as u8;
-  rank * 8 + file
+  /// Get move count
+  pub fn move_count(&self) -> u16 {
+    self.move_count
+  }
 }
 
 #[cfg(test)]
@@ -255,55 +203,15 @@ mod tests {
   }
 
   #[test]
-  fn test_index_position_conversion() {
-    // a1 = 0
-    assert_eq!(position_to_index(index_to_position(0)), 0);
-    // h1 = 7
-    assert_eq!(position_to_index(index_to_position(7)), 7);
-    // a8 = 56
-    assert_eq!(position_to_index(index_to_position(56)), 56);
-    // h8 = 63
-    assert_eq!(position_to_index(index_to_position(63)), 63);
-    // e4 = 28
-    assert_eq!(position_to_index(index_to_position(28)), 28);
-  }
-
-  #[test]
-  fn test_legal_move_e2e4() {
-    let game = GameState::new();
-    // e2 = 12, e4 = 28
-    assert!(game.is_legal_move(12, 28));
-  }
-
-  #[test]
-  fn test_illegal_move() {
-    let game = GameState::new();
-    // e2 = 12, e5 = 36 (pawn can't move 3 squares)
-    assert!(!game.is_legal_move(12, 36));
-  }
-
-  #[test]
-  fn test_make_move() {
+  fn test_make_move_switches_turn() {
     let mut game = GameState::new();
     game.set_status(GameStatus::InProgress);
 
-    // 1. e4
-    assert!(game.make_move(12, 28));
-    assert_eq!(game.current_turn(), Color::Black);
-
-    // 1... e5
-    assert!(game.make_move(52, 36));
     assert_eq!(game.current_turn(), Color::White);
-  }
-
-  #[test]
-  fn test_legal_destinations() {
-    let game = GameState::new();
-    // e2 pawn can go to e3 (20) or e4 (28)
-    let dests = game.legal_destinations(12);
-    assert!(dests.contains(&20));
-    assert!(dests.contains(&28));
-    assert_eq!(dests.len(), 2);
+    game.make_move(12, 28);
+    assert_eq!(game.current_turn(), Color::Black);
+    game.make_move(52, 36);
+    assert_eq!(game.current_turn(), Color::White);
   }
 
   #[test]
@@ -348,5 +256,6 @@ mod tests {
     game.reset();
     assert_eq!(game.status(), GameStatus::WaitingForSetup);
     assert_eq!(game.current_turn(), Color::White);
+    assert_eq!(game.move_count(), 0);
   }
 }

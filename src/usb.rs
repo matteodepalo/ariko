@@ -6,7 +6,7 @@ use critical_section::Mutex;
 use sam3x8e_hal::timer::CountDown;
 use log::debug;
 use nb::block;
-use sam3x8e_hal::pac::{RTT, UOTGHS};
+use sam3x8e_hal::pac::{uotghs, UOTGHS};
 use sam3x8e_hal::pmc::PeripheralClock;
 use sam3x8e_hal::time::U32Ext;
 use sam3x8e_hal::timer::Timer;
@@ -302,7 +302,7 @@ impl USB {
     });
   }
 
-  fn uotghs(&self) -> &UOTGHS {
+  fn uotghs(&self) -> &uotghs::RegisterBlock {
     // Use pointer to get a static reference to the UOTGHS peripheral
     // This is safe because the hardware registers are memory-mapped and don't move
     unsafe { &*UOTGHS::ptr() }

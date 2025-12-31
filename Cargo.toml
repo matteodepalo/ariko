@@ -17,8 +17,3 @@ nb = "1.1"
 modular-bitfield = "0.11.2"
 log = "0.4.14"
 
-# Heap allocator for no_std
-embedded-alloc = "0.6"
-
-# Chess move validation (no_std + alloc)
-chess-engine = "0.1"
