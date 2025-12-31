@@ -186,6 +186,73 @@ impl Buzzer {
       p.delay.delay_us(CYCLE / 2); // run the PMW cycle
     });
   }
+
+  /// Play multiple beep cycles
+  fn beep_cycles(&self, cycles: u32) {
+    for _ in 0..cycles {
+      self.beep();
+    }
+  }
+
+  /// Short beep for valid move
+  pub fn move_sound(&self) {
+    // ~50ms beep (50000us / 370us per cycle = ~135 cycles)
+    self.beep_cycles(135);
+  }
+
+  /// Double beep for capture
+  pub fn capture_sound(&self) {
+    self.beep_cycles(135);
+    Peripherals::with(|p| p.delay.delay_ms(50));
+    self.beep_cycles(135);
+  }
+
+  /// Long beep for invalid move
+  pub fn error_sound(&self) {
+    // ~200ms beep
+    self.beep_cycles(540);
+  }
+
+  /// Quick triple beep for check
+  pub fn check_sound(&self) {
+    for _ in 0..3 {
+      self.beep_cycles(100);
+      Peripherals::with(|p| p.delay.delay_ms(30));
+    }
+  }
+
+  /// Alarm sound for low time warning
+  pub fn low_time_warning(&self) {
+    // Two short beeps
+    self.beep_cycles(80);
+    Peripherals::with(|p| p.delay.delay_ms(100));
+    self.beep_cycles(80);
+  }
+
+  /// Continuous alarm for time expired
+  pub fn time_expired(&self) {
+    // Long continuous beep
+    self.beep_cycles(1350); // ~500ms
+  }
+
+  /// Game over fanfare
+  pub fn game_over_sound(&self) {
+    self.beep_cycles(200);
+    Peripherals::with(|p| p.delay.delay_ms(100));
+    self.beep_cycles(200);
+    Peripherals::with(|p| p.delay.delay_ms(100));
+    self.beep_cycles(400);
+  }
+
+  /// Calibration complete confirmation
+  pub fn calibration_complete(&self) {
+    // Rising tone simulation with multiple beeps
+    self.beep_cycles(100);
+    Peripherals::with(|p| p.delay.delay_ms(50));
+    self.beep_cycles(150);
+    Peripherals::with(|p| p.delay.delay_ms(50));
+    self.beep_cycles(200);
+  }
 }
 
 #[cfg(test)]

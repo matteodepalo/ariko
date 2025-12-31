@@ -1,6 +1,10 @@
 #![no_std]
 
+extern crate alloc;
+
 pub mod buzzer;
+pub mod certabo;
+pub mod game;
 pub mod display;
 pub mod i2c;
 pub mod jhd1802;
