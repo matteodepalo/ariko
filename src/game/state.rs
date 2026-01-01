@@ -161,6 +161,31 @@ impl GameState {
     true
   }
 
+  /// Undo the last move (takeback)
+  ///
+  /// Returns `true` if a move was undone, `false` if no move to undo.
+  pub fn undo_move(&mut self) -> bool {
+    if !self.board.undo_move() {
+      return false;
+    }
+
+    // Switch turns back
+    self.turn = match self.turn {
+      Color::White => Color::Black,
+      Color::Black => Color::White,
+    };
+    self.move_count = self.move_count.saturating_sub(1);
+    self.lifted_piece = None;
+    self.lift_square = None;
+
+    true
+  }
+
+  /// Check if we can undo a move
+  pub fn can_undo(&self) -> bool {
+    self.board.can_undo()
+  }
+
   /// Record that a piece was lifted from a square
   pub fn piece_lifted(&mut self, square: u8) {
     self.lifted_piece = Some(square);

@@ -261,7 +261,7 @@ impl App {
       _ => {}
     }
 
-    // Check for checkmate/stalemate from board state
+    // Check for checkmate/stalemate/draw from board state
     match self.game.board_status() {
       BoardStatus::Checkmate => {
         self.state = AppState::GameEnded;
@@ -277,6 +277,16 @@ impl App {
         self.state = AppState::GameEnded;
         Buzzer::with(|b| b.game_over_sound());
         Display::with(|d| d.show_draw("Stalemate"));
+      }
+      BoardStatus::FiftyMoveRule => {
+        self.state = AppState::GameEnded;
+        Buzzer::with(|b| b.game_over_sound());
+        Display::with(|d| d.show_draw("50-move"));
+      }
+      BoardStatus::InsufficientMaterial => {
+        self.state = AppState::GameEnded;
+        Buzzer::with(|b| b.game_over_sound());
+        Display::with(|d| d.show_draw("No material"));
       }
       BoardStatus::Ongoing => {}
     }
