@@ -190,4 +190,15 @@ impl Display {
       jhd1802.send_str("CHECK!          ");
     });
   }
+
+  /// Display pawn promotion prompt
+  pub fn show_promotion_prompt(&self) {
+    JHD1802::with(|jhd1802| {
+      jhd1802.clear();
+      jhd1802.set_cursor(0, 0);
+      jhd1802.send_str("PROMOTION!");
+      jhd1802.set_cursor(0, 1);
+      jhd1802.send_str("Place new piece");
+    });
+  }
 }

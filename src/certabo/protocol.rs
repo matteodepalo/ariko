@@ -135,6 +135,38 @@ impl RfidReading {
 mod tests {
   use super::*;
 
+  /// Helper to build a 320-value test data buffer (all zeros with spaces)
+  fn build_zeros_buffer() -> [u8; 639] {
+    let mut data = [0u8; 639]; // 320 single-digit values + 319 spaces
+    for i in 0..320 {
+      data[i * 2] = b'0';
+      if i < 319 {
+        data[i * 2 + 1] = b' ';
+      }
+    }
+    data
+  }
+
+  /// Helper to write a number to buffer at position
+  fn write_number(data: &mut [u8], pos: &mut usize, value: u8) {
+    if value >= 100 {
+      data[*pos] = b'0' + (value / 100);
+      *pos += 1;
+      data[*pos] = b'0' + ((value / 10) % 10);
+      *pos += 1;
+      data[*pos] = b'0' + (value % 10);
+      *pos += 1;
+    } else if value >= 10 {
+      data[*pos] = b'0' + (value / 10);
+      *pos += 1;
+      data[*pos] = b'0' + (value % 10);
+      *pos += 1;
+    } else {
+      data[*pos] = b'0' + value;
+      *pos += 1;
+    }
+  }
+
   #[test]
   fn test_empty_reading() {
     let reading = RfidReading::new();
@@ -145,13 +177,7 @@ mod tests {
 
   #[test]
   fn test_parse_minimal() {
-    // 320 zeros separated by spaces
-    let data: Vec<u8> = (0..320)
-      .map(|i| if i == 319 { b'0' } else { b'0' })
-      .flat_map(|v| [v, b' '])
-      .take(639)
-      .collect();
-
+    let data = build_zeros_buffer();
     let reading = RfidReading::parse(&data);
     assert!(reading.is_some());
   }
@@ -159,15 +185,21 @@ mod tests {
   #[test]
   fn test_parse_with_values() {
     // Create test data: first square has RFID [1, 2, 3, 4, 5], rest zeros
-    let mut data = Vec::new();
-    data.extend_from_slice(b"1 2 3 4 5 ");
-
+    // "1 2 3 4 5 0 0 0 ..." (320 values)
+    let mut data = [0u8; 640];
+    let base = b"1 2 3 4 5 ";
+    data[..10].copy_from_slice(base);
+    let mut pos = 10;
     for _ in 5..320 {
-      data.extend_from_slice(b"0 ");
+      data[pos] = b'0';
+      pos += 1;
+      if pos < 639 {
+        data[pos] = b' ';
+        pos += 1;
+      }
     }
-    data.pop(); // Remove trailing space
 
-    let reading = RfidReading::parse(&data).unwrap();
+    let reading = RfidReading::parse(&data[..pos]).unwrap();
     assert_eq!(reading.chip_id(0), [1, 2, 3, 4, 5]);
     assert!(reading.has_piece(0));
     assert!(!reading.has_piece(1));
@@ -193,21 +225,33 @@ mod tests {
 
   #[test]
   fn test_parse_with_newline() {
-    let mut data = Vec::new();
-    for i in 0..320 {
-      data.extend_from_slice(format!("{} ", i % 256).as_bytes());
+    // Build data buffer with incrementing values: "0 1 2 ... 63 64 ... 255 0 1 2 ..."
+    let mut data = [0u8; 1200]; // Extra space for multi-digit numbers
+    let mut pos = 0;
+    for i in 0u16..320 {
+      write_number(&mut data, &mut pos, (i % 256) as u8);
+      if i < 319 {
+        data[pos] = b' ';
+        pos += 1;
+      }
     }
-    data.pop();
-    data.push(b'\n');
+    data[pos] = b'\n';
+    pos += 1;
 
-    let reading = RfidReading::parse(&data);
+    let reading = RfidReading::parse(&data[..pos]);
     assert!(reading.is_some());
   }
 
   #[test]
   fn test_parse_incomplete() {
     // Only 100 values instead of 320
-    let data: Vec<u8> = (0..100).map(|_| b'0').flat_map(|v| [v, b' ']).collect();
+    let mut data = [0u8; 199]; // 100 single-digit + 99 spaces
+    for i in 0..100 {
+      data[i * 2] = b'0';
+      if i < 99 {
+        data[i * 2 + 1] = b' ';
+      }
+    }
 
     let reading = RfidReading::parse(&data);
     assert!(reading.is_none());

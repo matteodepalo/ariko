@@ -2,7 +2,7 @@
 //!
 //! Tracks chess board state with move validation.
 
-use crate::game::chess::{BoardStatus, ChessBoard, Destinations, PieceColor};
+use crate::game::chess::{BoardStatus, ChessBoard, Destinations, PieceColor, PieceType};
 use crate::game::timer::{ChessTimer, Color};
 
 /// Current game status
@@ -143,11 +143,24 @@ impl GameState {
   ///
   /// Returns `true` if move was successful, `false` if illegal.
   pub fn make_move(&mut self, from: u8, to: u8) -> bool {
+    self.make_move_with_promotion(from, to, None)
+  }
+
+  /// Make a move with explicit promotion piece choice
+  ///
+  /// For pawn promotion, if `promotion` is None, auto-promotes to Queen.
+  /// Returns `true` if move was successful, `false` if illegal.
+  pub fn make_move_with_promotion(
+    &mut self,
+    from: u8,
+    to: u8,
+    promotion: Option<PieceType>,
+  ) -> bool {
     if !self.is_legal_move(from, to) {
       return false;
     }
 
-    self.board.make_move(from, to);
+    self.board.make_move_with_promotion(from, to, promotion);
 
     // Switch turns
     self.turn = match self.turn {
@@ -159,6 +172,31 @@ impl GameState {
     self.lift_square = None;
 
     true
+  }
+
+  /// Undo the last move (takeback)
+  ///
+  /// Returns `true` if a move was undone, `false` if no move to undo.
+  pub fn undo_move(&mut self) -> bool {
+    if !self.board.undo_move() {
+      return false;
+    }
+
+    // Switch turns back
+    self.turn = match self.turn {
+      Color::White => Color::Black,
+      Color::Black => Color::White,
+    };
+    self.move_count = self.move_count.saturating_sub(1);
+    self.lifted_piece = None;
+    self.lift_square = None;
+
+    true
+  }
+
+  /// Check if we can undo a move
+  pub fn can_undo(&self) -> bool {
+    self.board.can_undo()
   }
 
   /// Record that a piece was lifted from a square
