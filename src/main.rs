@@ -15,7 +15,8 @@ use certabo::certabo::leds::LedState;
 use certabo::certabo::protocol::RfidReading;
 use certabo::display::Display;
 use certabo::events::{consume, BLUE_BUTTON_PRESSED, MILLIS, TIMER_TICK, WHITE_BUTTON_PRESSED};
-use certabo::game::chess::BoardStatus;
+use certabo::certabo::calibration::Piece as CalibrationPiece;
+use certabo::game::chess::{BoardStatus, PieceType};
 use certabo::game::state::{GameState, GameStatus};
 use certabo::game::timer::Color;
 use certabo::i2c::I2C;
@@ -48,6 +49,36 @@ enum AppState {
   GameEnded,
 }
 
+/// Convert calibration Piece to game PieceType (for promotion)
+fn calibration_piece_to_type(piece: CalibrationPiece) -> PieceType {
+  match piece {
+    CalibrationPiece::WhitePawn | CalibrationPiece::BlackPawn => PieceType::Pawn,
+    CalibrationPiece::WhiteKnight | CalibrationPiece::BlackKnight => PieceType::Knight,
+    CalibrationPiece::WhiteBishop | CalibrationPiece::BlackBishop => PieceType::Bishop,
+    CalibrationPiece::WhiteRook | CalibrationPiece::BlackRook => PieceType::Rook,
+    CalibrationPiece::WhiteQueen | CalibrationPiece::BlackQueen => PieceType::Queen,
+    CalibrationPiece::WhiteKing | CalibrationPiece::BlackKing => PieceType::King,
+  }
+}
+
+/// Check if a square is on the promotion rank
+fn is_promotion_rank(square: u8, is_white_pawn: bool) -> bool {
+  let rank = square / 8;
+  if is_white_pawn {
+    rank == 7 // Rank 8 (index 7)
+  } else {
+    rank == 0 // Rank 1 (index 0)
+  }
+}
+
+/// Pending pawn promotion state
+struct PendingPromotion {
+  /// Source square of the pawn
+  from: u8,
+  /// Destination square (on promotion rank)
+  to: u8,
+}
+
 /// Main application context
 struct App {
   state: AppState,
@@ -62,6 +93,8 @@ struct App {
   last_move: Option<(u8, u8)>,
   /// Spinner frame for calibration animation
   spinner_frame: u8,
+  /// Pending pawn promotion waiting for piece swap
+  pending_promotion: Option<PendingPromotion>,
 }
 
 impl App {
@@ -76,6 +109,7 @@ impl App {
       tick_count: 0,
       last_move: None,
       spinner_frame: 0,
+      pending_promotion: None,
     }
   }
 
@@ -183,6 +217,38 @@ impl App {
   fn process_game_move(&mut self, reading: &RfidReading) {
     let current_board = self.calibration.reading_to_board(reading);
 
+    // Handle pending promotion - waiting for piece swap
+    if let Some(ref promotion) = self.pending_promotion {
+      let to = promotion.to;
+      let from = promotion.from;
+
+      // Check what piece is now on the promotion square
+      if let Some(new_piece) = current_board[to as usize] {
+        let piece_type = calibration_piece_to_type(new_piece);
+
+        // Only allow valid promotion pieces (not pawn or king)
+        if matches!(
+          piece_type,
+          PieceType::Queen | PieceType::Rook | PieceType::Bishop | PieceType::Knight
+        ) {
+          // Complete the promotion move
+          self.game.make_move_with_promotion(from, to, Some(piece_type));
+          self.last_move = Some((from, to));
+          self.pending_promotion = None;
+          Buzzer::with(|b| b.move_sound());
+          self.led_state.clear_all();
+          self.led_dirty = true;
+
+          // Check for game end and update display
+          self.check_game_end();
+          self.update_display();
+          return;
+        }
+      }
+      // Still waiting for correct piece placement
+      return;
+    }
+
     if let Some(ref last_reading) = self.last_reading {
       let previous_board = self.calibration.reading_to_board(last_reading);
 
@@ -223,7 +289,47 @@ impl App {
       // Handle complete move (piece placed)
       if let (Some(from), Some(to)) = (self.game.lifted_piece(), placed_to) {
         if self.game.is_legal_move(from, to) {
-          // Valid move
+          // Check if this is a pawn promotion move
+          if let Some(piece) = previous_board[from as usize] {
+            let is_pawn = matches!(
+              piece,
+              CalibrationPiece::WhitePawn | CalibrationPiece::BlackPawn
+            );
+            let is_white = piece.is_white();
+
+            if is_pawn && is_promotion_rank(to, is_white) {
+              // Pawn promotion - check if correct piece already placed
+              if let Some(new_piece) = current_board[to as usize] {
+                let piece_type = calibration_piece_to_type(new_piece);
+
+                if matches!(
+                  piece_type,
+                  PieceType::Queen | PieceType::Rook | PieceType::Bishop | PieceType::Knight
+                ) {
+                  // Piece already swapped - complete promotion
+                  self.game.make_move_with_promotion(from, to, Some(piece_type));
+                  self.last_move = Some((from, to));
+                  Buzzer::with(|b| b.move_sound());
+                  self.led_state.clear_all();
+                  self.led_dirty = true;
+
+                  self.check_game_end();
+                  self.update_display();
+                  return;
+                }
+              }
+
+              // Wait for piece swap - set pending promotion
+              self.pending_promotion = Some(PendingPromotion { from, to });
+              Display::with(|d| d.show_promotion_prompt());
+              self.led_state.clear_all();
+              self.led_state.set(to); // Highlight promotion square
+              self.led_dirty = true;
+              return;
+            }
+          }
+
+          // Regular move (not promotion)
           self.game.make_move(from, to);
           self.last_move = Some((from, to));
           Buzzer::with(|b| b.move_sound());

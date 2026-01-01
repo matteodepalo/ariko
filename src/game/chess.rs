@@ -1202,16 +1202,16 @@ mod tests {
 
   #[test]
   fn test_is_legal_blocks_self_check() {
-    // White King on e1, Black Rook on e8, White Pawn on e2
-    // Moving the pawn would expose king to check - should be illegal
+    // White King on e1, Black Rook on a1, White Bishop on c1
+    // Moving the bishop would expose king to check along the 1st rank
     let mut board = ChessBoard::empty();
-    board.squares[4] = Some(Piece::new(PieceType::King, PieceColor::White));
-    board.squares[60] = Some(Piece::new(PieceType::Rook, PieceColor::Black));
-    board.squares[12] = Some(Piece::new(PieceType::Pawn, PieceColor::White));
+    board.squares[4] = Some(Piece::new(PieceType::King, PieceColor::White)); // e1
+    board.squares[0] = Some(Piece::new(PieceType::Rook, PieceColor::Black)); // a1
+    board.squares[2] = Some(Piece::new(PieceType::Bishop, PieceColor::White)); // c1
 
-    // Pawn moving forward is pseudo-legal but not fully legal (exposes king)
-    assert!(board.is_pseudo_legal(12, 20)); // e2-e3
-    assert!(!board.is_legal(12, 20)); // Can't move - would expose king
+    // Bishop moving diagonally is pseudo-legal but would expose king to check
+    assert!(board.is_pseudo_legal(2, 11)); // c1-d2
+    assert!(!board.is_legal(2, 11)); // Can't move - would expose king to rook on a1
   }
 
   #[test]
@@ -1235,16 +1235,15 @@ mod tests {
 
   #[test]
   fn test_checkmate() {
-    // Fool's mate position: Black queen on h4, bishop on c5, White king on e1
-    // Actually, let's use a simpler back-rank mate
+    // Corridor mate: Queen delivers mate with rook support
+    // King on a1, pawns on a2 and b2, black queen on d1 gives check
+    // Black rook on d8 prevents queen capture
     let mut board = ChessBoard::empty();
-    board.squares[4] = Some(Piece::new(PieceType::King, PieceColor::White)); // e1
+    board.squares[0] = Some(Piece::new(PieceType::King, PieceColor::White)); // a1
     board.squares[8] = Some(Piece::new(PieceType::Pawn, PieceColor::White)); // a2
     board.squares[9] = Some(Piece::new(PieceType::Pawn, PieceColor::White)); // b2
-    board.squares[12] = Some(Piece::new(PieceType::Pawn, PieceColor::White)); // e2
-    board.squares[13] = Some(Piece::new(PieceType::Pawn, PieceColor::White)); // f2
-    board.squares[14] = Some(Piece::new(PieceType::Pawn, PieceColor::White)); // g2
-    board.squares[60] = Some(Piece::new(PieceType::Rook, PieceColor::Black)); // e8
+    board.squares[3] = Some(Piece::new(PieceType::Queen, PieceColor::Black)); // d1 - gives check
+    board.squares[60] = Some(Piece::new(PieceType::King, PieceColor::Black)); // e8 - black king (needed for valid position)
 
     assert!(board.is_in_check(PieceColor::White));
     assert!(!board.has_legal_moves());
@@ -1330,17 +1329,19 @@ mod tests {
 
   #[test]
   fn test_castling_blocked_by_check() {
-    let mut board = ChessBoard::starting_position();
-    // Clear squares between king and rook
-    board.squares[5] = None; // f1
-    board.squares[6] = None; // g1
-    // Put a rook attacking e1 (king in check)
-    board.squares[4 + 8] = None; // clear e2
+    // Set up position where king is in check and can't castle
+    let mut board = ChessBoard::empty();
+    board.squares[4] = Some(Piece::new(PieceType::King, PieceColor::White)); // e1
+    board.squares[7] = Some(Piece::new(PieceType::Rook, PieceColor::White)); // h1
     board.squares[60] = Some(Piece::new(PieceType::Rook, PieceColor::Black)); // e8 attacks e1
+    board.white_castling = CastlingRights::new(); // Can castle
+
+    // King is in check
+    assert!(board.is_in_check(PieceColor::White));
 
     // King can't castle while in check
     let dests = board.legal_destinations(4);
-    assert!(!dests.contains(6));
+    assert!(!dests.contains(6)); // g1 - castling destination
   }
 
   #[test]
@@ -1514,20 +1515,21 @@ mod tests {
   #[test]
   fn test_undo_promotion() {
     let mut board = ChessBoard::empty();
-    board.squares[4] = Some(Piece::new(PieceType::King, PieceColor::White));
-    board.squares[60] = Some(Piece::new(PieceType::King, PieceColor::Black));
-    board.squares[52] = Some(Piece::new(PieceType::Pawn, PieceColor::White)); // e7
+    board.squares[4] = Some(Piece::new(PieceType::King, PieceColor::White)); // e1
+    board.squares[60] = Some(Piece::new(PieceType::King, PieceColor::Black)); // e8
+    board.squares[55] = Some(Piece::new(PieceType::Pawn, PieceColor::White)); // h7
 
-    // Promote
-    board.make_move(52, 60);
+    // Promote (h7-h8)
+    board.make_move(55, 63);
 
-    assert_eq!(board.get(60), Some(Piece::new(PieceType::Queen, PieceColor::White)));
+    assert_eq!(board.get(63), Some(Piece::new(PieceType::Queen, PieceColor::White)));
+    assert_eq!(board.get(55), None);
 
     // Undo
     assert!(board.undo_move());
 
-    assert_eq!(board.get(52), Some(Piece::new(PieceType::Pawn, PieceColor::White)));
-    assert_eq!(board.get(60), None);
+    assert_eq!(board.get(55), Some(Piece::new(PieceType::Pawn, PieceColor::White)));
+    assert_eq!(board.get(63), None);
   }
 
   #[test]

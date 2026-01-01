@@ -2,7 +2,7 @@
 //!
 //! Tracks chess board state with move validation.
 
-use crate::game::chess::{BoardStatus, ChessBoard, Destinations, PieceColor};
+use crate::game::chess::{BoardStatus, ChessBoard, Destinations, PieceColor, PieceType};
 use crate::game::timer::{ChessTimer, Color};
 
 /// Current game status
@@ -143,11 +143,24 @@ impl GameState {
   ///
   /// Returns `true` if move was successful, `false` if illegal.
   pub fn make_move(&mut self, from: u8, to: u8) -> bool {
+    self.make_move_with_promotion(from, to, None)
+  }
+
+  /// Make a move with explicit promotion piece choice
+  ///
+  /// For pawn promotion, if `promotion` is None, auto-promotes to Queen.
+  /// Returns `true` if move was successful, `false` if illegal.
+  pub fn make_move_with_promotion(
+    &mut self,
+    from: u8,
+    to: u8,
+    promotion: Option<PieceType>,
+  ) -> bool {
     if !self.is_legal_move(from, to) {
       return false;
     }
 
-    self.board.make_move(from, to);
+    self.board.make_move_with_promotion(from, to, promotion);
 
     // Switch turns
     self.turn = match self.turn {
