@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 use crate::peripherals::Peripherals;
 use core::cell::RefCell;
 use critical_section::Mutex;
@@ -8,155 +6,13 @@ use embedded_hal::digital::OutputPin;
 
 static BUZZER: Mutex<RefCell<Option<Buzzer>>> = Mutex::new(RefCell::new(None));
 
-const NOTE_D0: u32 = 0;
-const NOTE_D1: u32 = 294;
-const NOTE_D2: u32 = 330;
-const NOTE_D3: u32 = 350;
-const NOTE_D4: u32 = 393;
-const NOTE_D5: u32 = 441;
-const NOTE_D6: u32 = 495;
-const NOTE_D7: u32 = 556;
+const RESONANT_FREQ: u32 = 2700;
+const CYCLE: u32 = 1000000 / RESONANT_FREQ;
 
-const NOTE_DL1: u32 = 147;
-const NOTE_DL2: u32 = 165;
-const NOTE_DL3: u32 = 175;
-const NOTE_DL4: u32 = 196;
-const NOTE_DL5: u32 = 221;
-const NOTE_DL6: u32 = 248;
-const NOTE_DL7: u32 = 278;
-
-const NOTE_DH1: u32 = 589;
-const NOTE_DH2: u32 = 661;
-const NOTE_DH3: u32 = 700;
-const NOTE_DH4: u32 = 786;
-const NOTE_DH5: u32 = 882;
-const NOTE_DH6: u32 = 990;
-const NOTE_DH7: u32 = 112;
-
-const WHOLE: f32 = 1 as f32;
-const HALF: f32 = 0.5;
-const QUARTER: f32 = 0.25;
-const EIGHTH: f32 = 0.25;
-const SIXTEENTH: f32 = 0.625;
-
-//the note part of the whole song
-const TUNE: [u32; 98] = [
-  NOTE_DH1, NOTE_D6, NOTE_D5, NOTE_D6, NOTE_D0, NOTE_DH1, NOTE_D6, NOTE_D5, NOTE_DH1, NOTE_D6,
-  NOTE_D0, NOTE_D6, NOTE_D6, NOTE_D6, NOTE_D5, NOTE_D6, NOTE_D0, NOTE_D6, NOTE_DH1, NOTE_D6,
-  NOTE_D5, NOTE_DH1, NOTE_D6, NOTE_D0, NOTE_D1, NOTE_D1, NOTE_D3, NOTE_D1, NOTE_D1, NOTE_D3,
-  NOTE_D0, NOTE_D6, NOTE_D6, NOTE_D6, NOTE_D5, NOTE_D6, NOTE_D5, NOTE_D1, NOTE_D3, NOTE_D0,
-  NOTE_DH1, NOTE_D6, NOTE_D6, NOTE_D5, NOTE_D6, NOTE_D5, NOTE_D1, NOTE_D2, NOTE_D0, NOTE_D7,
-  NOTE_D7, NOTE_D5, NOTE_D3, NOTE_D5, NOTE_DH1, NOTE_D0, NOTE_D6, NOTE_D6, NOTE_D5, NOTE_D5,
-  NOTE_D6, NOTE_D6, NOTE_D0, NOTE_D5, NOTE_D1, NOTE_D3, NOTE_D0, NOTE_DH1, NOTE_D0, NOTE_D6,
-  NOTE_D6, NOTE_D5, NOTE_D5, NOTE_D6, NOTE_D6, NOTE_D0, NOTE_D5, NOTE_D1, NOTE_D2, NOTE_D0,
-  NOTE_D3, NOTE_D3, NOTE_D1, NOTE_DL6, NOTE_D1, NOTE_D3, NOTE_D5, NOTE_D6, NOTE_D6, NOTE_D3,
-  NOTE_D5, NOTE_D6, NOTE_D6, NOTE_DH1, NOTE_D0, NOTE_D7, NOTE_D5, NOTE_D6,
-];
-
-//the duration time of each note
-const DURATION: [f32; 98] = [
-  WHOLE,
-  WHOLE,
-  HALF,
-  HALF,
-  WHOLE,
-  HALF,
-  HALF,
-  HALF,
-  HALF,
-  WHOLE,
-  HALF,
-  HALF,
-  HALF,
-  WHOLE,
-  HALF,
-  WHOLE,
-  HALF,
-  HALF,
-  HALF,
-  HALF,
-  HALF,
-  HALF,
-  WHOLE,
-  WHOLE,
-  WHOLE,
-  WHOLE,
-  WHOLE + WHOLE,
-  HALF,
-  WHOLE,
-  WHOLE + HALF,
-  WHOLE,
-  WHOLE,
-  WHOLE,
-  HALF,
-  HALF,
-  WHOLE,
-  HALF,
-  WHOLE,
-  WHOLE + HALF,
-  WHOLE,
-  HALF,
-  HALF,
-  HALF,
-  HALF,
-  WHOLE + WHOLE,
-  HALF,
-  WHOLE,
-  WHOLE + HALF,
-  WHOLE,
-  WHOLE + WHOLE,
-  HALF,
-  HALF,
-  WHOLE,
-  WHOLE + WHOLE + WHOLE + WHOLE,
-  HALF,
-  HALF,
-  HALF + QUARTER,
-  QUARTER,
-  HALF + QUARTER,
-  QUARTER,
-  HALF + QUARTER,
-  QUARTER,
-  HALF,
-  WHOLE,
-  HALF,
-  WHOLE,
-  WHOLE,
-  HALF,
-  HALF,
-  HALF + QUARTER,
-  QUARTER,
-  HALF + QUARTER,
-  QUARTER,
-  HALF + QUARTER,
-  QUARTER,
-  HALF,
-  WHOLE,
-  HALF,
-  WHOLE,
-  WHOLE,
-  WHOLE + WHOLE,
-  HALF,
-  HALF,
-  WHOLE,
-  WHOLE + WHOLE + WHOLE + WHOLE,
-  HALF,
-  WHOLE,
-  HALF,
-  WHOLE + WHOLE,
-  HALF,
-  WHOLE,
-  HALF,
-  WHOLE + WHOLE,
-  WHOLE + WHOLE,
-  HALF,
-  HALF,
-  WHOLE,
-  WHOLE + WHOLE + WHOLE + WHOLE,
-];
-
-const FREQUENCY: u32 = 2700; //reach the Resonant Frequency
-const CYCLE: u32 = 1000000 / FREQUENCY;
+const NOTE_E7: u32 = 2637;
+const NOTE_G7: u32 = 3136;
+const NOTE_A7: u32 = 3520;
+const NOTE_REST: u32 = 0;
 
 pub struct Buzzer;
 
@@ -187,43 +43,44 @@ impl Buzzer {
     });
   }
 
-  /// Play multiple beep cycles
   fn beep_cycles(&self, cycles: u32) {
     for _ in 0..cycles {
       self.beep();
     }
   }
 
-  /// Short beep for valid move
-  pub fn move_sound(&self) {
-    // ~50ms beep (50000us / 370us per cycle = ~135 cycles)
-    self.beep_cycles(135);
+  fn play_note(&self, frequency_hz: u32, duration_ms: u32) {
+    if frequency_hz == 0 {
+      Peripherals::with(|p| p.delay.delay_ms(duration_ms));
+      return;
+    }
+
+    let cycle_us = 1_000_000 / frequency_hz;
+    let half_cycle_us = cycle_us / 2;
+    let total_cycles = (duration_ms * 1000) / cycle_us;
+
+    Peripherals::with(|p| {
+      for _ in 0..total_cycles {
+        p.buzzer.set_high().unwrap();
+        p.delay.delay_us(half_cycle_us);
+        p.buzzer.set_low().unwrap();
+        p.delay.delay_us(half_cycle_us);
+      }
+    });
   }
 
-  /// Double beep for capture
-  pub fn capture_sound(&self) {
-    self.beep_cycles(135);
-    Peripherals::with(|p| p.delay.delay_ms(50));
+  /// Short beep for valid move
+  pub fn move_sound(&self) {
     self.beep_cycles(135);
   }
 
   /// Long beep for invalid move
   pub fn error_sound(&self) {
-    // ~200ms beep
     self.beep_cycles(540);
-  }
-
-  /// Quick triple beep for check
-  pub fn check_sound(&self) {
-    for _ in 0..3 {
-      self.beep_cycles(100);
-      Peripherals::with(|p| p.delay.delay_ms(30));
-    }
   }
 
   /// Alarm sound for low time warning
   pub fn low_time_warning(&self) {
-    // Two short beeps
     self.beep_cycles(80);
     Peripherals::with(|p| p.delay.delay_ms(100));
     self.beep_cycles(80);
@@ -231,22 +88,26 @@ impl Buzzer {
 
   /// Continuous alarm for time expired
   pub fn time_expired(&self) {
-    // Long continuous beep
-    self.beep_cycles(1350); // ~500ms
+    self.beep_cycles(1350);
   }
 
-  /// Game over fanfare
+  /// Game over fanfare using notes near resonant frequency
   pub fn game_over_sound(&self) {
-    self.beep_cycles(200);
-    Peripherals::with(|p| p.delay.delay_ms(100));
-    self.beep_cycles(200);
-    Peripherals::with(|p| p.delay.delay_ms(100));
-    self.beep_cycles(400);
+    self.play_note(NOTE_E7, 100);
+    self.play_note(NOTE_REST, 30);
+    self.play_note(NOTE_E7, 100);
+    self.play_note(NOTE_REST, 30);
+    self.play_note(NOTE_E7, 100);
+    self.play_note(NOTE_REST, 80);
+    self.play_note(NOTE_G7, 150);
+    self.play_note(NOTE_REST, 50);
+    self.play_note(NOTE_E7, 80);
+    self.play_note(NOTE_REST, 30);
+    self.play_note(NOTE_A7, 300);
   }
 
   /// Calibration complete confirmation
   pub fn calibration_complete(&self) {
-    // Rising tone simulation with multiple beeps
     self.beep_cycles(100);
     Peripherals::with(|p| p.delay.delay_ms(50));
     self.beep_cycles(150);
@@ -261,83 +122,30 @@ mod tests {
 
   #[test]
   fn test_resonant_frequency() {
-    // Buzzer resonant frequency is 2700 Hz
-    assert_eq!(FREQUENCY, 2700);
+    assert_eq!(RESONANT_FREQ, 2700);
   }
 
   #[test]
   fn test_pwm_cycle_calculation() {
-    // CYCLE = 1000000 / 2700 = 370 microseconds (integer division)
     assert_eq!(CYCLE, 370);
   }
 
   #[test]
   fn test_half_cycle_timing() {
-    // Each half of the PWM cycle should be ~185 microseconds
     let half_cycle = CYCLE / 2;
     assert_eq!(half_cycle, 185);
   }
 
   #[test]
-  fn test_note_frequencies_main_octave() {
-    // Test main octave notes (D scale)
-    assert_eq!(NOTE_D0, 0); // Rest/silence
-    assert_eq!(NOTE_D1, 294);
-    assert_eq!(NOTE_D2, 330);
-    assert_eq!(NOTE_D3, 350);
-    assert_eq!(NOTE_D4, 393);
-    assert_eq!(NOTE_D5, 441);
-    assert_eq!(NOTE_D6, 495);
-    assert_eq!(NOTE_D7, 556);
-  }
-
-  #[test]
-  fn test_note_frequencies_lower_octave() {
-    // Lower octave should be roughly half the main octave frequencies
-    assert_eq!(NOTE_DL1, 147); // ~294/2
-    assert_eq!(NOTE_DL2, 165); // ~330/2
-    assert_eq!(NOTE_DL3, 175); // ~350/2
-    assert_eq!(NOTE_DL4, 196); // ~393/2
-    assert_eq!(NOTE_DL5, 221); // ~441/2
-    assert_eq!(NOTE_DL6, 248); // ~495/2
-    assert_eq!(NOTE_DL7, 278); // ~556/2
-  }
-
-  #[test]
-  fn test_note_frequencies_higher_octave() {
-    // Higher octave should be roughly double the main octave frequencies
-    assert_eq!(NOTE_DH1, 589); // ~294*2
-    assert_eq!(NOTE_DH2, 661); // ~330*2
-    assert_eq!(NOTE_DH3, 700); // ~350*2
-    assert_eq!(NOTE_DH4, 786); // ~393*2
-    assert_eq!(NOTE_DH5, 882); // ~441*2
-    assert_eq!(NOTE_DH6, 990); // ~495*2
-    // NOTE_DH7 appears to be 112 which seems like a typo (should be ~1112)
-    assert_eq!(NOTE_DH7, 112);
-  }
-
-  #[test]
-  fn test_duration_constants() {
-    // Test note duration ratios
-    assert_eq!(WHOLE, 1.0);
-    assert_eq!(HALF, 0.5);
-    assert_eq!(QUARTER, 0.25);
-    assert_eq!(EIGHTH, 0.25); // Note: EIGHTH equals QUARTER in the source
-    assert_eq!(SIXTEENTH, 0.625); // Note: This seems unusual for a sixteenth note
-  }
-
-  #[test]
-  fn test_tune_and_duration_arrays_same_length() {
-    // TUNE and DURATION arrays must have the same length
-    assert_eq!(TUNE.len(), DURATION.len());
-    assert_eq!(TUNE.len(), 98);
-  }
-
-  #[test]
   fn test_frequency_to_period_relationship() {
-    // Verify the math: period (us) = 1,000,000 / frequency (Hz)
-    // For 2700 Hz: 1000000 / 2700 = 370.37... which truncates to 370
-    let expected_cycle = 1_000_000_u32 / FREQUENCY;
+    let expected_cycle = 1_000_000_u32 / RESONANT_FREQ;
     assert_eq!(CYCLE, expected_cycle);
+  }
+
+  #[test]
+  fn test_note_frequencies_near_resonance() {
+    assert!(NOTE_E7 > 2000 && NOTE_E7 < 4000);
+    assert!(NOTE_G7 > 2000 && NOTE_G7 < 4000);
+    assert!(NOTE_A7 > 2000 && NOTE_A7 < 4000);
   }
 }

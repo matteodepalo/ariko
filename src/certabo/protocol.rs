@@ -15,6 +15,25 @@ pub const RFID_BYTES: usize = 5;
 /// Total number of values in a complete reading
 pub const TOTAL_VALUES: usize = NUM_SQUARES * RFID_BYTES; // 320
 
+pub fn write_ascii_number(buf: &mut [u8], pos: &mut usize, value: u8) {
+    if value >= 100 {
+        buf[*pos] = b'0' + (value / 100);
+        *pos += 1;
+        buf[*pos] = b'0' + ((value / 10) % 10);
+        *pos += 1;
+        buf[*pos] = b'0' + (value % 10);
+        *pos += 1;
+    } else if value >= 10 {
+        buf[*pos] = b'0' + (value / 10);
+        *pos += 1;
+        buf[*pos] = b'0' + (value % 10);
+        *pos += 1;
+    } else {
+        buf[*pos] = b'0' + value;
+        *pos += 1;
+    }
+}
+
 /// Raw RFID reading from the board (64 squares × 5 bytes each)
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct RfidReading {
@@ -147,24 +166,8 @@ mod tests {
     data
   }
 
-  /// Helper to write a number to buffer at position
   fn write_number(data: &mut [u8], pos: &mut usize, value: u8) {
-    if value >= 100 {
-      data[*pos] = b'0' + (value / 100);
-      *pos += 1;
-      data[*pos] = b'0' + ((value / 10) % 10);
-      *pos += 1;
-      data[*pos] = b'0' + (value % 10);
-      *pos += 1;
-    } else if value >= 10 {
-      data[*pos] = b'0' + (value / 10);
-      *pos += 1;
-      data[*pos] = b'0' + (value % 10);
-      *pos += 1;
-    } else {
-      data[*pos] = b'0' + value;
-      *pos += 1;
-    }
+    write_ascii_number(data, pos, value);
   }
 
   #[test]

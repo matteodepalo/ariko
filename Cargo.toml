@@ -4,17 +4,26 @@ version = "0.1.0"
 authors = ["Eugenio Depalo <eugeniodepalo@gmail.com>"]
 edition = "2024"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[features]
+default = ["embedded"]
+embedded = []
+simulator = []
+
+[[bin]]
+name = "certabo"
+required-features = ["embedded"]
 
 [dependencies]
-cortex-m = { version = "0.7", features = ["critical-section-single-core"] }
-cortex-m-rt = "0.7"
 critical-section = "1.2"
-panic-halt = "0.2.0"
-sam3x8e-hal = { path = "./sam3x8e-rs/sam3x8e-hal" }
 embedded-hal = "1.0"
 nb = "1.1"
 modular-bitfield = "0.11.2"
 log = "0.4.14"
+
+[target.'cfg(target_arch = "arm")'.dependencies]
+cortex-m = { version = "0.7", features = ["critical-section-single-core"] }
+cortex-m-rt = "0.7"
+panic-halt = "0.2.0"
+sam3x8e-hal = { path = "./sam3x8e-rs/sam3x8e-hal" }
 tm1637-embedded-hal = { version = "0.2", default-features = false }
 

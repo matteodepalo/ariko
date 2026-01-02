@@ -69,6 +69,11 @@ impl LedState {
     &self.ranks
   }
 
+  /// Create LED state from raw bytes
+  pub fn from_bytes(bytes: &[u8; 8]) -> Self {
+    Self { ranks: *bytes }
+  }
+
   /// Set LED state from file and rank coordinates (both 0-indexed)
   pub fn set_coord(&mut self, file: u8, rank: u8) {
     if file < 8 && rank < 8 {
@@ -239,5 +244,16 @@ mod tests {
     for square in 0..64 {
       assert!(!state.is_on(square));
     }
+  }
+
+  #[test]
+  fn test_from_bytes() {
+    let bytes: [u8; 8] = [0x01, 0x00, 0x00, 0x00, 0x10, 0x00, 0x10, 0x01];
+    let state = LedState::from_bytes(&bytes);
+    assert!(state.is_on(56)); // a8 (byte 0, bit 0)
+    assert!(state.is_on(28)); // e4 (byte 4, bit 4)
+    assert!(state.is_on(12)); // e2 (byte 6, bit 4)
+    assert!(state.is_on(0));  // a1 (byte 7, bit 0)
+    assert!(!state.is_on(63));
   }
 }

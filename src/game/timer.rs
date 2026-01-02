@@ -52,10 +52,6 @@ impl ChessTimer {
     self.running = false;
   }
 
-  /// Check if timer is running
-  pub fn is_running(&self) -> bool {
-    self.running
-  }
 
   /// Reset both clocks to initial time
   pub fn reset(&mut self) {
@@ -92,18 +88,12 @@ impl ChessTimer {
     }
   }
 
-  /// Check if a player's time has expired
-  pub fn is_expired(&self, color: Color) -> bool {
-    self.time_remaining(color) == 0
-  }
-
   /// Check if a player is in low time (< 30 seconds)
   pub fn is_low_time(&self, color: Color) -> bool {
     self.time_remaining(color) < LOW_TIME_THRESHOLD_MS
   }
 
-  /// Format time remaining as MM:SS for display
-  pub fn format_time(time_ms: u32) -> (u8, u8) {
+  fn format_time(time_ms: u32) -> (u8, u8) {
     let total_seconds = time_ms / 1000;
     let minutes = (total_seconds / 60) as u8;
     let seconds = (total_seconds % 60) as u8;
@@ -125,19 +115,19 @@ mod tests {
     let timer = ChessTimer::new();
     assert_eq!(timer.time_remaining(Color::White), INITIAL_TIME_MS);
     assert_eq!(timer.time_remaining(Color::Black), INITIAL_TIME_MS);
-    assert!(!timer.is_running());
+    assert!(!timer.running);
   }
 
   #[test]
   fn test_start_stop() {
     let mut timer = ChessTimer::new();
-    assert!(!timer.is_running());
+    assert!(!timer.running);
 
     timer.start();
-    assert!(timer.is_running());
+    assert!(timer.running);
 
     timer.stop();
-    assert!(!timer.is_running());
+    assert!(!timer.running);
   }
 
   #[test]
@@ -169,15 +159,13 @@ mod tests {
     let mut timer = ChessTimer::new();
     timer.start();
 
-    // Decrement all but 100ms
     timer.tick(Color::White, INITIAL_TIME_MS - 100);
-    assert!(!timer.is_expired(Color::White));
+    assert!(timer.time_remaining(Color::White) > 0);
 
-    // Expire the timer
     let expired = timer.tick(Color::White, 100);
     assert!(expired);
-    assert!(timer.is_expired(Color::White));
-    assert!(!timer.is_expired(Color::Black));
+    assert_eq!(timer.time_remaining(Color::White), 0);
+    assert!(timer.time_remaining(Color::Black) > 0);
   }
 
   #[test]
@@ -194,11 +182,19 @@ mod tests {
   }
 
   #[test]
-  fn test_format_time() {
-    assert_eq!(ChessTimer::format_time(600_000), (10, 0)); // 10:00
-    assert_eq!(ChessTimer::format_time(65_000), (1, 5)); // 1:05
-    assert_eq!(ChessTimer::format_time(30_000), (0, 30)); // 0:30
-    assert_eq!(ChessTimer::format_time(0), (0, 0)); // 0:00
+  fn test_formatted_time() {
+    let mut timer = ChessTimer::new();
+    assert_eq!(timer.formatted_time(Color::White), (10, 0)); // 10:00
+
+    timer.start();
+    timer.tick(Color::White, 535_000);
+    assert_eq!(timer.formatted_time(Color::White), (1, 5)); // 1:05
+
+    timer.tick(Color::White, 35_000);
+    assert_eq!(timer.formatted_time(Color::White), (0, 30)); // 0:30
+
+    timer.tick(Color::White, 30_000);
+    assert_eq!(timer.formatted_time(Color::White), (0, 0)); // 0:00
   }
 
   #[test]
@@ -210,7 +206,7 @@ mod tests {
     timer.reset();
     assert_eq!(timer.time_remaining(Color::White), INITIAL_TIME_MS);
     assert_eq!(timer.time_remaining(Color::Black), INITIAL_TIME_MS);
-    assert!(!timer.is_running());
+    assert!(!timer.running);
   }
 
   #[test]

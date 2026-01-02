@@ -2,7 +2,7 @@
 //!
 //! Tracks chess board state with move validation.
 
-use crate::game::chess::{BoardStatus, ChessBoard, Destinations, PieceColor, PieceType};
+use crate::game::chess::{BoardStatus, ChessBoard, Destinations, PieceColor, PieceType, UndoInfo};
 use crate::game::timer::{ChessTimer, Color};
 
 /// Current game status
@@ -91,23 +91,9 @@ impl GameState {
     &self.timer
   }
 
-  /// Get mutable timer reference
-  pub fn timer_mut(&mut self) -> &mut ChessTimer {
-    &mut self.timer
-  }
-
   /// Check if a move from one square to another is legal (including check rules)
   pub fn is_legal_move(&self, from: u8, to: u8) -> bool {
     self.board.is_legal(from, to)
-  }
-
-  /// Check if the current player is in check
-  pub fn is_in_check(&self) -> bool {
-    let color = match self.turn {
-      Color::White => PieceColor::White,
-      Color::Black => PieceColor::Black,
-    };
-    self.board.is_in_check(color)
   }
 
   /// Get board status (checkmate, stalemate, or ongoing)
@@ -194,30 +180,15 @@ impl GameState {
     true
   }
 
-  /// Check if we can undo a move
-  pub fn can_undo(&self) -> bool {
-    self.board.can_undo()
+  /// Get information about the last move (for takeback detection)
+  pub fn last_undo_info(&self) -> Option<&UndoInfo> {
+    self.board.last_undo_info()
   }
 
   /// Record that a piece was lifted from a square
   pub fn piece_lifted(&mut self, square: u8) {
     self.lifted_piece = Some(square);
     self.lift_square = Some(square);
-  }
-
-  /// Record that a piece was placed on a square
-  ///
-  /// Returns `Some((from, to))` if this completes a move, `None` otherwise.
-  pub fn piece_placed(&mut self, square: u8) -> Option<(u8, u8)> {
-    if let Some(from) = self.lift_square {
-      self.lifted_piece = None;
-      self.lift_square = None;
-
-      if from != square {
-        return Some((from, square));
-      }
-    }
-    None
   }
 
   /// Get the currently lifted piece square (if any)
@@ -264,11 +235,6 @@ impl GameState {
       GameStatus::Paused => self.set_status(GameStatus::InProgress),
       _ => {}
     }
-  }
-
-  /// Get move count
-  pub fn move_count(&self) -> u16 {
-    self.move_count
   }
 }
 
@@ -323,24 +289,56 @@ mod tests {
   }
 
   #[test]
-  fn test_piece_lift_and_place() {
+  fn test_piece_lifted() {
     let mut game = GameState::new();
 
-    game.piece_lifted(12); // e2
+    game.piece_lifted(12);
     assert_eq!(game.lifted_piece(), Some(12));
 
-    let result = game.piece_placed(28); // e4
-    assert_eq!(result, Some((12, 28)));
+    game.make_move(12, 28);
     assert_eq!(game.lifted_piece(), None);
   }
 
   #[test]
-  fn test_piece_put_back() {
+  fn test_undo_move_simple() {
     let mut game = GameState::new();
+    game.set_status(GameStatus::InProgress);
 
-    game.piece_lifted(12); // e2
-    let result = game.piece_placed(12); // Same square
-    assert_eq!(result, None);
+    assert!(game.make_move(12, 28));
+    assert_eq!(game.current_turn(), Color::Black);
+
+    assert!(game.undo_move());
+    assert_eq!(game.current_turn(), Color::White);
+  }
+
+  #[test]
+  fn test_undo_move_multiple() {
+    let mut game = GameState::new();
+    game.set_status(GameStatus::InProgress);
+
+    assert!(game.make_move(12, 28));
+    assert!(game.make_move(52, 36));
+    assert!(game.make_move(6, 21));
+
+    assert_eq!(game.current_turn(), Color::Black);
+
+    assert!(game.undo_move());
+    assert_eq!(game.current_turn(), Color::White);
+
+    assert!(game.undo_move());
+    assert_eq!(game.current_turn(), Color::Black);
+
+    assert!(game.undo_move());
+    assert_eq!(game.current_turn(), Color::White);
+
+    assert!(!game.undo_move());
+  }
+
+  #[test]
+  fn test_undo_no_moves() {
+    let mut game = GameState::new();
+    assert!(!game.undo_move());
+    assert_eq!(game.current_turn(), Color::White);
   }
 
   #[test]
@@ -364,6 +362,5 @@ mod tests {
     game.reset();
     assert_eq!(game.status(), GameStatus::WaitingForSetup);
     assert_eq!(game.current_turn(), Color::White);
-    assert_eq!(game.move_count(), 0);
   }
 }

@@ -169,10 +169,6 @@ impl<'a> DataPacket<'a> {
     Self(data)
   }
 
-  fn len(&self) -> usize {
-    self.0.len()
-  }
-
   fn data(&mut self) -> &mut [u8] {
     self.0
   }
@@ -189,8 +185,8 @@ impl<'a> DataPacket<'a> {
 impl<'a> Packet<'a> {
   pub fn len(&self) -> usize {
     match self {
-      Self::DataIn(packet) => packet.0.len(),
-      Self::DataOut(packet) => packet.0.len(),
+      Self::DataIn(packet) => packet.0.0.len(),
+      Self::DataOut(packet) => packet.0.0.len(),
       Self::Setup(_) => panic!(),
     }
   }
@@ -290,10 +286,6 @@ impl<'a> Message<'a> {
     } else {
       Err(Error::TransferTimeout)
     }
-  }
-
-  fn len(&self) -> usize {
-    self.data.len()
   }
 
   fn start_timer(&mut self) {

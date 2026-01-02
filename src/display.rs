@@ -40,11 +40,6 @@ impl Write for Display {
 }
 
 impl Display {
-  /// Clear the display
-  pub fn clear(&self) {
-    JHD1802::with(|jhd1802| jhd1802.clear());
-  }
-
   /// Display game status with turn and last move
   /// Line 1: "White to move" or "Black to move"
   /// Line 2: Last move (e.g., "Last: e2-e4")
@@ -183,14 +178,6 @@ impl Display {
     });
   }
 
-  /// Display check warning
-  pub fn show_check(&self) {
-    JHD1802::with(|jhd1802| {
-      jhd1802.set_cursor(0, 1);
-      jhd1802.send_str("CHECK!          ");
-    });
-  }
-
   /// Display pawn promotion prompt
   pub fn show_promotion_prompt(&self) {
     JHD1802::with(|jhd1802| {
@@ -199,6 +186,53 @@ impl Display {
       jhd1802.send_str("PROMOTION!");
       jhd1802.set_cursor(0, 1);
       jhd1802.send_str("Place new piece");
+    });
+  }
+
+  pub fn show_takeback_complete(&self) {
+    JHD1802::with(|jhd1802| {
+      jhd1802.set_cursor(0, 1);
+      jhd1802.send_str("Move taken back ");
+    });
+  }
+
+  pub fn show_takeback_capture(&self) {
+    JHD1802::with(|jhd1802| {
+      jhd1802.clear();
+      jhd1802.set_cursor(0, 0);
+      jhd1802.send_str("TAKEBACK");
+      jhd1802.set_cursor(0, 1);
+      jhd1802.send_str("Restore capture");
+    });
+  }
+
+  pub fn show_takeback_castling(&self) {
+    JHD1802::with(|jhd1802| {
+      jhd1802.clear();
+      jhd1802.set_cursor(0, 0);
+      jhd1802.send_str("TAKEBACK");
+      jhd1802.set_cursor(0, 1);
+      jhd1802.send_str("Move rook back");
+    });
+  }
+
+  pub fn show_takeback_en_passant(&self) {
+    JHD1802::with(|jhd1802| {
+      jhd1802.clear();
+      jhd1802.set_cursor(0, 0);
+      jhd1802.send_str("TAKEBACK");
+      jhd1802.set_cursor(0, 1);
+      jhd1802.send_str("Restore pawn");
+    });
+  }
+
+  pub fn show_takeback_promotion(&self) {
+    JHD1802::with(|jhd1802| {
+      jhd1802.clear();
+      jhd1802.set_cursor(0, 0);
+      jhd1802.send_str("TAKEBACK");
+      jhd1802.set_cursor(0, 1);
+      jhd1802.send_str("Place pawn back");
     });
   }
 }

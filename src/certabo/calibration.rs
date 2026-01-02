@@ -9,6 +9,41 @@ use crate::certabo::protocol::{RfidReading, RFID_BYTES};
 /// (32 standard pieces + 2 extra queens for promotion)
 pub const MAX_PIECES: usize = 34;
 
+pub const STARTING_LAYOUT: [(u8, Piece); 32] = [
+  (0, Piece::WhiteRook),
+  (1, Piece::WhiteKnight),
+  (2, Piece::WhiteBishop),
+  (3, Piece::WhiteQueen),
+  (4, Piece::WhiteKing),
+  (5, Piece::WhiteBishop),
+  (6, Piece::WhiteKnight),
+  (7, Piece::WhiteRook),
+  (8, Piece::WhitePawn),
+  (9, Piece::WhitePawn),
+  (10, Piece::WhitePawn),
+  (11, Piece::WhitePawn),
+  (12, Piece::WhitePawn),
+  (13, Piece::WhitePawn),
+  (14, Piece::WhitePawn),
+  (15, Piece::WhitePawn),
+  (48, Piece::BlackPawn),
+  (49, Piece::BlackPawn),
+  (50, Piece::BlackPawn),
+  (51, Piece::BlackPawn),
+  (52, Piece::BlackPawn),
+  (53, Piece::BlackPawn),
+  (54, Piece::BlackPawn),
+  (55, Piece::BlackPawn),
+  (56, Piece::BlackRook),
+  (57, Piece::BlackKnight),
+  (58, Piece::BlackBishop),
+  (59, Piece::BlackQueen),
+  (60, Piece::BlackKing),
+  (61, Piece::BlackBishop),
+  (62, Piece::BlackKnight),
+  (63, Piece::BlackRook),
+];
+
 /// Chess piece types
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Piece {
@@ -141,44 +176,6 @@ impl CalibrationData {
   pub fn calibrate_from_starting_position(&mut self, reading: &RfidReading) -> usize {
     self.clear();
     let mut calibrated = 0;
-
-    // Starting position piece layout
-    const STARTING_LAYOUT: [(u8, Piece); 32] = [
-      // White pieces (rank 1 and 2)
-      (0, Piece::WhiteRook),
-      (1, Piece::WhiteKnight),
-      (2, Piece::WhiteBishop),
-      (3, Piece::WhiteQueen),
-      (4, Piece::WhiteKing),
-      (5, Piece::WhiteBishop),
-      (6, Piece::WhiteKnight),
-      (7, Piece::WhiteRook),
-      (8, Piece::WhitePawn),
-      (9, Piece::WhitePawn),
-      (10, Piece::WhitePawn),
-      (11, Piece::WhitePawn),
-      (12, Piece::WhitePawn),
-      (13, Piece::WhitePawn),
-      (14, Piece::WhitePawn),
-      (15, Piece::WhitePawn),
-      // Black pieces (rank 7 and 8)
-      (48, Piece::BlackPawn),
-      (49, Piece::BlackPawn),
-      (50, Piece::BlackPawn),
-      (51, Piece::BlackPawn),
-      (52, Piece::BlackPawn),
-      (53, Piece::BlackPawn),
-      (54, Piece::BlackPawn),
-      (55, Piece::BlackPawn),
-      (56, Piece::BlackRook),
-      (57, Piece::BlackKnight),
-      (58, Piece::BlackBishop),
-      (59, Piece::BlackQueen),
-      (60, Piece::BlackKing),
-      (61, Piece::BlackBishop),
-      (62, Piece::BlackKnight),
-      (63, Piece::BlackRook),
-    ];
 
     for &(square, piece) in &STARTING_LAYOUT {
       let chip_id = reading.chip_id(square);

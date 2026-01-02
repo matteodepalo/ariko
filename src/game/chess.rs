@@ -100,9 +100,6 @@ impl Destinations {
     self.count
   }
 
-  pub fn is_empty(&self) -> bool {
-    self.count == 0
-  }
 }
 
 impl IntoIterator for Destinations {
@@ -218,8 +215,7 @@ const BLACK_ROOK_KINGSIDE: u8 = 63; // h8
 const BLACK_ROOK_QUEENSIDE: u8 = 56; // a8
 
 impl ChessBoard {
-  /// Create empty board
-  pub fn empty() -> Self {
+  pub(crate) fn empty() -> Self {
     Self {
       squares: [None; 64],
       side_to_move: PieceColor::White,
@@ -270,17 +266,10 @@ impl ChessBoard {
     board
   }
 
-  /// Get piece at square
   pub fn get(&self, sq: u8) -> Option<Piece> {
     self.squares[sq as usize]
   }
 
-  /// Get side to move
-  pub fn side_to_move(&self) -> PieceColor {
-    self.side_to_move
-  }
-
-  /// Get castling rights for a color
   pub fn castling_rights(&self, color: PieceColor) -> CastlingRights {
     match color {
       PieceColor::White => self.white_castling,
@@ -288,24 +277,13 @@ impl ChessBoard {
     }
   }
 
-  /// Get en passant target square (if any)
-  pub fn en_passant(&self) -> Option<u8> {
-    self.en_passant
-  }
-
-  /// Get halfmove clock (for 50-move rule)
-  pub fn halfmove_clock(&self) -> u8 {
-    self.halfmove_clock
-  }
-
-  /// Get full move number
-  pub fn fullmove_number(&self) -> u16 {
-    self.fullmove_number
-  }
-
-  /// Check if we can undo a move
-  pub fn can_undo(&self) -> bool {
-    self.undo_count > 0
+  /// Get information about the last move (for takeback detection)
+  pub fn last_undo_info(&self) -> Option<&UndoInfo> {
+    if self.undo_count > 0 {
+      self.undo_history[self.undo_count - 1].as_ref()
+    } else {
+      None
+    }
   }
 
   /// Make a move with optional promotion piece (updates board state)
@@ -551,16 +529,7 @@ impl ChessBoard {
     true
   }
 
-  /// Clear undo history (e.g., when starting a new game)
-  pub fn clear_undo_history(&mut self) {
-    for i in 0..self.undo_count {
-      self.undo_history[i] = None;
-    }
-    self.undo_count = 0;
-  }
-
-  /// Check if a move is pseudo-legal (follows piece movement rules)
-  pub fn is_pseudo_legal(&self, from: u8, to: u8) -> bool {
+  fn is_pseudo_legal(&self, from: u8, to: u8) -> bool {
     let piece = match self.get(from) {
       Some(p) => p,
       None => return false,
@@ -605,8 +574,7 @@ impl ChessBoard {
     dests
   }
 
-  /// Find the king's square for a given color
-  pub fn find_king(&self, color: PieceColor) -> Option<u8> {
+  fn find_king(&self, color: PieceColor) -> Option<u8> {
     for sq in 0..64 {
       if let Some(piece) = self.squares[sq] {
         if piece.piece_type == PieceType::King && piece.color == color {
@@ -617,8 +585,7 @@ impl ChessBoard {
     None
   }
 
-  /// Check if a square is attacked by the given color
-  pub fn is_square_attacked(&self, sq: u8, by_color: PieceColor) -> bool {
+  fn is_square_attacked(&self, sq: u8, by_color: PieceColor) -> bool {
     let sq_file = (sq % 8) as i8;
     let sq_rank = (sq / 8) as i8;
 
@@ -788,13 +755,7 @@ impl ChessBoard {
     }
   }
 
-  /// Check if neither side has sufficient material to checkmate
-  /// Returns true for:
-  /// - King vs King
-  /// - King + Bishop vs King
-  /// - King + Knight vs King
-  /// - King + Bishop vs King + Bishop (same color bishops)
-  pub fn is_insufficient_material(&self) -> bool {
+  fn is_insufficient_material(&self) -> bool {
     let mut white_knights = 0u8;
     let mut white_bishops = 0u8;
     let mut white_bishop_sq_color = 0u8; // 0 = none, 1 = light, 2 = dark
@@ -852,14 +813,6 @@ impl ChessBoard {
     }
 
     false
-  }
-
-  /// Check if the game is a draw (any draw condition except stalemate which is handled separately)
-  pub fn is_draw(&self) -> bool {
-    matches!(
-      self.status(),
-      BoardStatus::Stalemate | BoardStatus::FiftyMoveRule | BoardStatus::InsufficientMaterial
-    )
   }
 
   fn pawn_moves(&self, from: u8, color: PieceColor, dests: &mut Destinations) {
@@ -1113,9 +1066,9 @@ mod tests {
   fn test_make_move() {
     let mut board = ChessBoard::starting_position();
 
-    assert_eq!(board.side_to_move(), PieceColor::White);
+    assert_eq!(board.side_to_move, PieceColor::White);
     board.make_move(12, 28); // e2-e4
-    assert_eq!(board.side_to_move(), PieceColor::Black);
+    assert_eq!(board.side_to_move, PieceColor::Black);
     assert_eq!(board.get(12), None);
     assert_eq!(board.get(28), Some(Piece::new(PieceType::Pawn, PieceColor::White)));
   }
@@ -1377,7 +1330,7 @@ mod tests {
     board.make_move(51, 35);
 
     // En passant should be available
-    assert_eq!(board.en_passant(), Some(43)); // d6
+    assert_eq!(board.en_passant, Some(43)); // d6
 
     // White pawn on e5 should be able to capture en passant
     let dests = board.legal_destinations(36);
@@ -1430,14 +1383,13 @@ mod tests {
 
     assert_eq!(board.get(12), None);
     assert_eq!(board.get(28), Some(Piece::new(PieceType::Pawn, PieceColor::White)));
-    assert_eq!(board.side_to_move(), PieceColor::Black);
+    assert_eq!(board.side_to_move, PieceColor::Black);
 
-    // Undo the move
     assert!(board.undo_move());
 
     assert_eq!(board.get(12), Some(Piece::new(PieceType::Pawn, PieceColor::White)));
     assert_eq!(board.get(28), None);
-    assert_eq!(board.side_to_move(), PieceColor::White);
+    assert_eq!(board.side_to_move, PieceColor::White);
   }
 
   #[test]
@@ -1536,23 +1488,19 @@ mod tests {
   fn test_halfmove_clock() {
     let mut board = ChessBoard::starting_position();
 
-    assert_eq!(board.halfmove_clock(), 0);
+    assert_eq!(board.halfmove_clock, 0);
 
-    // Pawn move resets clock
     board.make_move(12, 28); // e2-e4
-    assert_eq!(board.halfmove_clock(), 0);
+    assert_eq!(board.halfmove_clock, 0);
 
-    // Knight move increments clock
     board.make_move(57, 42); // Nb8-c6
-    assert_eq!(board.halfmove_clock(), 1);
+    assert_eq!(board.halfmove_clock, 1);
 
-    // Another knight move
     board.make_move(6, 21); // Ng1-f3
-    assert_eq!(board.halfmove_clock(), 2);
+    assert_eq!(board.halfmove_clock, 2);
 
-    // Pawn move resets
     board.make_move(52, 36); // e7-e5
-    assert_eq!(board.halfmove_clock(), 0);
+    assert_eq!(board.halfmove_clock, 0);
   }
 
   #[test]
